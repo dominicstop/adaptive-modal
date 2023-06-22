@@ -12,7 +12,7 @@ public struct AdaptiveModalSnapPointPreset {
   public let layoutPreset: RNILayoutPreset;
   public let animationKeyframe: AdaptiveModalAnimationConfig?;
   
-  init(
+  public init(
     layoutPreset: RNILayoutPreset,
     animationKeyframe: AdaptiveModalAnimationConfig? = nil
   ) {

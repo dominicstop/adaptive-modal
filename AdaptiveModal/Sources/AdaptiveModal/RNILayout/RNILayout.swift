@@ -37,7 +37,7 @@ public struct RNILayout {
   // MARK: - Init
   // ------------
   
-  init(
+  public init(
     horizontalAlignment: HorizontalAlignment,
     verticalAlignment  : VerticalAlignment,
     
@@ -61,7 +61,7 @@ public struct RNILayout {
     self.marginBottom = marginBottom;
   };
   
-  init(
+  public init(
     derivedFrom prev: Self,
     horizontalAlignment: HorizontalAlignment? = nil,
     verticalAlignment  : VerticalAlignment? = nil,

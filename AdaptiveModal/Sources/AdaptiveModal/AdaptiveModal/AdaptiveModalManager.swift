@@ -362,9 +362,9 @@ public class AdaptiveModalManager: NSObject {
   // -------------------
   
   private var didTriggerSetup = false;
-  var presentationState: PresentationState = .none;
+  public var presentationState: PresentationState = .none;
   
-  weak var eventDelegate: AdaptiveModalEventNotifiable?;
+  public weak var eventDelegate: AdaptiveModalEventNotifiable?;
 
   // MARK: - Computed Properties
   // ---------------------------

@@ -7,7 +7,7 @@
 
 
 import UIKit
-
+import AdaptiveModal
 
 class RNIDraggableTestViewController : UIViewController {
   
@@ -119,7 +119,7 @@ class RNIDraggableTestViewController : UIViewController {
       targetView: self.view
     );
   
-    self.modalManager.showModal();
+    //self.modalManager.showModal();
   };
 };
 

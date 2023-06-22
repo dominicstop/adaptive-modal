@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import AdaptiveModal
 
 fileprivate class TestModalViewController: UIViewController, AdaptiveModalEventNotifiable {
 
