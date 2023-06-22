@@ -34,15 +34,11 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
               height: .percent(percentValue: 0.3)
             ),
             animationKeyframe: AdaptiveModalAnimationConfig(
-              //modalOpacity: 1,
               modalShadowOffset: .init(width: 0, height: -2),
               modalShadowOpacity: 0.2,
               modalShadowRadius: 7,
               modalCornerRadius: 25,
-              modalMaskedCorners: [
-                .layerMinXMinYCorner,
-                .layerMaxXMinYCorner
-              ],
+              modalMaskedCorners: .topCorners,
               modalBackgroundOpacity: 0.9,
               modalBackgroundVisualEffect: UIBlurEffect(style: .systemUltraThinMaterial),
               modalBackgroundVisualEffectIntensity: 1,
@@ -61,8 +57,8 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
               height: .percent(percentValue: 0.5),
               marginLeft: .constant(15),
               marginRight: .constant(15),
-              marginBottom: .init(
-                mode: .safeAreaInsets(insetKey: \.bottom),
+              marginBottom: .safeAreaInsets(
+                insetKey: \.bottom,
                 minValue: .constant(15)
               )
             ),
@@ -71,12 +67,7 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
               modalShadowOpacity: 0.2,
               modalShadowRadius: 15,
               modalCornerRadius: 10,
-              modalMaskedCorners: [
-                .layerMinXMinYCorner,
-                .layerMaxXMinYCorner,
-                .layerMinXMaxYCorner,
-                .layerMaxXMaxYCorner
-              ],
+              modalMaskedCorners: .allCorners,
               modalBackgroundOpacity: 0.85,
               modalBackgroundVisualEffectIntensity: 0.6,
               backgroundOpacity: 0.1,
@@ -89,12 +80,12 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
             snapPoint: RNILayout(
               horizontalAlignment: .center,
               verticalAlignment: .center,
-              width: RNILayoutValue(
-                mode: .percent(percentValue: 0.85),
+              width: .percent(
+                percentValue: 0.85,
                 maxValue: .constant(ScreenSize.iPhone8.size.width)
               ),
-              height: RNILayoutValue(
-                mode: .percent(percentValue: 0.75),
+              height: .percent(
+                percentValue: 0.75,
                 maxValue: .constant(ScreenSize.iPhone8.size.height)
               )
             ),
@@ -103,16 +94,10 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
               modalShadowOpacity: 0.3,
               modalShadowRadius: 10,
               modalCornerRadius: 20,
-              modalMaskedCorners: [
-                .layerMinXMinYCorner,
-                .layerMinXMaxYCorner,
-                .layerMaxXMinYCorner,
-                .layerMaxXMaxYCorner
-              ],
+              modalMaskedCorners: .allCorners,
               modalBackgroundOpacity: 0.8,
               modalBackgroundVisualEffectIntensity: 1,
               backgroundOpacity: 0,
-              //backgroundVisualEffectOpacity: 0.5,
               backgroundVisualEffectIntensity: 0.5
             )
           ),
@@ -135,10 +120,7 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
               modalShadowOpacity: 0.4,
               modalShadowRadius: 10,
               modalCornerRadius: 25,
-              modalMaskedCorners: [
-                .layerMinXMinYCorner,
-                .layerMaxXMinYCorner,
-              ],
+              modalMaskedCorners: .topCorners,
               modalBackgroundOpacity: 0.83,
               modalBackgroundVisualEffectIntensity: 1,
               backgroundVisualEffectIntensity: 1
@@ -163,22 +145,15 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
             snapPoint: RNILayout(
               horizontalAlignment: .center,
               verticalAlignment: .bottom,
-              width: RNILayoutValue(
-                mode: .percent(percentValue: 0.8)
-              ),
-              height: RNILayoutValue(
-                mode: .percent(percentValue: 0.2)
-              )
+              width: .percent(percentValue: 0.8),
+              height: .percent(percentValue: 0.2)
             ),
             animationKeyframe: AdaptiveModalAnimationConfig(
               modalShadowOffset: .init(width: 0, height: -2),
               modalShadowOpacity: 0.3,
               modalShadowRadius: 7,
               modalCornerRadius: 10,
-              modalMaskedCorners: [
-                .layerMinXMinYCorner,
-                .layerMaxXMinYCorner
-              ],
+              modalMaskedCorners: .topCorners,
               backgroundOpacity: 0,
               backgroundVisualEffect: UIBlurEffect(style: .regular),
               backgroundVisualEffectIntensity: 0
@@ -190,22 +165,15 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
             snapPoint: RNILayout(
               horizontalAlignment: .center,
               verticalAlignment: .bottom,
-              width: RNILayoutValue(
-                mode: .percent(percentValue: 0.8)
-              ),
-              height: RNILayoutValue(
-                mode: .percent(percentValue: 0.4)
-              )
+              width: .percent(percentValue: 0.8),
+              height: .percent(percentValue: 0.4)
             ),
             animationKeyframe: AdaptiveModalAnimationConfig(
               modalShadowOffset: .init(width: 1, height: 1),
               modalShadowOpacity: 0.4,
               modalShadowRadius: 7,
               modalCornerRadius: 15,
-              modalMaskedCorners: [
-                .layerMinXMinYCorner,
-                .layerMaxXMinYCorner
-              ],
+              modalMaskedCorners: .topCorners,
               backgroundOpacity: 0.1
             )
           ),
@@ -214,12 +182,8 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
             snapPoint: RNILayout(
               horizontalAlignment: .center,
               verticalAlignment: .bottom,
-              width: RNILayoutValue(
-                mode: .percent(percentValue: 0.9)
-              ),
-              height: RNILayoutValue(
-                mode: .percent(percentValue: 0.7)
-              )
+              width: .percent(percentValue: 0.9),
+              height: .percent(percentValue: 0.7)
             ),
             animationKeyframe: AdaptiveModalAnimationConfig(
               modalShadowOffset: .init(width: 2, height: 2),
@@ -244,12 +208,8 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
             snapPoint: RNILayout(
               horizontalAlignment: .left,
               verticalAlignment: .center,
-              width: RNILayoutValue(
-                mode: .percent(percentValue: 0.5)
-              ),
-              height: RNILayoutValue(
-                mode: .percent(percentValue: 0.65)
-              ),
+              width: .percent(percentValue: 0.5),
+              height: .percent(percentValue: 0.65),
               marginLeft: .constant(15)
             ),
             animationKeyframe: AdaptiveModalAnimationConfig(
@@ -266,17 +226,14 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
               backgroundVisualEffectIntensity: 0.04
             )
           ),
+          
           // snap point - 2
           AdaptiveModalSnapPointConfig(
             snapPoint: RNILayout(
               horizontalAlignment: .center,
               verticalAlignment: .center,
-              width: RNILayoutValue(
-                mode: .stretch
-              ),
-              height: RNILayoutValue(
-                mode: .percent(percentValue: 0.85)
-              ),
+              width: .stretch,
+              height: .percent(percentValue: 0.85),
               marginLeft: .constant(20),
               marginRight: .constant(20)
             ),
