@@ -8,6 +8,14 @@
 import UIKit
 
 public struct AdaptiveModalInterpolationPoint: Equatable {
+
+  static let defaultModalBackground: UIColor = {
+    if #available(iOS 13.0, *) {
+      return .systemBackground
+    };
+    
+    return .white;
+  }();
   
   // MARK: - Properties
   // ------------------
@@ -287,7 +295,7 @@ public extension AdaptiveModalInterpolationPoint {
       
     self.modalBackgroundColor = keyframeCurrent?.modalBackgroundColor
       ?? keyframePrev?.modalBackgroundColor
-      ?? .systemBackground;
+      ?? Self.defaultModalBackground;
       
     self.modalBackgroundOpacity = keyframeCurrent?.modalBackgroundOpacity
       ?? keyframePrev?.modalBackgroundOpacity

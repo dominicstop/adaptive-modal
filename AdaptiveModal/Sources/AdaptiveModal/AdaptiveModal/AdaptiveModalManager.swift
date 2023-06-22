@@ -520,7 +520,10 @@ public class AdaptiveModalManager: NSObject {
       modalView.addSubview(modalBackgroundView);
       modalView.sendSubviewToBack(modalBackgroundView);
       
-      modalBackgroundView.backgroundColor = .systemBackground;
+      modalBackgroundView.backgroundColor =
+        AdaptiveModalInterpolationPoint.defaultModalBackground;
+      
+      
       modalBackgroundView.isUserInteractionEnabled = false;
     };
     
@@ -1656,8 +1659,12 @@ public class AdaptiveModalManager: NSObject {
     
     self.displayLink = displayLink;
     
-    displayLink.preferredFrameRateRange =
-      CAFrameRateRange(minimum: 60, maximum: 120);
+    if #available(iOS 15.0, *) {
+      displayLink.preferredFrameRateRange = CAFrameRateRange(minimum: 60, maximum: 120);
+      
+    } else {
+      displayLink.preferredFramesPerSecond = 60;
+    };
     
     displayLink.add(to: .current, forMode: .common);
   };
