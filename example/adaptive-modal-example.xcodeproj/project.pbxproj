@@ -69,7 +69,7 @@
 			isa = PBXGroup;
 			children = (
 				88130B192A43FD9700219B27 /* Packages */,
-				887C3DEC2A43EEF60026B57C /* Test */,
+				887C3DEC2A43EEF60026B57C /* src */,
 				887C3DAB2A43EE700026B57C /* adaptive-modal-example */,
 				887C3DAA2A43EE700026B57C /* Products */,
 				881B68EB2A43FE20009EB533 /* Frameworks */,
@@ -96,7 +96,7 @@
 			path = "adaptive-modal-example";
 			sourceTree = "<group>";
 		};
-		887C3DEC2A43EEF60026B57C /* Test */ = {
+		887C3DEC2A43EEF60026B57C /* src */ = {
 			isa = PBXGroup;
 			children = (
 				887C3DED2A43EEF60026B57C /* AdaptiveModalConfigTestPresets.swift */,
@@ -107,7 +107,7 @@
 				887C3DF22A43EEF60026B57C /* RoundedViewTestViewController.swift */,
 				887C3DF32A43EEF60026B57C /* TestRoutes.swift */,
 			);
-			path = Test;
+			path = src;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
