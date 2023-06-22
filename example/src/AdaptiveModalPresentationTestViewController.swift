@@ -176,18 +176,7 @@ class AdaptiveModalPresentationTestViewController : UIViewController {
     modalConfig: self.currentModalConfigPreset.config
   );
   
-  let modalConfigs: [AdaptiveModalConfigTestPresets] = [
-    .demo01,
-    .demo02,
-    .demo03,
-    .demo04,
-    .demo05,
-    .demo06,
-    .demo07,
-    .demo08,
-    .demo09,
-    .demo10,
-  ];
+  let modalConfigs = AdaptiveModalConfigDemoPresets.allCases;
   
   var currentModalConfigPresetCounter = 0;
   
@@ -195,9 +184,8 @@ class AdaptiveModalPresentationTestViewController : UIViewController {
     self.currentModalConfigPresetCounter % self.modalConfigs.count
   };
   
-  var currentModalConfigPreset: AdaptiveModalConfigTestPresets {
+  var currentModalConfigPreset: AdaptiveModalConfigDemoPresets {
     self.modalConfigs[self.currentModalConfigPresetIndex];
-    //AdaptiveModalConfigTestPresets.default;
   };
   
   var currentModalManagerAdjustmentBlock: () -> Void {

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		881B68ED2A43FE20009EB533 /* AdaptiveModal in Frameworks */ = {isa = PBXBuildFile; productRef = 881B68EC2A43FE20009EB533 /* AdaptiveModal */; };
+		881B68EF2A4494EA009EB533 /* AdaptiveModalConfigDemoPresets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881B68EE2A4494EA009EB533 /* AdaptiveModalConfigDemoPresets.swift */; };
 		887C3DAD2A43EE700026B57C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887C3DAC2A43EE700026B57C /* AppDelegate.swift */; };
 		887C3DAF2A43EE700026B57C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887C3DAE2A43EE700026B57C /* SceneDelegate.swift */; };
 		887C3DB62A43EE710026B57C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 887C3DB52A43EE710026B57C /* Assets.xcassets */; };
@@ -23,6 +24,7 @@
 
 /* Begin PBXFileReference section */
 		88130B1A2A43FD9700219B27 /* AdaptiveModal */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = AdaptiveModal; path = ../AdaptiveModal; sourceTree = "<group>"; };
+		881B68EE2A4494EA009EB533 /* AdaptiveModalConfigDemoPresets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdaptiveModalConfigDemoPresets.swift; sourceTree = "<group>"; };
 		887C3DA92A43EE700026B57C /* adaptive-modal-example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "adaptive-modal-example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		887C3DAC2A43EE700026B57C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		887C3DAE2A43EE700026B57C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -99,11 +101,12 @@
 		887C3DEC2A43EEF60026B57C /* src */ = {
 			isa = PBXGroup;
 			children = (
+				881B68EE2A4494EA009EB533 /* AdaptiveModalConfigDemoPresets.swift */,
+				887C3DF12A43EEF60026B57C /* AdaptiveModalPresentationTestViewController.swift */,
 				887C3DED2A43EEF60026B57C /* AdaptiveModalConfigTestPresets.swift */,
 				887C3DEE2A43EEF60026B57C /* RNILayoutTestViewController.swift */,
 				887C3DEF2A43EEF60026B57C /* BlurEffectTestViewController.swift */,
 				887C3DF02A43EEF60026B57C /* RNIDraggableTestViewController.swift */,
-				887C3DF12A43EEF60026B57C /* AdaptiveModalPresentationTestViewController.swift */,
 				887C3DF22A43EEF60026B57C /* RoundedViewTestViewController.swift */,
 				887C3DF32A43EEF60026B57C /* TestRoutes.swift */,
 			);
@@ -186,6 +189,7 @@
 				887C3E1F2A43EEF60026B57C /* AdaptiveModalPresentationTestViewController.swift in Sources */,
 				887C3E202A43EEF60026B57C /* RoundedViewTestViewController.swift in Sources */,
 				887C3DAD2A43EE700026B57C /* AppDelegate.swift in Sources */,
+				881B68EF2A4494EA009EB533 /* AdaptiveModalConfigDemoPresets.swift in Sources */,
 				887C3E1B2A43EEF60026B57C /* AdaptiveModalConfigTestPresets.swift in Sources */,
 				887C3E212A43EEF60026B57C /* TestRoutes.swift in Sources */,
 				887C3E1C2A43EEF60026B57C /* RNILayoutTestViewController.swift in Sources */,
