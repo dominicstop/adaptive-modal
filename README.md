@@ -6,6 +6,8 @@ See [`AdaptiveModalConfigDemoPresets`](example/src/AdaptiveModalConfigDemoPreset
 
 ![Demo 01 to 04](assets/demo-01-02-03-04.gif)
 
+![Demo 01 to 04](assets/demo-05-06-07-08.gif)
+
 <br><br>
 
 ## Demo Videos
