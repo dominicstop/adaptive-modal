@@ -6,26 +6,29 @@
 
 ## WIP
 
+- [ ] `TODO:2023-06-23-18-14-47` -  Impl: `AdaptiveModal` - Add support for modal content padding.
+
+<br>
+
 - [ ] `TODO:2023-06-23-03-12-52` - Impl: `AdaptiveModal` - User-invoked function `snapTo(key:)`
-- [ ] `TODO` -  Impl: `AdaptiveModal` - User-invoked function `removeSnapPointOverride`.
-- [ ] `TODO` -  Impl: `AdaptiveModal` - Config - Background interaction - `dismiss`, `passthrough`, `none`.
-- [ ] `TODO` -  Impl: `AdaptiveModal` - Config - `shouldLockAxisToModalDirection`.
-- [ ] `TODO` -  Impl: `AdaptiveModal` - Config - `secondaryAxisDampiningPercent.`
-- [ ] `TODO` -  Impl: `AdaptiveModal` - Add support for passing a user-created gesture handler.
-- [ ] `TODO` -  Impl: `AdaptiveModal` - Add support for modal's w/ scrollviews.
-- [ ] `TODO` -  Impl: `AdaptiveModal` - Add support for modal content margins.
-- [ ] `TODO` -  Impl: `AdaptiveModal` - Add support for creating a drag handlers.
-- [ ] `TODO` -  Impl: `AdaptiveModal` - Add support for animating the home gesture bar + status bar.
-- [ ] `TODO` -  Impl: `AdaptiveModal` - Adaptive config based on rules (i.e. the current size class, device type, device orientation, window size, etc).
-- [ ] `TODO` -  Impl: `AdaptiveModal` - Update present/dismiss/snap functions to support accepting "extra animations" block.
-- [ ] Impl: `AdaptiveModal` -Add support for "in-between" snap points.
-- [ ] Impl: `AdaptiveModal` - Expose root view as computed property.
-- [ ] `TODO:` - Impl: `RNILayout` - `x` and `y` offsets.
-- [ ] `TODO:` - Impl: `RNILayout` - raw rect layout value.
+- [ ] `TODO:2023-06-23-18-13-12` -  Impl: `AdaptiveModal` - User-invoked function `removeSnapPointOverride`.
+- [ ] `TODO:2023-06-23-18-13-25` -  Impl: `AdaptiveModal` - Config - Background interaction - `dismiss`, `passthrough`, `none`.
+- [ ] `TODO:2023-06-23-18-13-34` -  Impl: `AdaptiveModal` - Config - `shouldLockAxisToModalDirection`.
+- [ ] `TODO:2023-06-23-18-13-48` -  Impl: `AdaptiveModal` - Config - `secondaryAxisDampiningPercent.`
+- [ ] `TODO:2023-06-23-18-13-58` -  Impl: `AdaptiveModal` - Add support for passing a user-created gesture handler.
+- [ ] `TODO:2023-06-23-18-14-24` -  Impl: `AdaptiveModal` - Add support for modal's w/ scrollviews.
+- [ ] `TODO:2023-06-23-18-14-53` -  Impl: `AdaptiveModal` - Add support for creating a drag handlers.
+- [ ] `TODO:2023-06-23-18-15-46` -  Impl: `AdaptiveModal` - Add support for animating the home gesture bar + status bar.
+- [ ] `TODO:2023-06-23-18-15-46` -  Impl: `AdaptiveModal` - Adaptive config based on rules (i.e. the current size class, device type, device orientation, window size, etc).
+- [ ] `TODO:2023-06-23-18-15-59` -  Impl: `AdaptiveModal` - Update present/dismiss/snap functions to support accepting "extra animations" block.
+- [ ] ` TODO:2023-06-23-18-16-28` - Impl: `AdaptiveModal` -Add support for "in-between" snap points.
+- [ ] `TODO:2023-06-23-18-17-01` - Impl: `AdaptiveModal` - Expose root view as computed property.
+- [ ] `TODO:2023-06-23-18-17-09` - Impl: `RNILayout` - `x` and `y` offsets.
+- [ ] `TODO:2023-06-23-18-17-09` - Impl: `RNILayout` - raw rect layout value.
 - [ ] `TODO:2023-06-23-03-17-21` - Impl: Respect `isAnimated` arg. when showing/hiding the modal.
-- [ ] `TODO:` - Impl: Modal Events Delegate - Will/Did show/hide modal events.
-- [ ] `TODO:` - Impl: Modal Events Delegate - Drag begin/end event.
-- [ ] `TODO:` - Chore: Publish initial version of the swift package.
+- [ ] `TODO:2023-06-23-18-17-19` - Impl: Modal Events Delegate - Will/Did show/hide modal events.
+- [ ] `TODO:2023-06-23-18-17-27` - Impl: Modal Events Delegate - Drag begin/end event.
+- [ ] `TODO:2023-06-23-18-17-27` - Chore: Publish initial version of the swift package.
 
 <br><br>
 
