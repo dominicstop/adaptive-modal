@@ -353,7 +353,10 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
             snapPoint: RNILayout(
               horizontalAlignment: .center,
               verticalAlignment: .center,
-              width: .stretch,
+              width: .stretch(
+                offsetValue: .constant(40),
+                offsetOperation: .subtract
+              ),
               height: .stretch(
                 offsetValue: .multipleValues([
                   .safeAreaInsets(insetKey: \.top),
@@ -361,9 +364,7 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
                   .constant(40),
                 ]),
                 offsetOperation: .subtract
-              ),
-              marginLeft: .constant(20),
-              marginRight: .constant(20)
+              )
             ),
             animationKeyframe: AdaptiveModalAnimationConfig(
               modalShadowOffset: .init(width: 2, height: 2),
