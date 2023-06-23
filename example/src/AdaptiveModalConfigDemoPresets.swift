@@ -672,27 +672,42 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
               backgroundVisualEffectIntensity: 0.04
             )
           ),
+          
           // snap point - 2
           AdaptiveModalSnapPointConfig(
             snapPoint: RNILayout(
               horizontalAlignment: .left,
               verticalAlignment: .center,
-              width: RNILayoutValue(
-                mode: .stretch
-              ),
-              height: RNILayoutValue(
-                mode: .percent(percentValue: 0.85)
-              ),
-              marginRight: .constant(25)
+              width: .percent(percentValue: 0.7),
+              height: .percent(percentValue: 0.85)
             ),
             animationKeyframe: AdaptiveModalAnimationConfig(
               modalShadowOffset: .init(width: 2, height: 2),
               modalShadowOpacity: 0.2,
-              modalShadowRadius: 15,
+              modalShadowRadius: 12,
               modalCornerRadius: 15,
               modalBackgroundOpacity: 0.9,
-              modalBackgroundVisualEffectIntensity: 0.5,
-              backgroundVisualEffectIntensity: 0.5
+              modalBackgroundVisualEffectIntensity: 0.6,
+              backgroundVisualEffectIntensity: 0.4
+            )
+          ),
+          
+          // snap point - 3
+          AdaptiveModalSnapPointConfig(
+            snapPoint: RNILayout(
+              horizontalAlignment: .left,
+              verticalAlignment: .center,
+              width: .percent(percentValue: 0.95),
+              height: .stretch
+            ),
+            animationKeyframe: AdaptiveModalAnimationConfig(
+              modalShadowOffset: .init(width: 2.5, height: 0),
+              modalShadowOpacity: 0.35,
+              modalShadowRadius: 10,
+              modalCornerRadius: 20,
+              modalBackgroundOpacity: 0.87,
+              modalBackgroundVisualEffectIntensity: 0.4,
+              backgroundVisualEffectIntensity: 0.9
             )
           ),
         ],
@@ -707,7 +722,7 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
           )
         ),
         overshootSnapPoint: AdaptiveModalSnapPointPreset(
-          layoutPreset: .edgeRight
+          layoutPreset: .fitScreenHorizontally
         )
       );
     };
