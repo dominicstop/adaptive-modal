@@ -1344,6 +1344,14 @@ public class AdaptiveModalManager: NSObject {
       usingModalConfig: self.modalConfig,
       layoutValueContext: context
     );
+    
+    if let overrideSnapPoints = self.overrideSnapPoints {
+      self.overrideInterpolationPoints = .Element.compute(
+        usingModalConfig: self.modalConfig,
+        snapPoints: overrideSnapPoints,
+        layoutValueContext: context
+      );
+    };
   };
   
   private func updateModal() {
@@ -1762,10 +1770,6 @@ public class AdaptiveModalManager: NSObject {
   };
   
   private func notifyOnModalDidSnap() {
-    if self.shouldClearOverrideSnapPoints {
-      self.cleanupSnapPointOverride();
-    };
-    
     self.eventDelegate?.notifyOnModalDidSnap(
       prevSnapPointIndex:
         self.interpolationSteps[self.prevInterpolationIndex].snapPointIndex,
@@ -1798,6 +1802,10 @@ public class AdaptiveModalManager: NSObject {
       
     } else if wasPresented {
       self.notifyOnModalDidShow();
+    };
+    
+    if self.shouldClearOverrideSnapPoints {
+      self.cleanupSnapPointOverride();
     };
   };
   
@@ -2097,7 +2105,13 @@ public class AdaptiveModalManager: NSObject {
     self.overrideInterpolationPoints = interpolationPoints;
     self.currentOverrideInterpolationIndex = nextInterpolationPointIndex;
     
+    print("overshootSnapPoint", overshootSnapPoint);
+    print("overshootSnapPointConfig", overshootSnapPointConfig);
+    
+    self.debug(prefix: "snapTo");
+    
     self.animateModal(to: nextInterpolationPoint, completion: { _ in
+      self.debug(prefix: "snapTo - animateModal completion");
       completion?();
     });
   };
