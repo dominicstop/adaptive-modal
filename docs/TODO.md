@@ -8,6 +8,7 @@
 
 - [ ] `TODO:2023-06-23-03-12-52` - Impl: `AdaptiveModal` - User-invoked function `snapTo(key:)`
 - [ ] `TODO` -  Impl: `AdaptiveModal` - User-invoked function `removeSnapPointOverride`.
+- [ ] `TODO` -  Impl: `AdaptiveModal` - Config - Background interaction - `dismiss`, `passthrough`, `none`.
 - [ ] `TODO` -  Impl: `AdaptiveModal` - Config - `shouldLockAxisToModalDirection`.
 - [ ] `TODO` -  Impl: `AdaptiveModal` - Config - `secondaryAxisDampiningPercent.`
 - [ ] `TODO` -  Impl: `AdaptiveModal` - Add support for passing a user-created gesture handler.
