@@ -118,10 +118,11 @@ fileprivate class TestModalViewController: UIViewController, AdaptiveModalEventN
       snapPoint: .init(
         horizontalAlignment: .center,
         verticalAlignment: .center,
-        width: .stretch,
+        width: .stretch(
+          offsetValue: .constant(15 * 2),
+          offsetOperation: .subtract
+        ),
         height: .stretch,
-        marginLeft: .constant(15),
-        marginRight: .constant(15),
         marginTop: .multipleValues([
           .safeAreaInsets(insetKey: \.top),
           .constant(15),
@@ -134,12 +135,7 @@ fileprivate class TestModalViewController: UIViewController, AdaptiveModalEventN
       ),
       animationKeyframe: .init(
         modalCornerRadius: 15,
-        modalMaskedCorners: [
-          .layerMaxXMaxYCorner,
-          .layerMaxXMinYCorner,
-          .layerMinXMaxYCorner,
-          .layerMinXMinYCorner,
-        ],
+        modalMaskedCorners: .allCorners,
         modalBackgroundOpacity: 0.9,
         backgroundOpacity: 0
       )
