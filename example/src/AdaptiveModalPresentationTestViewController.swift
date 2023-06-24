@@ -142,8 +142,8 @@ fileprivate class TestModalViewController: UIViewController, AdaptiveModalEventN
     );
   
     //self.dismiss(animated: true);
-    self.modalManager?.snapTo(
-      snapPointConfig: snapPoint
+    try? self.modalManager?.snapTo(
+      overrideSnapPointConfig: snapPoint
     );
   };
   

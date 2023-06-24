@@ -2141,36 +2141,44 @@ public class AdaptiveModalManager: NSObject {
   };
   
   public func snapTo(
-    snapPointConfig overrideSnapPointConfig: AdaptiveModalSnapPointConfig,
+    overrideSnapPointConfig: AdaptiveModalSnapPointConfig,
+    prevSnapPointConfigs: [AdaptiveModalSnapPointConfig]? = nil,
     overshootSnapPointPreset: AdaptiveModalSnapPointPreset? = nil,
     fallbackSnapPointKey: AdaptiveModalSnapPointConfig.SnapPointKey? = nil,
     animated: Bool = true,
     completion: (() -> Void)? = nil
-  ) {
+  ) throws {
+  
     self.cleanupSnapPointOverride();
     
-    let prevInterpolationPoints: [AdaptiveModalInterpolationPoint] = {
-      let overrideInterpolationPoint = AdaptiveModalInterpolationPoint(
-        usingModalConfig: self.modalConfig,
-        snapPointIndex: 1,
-        layoutValueContext: self.layoutValueContext,
-        snapPointConfig: overrideSnapPointConfig
-      );
-      
-      let items = self.configInterpolationSteps.filter {
-        $0.percent < overrideInterpolationPoint.percent;
+    let prevSnapPointConfigs: [AdaptiveModalSnapPointConfig] = {
+      if let prevSnapPointConfigs = prevSnapPointConfigs {
+        return prevSnapPointConfigs;
       };
-      
-      guard items.count > 0 else {
-        return [self.configInterpolationSteps.first!];
-      };
-      
-      return items;
-    }();
     
-    let prevSnapPointConfigs = prevInterpolationPoints.map {
-      self.modalConfig.snapPoints[$0.snapPointIndex];
-    };
+      let prevInterpolationPoints: [AdaptiveModalInterpolationPoint] = {
+        let overrideInterpolationPoint = AdaptiveModalInterpolationPoint(
+          usingModalConfig: self.modalConfig,
+          snapPointIndex: 1,
+          layoutValueContext: self.layoutValueContext,
+          snapPointConfig: overrideSnapPointConfig
+        );
+        
+        let items = self.configInterpolationSteps.filter {
+          $0.percent < overrideInterpolationPoint.percent;
+        };
+        
+        guard items.count > 0 else {
+          return [self.configInterpolationSteps.first!];
+        };
+        
+        return items;
+      }();
+    
+      return prevInterpolationPoints.map {
+        self.modalConfig.snapPoints[$0.snapPointIndex];
+      };
+    }();
     
     let overshootSnapPointPreset = overshootSnapPointPreset
       ?? .getDefaultOvershootSnapPoint(forDirection: modalConfig.snapDirection);
@@ -2185,38 +2193,19 @@ public class AdaptiveModalManager: NSObject {
       overshootSnapPointConfig,
     ];
     
-    var interpolationPoints = prevInterpolationPoints.enumerated().map {
-      var copy = $0.element;
-      copy.snapPointIndex = $0.offset;
-      
-      return copy;
-    };
+    let nextInterpolationPointIndex = prevSnapPointConfigs.count;
     
-    let nextInterpolationPoint = AdaptiveModalInterpolationPoint(
-      usingModalConfig: self.modalConfig,
-      snapPointIndex: interpolationPoints.count,
-      layoutValueContext: self.layoutValueContext,
-      snapPointConfig: overrideSnapPointConfig,
-      prevInterpolationPoint: self.currentInterpolationStep
-    );
+    self.overrideSnapPoints = snapPoints;
+    self.computeSnapPoints();
     
-    interpolationPoints.append(nextInterpolationPoint);
-    
-    let nextInterpolationPointIndex = interpolationPoints.count - 1;
-    
-    let overshootSnapPoint = AdaptiveModalInterpolationPoint(
-      usingModalConfig: self.modalConfig,
-      snapPointIndex: interpolationPoints.count,
-      layoutValueContext: self.layoutValueContext,
-      snapPointConfig: overshootSnapPointConfig,
-      prevInterpolationPoint: self.currentInterpolationStep
-    );
-    
-    interpolationPoints.append(overshootSnapPoint);
+    guard let overrideInterpolationPoints = self.overrideInterpolationPoints,
+          let nextInterpolationPoint =
+            overrideInterpolationPoints[safeIndex: nextInterpolationPointIndex]
+    else {
+      throw NSError();
+     };
     
     self.isOverridingSnapPoints = true;
-    self.overrideSnapPoints = snapPoints;
-    self.overrideInterpolationPoints = interpolationPoints;
     self.currentOverrideInterpolationIndex = nextInterpolationPointIndex;
     
     self.animateModal(to: nextInterpolationPoint, completion: { _ in
