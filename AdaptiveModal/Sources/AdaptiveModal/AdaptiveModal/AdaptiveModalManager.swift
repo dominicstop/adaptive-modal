@@ -18,8 +18,8 @@ public class AdaptiveModalManager: NSObject {
   
   public var modalConfig: AdaptiveModalConfig;
   
-  public var enableSnapping = true;
-  public var enableOverShooting = true;
+  public var shouldEnableSnapping = true;
+  public var shouldEnableOverShooting = true;
   
   public var shouldSnapToUnderShootSnapPoint = true;
   public var shouldSnapToOvershootSnapPoint = false;
@@ -1341,7 +1341,7 @@ public class AdaptiveModalManager: NSObject {
     let percent = inputValue / interpolationRangeMaxInput;
     
     let percentClamped: CGFloat = {
-      guard !self.enableOverShooting else { return percent };
+      guard !self.shouldEnableOverShooting else { return percent };
       
       let secondToLastIndex = self.modalConfig.overshootSnapPointIndex - 1;
       let maxPercent = self.interpolationRangeInput[secondToLastIndex];
@@ -1624,7 +1624,7 @@ public class AdaptiveModalManager: NSObject {
         self.notifyOnModalWillSnap();
         
       case .cancelled, .ended:
-        guard self.enableSnapping else {
+        guard self.shouldEnableSnapping else {
           self.clearGestureValues();
           return;
         };

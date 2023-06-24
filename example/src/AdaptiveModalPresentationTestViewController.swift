@@ -186,7 +186,7 @@ class AdaptiveModalPresentationTestViewController : UIViewController {
   
   var currentModalManagerAdjustmentBlock: () -> Void {
     let defaultBlock = {
-      self.adaptiveModalManager.enableOverShooting = true;
+      self.adaptiveModalManager.shouldEnableOverShooting = true;
     
       self.adaptiveModalManager.shouldSnapToUnderShootSnapPoint = true;
       self.adaptiveModalManager.shouldSnapToOvershootSnapPoint = false;
@@ -202,7 +202,7 @@ class AdaptiveModalPresentationTestViewController : UIViewController {
       };
       
       case .demo07: return {
-        self.adaptiveModalManager.enableOverShooting = false;
+        self.adaptiveModalManager.shouldEnableOverShooting = false;
       };
       
       default: return defaultBlock;
