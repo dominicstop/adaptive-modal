@@ -6,7 +6,6 @@
 
 ## WIP
 
-- [ ] `TODO:2023-06-25-05-24-18` - Impl: `isAnimated` arg. for `AdaptiveModalManager.animateTo` and related functions.
 - [ ] `TODO:2023-06-24-23-46-58` - Impl:   `AdaptiveModalManagers.shouldDismissKeyboardOnGestureSwipe`.
 - [ ] `TODO:2023-06-24-23-55-57` - Impl: `AdaptiveModalManager.shouldEnableGesture`.
 - [ ] `TODO:2023-06-23-18-13-34` -  Impl:  `AdaptiveModalManager.shouldLockAxisToModalDirection`.
@@ -62,6 +61,7 @@
 
 ## Completed
 
+- [x] `TODO:2023-06-25-05-24-18` - Impl: `isAnimated` arg. for `AdaptiveModalManager.animateTo` and related functions.
 - [x] `TODO:2023-06-23-18-13-12` - Impl:  `AdaptiveModalManager.clearSnapPointOverride`.
 - [x] `TODO:2023-06-23-03-12-52` - Impl:  `AdaptiveModalManager.snapTo(key:)`.
 - [x] `TODO:2023-06-24-09-04-32` - Impl: `RNILayoutValueMode` - `conditionalValue` .
