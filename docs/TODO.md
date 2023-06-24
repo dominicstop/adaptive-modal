@@ -1,4 +1,4 @@
-# TODO
+# /TODO
 
 💖✨
 
@@ -6,12 +6,16 @@
 
 ## WIP
 
+- [ ] `TODO:2023-06-23-03-12-52` - Impl:  `AdaptiveModalManager.snapTo(key:)`.
+- [ ] `TODO:2023-06-23-18-13-12` - Impl:  `AdaptiveModalManager.clearSnapPointOverride`.
+- [ ] `TODO:2023-06-24-23-46-58` - Impl:   `AdaptiveModalManagers.shouldDismissKeyboardOnGestureSwipe`.
+- [ ] `TODO:2023-06-24-23-55-57` - Impl: `AdaptiveModalManager.shouldEnableGesture`.
+- [ ] `TODO:2023-06-23-18-13-34` -  Impl:  `AdaptiveModalManager.shouldLockAxisToModalDirection`.
+
 <br>
 
-- [ ] `TODO:2023-06-23-03-12-52` - Impl: `AdaptiveModal` - User-invoked function `snapTo(key:)`
-- [ ] `TODO:2023-06-23-18-13-12` - Impl: `AdaptiveModal` - User-invoked function `snapPointOverride`.
-- [ ] `TODO:2023-06-23-18-13-25` -  Impl: `AdaptiveModal` - Config - Background interaction - `dismiss`, `passthrough`, `none`.
-- [ ] `TODO:2023-06-23-18-13-34` -  Impl: `AdaptiveModal` - Config - `shouldLockAxisToModalDirection`.
+- [ ] `TODO:2023-06-24-23-15-29`  - Impl:  `AdaptiveModalConfig.keyboardOverrideSnapPoint`.
+- [ ] `TODO:2023-06-23-18-13-25` - Impl: `AdaptiveModal` - Config - Background interaction - `dismiss`, `passthrough`, `none`.
 - [ ] `TODO:2023-06-23-18-13-48` -  Impl: `AdaptiveModal` - Config - `secondaryAxisDampiningPercent.`
 - [ ] `TODO:2023-06-23-18-13-58` -  Impl: `AdaptiveModal` - Add support for passing a user-created gesture handler.
 - [ ] `TODO:2023-06-23-18-14-24` -  Impl: `AdaptiveModal` - Add support for modal's w/ scrollviews.
@@ -26,6 +30,7 @@
 - [ ] `TODO:2023-06-23-03-17-21` - Impl: Respect `isAnimated` arg. when showing/hiding the modal.
 - [ ] `TODO:2023-06-23-18-17-19` - Impl: Modal Events Delegate - Will/Did show/hide modal events.
 - [ ] `TODO:2023-06-23-18-17-27` - Impl: Modal Events Delegate - Drag begin/end event.
+- [ ] `TODO:2023-06-23-18-17-27` - Impl: Modal Events Delegate - Snap animation will begin - Send a ref of the animator.
 - [ ] `TODO:2023-06-23-18-17-27` - Chore: Publish initial version of the swift package.
 
 <br><br>
