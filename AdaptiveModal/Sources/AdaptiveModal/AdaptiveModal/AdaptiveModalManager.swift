@@ -1929,8 +1929,6 @@ public class AdaptiveModalManager: NSObject {
     //UIView.animate(withDuration: 1){
     //  self.targetViewController?.view.transform = .init(scaleX: 0.5, y: 0.5);
     //};
-    
-    self.debug(prefix: "notifyOnModalDidShow");
   };
   
   private func notifyOnModalWillHide(){
@@ -2221,13 +2219,7 @@ public class AdaptiveModalManager: NSObject {
     self.overrideInterpolationPoints = interpolationPoints;
     self.currentOverrideInterpolationIndex = nextInterpolationPointIndex;
     
-    print("overshootSnapPoint", overshootSnapPoint);
-    print("overshootSnapPointConfig", overshootSnapPointConfig);
-    
-    self.debug(prefix: "snapTo");
-    
     self.animateModal(to: nextInterpolationPoint, completion: { _ in
-      self.debug(prefix: "snapTo - animateModal completion");
       completion?();
     });
   };
