@@ -14,6 +14,7 @@ public struct AdaptiveModalSnapPointConfig {
 
   public enum SnapPointKey: Equatable {
     case undershootPoint, overshootPoint, unspecified;
+    
     case string(_ stringKey: String);
     case index(_ indexKey: Int);
   };

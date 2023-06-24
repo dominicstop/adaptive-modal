@@ -2212,4 +2212,51 @@ public class AdaptiveModalManager: NSObject {
       completion?();
     });
   };
+  
+  public func snapTo(
+    key: AdaptiveModalSnapPointConfig.SnapPointKey,
+    isAnimated: Bool = true,
+    animationBlock: (() -> Void)? = nil,
+    completion: (() -> Void)? = nil
+  ) throws {
+    let matchingInterpolationPoint: AdaptiveModalInterpolationPoint? = {
+      switch key {
+        case let .index(indexKey):
+          return self.configInterpolationSteps?.first {
+            $0.snapPointIndex == indexKey;
+          };
+          
+        case .string(_):
+          return self.configInterpolationSteps.first {
+            $0.key == key;
+          };
+          
+        case .undershootPoint:
+          return self.configInterpolationSteps?.first;
+          
+        case .overshootPoint:
+          return self.configInterpolationSteps?.last;
+          
+        case .unspecified:
+          return nil;
+      };
+    }();
+    
+    guard let matchingInterpolationPoint = matchingInterpolationPoint else {
+      throw NSError();
+    };
+    
+    self.nextConfigInterpolationIndex =
+      matchingInterpolationPoint.snapPointIndex;
+      
+    self.notifyOnModalWillSnap();
+    
+    self.animateModal(
+      to: matchingInterpolationPoint,
+      extraAnimation: animationBlock
+    ) { _ in
+      self.notifyOnModalDidSnap();
+      completion?();
+    };
+  };
 };

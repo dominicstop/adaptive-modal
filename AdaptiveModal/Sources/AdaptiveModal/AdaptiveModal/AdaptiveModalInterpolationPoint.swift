@@ -19,7 +19,8 @@ public struct AdaptiveModalInterpolationPoint: Equatable {
   
   // MARK: - Properties
   // ------------------
-
+  
+  public var key: AdaptiveModalSnapPointConfig.SnapPointKey;
   public var percent: CGFloat;
   public var snapPointIndex: Int;
 
@@ -254,6 +255,7 @@ public extension AdaptiveModalInterpolationPoint {
     snapPointConfig: AdaptiveModalSnapPointConfig,
     prevInterpolationPoint keyframePrev: Self? = nil
   ) {
+    self.key = snapPointConfig.key;
     self.snapPointIndex = snapPointIndex;
     
     let computedRect = snapPointConfig.snapPoint.computeRect(
