@@ -2094,6 +2094,24 @@ public class AdaptiveModalManager: NSObject {
     self.updateModal();
   };
   
+  public func presentModal(
+    viewControllerToPresent modalVC: UIViewController,
+    presentingViewController targetVC: UIViewController,
+    animated: Bool = true,
+    completion: (() -> Void)? = nil
+  ) {
+    self.prepareForPresentation(
+      viewControllerToPresent: modalVC,
+      presentingViewController: targetVC
+    );
+    
+    targetVC.present(
+      modalVC,
+      animated: animated,
+      completion: completion
+    );
+  };
+  
   public func snapToClosestSnapPoint(completion: (() -> Void)? = nil) {
     let closestSnapPoint = self.getClosestSnapPoint(forRect: self.modalFrame);
     
@@ -2118,24 +2136,6 @@ public class AdaptiveModalManager: NSObject {
   public func snapToCurrentIndex(completion: (() -> Void)? = nil) {
     self.snapTo(
       interpolationIndex: self.currentInterpolationIndex,
-      completion: completion
-    );
-  };
-  
-  public func presentModal(
-    viewControllerToPresent modalVC: UIViewController,
-    presentingViewController targetVC: UIViewController,
-    animated: Bool = true,
-    completion: (() -> Void)? = nil
-  ) {
-    self.prepareForPresentation(
-      viewControllerToPresent: modalVC,
-      presentingViewController: targetVC
-    );
-    
-    targetVC.present(
-      modalVC,
-      animated: animated,
       completion: completion
     );
   };
