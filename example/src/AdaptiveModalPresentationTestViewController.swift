@@ -313,6 +313,9 @@ class AdaptiveModalPresentationTestViewController : UIViewController {
         
       case .demo10:
         testVC.showCustomSnapPointButton = true;
+        
+      case .demo11:
+        testVC.showTextInputField = true;
       
       default: break;
     };

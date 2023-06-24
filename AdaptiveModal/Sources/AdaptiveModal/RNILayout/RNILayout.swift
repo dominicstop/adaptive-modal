@@ -34,6 +34,11 @@ public struct RNILayout {
   public let marginTop   : RNILayoutValue?;
   public let marginBottom: RNILayoutValue?;
   
+  public let paddingLeft  : RNILayoutValue?;
+  public let paddingRight : RNILayoutValue?;
+  public let paddingTop   : RNILayoutValue?;
+  public let paddingBottom: RNILayoutValue?;
+  
   // MARK: - Init
   // ------------
   
@@ -47,7 +52,12 @@ public struct RNILayout {
     marginLeft  : RNILayoutValue? = nil,
     marginRight : RNILayoutValue? = nil,
     marginTop   : RNILayoutValue? = nil,
-    marginBottom: RNILayoutValue? = nil
+    marginBottom: RNILayoutValue? = nil,
+    
+    paddingLeft  : RNILayoutValue? = nil,
+    paddingRight : RNILayoutValue? = nil,
+    paddingTop   : RNILayoutValue? = nil,
+    paddingBottom: RNILayoutValue? = nil
   ) {
     self.horizontalAlignment = horizontalAlignment;
     self.verticalAlignment   = verticalAlignment;
@@ -59,6 +69,11 @@ public struct RNILayout {
     self.marginRight  = marginRight;
     self.marginTop    = marginTop;
     self.marginBottom = marginBottom;
+    
+    self.paddingLeft   = paddingLeft;
+    self.paddingRight  = paddingRight;
+    self.paddingTop    = paddingTop;
+    self.paddingBottom = paddingBottom;
   };
   
   public init(
@@ -72,7 +87,12 @@ public struct RNILayout {
     marginLeft  : RNILayoutValue? = nil,
     marginRight : RNILayoutValue? = nil,
     marginTop   : RNILayoutValue? = nil,
-    marginBottom: RNILayoutValue? = nil
+    marginBottom: RNILayoutValue? = nil,
+    
+    paddingLeft  : RNILayoutValue? = nil,
+    paddingRight : RNILayoutValue? = nil,
+    paddingTop   : RNILayoutValue? = nil,
+    paddingBottom: RNILayoutValue? = nil
   ) {
     self.horizontalAlignment = horizontalAlignment ?? prev.horizontalAlignment;
     self.verticalAlignment   = verticalAlignment   ?? prev.verticalAlignment;
@@ -84,6 +104,11 @@ public struct RNILayout {
     self.marginRight  = marginRight  ?? prev.marginRight;
     self.marginTop    = marginTop    ?? prev.marginTop;
     self.marginBottom = marginBottom ?? prev.marginBottom;
+    
+    self.paddingLeft   = paddingLeft   ?? prev.paddingLeft;
+    self.paddingRight  = paddingRight  ?? prev.paddingRight;
+    self.paddingTop    = paddingTop    ?? prev.paddingTop;
+    self.paddingBottom = paddingBottom ?? prev.paddingBottom;
   };
   
   // MARK: - Intermediate Functions
@@ -365,5 +390,37 @@ public struct RNILayout {
     };
     
     return rect;
+  };
+  
+  public func computePadding(
+    usingLayoutValueContext context: RNILayoutValueContext
+  ) -> UIEdgeInsets {
+  
+    let paddingLeft = self.paddingLeft?.computeValue(
+      usingLayoutValueContext: context,
+      preferredSizeKey: \.width
+    );
+    
+    let paddingRight = self.paddingRight?.computeValue(
+      usingLayoutValueContext: context,
+      preferredSizeKey: \.width
+    );
+    
+    let paddingTop = self.paddingTop?.computeValue(
+      usingLayoutValueContext: context,
+      preferredSizeKey: \.height
+    );
+    
+    let paddingBottom = self.paddingBottom?.computeValue(
+      usingLayoutValueContext: context,
+      preferredSizeKey: \.height
+    );
+    
+    return .init(
+      top   : paddingTop    ?? 0,
+      left  : paddingLeft   ?? 0,
+      bottom: paddingBottom ?? 0,
+      right : paddingRight  ?? 0
+    );
   };
 };

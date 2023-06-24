@@ -25,6 +25,7 @@ public struct AdaptiveModalInterpolationPoint: Equatable {
 
   /// The computed frames of the modal based on the snap points
   public var computedRect: CGRect;
+  public var modalPadding: UIEdgeInsets;
   
   // MARK: - Properties - Keyframes
   // ------------------------------
@@ -90,6 +91,15 @@ public struct AdaptiveModalInterpolationPoint: Equatable {
     };
   };
   
+  public var modalPaddingAdjusted: UIEdgeInsets {
+    .init(
+      top   :  self.modalPadding.top,
+      left  :  self.modalPadding.left,
+      bottom: -self.modalPadding.bottom,
+      right : -self.modalPadding.right
+    );
+  };
+  
   // MARK: - Functions
   // -----------------
   
@@ -139,17 +149,18 @@ public struct AdaptiveModalInterpolationPoint: Equatable {
     toModalWrapperView modalWrapperView: UIView,
     toModalWrapperTransformView modalWrapperTransformView: UIView?,
     toModalWrapperShadowView modalWrapperShadowView: UIView?,
+    toModalContentWrapperView modalContentWrapperView: UIView,
     toDummyModalView dummyModalView: UIView,
     toModalBackgroundView modalBgView: UIView?,
     toBackgroundView bgView: UIView?,
     toModalBackgroundEffectView modalBgEffectView: UIVisualEffectView?,
-    toBackgroundVisualEffectView bgVisualEffectView: UIVisualEffectView?
+    toBackgroundVisualEffectView bgVisualEffectView: UIVisualEffectView?,
+    toModalConstraintLeft modalConstraintLeft: NSLayoutConstraint?,
+    toModalConstraintRight modalConstraintRight: NSLayoutConstraint?,
+    toModalConstraintTop modalConstraintTop: NSLayoutConstraint?,
+    toModalConstraintBottom modalConstraintBottom: NSLayoutConstraint?
   ){
     modalView.alpha = self.modalOpacity;
-    
-    modalView.layer.cornerRadius = self.modalCornerRadius;
-    modalView.layer.maskedCorners = self.modalMaskedCorners;
-    
     modalWrapperView.frame = self.computedRect;
     
     if let view = modalWrapperTransformView {
@@ -167,6 +178,9 @@ public struct AdaptiveModalInterpolationPoint: Equatable {
       view.layer.shadowOpacity = Float(self.modalShadowOpacity);
       view.layer.shadowRadius = self.modalShadowRadius;
     };
+    
+    modalContentWrapperView.layer.cornerRadius = self.modalCornerRadius;
+    modalContentWrapperView.layer.maskedCorners = self.modalMaskedCorners;
     
     dummyModalView.frame = self.computedRect;
     
@@ -187,6 +201,43 @@ public struct AdaptiveModalInterpolationPoint: Equatable {
     if let effectView = bgVisualEffectView {
       effectView.alpha = self.backgroundVisualEffectOpacity;
     };
+    
+    var shouldUpdateConstraints = false;
+    
+    if let constraintLeft = modalConstraintLeft,
+       constraintLeft.constant != self.modalPaddingAdjusted.left {
+      
+      constraintLeft.constant = self.modalPaddingAdjusted.left;
+      shouldUpdateConstraints = true;
+    };
+    
+    if let constraintRight = modalConstraintRight,
+       constraintRight.constant != self.modalPaddingAdjusted.right {
+      
+      constraintRight.constant = self.modalPaddingAdjusted.right;
+      shouldUpdateConstraints = true;
+    };
+    
+    if let constraintTop = modalConstraintTop,
+       constraintTop.constant != self.modalPaddingAdjusted.top {
+      
+      constraintTop.constant = self.modalPaddingAdjusted.top;
+      shouldUpdateConstraints = true;
+    };
+    
+    if let constraintBottom = modalConstraintBottom,
+       constraintBottom.constant != self.modalPaddingAdjusted.bottom {
+      
+      constraintBottom.constant = self.modalPaddingAdjusted.bottom;
+      shouldUpdateConstraints = true;
+    };
+    
+    if shouldUpdateConstraints {
+      modalView.updateConstraints();
+      modalView.setNeedsLayout();
+    };
+    
+    modalContentWrapperView.layoutIfNeeded();
   };
 };
 
@@ -199,17 +250,26 @@ public extension AdaptiveModalInterpolationPoint {
     usingModalConfig modalConfig: AdaptiveModalConfig,
     snapPointIndex: Int,
     percent: CGFloat? = nil,
-    layoutValueContext context: RNILayoutValueContext,
+    layoutValueContext baseContext: RNILayoutValueContext,
     snapPointConfig: AdaptiveModalSnapPointConfig,
     prevInterpolationPoint keyframePrev: Self? = nil
   ) {
     self.snapPointIndex = snapPointIndex;
     
     let computedRect = snapPointConfig.snapPoint.computeRect(
-      usingLayoutValueContext: context
+      usingLayoutValueContext: baseContext
+    );
+    
+    let context = RNILayoutValueContext(
+      derivedFrom: baseContext,
+      currentSize: computedRect.size
     );
     
     self.computedRect = computedRect;
+    
+    self.modalPadding = snapPointConfig.snapPoint.computePadding(
+      usingLayoutValueContext: context
+    );
     
     self.percent = percent ?? {
       switch modalConfig.snapPercentStrategy {
@@ -236,7 +296,7 @@ public extension AdaptiveModalInterpolationPoint {
     
     let isFirstSnapPoint = snapPointIndex == 0;
     let keyframeCurrent = snapPointConfig.animationKeyframe;
-    
+  
     self.modalRotation = keyframeCurrent?.modalRotation
       ?? keyframePrev?.modalRotation
       ?? 0;

@@ -8,6 +8,7 @@
 import UIKit
 
 public struct AdaptiveModalAnimationConfig {
+
   public var modalRotation: CGFloat?;
   
   public var modalScaleX: CGFloat?;
@@ -68,6 +69,7 @@ public struct AdaptiveModalAnimationConfig {
      backgroundVisualEffectOpacity: CGFloat? = nil,
      backgroundVisualEffectIntensity: CGFloat? = nil
   ) {
+  
     self.modalRotation = modalRotation;
     
     self.modalScaleX = modalScaleX;

@@ -20,6 +20,7 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
   case demo08;
   case demo09;
   case demo10;
+  case demo11;
   
   var config: AdaptiveModalConfig {
     switch self {
@@ -723,6 +724,52 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
         ),
         overshootSnapPoint: AdaptiveModalSnapPointPreset(
           layoutPreset: .fitScreenHorizontally
+        )
+      );
+      
+      case .demo11: return AdaptiveModalConfig(
+        snapPoints: [
+          // Snap Point 1
+          AdaptiveModalSnapPointConfig(
+            snapPoint: RNILayout(
+              horizontalAlignment: .center,
+              verticalAlignment: .bottom,
+              width: .stretch,
+              height: .multipleValues([
+                .percent(percentValue: 0.3),
+                .safeAreaInsets(insetKey: \.bottom),
+                .keyboardRelativeSize(sizeKey: \.height)
+              ]),
+              paddingLeft: .multipleValues([
+                .safeAreaInsets(insetKey: \.left),
+                .constant(15),
+              ]),
+              paddingRight: .multipleValues([
+                .safeAreaInsets(insetKey: \.right),
+                .constant(15)
+              ]),
+              paddingBottom: .multipleValues([
+                .safeAreaInsets(insetKey: \.bottom),
+                .keyboardRelativeSize(sizeKey: \.height),
+              ])
+            ),
+            animationKeyframe: AdaptiveModalAnimationConfig(
+              modalShadowOffset: .init(width: 0, height: -2),
+              modalShadowOpacity: 0.25,
+              modalShadowRadius: 7,
+              modalCornerRadius: 12,
+              modalMaskedCorners: .topCorners,
+              modalBackgroundOpacity: 0.9,
+              modalBackgroundVisualEffect: UIBlurEffect(style: .systemUltraThinMaterial),
+              modalBackgroundVisualEffectIntensity: 1,
+              backgroundVisualEffect: UIBlurEffect(style: .regular),
+              backgroundVisualEffectIntensity: 0
+            )
+          ),
+        ],
+        snapDirection: .bottomToTop,
+        overshootSnapPoint: AdaptiveModalSnapPointPreset(
+          layoutPreset: .fitScreenVertically
         )
       );
     };

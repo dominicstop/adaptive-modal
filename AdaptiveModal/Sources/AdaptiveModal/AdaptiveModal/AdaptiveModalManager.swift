@@ -40,6 +40,7 @@ public class AdaptiveModalManager: NSObject {
   public lazy var modalWrapperView = UIView();
   public lazy var modalWrapperTransformView = UIView();
   public lazy var modalWrapperShadowView = UIView();
+  public lazy var modalContentWrapperView = UIView();
   
   public private(set) var prevModalFrame: CGRect = .zero;
   
@@ -61,6 +62,11 @@ public class AdaptiveModalManager: NSObject {
       self.dummyModalView.frame;
     }
   };
+  
+  private weak var modalConstraintLeft  : NSLayoutConstraint?;
+  private weak var modalConstraintRight : NSLayoutConstraint?;
+  private weak var modalConstraintTop   : NSLayoutConstraint?;
+  private weak var modalConstraintBottom: NSLayoutConstraint?;
   
   private var layoutKeyboardValues: RNILayoutKeyboardValues?;
   
@@ -501,6 +507,7 @@ public class AdaptiveModalManager: NSObject {
       self.modalWrapperView,
       self.modalWrapperTransformView,
       self.modalWrapperShadowView,
+      self.modalContentWrapperView,
       modalView,
     ];
     
@@ -513,12 +520,12 @@ public class AdaptiveModalManager: NSObject {
       prev.addSubview($0.element);
     };
     
-    modalView.clipsToBounds = true;
+    self.modalContentWrapperView.clipsToBounds = true;
     modalView.backgroundColor = .clear;
     
     if let modalBackgroundView = self.modalBackgroundView {
-      modalView.addSubview(modalBackgroundView);
-      modalView.sendSubviewToBack(modalBackgroundView);
+      self.modalContentWrapperView.addSubview(modalBackgroundView);
+      self.modalContentWrapperView.sendSubviewToBack(modalBackgroundView);
       
       modalBackgroundView.backgroundColor =
         AdaptiveModalInterpolationPoint.defaultModalBackground;
@@ -528,12 +535,12 @@ public class AdaptiveModalManager: NSObject {
     };
     
     if let modalBGVisualEffectView = self.modalBackgroundVisualEffectView {
-      modalView.addSubview(modalBGVisualEffectView);
-      modalView.sendSubviewToBack(modalBGVisualEffectView);
+      self.modalContentWrapperView.addSubview(modalBGVisualEffectView);
+      self.modalContentWrapperView.sendSubviewToBack(modalBGVisualEffectView);
       
       modalBGVisualEffectView.clipsToBounds = true;
       modalBGVisualEffectView.backgroundColor = .clear;
-      modalBGVisualEffectView.isUserInteractionEnabled = false;
+      //modalBGVisualEffectView.isUserInteractionEnabled = false;
     };
   };
   
@@ -556,7 +563,7 @@ public class AdaptiveModalManager: NSObject {
     let wrapperViews = [
       self.modalWrapperTransformView,
       self.modalWrapperShadowView,
-      modalView,
+      self.modalContentWrapperView,
     ];
     
     wrapperViews.forEach {
@@ -570,6 +577,36 @@ public class AdaptiveModalManager: NSObject {
         $0.heightAnchor .constraint(equalTo: parentView.heightAnchor ),
       ]);
     };
+    
+    modalView.translatesAutoresizingMaskIntoConstraints = false;
+    modalView.layoutMargins = .zero;
+    
+    self.modalConstraintLeft =  modalView.leftAnchor.constraint(
+      equalTo: self.modalContentWrapperView.leftAnchor,
+      constant: 0
+    );
+    
+    self.modalConstraintRight =  modalView.rightAnchor.constraint(
+      equalTo: self.modalContentWrapperView.rightAnchor,
+      constant: 0
+    );
+    
+    self.modalConstraintTop =  modalView.topAnchor.constraint(
+      equalTo: self.modalContentWrapperView.topAnchor,
+      constant: 0
+    );
+    
+    self.modalConstraintBottom =  modalView.bottomAnchor.constraint(
+      equalTo: self.modalContentWrapperView.bottomAnchor,
+      constant: 0
+    );
+    
+    NSLayoutConstraint.activate([
+      self.modalConstraintLeft!,
+      self.modalConstraintRight!,
+      self.modalConstraintTop!,
+      self.modalConstraintBottom!,
+    ]);
     
     if let bgDimmingView = self.backgroundDimmingView {
       bgDimmingView.translatesAutoresizingMaskIntoConstraints = false;
@@ -586,10 +623,10 @@ public class AdaptiveModalManager: NSObject {
       modalBGView.translatesAutoresizingMaskIntoConstraints = false;
       
       NSLayoutConstraint.activate([
-        modalBGView.centerXAnchor.constraint(equalTo: modalView.centerXAnchor),
-        modalBGView.centerYAnchor.constraint(equalTo: modalView.centerYAnchor),
-        modalBGView.widthAnchor  .constraint(equalTo: modalView.widthAnchor  ),
-        modalBGView.heightAnchor .constraint(equalTo: modalView.heightAnchor ),
+        modalBGView.centerXAnchor.constraint(equalTo: self.modalContentWrapperView.centerXAnchor),
+        modalBGView.centerYAnchor.constraint(equalTo: self.modalContentWrapperView.centerYAnchor),
+        modalBGView.widthAnchor  .constraint(equalTo: self.modalContentWrapperView.widthAnchor  ),
+        modalBGView.heightAnchor .constraint(equalTo: self.modalContentWrapperView.heightAnchor ),
       ]);
     };
     
@@ -597,10 +634,10 @@ public class AdaptiveModalManager: NSObject {
       modalBGVisualEffectView.translatesAutoresizingMaskIntoConstraints = false;
       
       NSLayoutConstraint.activate([
-        modalBGVisualEffectView.centerXAnchor.constraint(equalTo: modalView.centerXAnchor),
-        modalBGVisualEffectView.centerYAnchor.constraint(equalTo: modalView.centerYAnchor),
-        modalBGVisualEffectView.widthAnchor  .constraint(equalTo: modalView.widthAnchor  ),
-        modalBGVisualEffectView.heightAnchor .constraint(equalTo: modalView.heightAnchor ),
+        modalBGVisualEffectView.centerXAnchor.constraint(equalTo: self.modalContentWrapperView.centerXAnchor),
+        modalBGVisualEffectView.centerYAnchor.constraint(equalTo: self.modalContentWrapperView.centerYAnchor),
+        modalBGVisualEffectView.widthAnchor  .constraint(equalTo: self.modalContentWrapperView.widthAnchor  ),
+        modalBGVisualEffectView.heightAnchor .constraint(equalTo: self.modalContentWrapperView.heightAnchor ),
       ]);
     };
   };
@@ -652,8 +689,9 @@ public class AdaptiveModalManager: NSObject {
       self.dummyModalView,
       self.modalWrapperView,
       // self.modalWrapperTransformView,
-      // self.nodalView,
+      // self.modalView,
       self.modalWrapperShadowView,
+      // self.modalContentWrapperView,
       self.modalBackgroundView,
       self.modalBackgroundVisualEffectView,
       self.backgroundDimmingView,
@@ -676,6 +714,11 @@ public class AdaptiveModalManager: NSObject {
     self.backgroundVisualEffectView = nil;
     
     self.didTriggerSetup = false;
+    
+    self.modalConstraintLeft = nil;
+    self.modalConstraintRight = nil;
+    self.modalConstraintTop = nil;
+    self.modalConstraintBottom = nil;
   };
   
   private func cleanupSnapPointOverride(){
@@ -1054,6 +1097,64 @@ public class AdaptiveModalManager: NSObject {
     );
   };
   
+  private func applyInterpolationToModalPadding(
+    forInputPercentValue inputPercentValue: CGFloat
+  ) {
+    guard let modalView = self.modalView else { return };
+  
+    let nextPaddingLeft = self.interpolate(
+      inputValue: inputPercentValue,
+      rangeOutputKey: \.modalPaddingAdjusted.left,
+      shouldClampMin: true,
+      shouldClampMax: true
+    );
+    
+    let nextPaddingRight = self.interpolate(
+      inputValue: inputPercentValue,
+      rangeOutputKey: \.modalPaddingAdjusted.right,
+      shouldClampMin: true,
+      shouldClampMax: true
+    );
+    
+    let nextPaddingTop = self.interpolate(
+      inputValue: inputPercentValue,
+      rangeOutputKey: \.modalPaddingAdjusted.top,
+      shouldClampMin: true,
+      shouldClampMax: true
+    );
+    
+    let nextPaddingBottom = self.interpolate(
+      inputValue: inputPercentValue,
+      rangeOutputKey: \.modalPaddingAdjusted.bottom,
+      shouldClampMin: true,
+      shouldClampMax: true
+    );
+    
+    guard let nextPaddingLeft   = nextPaddingLeft  ,
+          let nextPaddingRight  = nextPaddingRight ,
+          let nextPaddingTop    = nextPaddingTop   ,
+          let nextPaddingBottom = nextPaddingBottom,
+          
+          let modalConstraintLeft   = modalConstraintLeft  ,
+          let modalConstraintRight  = modalConstraintRight ,
+          let modalConstraintTop    = modalConstraintTop   ,
+          let modalConstraintBottom = modalConstraintBottom,
+          
+          modalConstraintLeft  .constant != nextPaddingLeft  ,
+          modalConstraintRight .constant != nextPaddingRight ,
+          modalConstraintTop   .constant != nextPaddingTop   ,
+          modalConstraintBottom.constant != nextPaddingBottom
+    else { return };
+    
+    modalConstraintLeft  .constant = nextPaddingLeft;
+    modalConstraintRight .constant = nextPaddingRight;
+    modalConstraintTop   .constant = nextPaddingTop;
+    modalConstraintBottom.constant = nextPaddingBottom;
+    
+    modalView.updateConstraints();
+    modalView.setNeedsLayout();
+  };
+  
   // MARK: - Functions - Apply Interpolators
   // ----------------------------------------
   
@@ -1063,6 +1164,10 @@ public class AdaptiveModalManager: NSObject {
     guard let modalView = self.modalView else { return };
     
     self.modalFrame = self.interpolateModalRect(
+      forInputPercentValue: inputPercentValue
+    );
+    
+    self.applyInterpolationToModalPadding(
       forInputPercentValue: inputPercentValue
     );
     
@@ -1150,7 +1255,7 @@ public class AdaptiveModalManager: NSObject {
     );
     
     AdaptiveModalUtilities.unwrapAndSetProperty(
-      forObject: modalView,
+      forObject: self.modalContentWrapperView,
       forPropertyKey: \.layer.cornerRadius,
       withValue:  self.interpolateModalBorderRadius(
         forInputPercentValue: inputPercentValue
@@ -1316,6 +1421,7 @@ public class AdaptiveModalManager: NSObject {
       + "\n - currentInterpolationStep: computedRect \(self.currentInterpolationStep.computedRect)"
       + "\n - currentConfigInterpolationStep computedRect: \(self.currentConfigInterpolationStep.computedRect)"
       + "\n - currentOverrideInterpolationStep computedRect: \(self.currentOverrideInterpolationStep?.computedRect.debugDescription ?? "N/A")"
+      + "\n - currentOverrideInterpolationStep modalPadding: \(self.currentOverrideInterpolationStep?.modalPadding ?? .zero)"
       + "\n - modalView gestureRecognizers: \(self.modalView?.gestureRecognizers.debugDescription ?? "N/A")"
       + "\n - isOverridingSnapPoints: \(self.isOverridingSnapPoints)"
       + "\n - shouldUseOverrideSnapPoints: \(self.shouldUseOverrideSnapPoints)"
@@ -1472,11 +1578,16 @@ public class AdaptiveModalManager: NSObject {
         toModalWrapperView: self.modalWrapperView,
         toModalWrapperTransformView: self.modalWrapperTransformView,
         toModalWrapperShadowView: self.modalWrapperShadowView,
+        toModalContentWrapperView: self.modalContentWrapperView,
         toDummyModalView: self.dummyModalView,
         toModalBackgroundView: self.modalBackgroundView,
         toBackgroundView: self.backgroundDimmingView,
         toModalBackgroundEffectView: self.modalBackgroundVisualEffectView,
-        toBackgroundVisualEffectView: self.backgroundVisualEffectView
+        toBackgroundVisualEffectView: self.backgroundVisualEffectView,
+        toModalConstraintLeft: self.modalConstraintLeft,
+        toModalConstraintRight: self.modalConstraintRight,
+        toModalConstraintTop: self.modalConstraintTop,
+        toModalConstraintBottom: self.modalConstraintBottom
       );
     };
     
@@ -1818,6 +1929,8 @@ public class AdaptiveModalManager: NSObject {
     //UIView.animate(withDuration: 1){
     //  self.targetViewController?.view.transform = .init(scaleX: 0.5, y: 0.5);
     //};
+    
+    self.debug(prefix: "notifyOnModalDidShow");
   };
   
   private func notifyOnModalWillHide(){
@@ -1963,6 +2076,9 @@ public class AdaptiveModalManager: NSObject {
     
     self.updateModal();
     self.didTriggerSetup = true;
+    
+    self.modalContentWrapperView.updateConstraints();
+    self.modalWrapperView.layoutIfNeeded();
   };
   
   public func prepareForPresentation(
