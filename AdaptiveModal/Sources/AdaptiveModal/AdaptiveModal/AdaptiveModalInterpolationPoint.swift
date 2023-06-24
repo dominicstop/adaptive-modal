@@ -240,6 +240,14 @@ public struct AdaptiveModalInterpolationPoint: Equatable {
     
     modalContentWrapperView.layoutIfNeeded();
   };
+  
+  func apply(
+    toModalBackgroundEffectView modalBgEffectView: UIVisualEffectView?,
+    toBackgroundVisualEffectView bgVisualEffectView: UIVisualEffectView?
+  ){
+    modalBgEffectView?.effect = self.modalBackgroundVisualEffect;
+    bgVisualEffectView?.effect = self.backgroundVisualEffect;
+  };
 };
 
 // MARK: - Init

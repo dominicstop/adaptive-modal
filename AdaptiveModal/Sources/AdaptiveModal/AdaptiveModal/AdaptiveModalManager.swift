@@ -1547,32 +1547,15 @@ public class AdaptiveModalManager: NSObject {
   private func animateModal(
     to interpolationPoint: AdaptiveModalInterpolationPoint,
     animator: UIViewPropertyAnimator? = nil,
+    isAnimated: Bool = true,
     extraAnimation: (() -> Void)? = nil,
     completion: ((UIViewAnimatingPosition) -> Void)? = nil
   ) {
     guard let modalView = self.modalView else { return };
     
-    let animator: UIViewPropertyAnimator = animator ?? {
-      let gestureInitialVelocity = self.gestureInitialVelocity;
-      let snapAnimationConfig = self.modalConfig.snapAnimationConfig;
-        
-      let springTiming = UISpringTimingParameters(
-        dampingRatio: snapAnimationConfig.springDampingRatio,
-        initialVelocity: gestureInitialVelocity
-      );
-
-      return UIViewPropertyAnimator(
-        duration: snapAnimationConfig.springAnimationSettlingTime,
-        timingParameters: springTiming
-      );
-    }();
-    
-    self.modalAnimator?.stopAnimation(true);
-    self.modalAnimator = animator;
-    
-    animator.addAnimations {
+    let animationBlock = {
       extraAnimation?();
-      
+        
       interpolationPoint.apply(
         toModalView: modalView,
         toModalWrapperView: self.modalWrapperView,
@@ -1591,17 +1574,52 @@ public class AdaptiveModalManager: NSObject {
       );
     };
     
-    if let completion = completion {
-      animator.addCompletion(completion);
-    };
+    if isAnimated {
+      let animator: UIViewPropertyAnimator = animator ?? {
+        let gestureInitialVelocity = self.gestureInitialVelocity;
+        let snapAnimationConfig = self.modalConfig.snapAnimationConfig;
+          
+        let springTiming = UISpringTimingParameters(
+          dampingRatio: snapAnimationConfig.springDampingRatio,
+          initialVelocity: gestureInitialVelocity
+        );
+
+        return UIViewPropertyAnimator(
+          duration: snapAnimationConfig.springAnimationSettlingTime,
+          timingParameters: springTiming
+        );
+      }();
+      
+      self.modalAnimator?.stopAnimation(true);
+      self.modalAnimator = animator;
+      
+      animator.addAnimations {
+        animationBlock();
+      };
+      
+      if let completion = completion {
+        animator.addCompletion(completion);
+      };
+      
+      animator.addCompletion { _ in
+        self.endDisplayLink();
+        self.modalAnimator = nil;
+      };
     
-    animator.addCompletion { _ in
-      self.endDisplayLink();
-      self.modalAnimator = nil;
+      animator.startAnimation();
+      self.startDisplayLink();
+      
+    } else {
+      animationBlock();
+      
+      interpolationPoint.apply(
+        toModalBackgroundEffectView: self.modalBackgroundVisualEffectView,
+        toBackgroundVisualEffectView: self.backgroundVisualEffectView
+      );
+    
+      extraAnimation?();
+      completion?(.end);
     };
-  
-    animator.startAnimation();
-    self.startDisplayLink();
   };
   
   // MARK: - Functions - Handlers
@@ -1653,8 +1671,6 @@ public class AdaptiveModalManager: NSObject {
       self.layoutKeyboardValues = keyboardValues;
       self.computeSnapPoints();
     };
-    
-    
     
     self.animateModal(
       to: self.currentInterpolationStep,
@@ -1949,6 +1965,8 @@ public class AdaptiveModalManager: NSObject {
   func snapTo(
     interpolationIndex nextIndex: Int,
     interpolationPoint: AdaptiveModalInterpolationPoint? = nil,
+    isAnimated: Bool = true,
+    extraAnimation: (() -> Void)? = nil,
     completion: (() -> Void)? = nil
   ) {
     self.nextInterpolationIndex = nextIndex;
@@ -1958,13 +1976,18 @@ public class AdaptiveModalManager: NSObject {
       
     self.notifyOnModalWillSnap();
   
-    self.animateModal(to: nextInterpolationPoint, completion: { _ in
+    self.animateModal(
+      to: nextInterpolationPoint,
+      isAnimated: isAnimated,
+      extraAnimation: extraAnimation
+    ) { _ in
+    
       self.currentInterpolationIndex = nextIndex;
       self.nextInterpolationIndex = nil;
       
       self.notifyOnModalDidSnap();
       completion?();
-    });
+    }
   };
   
   func snapToClosestSnapPoint(
@@ -2119,7 +2142,11 @@ public class AdaptiveModalManager: NSObject {
     );
   };
   
-  public func snapToClosestSnapPoint(completion: (() -> Void)? = nil) {
+  public func snapToClosestSnapPoint(
+    isAnimated: Bool = true,
+    extraAnimation: (() -> Void)? = nil,
+    completion: (() -> Void)? = nil
+  ) {
     let closestSnapPoint = self.getClosestSnapPoint(forRect: self.modalFrame);
     
     let nextInterpolationIndex =
@@ -2135,14 +2162,25 @@ public class AdaptiveModalManager: NSObject {
           prevFrame != nextFrame
     else { return };
     
-    self.snapTo(interpolationIndex: nextInterpolationIndex) {
+    self.snapTo(
+      interpolationIndex: nextInterpolationIndex,
+      isAnimated: isAnimated,
+      extraAnimation: extraAnimation
+    ) {
       completion?();
     };
   };
   
-  public func snapToCurrentIndex(completion: (() -> Void)? = nil) {
+  public func snapToCurrentIndex(
+    isAnimated: Bool = true,
+    extraAnimation: (() -> Void)? = nil,
+    completion: (() -> Void)? = nil
+  ) {
+  
     self.snapTo(
       interpolationIndex: self.currentInterpolationIndex,
+      isAnimated: isAnimated,
+      extraAnimation: extraAnimation,
       completion: completion
     );
   };
@@ -2152,7 +2190,8 @@ public class AdaptiveModalManager: NSObject {
     prevSnapPointConfigs: [AdaptiveModalSnapPointConfig]? = nil,
     overshootSnapPointPreset: AdaptiveModalSnapPointPreset? = nil,
     fallbackSnapPointKey: AdaptiveModalSnapPointConfig.SnapPointKey? = nil,
-    animated: Bool = true,
+    isAnimated: Bool = true,
+    extraAnimation: (() -> Void)? = nil,
     completion: (() -> Void)? = nil
   ) throws {
   
@@ -2210,14 +2249,18 @@ public class AdaptiveModalManager: NSObject {
             overrideInterpolationPoints[safeIndex: nextInterpolationPointIndex]
     else {
       throw NSError();
-     };
+    };
     
     self.isOverridingSnapPoints = true;
     self.currentOverrideInterpolationIndex = nextInterpolationPointIndex;
     
-    self.animateModal(to: nextInterpolationPoint, completion: { _ in
+    self.animateModal(
+      to: nextInterpolationPoint,
+      isAnimated: isAnimated,
+      extraAnimation: extraAnimation
+    ) { _ in
       completion?();
-    });
+    };
   };
   
   public func snapTo(
