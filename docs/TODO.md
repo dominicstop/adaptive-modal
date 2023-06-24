@@ -6,7 +6,6 @@
 
 ## WIP
 
-- [ ] `TODO:2023-06-23-03-12-52` - Impl:  `AdaptiveModalManager.snapTo(key:)`.
 - [ ] `TODO:2023-06-23-18-13-12` - Impl:  `AdaptiveModalManager.clearSnapPointOverride`.
 - [ ] `TODO:2023-06-24-23-46-58` - Impl:   `AdaptiveModalManagers.shouldDismissKeyboardOnGestureSwipe`.
 - [ ] `TODO:2023-06-24-23-55-57` - Impl: `AdaptiveModalManager.shouldEnableGesture`.
@@ -30,6 +29,7 @@
 - [ ] `TODO:2023-06-23-18-17-09` - Impl: `RNILayout` - `x` and `y` offsets.
 - [ ] `TODO:2023-06-23-18-17-09` - Impl: `RNILayout` - raw rect layout value.
 - [ ] `TODO:2023-06-23-03-17-21` - Impl: Respect `isAnimated` arg. when showing/hiding the modal.
+- [ ] Impl: `isAnimated` arg for `AdaptiveModalManager.animateTo`
 - [ ] `TODO:2023-06-23-18-17-19` - Impl: Modal Events Delegate - Will/Did show/hide modal events.
 - [ ] `TODO:2023-06-23-18-17-27` - Impl: Modal Events Delegate - Drag begin/end event.
 	* Send a ref of the animator so the user can attach custom animators.
@@ -63,6 +63,7 @@
 
 ## Completed
 
+- [x] `TODO:2023-06-23-03-12-52` - Impl:  `AdaptiveModalManager.snapTo(key:)`.
 - [x] `TODO:2023-06-24-09-04-32` - Impl: `RNILayoutValueMode` - `conditionalValue` .
 
 - [x] `TODO:2023-06-23-18-14-47` -  Impl: `AdaptiveModal` - Add support for modal content padding.
