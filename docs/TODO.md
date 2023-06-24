@@ -6,12 +6,10 @@
 
 ## WIP
 
-- [ ] `TODO:2023-06-23-18-14-47` -  Impl: `AdaptiveModal` - Add support for modal content padding.
-
 <br>
 
 - [ ] `TODO:2023-06-23-03-12-52` - Impl: `AdaptiveModal` - User-invoked function `snapTo(key:)`
-- [ ] `TODO:2023-06-23-18-13-12` -  Impl: `AdaptiveModal` - User-invoked function `removeSnapPointOverride`.
+- [ ] `TODO:2023-06-23-18-13-12` - Impl: `AdaptiveModal` - User-invoked function `snapPointOverride`.
 - [ ] `TODO:2023-06-23-18-13-25` -  Impl: `AdaptiveModal` - Config - Background interaction - `dismiss`, `passthrough`, `none`.
 - [ ] `TODO:2023-06-23-18-13-34` -  Impl: `AdaptiveModal` - Config - `shouldLockAxisToModalDirection`.
 - [ ] `TODO:2023-06-23-18-13-48` -  Impl: `AdaptiveModal` - Config - `secondaryAxisDampiningPercent.`
@@ -55,3 +53,4 @@
 
 ## Completed
 
+- [x] `TODO:2023-06-23-18-14-47` -  Impl: `AdaptiveModal` - Add support for modal content padding.
