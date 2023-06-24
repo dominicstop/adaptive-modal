@@ -6,8 +6,6 @@
 
 ## WIP
 
-- [ ] `TODO:2023-06-24-09-04-32` - Impl: `RNILayoutValueMode` - `conditionalValue` .
-
 <br>
 
 - [ ] `TODO:2023-06-23-03-12-52` - Impl: `AdaptiveModal` - User-invoked function `snapTo(key:)`
@@ -54,5 +52,7 @@
 <br><br>
 
 ## Completed
+
+- [x] `TODO:2023-06-24-09-04-32` - Impl: `RNILayoutValueMode` - `conditionalValue` .
 
 - [x] `TODO:2023-06-23-18-14-47` -  Impl: `AdaptiveModal` - Add support for modal content padding.
