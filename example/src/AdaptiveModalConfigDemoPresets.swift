@@ -737,8 +737,11 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
               width: .stretch,
               height: .multipleValues([
                 .percent(percentValue: 0.3),
-                .safeAreaInsets(insetKey: \.bottom),
-                .keyboardRelativeSize(sizeKey: \.height)
+                .conditionalValue(
+                  condition: .keyboardPresent,
+                  trueValue: .keyboardRelativeSize(sizeKey: \.height),
+                  falseValue: .safeAreaInsets(insetKey: \.bottom)
+                )
               ]),
               paddingLeft: .multipleValues([
                 .safeAreaInsets(insetKey: \.left),
@@ -748,10 +751,11 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
                 .safeAreaInsets(insetKey: \.right),
                 .constant(15)
               ]),
-              paddingBottom: .multipleValues([
-                .safeAreaInsets(insetKey: \.bottom),
-                .keyboardRelativeSize(sizeKey: \.height),
-              ])
+              paddingBottom: .conditionalValue(
+                condition: .keyboardPresent,
+                trueValue: .keyboardRelativeSize(sizeKey: \.height),
+                falseValue: .safeAreaInsets(insetKey: \.bottom)
+              )
             ),
             animationKeyframe: AdaptiveModalAnimationConfig(
               modalShadowOffset: .init(width: 0, height: -2),

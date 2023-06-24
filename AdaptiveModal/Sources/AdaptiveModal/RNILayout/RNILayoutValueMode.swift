@@ -7,7 +7,7 @@
 
 import UIKit
 
-public enum RNILayoutValueMode: Equatable {
+public indirect enum RNILayoutValueMode: Equatable {
 
   case stretch;
   
@@ -32,12 +32,18 @@ public enum RNILayoutValueMode: Equatable {
   
   case multipleValues(_ values: [Self]);
   
+  case conditionalValue(
+    condition: RNILayoutConditionalValueMode,
+    trueValue: Self?,
+    falseValue: Self? = nil
+  );
+  
   // MARK: Functions
   // ---------------
   
   public func compute(
     usingLayoutValueContext context: RNILayoutValueContext,
-    preferredSizeKey: KeyPath<CGSize, CGFloat>?
+    preferredSizeKey: KeyPath<CGSize, CGFloat>? = nil
   ) -> CGFloat? {
   
     switch self {
@@ -77,6 +83,11 @@ public enum RNILayoutValueMode: Equatable {
           
           return $0 + (computedValue ?? 0);
         };
+        
+      case let .conditionalValue(condition, trueValue, falseValue):
+        return condition.evaluate(usingContext: context)
+          ? trueValue? .compute(usingLayoutValueContext: context)
+          : falseValue?.compute(usingLayoutValueContext: context);
     };
   };
 };
