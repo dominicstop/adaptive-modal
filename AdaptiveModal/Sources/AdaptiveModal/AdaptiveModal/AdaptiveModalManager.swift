@@ -2094,6 +2094,13 @@ public class AdaptiveModalManager: NSObject {
     self.updateModal();
   };
   
+  public func clearSnapPointOverride(completion: (() -> Void)?){
+    guard self.isOverridingSnapPoints else { return };
+  
+    self.cleanupSnapPointOverride();
+    self.snapToCurrentIndex(completion: completion);
+  };
+  
   public func presentModal(
     viewControllerToPresent modalVC: UIViewController,
     presentingViewController targetVC: UIViewController,
