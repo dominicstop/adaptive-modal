@@ -32,7 +32,20 @@ public class AdaptiveModalManager: NSObject {
   
   public var isSwipeGestureEnabled = true {
     willSet {
+      self.isModalContentSwipeGestureEnabled = newValue;
+      self.isModalDragHandleGestureEnabled  = newValue;
+    }
+  };
+  
+  public var isModalContentSwipeGestureEnabled = true {
+    willSet {
       self.modalGesture?.isEnabled = newValue;
+    }
+  };
+  
+  public var isModalDragHandleGestureEnabled = true {
+    willSet {
+       self.modalDragHandleGesture?.isEnabled = newValue;
     }
   };
   
@@ -277,6 +290,7 @@ public class AdaptiveModalManager: NSObject {
   // -------------------------------------
   
   weak var modalGesture: UIGestureRecognizer?;
+  weak var modalDragHandleGesture: UIGestureRecognizer?;
   
   private var gestureOffset: CGPoint?;
   private var gestureVelocity: CGPoint?;
@@ -494,9 +508,21 @@ public class AdaptiveModalManager: NSObject {
     );
     
     self.modalGesture = gesture;
-    gesture.isEnabled = self.isSwipeGestureEnabled;
+    gesture.isEnabled = self.isModalContentSwipeGestureEnabled;
     
     modalView.addGestureRecognizer(gesture);
+    
+    if let modalDragHandleView = self.modalDragHandleView {
+      let gesture = UIPanGestureRecognizer(
+        target: self,
+        action: #selector(self.onDragPanGesture(_:))
+      );
+    
+      self.modalDragHandleGesture = gesture;
+      gesture.isEnabled = self.isModalDragHandleGestureEnabled;
+      
+      modalDragHandleView.addGestureRecognizer(gesture);
+    };
   };
   
   func setupDummyModalView() {
@@ -1795,6 +1821,11 @@ public class AdaptiveModalManager: NSObject {
     
     modalGesture.isEnabled = false;
     modalGesture.isEnabled = currentValue;
+    
+    if let modalDragHandleGesture = self.modalDragHandleGesture {
+      modalDragHandleGesture.isEnabled = false;
+      modalDragHandleGesture.isEnabled = currentValue;
+    };
   };
   
   // MARK: - Functions - Handlers
