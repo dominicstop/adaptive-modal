@@ -20,6 +20,7 @@ public class AdaptiveModalManager: NSObject {
   
   public var shouldEnableSnapping = true;
   public var shouldEnableOverShooting = true;
+  public var shouldDismissKeyboardOnGestureSwipe = true;
   
   public var shouldSnapToUnderShootSnapPoint = true;
   public var shouldSnapToOvershootSnapPoint = false;
@@ -1635,6 +1636,10 @@ public class AdaptiveModalManager: NSObject {
     switch sender.state {
       case .began:
         self.gestureInitialPoint = gesturePoint;
+        
+        if self.shouldDismissKeyboardOnGestureSwipe {
+          self.modalViewController?.view.endEditing(true);
+        };
     
       case .changed:
         self.modalAnimator?.stopAnimation(true);
@@ -1664,14 +1669,13 @@ public class AdaptiveModalManager: NSObject {
   };
   
   @objc private func onKeyboardWillShow(notification: NSNotification) {
-    guard let keyboardValues = RNILayoutKeyboardValues(fromNotification: notification)
+    guard let keyboardValues = RNILayoutKeyboardValues(fromNotification: notification),
+          self.presentationState != .dismissing
     else { return };
     
-    if self.presentationState != .dismissing {
-      self.layoutKeyboardValues = keyboardValues;
-      self.computeSnapPoints();
-    };
-    
+    self.layoutKeyboardValues = keyboardValues;
+    self.computeSnapPoints();
+
     self.animateModal(
       to: self.currentInterpolationStep,
       animator: keyboardValues.keyboardAnimator
@@ -1693,6 +1697,7 @@ public class AdaptiveModalManager: NSObject {
     else { return };
     
     self.layoutKeyboardValues = keyboardValues;
+    self.computeSnapPoints();
     
     print(
       "onKeyboardDidShow",
@@ -1732,7 +1737,7 @@ public class AdaptiveModalManager: NSObject {
     guard let keyboardValues = RNILayoutKeyboardValues(fromNotification: notification)
     else { return };
     
-    self.layoutKeyboardValues = keyboardValues;
+    // no-op
     
     print(
       "onKeyboardDidHide",
@@ -1746,13 +1751,18 @@ public class AdaptiveModalManager: NSObject {
   };
   
   @objc private func onKeyboardWillChange(notification: NSNotification) {
-    guard let keyboardValues = RNILayoutKeyboardValues(fromNotification: notification)
+    guard let keyboardValues = RNILayoutKeyboardValues(fromNotification: notification),
+          self.presentationState == .none,
+          !self.isAnimating
     else { return };
     
-    if self.presentationState == .dismissing {
-      self.layoutKeyboardValues = keyboardValues;
-      self.computeSnapPoints();
-    };
+    self.layoutKeyboardValues = keyboardValues;
+    self.computeSnapPoints();
+    
+    self.animateModal(
+      to: self.currentInterpolationStep,
+      animator: keyboardValues.keyboardAnimator
+    );
     
     print(
       "onKeyboardWillChange",
