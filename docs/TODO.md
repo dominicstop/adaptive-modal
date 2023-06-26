@@ -6,8 +6,6 @@
 
 ## WIP
 
-- [ ] `TODO:2023-06-26-12-16-31` - Fix: `AdaptiveModalManagers.shouldDismissKeyboardOnGestureSwipe` abrupt animation.
-
 - [ ] `TODO:2023-06-25-02-31-12` -  Impl: Modal drag handle + modal drag handle position.
 - [ ] `TODO:2023-06-26-12-16-49` - Impl: Modal drag handle offset.
 - [ ] `TODO:2023-06-26-12-16-58` - Impl: Modal drag handle color.
@@ -65,6 +63,7 @@
 
 ## Completed
 
+- [x] `TODO:2023-06-26-12-16-31` - Fix: `AdaptiveModalManagers.shouldDismissKeyboardOnGestureSwipe` abrupt animation.
 - [x] `TODO:2023-06-23-18-13-48` -  Impl: `AdaptiveModalManager.secondaryAxisDampingPercent`.
 - [x] `TODO:2023-06-23-18-13-34` -  Impl:  `AdaptiveModalManager.shouldLockAxisToModalDirection`.
 - [x] `TODO:2023-06-24-23-55-57` - Impl: `AdaptiveModalManager.isSwipeGestureEnabled`.
