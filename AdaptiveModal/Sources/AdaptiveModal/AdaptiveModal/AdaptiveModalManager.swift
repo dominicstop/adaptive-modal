@@ -28,6 +28,12 @@ public class AdaptiveModalManager: NSObject {
   public var shouldDismissModalOnSnapToUnderShootSnapPoint = true;
   public var shouldDismissModalOnSnapToOverShootSnapPoint = false;
   
+  public var isSwipeGestureEnabled = true {
+    willSet {
+      self.modalGesture?.isEnabled = newValue;
+    }
+  };
+  
   // MARK: -  Properties - Layout-Related
   // ------------------------------------
   
@@ -262,6 +268,8 @@ public class AdaptiveModalManager: NSObject {
   // MARK: -  Properties - Gesture-Related
   // -------------------------------------
   
+  weak var modalGesture: UIGestureRecognizer?;
+  
   private var gestureOffset: CGPoint?;
   private var gestureVelocity: CGPoint?;
   private var gestureInitialPoint: CGPoint?;
@@ -461,15 +469,17 @@ public class AdaptiveModalManager: NSObject {
   
   func setupGestureHandler() {
     guard let modalView = self.modalView else { return };
-    
     modalView.gestureRecognizers?.removeAll();
-  
-    modalView.addGestureRecognizer(
-      UIPanGestureRecognizer(
-        target: self,
-        action: #selector(self.onDragPanGesture(_:))
-      )
+    
+    let gesture = UIPanGestureRecognizer(
+      target: self,
+      action: #selector(self.onDragPanGesture(_:))
     );
+    
+    self.modalGesture = gesture;
+    gesture.isEnabled = self.isSwipeGestureEnabled;
+    
+    modalView.addGestureRecognizer(gesture);
   };
   
   func setupDummyModalView() {
