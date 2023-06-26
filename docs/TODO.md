@@ -1,4 +1,4 @@
-# /TODO
+# TODO
 
 💖✨
 
@@ -6,15 +6,19 @@
 
 ## WIP
 
-- [ ] `TODO:2023-06-24-23-46-58` - Impl:   `AdaptiveModalManagers.shouldDismissKeyboardOnGestureSwipe`.
-- [ ] `TODO:2023-06-24-23-55-57` - Impl: `AdaptiveModalManager.shouldEnableGesture`.
+- [ ] `TODO:2023-06-24-23-55-57` - Impl: `AdaptiveModalManager.isSwipeGestureEnabled`.
 - [ ] `TODO:2023-06-23-18-13-34` -  Impl:  `AdaptiveModalManager.shouldLockAxisToModalDirection`.
 - [ ] `TODO:2023-06-25-02-31-12` -  Impl: Modal drag handle.
 
 <br>
 
 - [ ] `TODO:2023-06-24-23-15-29`  - Impl:  `AdaptiveModalConfig.keyboardOverrideSnapPoint`.
-- [ ] Impl: Optimization - Conditionally initialize views only when needed.
+- [ ] `TODO:` Impl: Optimization - Conditionally initialize views only when needed.
+- [ ] `TODO:` Fix: `AdaptiveModalManagers.shouldDismissKeyboardOnGestureSwipe` abrupt animation.
+	* Might be caused by a conflict with the gesture interpolation animation + the keyboard animation. 
+
+<br>
+
 - [ ] `TODO:2023-06-23-18-13-25` - Impl: `AdaptiveModal` - Config - Background interaction - `dismiss`, `passthrough`, `none`.
 - [ ] `TODO:2023-06-23-18-13-48` -  Impl: `AdaptiveModal` - Config - `secondaryAxisDampiningPercent.`
 - [ ] `TODO:2023-06-23-18-13-58` -  Impl: `AdaptiveModal` - Add support for passing a user-created gesture handler.
@@ -30,7 +34,7 @@
 - [ ] `TODO:2023-06-23-03-17-21` - Impl: Respect `isAnimated` arg. when showing/hiding the modal.
 - [ ] `TODO:2023-06-23-18-17-19` - Impl: Modal Events Delegate - Will/Did show/hide modal events.
 - [ ] `TODO:2023-06-23-18-17-27` - Impl: Modal Events Delegate - Drag begin/end event.
-	* Send a ref of the animator so the user can attach custom animators.
+  * Send a ref of the animator so the user can attach custom animators.
 
 <br>
 
@@ -38,7 +42,8 @@
 
 <br><br>
 
-- [ ] `TODO:` - Docs: Create `AdaptiveModalExample00` - Basic usage - Presenting a simple modal with one snap point.
+- [ ] `TODO:2023-06-26-08-30-23` - Fix: Abrupt animation when  `AdaptiveModalManagers.shouldDismissKeyboardOnGestureSwipe` is enabled.
+- [ ] `TODO:2023-06-26-08-30-23` - Docs: Create `AdaptiveModalExample00` - Basic usage - Presenting a simple modal with one snap point.
 - [ ] `TODO:` - Docs: Create `AdaptiveModalExample00` - Basic usage - Modal with one snap point + undershoot and overshoot preset.
 - [ ] `TODO:` - Docs: Create `AdaptiveModalExample00` - Basic usage - Modal with one snap point + custom undershoot and overshoot config.
 - [ ] `TODO:` - Docs: Create `AdaptiveModalExample01` - Basic Usage - Modal with 2 snapping points.
@@ -61,6 +66,7 @@
 
 ## Completed
 
+- [x] `TODO:2023-06-24-23-46-58` - Impl:  `AdaptiveModalManagers.shouldDismissKeyboardOnGestureSwipe`.
 - [x] `TODO:2023-06-25-05-24-18` - Impl: `isAnimated` arg. for `AdaptiveModalManager.animateTo` and related functions.
 - [x] `TODO:2023-06-23-18-13-12` - Impl:  `AdaptiveModalManager.clearSnapPointOverride`.
 - [x] `TODO:2023-06-23-03-12-52` - Impl:  `AdaptiveModalManager.snapTo(key:)`.
