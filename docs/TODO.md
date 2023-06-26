@@ -6,17 +6,18 @@
 
 ## WIP
 
-- [ ] `TODO:2023-06-23-18-13-48` -  Impl: `AdaptiveModalManager.secondaryAxisDampingPercent`.
-- [ ] `TODO:2023-06-25-02-31-12` -  Impl: Modal drag handle.
+- [ ] `TODO:2023-06-26-12-16-31` - Fix: `AdaptiveModalManagers.shouldDismissKeyboardOnGestureSwipe` abrupt animation.
+
+- [ ] `TODO:2023-06-25-02-31-12` -  Impl: Modal drag handle + modal drag handle position.
+- [ ] `TODO:2023-06-26-12-16-49` - Impl: Modal drag handle offset.
+- [ ] `TODO:2023-06-26-12-16-58` - Impl: Modal drag handle color.
+- [ ] `TODO:2023-06-26-12-17-08` - Impl: Modal drag handle size.
+- [ ] `TODO:2023-06-26-12-17-15` - Impl: Modal drag handle opacity.
 
 <br>
 
 - [ ] `TODO:2023-06-24-23-15-29`  - Impl:  `AdaptiveModalConfig.keyboardOverrideSnapPoint`.
-- [ ] `TODO:` Impl: Optimization - Conditionally initialize views only when needed.
-- [ ] `TODO:` Fix: `AdaptiveModalManagers.shouldDismissKeyboardOnGestureSwipe` abrupt animation.
-	* Might be caused by a conflict with the gesture interpolation animation + the keyboard animation. 
-
-<br>
+- [ ] `TODO:` Impl: Optimization - Conditionally initialize views only when needed.s
 
 - [ ] `TODO:2023-06-23-18-13-25` - Impl: `AdaptiveModal` - Config - Background interaction - `dismiss`, `passthrough`, `none`.
 - [ ] `TODO:2023-06-23-18-13-58` -  Impl: `AdaptiveModal` - Add support for passing a user-created gesture handler.
@@ -64,6 +65,7 @@
 
 ## Completed
 
+- [x] `TODO:2023-06-23-18-13-48` -  Impl: `AdaptiveModalManager.secondaryAxisDampingPercent`.
 - [x] `TODO:2023-06-23-18-13-34` -  Impl:  `AdaptiveModalManager.shouldLockAxisToModalDirection`.
 - [x] `TODO:2023-06-24-23-55-57` - Impl: `AdaptiveModalManager.isSwipeGestureEnabled`.
 - [x] `TODO:2023-06-24-23-46-58` - Impl:  `AdaptiveModalManagers.shouldDismissKeyboardOnGestureSwipe`.
