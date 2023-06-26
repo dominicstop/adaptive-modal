@@ -103,6 +103,8 @@ public class AdaptiveModalManager: NSObject {
     return context ?? .default;
   };
   
+  private var isKeyboardVisible = false;
+  
   // MARK: -  Properties - Config Interpolation Points
   // -------------------------------------------------
   
@@ -1706,6 +1708,14 @@ public class AdaptiveModalManager: NSObject {
     };
   };
   
+  private func cancelModalGesture(){
+    guard let modalGesture = self.modalGesture else { return };
+    let currentValue = modalGesture.isEnabled;
+    
+    modalGesture.isEnabled = false;
+    modalGesture.isEnabled = currentValue;
+  };
+  
   // MARK: - Functions - Handlers
   // ----------------------------
   
@@ -1720,12 +1730,19 @@ public class AdaptiveModalManager: NSObject {
       case .began:
         self.gestureInitialPoint = gesturePoint;
         
-        if self.shouldDismissKeyboardOnGestureSwipe {
-          self.modalViewController?.view.endEditing(true);
+        if self.isKeyboardVisible,
+           self.shouldDismissKeyboardOnGestureSwipe,
+           let modalView = self.modalView {
+           
+          modalView.endEditing(true);
+          self.cancelModalGesture();
         };
     
       case .changed:
-        self.modalAnimator?.stopAnimation(true);
+        if !self.isKeyboardVisible {
+          self.modalAnimator?.stopAnimation(true);
+        };
+        
         self.applyInterpolationToModal(forGesturePoint: gesturePoint);
         self.notifyOnModalWillSnap();
         
@@ -1756,6 +1773,7 @@ public class AdaptiveModalManager: NSObject {
           self.presentationState != .dismissing
     else { return };
     
+    self.isKeyboardVisible = true;
     self.layoutKeyboardValues = keyboardValues;
     self.computeSnapPoints();
 
@@ -1779,6 +1797,7 @@ public class AdaptiveModalManager: NSObject {
     guard let keyboardValues = RNILayoutKeyboardValues(fromNotification: notification)
     else { return };
     
+    self.isKeyboardVisible = true;
     self.layoutKeyboardValues = keyboardValues;
     self.computeSnapPoints();
     
@@ -1820,7 +1839,7 @@ public class AdaptiveModalManager: NSObject {
     guard let keyboardValues = RNILayoutKeyboardValues(fromNotification: notification)
     else { return };
     
-    // no-op
+    self.isKeyboardVisible = false;
     
     print(
       "onKeyboardDidHide",
@@ -1907,7 +1926,7 @@ public class AdaptiveModalManager: NSObject {
           let interpolationRangeMaxInput = self.interpolationRangeMaxInput
     else { return };
     
-    if self.isSwiping {
+    if self.isSwiping && !self.isKeyboardVisible {
       self.endDisplayLink();
     };
     
