@@ -6,11 +6,10 @@
 
 ## WIP
 
-- [ ] `TODO:2023-06-25-02-31-12` -  Impl: Modal drag handle + modal drag handle position.
-- [ ] `TODO:2023-06-26-12-16-49` - Impl: Modal drag handle offset.
-- [ ] `TODO:2023-06-26-12-16-58` - Impl: Modal drag handle color.
-- [ ] `TODO:2023-06-26-12-17-08` - Impl: Modal drag handle size.
-- [ ] `TODO:2023-06-26-12-17-15` - Impl: Modal drag handle opacity.
+- [ ] `TODO:2023-06-26-12-16-49` - Impl: Modal drag handle interpolation offset.
+- [ ] `TODO:2023-06-26-12-16-58` - Impl: Modal drag handle interpolation color.
+- [ ] `TODO:2023-06-26-12-17-08` - Impl: Modal drag handle interpolation size.
+- [ ] `TODO:2023-06-26-12-17-15` - Impl: Modal drag handle interpolation opacity.
 
 <br>
 
@@ -63,6 +62,7 @@
 
 ## Completed
 
+- [x] `TODO:2023-06-25-02-31-12` -  Impl: Modal drag handle + modal drag handle config.
 - [x] `TODO:2023-06-26-12-16-31` - Fix: `AdaptiveModalManagers.shouldDismissKeyboardOnGestureSwipe` abrupt animation.
 - [x] `TODO:2023-06-23-18-13-48` -  Impl: `AdaptiveModalManager.secondaryAxisDampingPercent`.
 - [x] `TODO:2023-06-23-18-13-34` -  Impl:  `AdaptiveModalManager.shouldLockAxisToModalDirection`.
