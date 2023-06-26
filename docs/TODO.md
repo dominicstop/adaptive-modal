@@ -7,6 +7,7 @@
 ## WIP
 
 - [ ] `TODO:2023-06-23-18-13-34` -  Impl:  `AdaptiveModalManager.shouldLockAxisToModalDirection`.
+- [ ] `TODO:2023-06-23-18-13-48` -  Impl: `AdaptiveModalManager.secondaryAxisDampingPercent`.
 - [ ] `TODO:2023-06-25-02-31-12` -  Impl: Modal drag handle.
 
 <br>
@@ -19,7 +20,6 @@
 <br>
 
 - [ ] `TODO:2023-06-23-18-13-25` - Impl: `AdaptiveModal` - Config - Background interaction - `dismiss`, `passthrough`, `none`.
-- [ ] `TODO:2023-06-23-18-13-48` -  Impl: `AdaptiveModal` - Config - `secondaryAxisDampiningPercent.`
 - [ ] `TODO:2023-06-23-18-13-58` -  Impl: `AdaptiveModal` - Add support for passing a user-created gesture handler.
 - [ ] `TODO:2023-06-23-18-14-24` -  Impl: `AdaptiveModal` - Add support for modal's w/ scrollviews.
 - [ ] `TODO:2023-06-23-18-14-53` -  Impl: `AdaptiveModal` - Add support for creating a drag handlers.
