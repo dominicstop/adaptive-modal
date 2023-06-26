@@ -38,6 +38,8 @@ public struct AdaptiveModalAnimationConfig {
   public var modalBackgroundVisualEffectOpacity: CGFloat?;
   public var modalBackgroundVisualEffectIntensity: CGFloat?;
   
+  public var modalDragHandleOffset: CGFloat?;
+  
   public var backgroundColor: UIColor?;
   public var backgroundOpacity: CGFloat?;
   
@@ -46,7 +48,7 @@ public struct AdaptiveModalAnimationConfig {
   public var backgroundVisualEffectIntensity: CGFloat?;
   
   public init(
-    secondaryGestureAxisDampingPercent: CGFloat? = nil,
+     secondaryGestureAxisDampingPercent: CGFloat? = nil,
      modalRotation: CGFloat? = nil,
      modalScaleX: CGFloat? = nil,
      modalScaleY: CGFloat? = nil,
@@ -66,6 +68,7 @@ public struct AdaptiveModalAnimationConfig {
      modalBackgroundVisualEffect: UIVisualEffect? = nil,
      modalBackgroundVisualEffectOpacity: CGFloat? = nil,
      modalBackgroundVisualEffectIntensity: CGFloat? = nil,
+     modalDragHandleOffset: CGFloat? = nil,
      backgroundColor: UIColor? = nil,
      backgroundOpacity: CGFloat? = nil,
      backgroundVisualEffect: UIVisualEffect? = nil,
@@ -101,6 +104,8 @@ public struct AdaptiveModalAnimationConfig {
     self.modalBackgroundVisualEffect = modalBackgroundVisualEffect;
     self.modalBackgroundVisualEffectOpacity = modalBackgroundVisualEffectOpacity;
     self.modalBackgroundVisualEffectIntensity = modalBackgroundVisualEffectIntensity;
+    
+    self.modalDragHandleOffset = modalDragHandleOffset
     
     self.backgroundColor = backgroundColor;
     self.backgroundOpacity = backgroundOpacity;

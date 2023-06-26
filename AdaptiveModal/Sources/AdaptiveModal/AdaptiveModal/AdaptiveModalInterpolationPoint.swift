@@ -66,6 +66,8 @@ public struct AdaptiveModalInterpolationPoint: Equatable {
   public var backgroundVisualEffectOpacity: CGFloat;
   public var backgroundVisualEffectIntensity: CGFloat;
   
+  public var modalDragHandleOffset: CGFloat;
+  
   // MARK: - Computed Properties
   // ---------------------------
   
@@ -147,6 +149,7 @@ public struct AdaptiveModalInterpolationPoint: Equatable {
   };
   
   func apply(
+    modalConfig: AdaptiveModalConfig,
     toModalView modalView: UIView,
     toModalWrapperView modalWrapperView: UIView,
     toModalWrapperTransformView modalWrapperTransformView: UIView?,
@@ -160,7 +163,9 @@ public struct AdaptiveModalInterpolationPoint: Equatable {
     toModalConstraintLeft modalConstraintLeft: NSLayoutConstraint?,
     toModalConstraintRight modalConstraintRight: NSLayoutConstraint?,
     toModalConstraintTop modalConstraintTop: NSLayoutConstraint?,
-    toModalConstraintBottom modalConstraintBottom: NSLayoutConstraint?
+    toModalConstraintBottom modalConstraintBottom: NSLayoutConstraint?,
+    toModalDragHandleView modalDragHandleView: UIView?,
+    toModalDragHandleConstraint modalDragHandleConstraint: NSLayoutConstraint?
   ){
     modalView.alpha = self.modalOpacity;
     modalWrapperView.frame = self.computedRect;
@@ -239,7 +244,27 @@ public struct AdaptiveModalInterpolationPoint: Equatable {
       modalView.setNeedsLayout();
     };
     
+    if let modalDragHandleView = modalDragHandleView,
+       let constraint = modalDragHandleConstraint {
+       
+      constraint.constant = {
+        switch modalConfig.dragHandlePosition {
+          case .top, .left:
+            return self.modalDragHandleOffset;
+            
+          case .bottom, .right:
+            return -self.modalDragHandleOffset;
+            
+          default: return self.modalDragHandleOffset;
+        };
+      }();
+      
+      modalDragHandleView.updateConstraints()
+      modalDragHandleView.setNeedsLayout();
+    };
+    
     modalContentWrapperView.layoutIfNeeded();
+    modalDragHandleView?.layoutIfNeeded();
   };
   
   func apply(
@@ -405,6 +430,10 @@ public extension AdaptiveModalInterpolationPoint {
     self.backgroundVisualEffectIntensity = keyframeCurrent?.backgroundVisualEffectIntensity
       ?? keyframePrev?.backgroundVisualEffectIntensity
       ?? (isFirstSnapPoint ? 0 : 1);
+      
+    self.modalDragHandleOffset = keyframeCurrent?.modalDragHandleOffset
+      ?? keyframePrev?.modalDragHandleOffset
+      ?? 8;
   };
 };
 

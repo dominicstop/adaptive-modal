@@ -94,6 +94,8 @@ public class AdaptiveModalManager: NSObject {
   private weak var modalConstraintTop   : NSLayoutConstraint?;
   private weak var modalConstraintBottom: NSLayoutConstraint?;
   
+  private weak var modalDragHandleConstraint: NSLayoutConstraint?;
+  
   private var layoutKeyboardValues: RNILayoutKeyboardValues?;
   
   private var layoutValueContext: RNILayoutValueContext {
@@ -705,6 +707,8 @@ public class AdaptiveModalManager: NSObject {
         default: break;
       };
       
+      self.modalDragHandleConstraint = constraint.first;
+      
       switch self.modalConfig.dragHandlePosition {
         case .top, .bottom: constraint.append(
           modalDragHandleView.centerXAnchor.constraint(
@@ -1259,10 +1263,10 @@ public class AdaptiveModalManager: NSObject {
           let nextPaddingTop    = nextPaddingTop   ,
           let nextPaddingBottom = nextPaddingBottom,
           
-          let modalConstraintLeft   = modalConstraintLeft  ,
-          let modalConstraintRight  = modalConstraintRight ,
-          let modalConstraintTop    = modalConstraintTop   ,
-          let modalConstraintBottom = modalConstraintBottom,
+          let modalConstraintLeft   = self.modalConstraintLeft  ,
+          let modalConstraintRight  = self.modalConstraintRight ,
+          let modalConstraintTop    = self.modalConstraintTop   ,
+          let modalConstraintBottom = self.modalConstraintBottom,
           
           modalConstraintLeft  .constant != nextPaddingLeft  ,
           modalConstraintRight .constant != nextPaddingRight ,
@@ -1277,6 +1281,43 @@ public class AdaptiveModalManager: NSObject {
     
     modalView.updateConstraints();
     modalView.setNeedsLayout();
+  };
+  
+  private func applyInterpolationToModalDragHandleOffset(
+    forInputPercentValue inputPercentValue: CGFloat
+  ) {
+    guard let modalDragHandleView = self.modalDragHandleView else { return };
+  
+    let nextDragHandleOffset = self.interpolate(
+      inputValue: inputPercentValue,
+      rangeOutputKey: \.modalDragHandleOffset,
+      shouldClampMin: true,
+      shouldClampMax: true
+    );
+
+    guard let nextDragHandleOffset = nextDragHandleOffset,
+          let modalDragHandleConstraint = self.modalDragHandleConstraint
+    else { return };
+    
+    let nextDragHandleOffsetAdj: CGFloat = {
+      switch self.modalConfig.dragHandlePosition {
+        case .top, .left:
+          return nextDragHandleOffset;
+          
+        case .bottom, .right:
+          return -nextDragHandleOffset;
+          
+        default: return nextDragHandleOffset;
+      };
+    }();
+    
+    guard modalDragHandleConstraint.constant != nextDragHandleOffsetAdj
+    else { return };
+    
+    modalDragHandleConstraint.constant = nextDragHandleOffsetAdj;
+    
+    modalDragHandleView.updateConstraints();
+    modalDragHandleView.setNeedsLayout();
   };
   
   // MARK: - Functions - Apply Interpolators
@@ -1356,6 +1397,10 @@ public class AdaptiveModalManager: NSObject {
     }();
     
     self.applyInterpolationToModalPadding(
+      forInputPercentValue: inputPercentValue
+    );
+    
+    self.applyInterpolationToModalDragHandleOffset(
       forInputPercentValue: inputPercentValue
     );
     
@@ -1750,6 +1795,7 @@ public class AdaptiveModalManager: NSObject {
       extraAnimation?();
         
       interpolationPoint.apply(
+        modalConfig: self.modalConfig,
         toModalView: modalView,
         toModalWrapperView: self.modalWrapperView,
         toModalWrapperTransformView: self.modalWrapperTransformView,
@@ -1763,7 +1809,9 @@ public class AdaptiveModalManager: NSObject {
         toModalConstraintLeft: self.modalConstraintLeft,
         toModalConstraintRight: self.modalConstraintRight,
         toModalConstraintTop: self.modalConstraintTop,
-        toModalConstraintBottom: self.modalConstraintBottom
+        toModalConstraintBottom: self.modalConstraintBottom,
+        toModalDragHandleView: self.modalDragHandleView,
+        toModalDragHandleConstraint: self.modalDragHandleConstraint
       );
     };
     
