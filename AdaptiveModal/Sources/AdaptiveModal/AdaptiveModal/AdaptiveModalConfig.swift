@@ -31,6 +31,11 @@ public struct AdaptiveModalConfig {
     case position;
   };
   
+  public enum DragHandlePosition: Equatable {
+    case automatic, none;
+    case top, bottom, left, right;
+  };
+  
   // MARK: - Properties
   // ------------------
   
@@ -47,6 +52,13 @@ public struct AdaptiveModalConfig {
   
   // the first snap point to snap to when the modal is first shown
   public let initialSnapPointIndex: Int;
+  
+  public let dragHandlePosition: DragHandlePosition;
+  public let dragHandleSize: CGSize;
+  public let dragHandleColor: UIColor;
+  public let dragHandleOpacity: CGFloat;
+  public let dragHandleOffset: CGFloat;
+  public let dragHandleCornerRadius: CGFloat;
   
   // let entranceConfig: AdaptiveModalEntranceConfig;
   // let snapSwipeVelocityThreshold: CGFloat = 0;
@@ -100,11 +112,24 @@ public struct AdaptiveModalConfig {
   };
   
   public var secondarySwipeAxis: KeyPath<CGPoint, CGFloat> {
-      switch self.snapDirection {
-        case .bottomToTop, .topToBottom: return \.x;
-        case .leftToRight, .rightToLeft: return \.y;
-      };
+    switch self.snapDirection {
+      case .bottomToTop, .topToBottom: return \.x;
+      case .leftToRight, .rightToLeft: return \.y;
     };
+  };
+  
+  public var dragHandleSizeAdj: CGSize {
+    switch self.snapDirection {
+      case .bottomToTop, .topToBottom:
+        return self.dragHandleSize;
+      
+      case .leftToRight, .rightToLeft:
+        return CGSize(
+          width : self.dragHandleSize.height,
+          height: self.dragHandleSize.width
+        );
+    };
+  };
   
   // MARK: - Init
   // ------------
@@ -117,7 +142,13 @@ public struct AdaptiveModalConfig {
     interpolationClampingConfig: AdaptiveModalClampingConfig = .default,
     initialSnapPointIndex: Int = 1,
     undershootSnapPoint: AdaptiveModalSnapPointPreset? = nil,
-    overshootSnapPoint: AdaptiveModalSnapPointPreset? = nil
+    overshootSnapPoint: AdaptiveModalSnapPointPreset? = nil,
+    dragHandlePosition: DragHandlePosition = .automatic,
+    dragHandleSize: CGSize? = nil,
+    dragHandleColor: UIColor? = nil,
+    dragHandleOpacity: CGFloat? = nil,
+    dragHandleOffset: CGFloat? = nil,
+    dragHandleCornerRadius: CGFloat? = nil
   ) {
     self.baseSnapPoints = snapPoints;
     
@@ -134,6 +165,27 @@ public struct AdaptiveModalConfig {
     
     self.overshootSnapPoint = overshootSnapPoint
       ?? .getDefaultOvershootSnapPoint(forDirection: snapDirection);
+      
+    self.dragHandlePosition = {
+      if dragHandlePosition != .automatic {
+        return dragHandlePosition;
+      };
+      
+      switch snapDirection {
+        case .bottomToTop: return .top;
+        case .topToBottom: return .bottom;
+        case .leftToRight: return .right;
+        case .rightToLeft: return .left;
+      };
+    }();
+    
+    self.dragHandleSize = dragHandleSize ?? CGSize(width: 40, height: 6);
+    
+    self.dragHandleColor   = dragHandleColor   ?? .systemGray;
+    self.dragHandleOpacity = dragHandleOpacity ?? 0.8;
+    self.dragHandleOffset  = dragHandleOffset  ?? 8;
+    
+    self.dragHandleCornerRadius = dragHandleCornerRadius ?? 3;
   };
   
   // MARK: - Functions

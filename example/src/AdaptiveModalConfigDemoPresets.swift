@@ -261,7 +261,8 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
         ),
         overshootSnapPoint: AdaptiveModalSnapPointPreset(
           layoutPreset: .offscreenRight
-        )
+        ),
+        dragHandlePosition: .none
       );
       
       case .demo04: return AdaptiveModalConfig(
@@ -724,7 +725,8 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
         ),
         overshootSnapPoint: AdaptiveModalSnapPointPreset(
           layoutPreset: .fitScreenHorizontally
-        )
+        ),
+        dragHandlePosition: .none
       );
       
       case .demo11: return AdaptiveModalConfig(

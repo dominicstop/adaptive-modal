@@ -51,6 +51,8 @@ public class AdaptiveModalManager: NSObject {
   public lazy var modalWrapperShadowView = UIView();
   public lazy var modalContentWrapperView = UIView();
   
+  public var modalDragHandleView: UIView?;
+  
   public private(set) var prevModalFrame: CGRect = .zero;
   
   public private(set) var modalBackgroundView: UIView?;
@@ -471,6 +473,15 @@ public class AdaptiveModalManager: NSObject {
     
     self.backgroundDimmingView = UIView();
     self.backgroundVisualEffectView = UIVisualEffectView();
+    
+    if self.modalConfig.dragHandlePosition != .none {
+      let dragHandle = UIView();
+      self.modalDragHandleView = dragHandle;
+      
+      dragHandle.backgroundColor = self.modalConfig.dragHandleColor;
+      dragHandle.alpha = self.modalConfig.dragHandleOpacity;
+      dragHandle.layer.cornerRadius = self.modalConfig.dragHandleCornerRadius;
+    };
   };
   
   func setupGestureHandler() {
@@ -559,6 +570,10 @@ public class AdaptiveModalManager: NSObject {
       modalBGVisualEffectView.backgroundColor = .clear;
       //modalBGVisualEffectView.isUserInteractionEnabled = false;
     };
+    
+    if let modalDragHandleView = self.modalDragHandleView {
+      self.modalWrapperShadowView.addSubview(modalDragHandleView);
+    };
   };
   
   func setupViewConstraints() {
@@ -624,6 +639,70 @@ public class AdaptiveModalManager: NSObject {
       self.modalConstraintTop!,
       self.modalConstraintBottom!,
     ]);
+    
+    scope:
+    if let modalDragHandleView = self.modalDragHandleView {
+      modalDragHandleView.translatesAutoresizingMaskIntoConstraints = false;
+      
+      let dragHandleOffset = self.modalConfig.dragHandleOffset;
+      var constraint: [NSLayoutConstraint] = [];
+      
+      switch self.modalConfig.dragHandlePosition {
+        case .top: constraint.append(
+          modalDragHandleView.topAnchor.constraint(
+            equalTo: modalWrapperShadowView.topAnchor,
+            constant: dragHandleOffset
+          )
+        );
+          
+        case .bottom: constraint.append(
+          modalDragHandleView.bottomAnchor.constraint(
+            equalTo: modalWrapperShadowView.bottomAnchor,
+            constant: -dragHandleOffset
+          )
+        );
+          
+        case .left: constraint.append(
+          modalDragHandleView.leftAnchor.constraint(
+            equalTo: modalWrapperShadowView.leftAnchor,
+            constant: dragHandleOffset
+          )
+        );
+          
+        case .right: constraint.append(
+          modalDragHandleView.rightAnchor.constraint(
+            equalTo: modalWrapperShadowView.rightAnchor,
+            constant: -dragHandleOffset
+          )
+        );
+          
+        default: break;
+      };
+      
+      switch self.modalConfig.dragHandlePosition {
+        case .top, .bottom: constraint.append(
+          modalDragHandleView.centerXAnchor.constraint(
+            equalTo: modalWrapperShadowView.centerXAnchor
+          )
+        );
+          
+        case .left, .right: constraint.append(
+          modalDragHandleView.centerYAnchor.constraint(
+            equalTo: modalWrapperShadowView.centerYAnchor
+          )
+        );
+          
+        default: break;
+      };
+      
+      guard constraint.count > 0 else { break scope };
+      let dragHandleSize = self.modalConfig.dragHandleSizeAdj;
+      
+      NSLayoutConstraint.activate(constraint + [
+        modalDragHandleView.heightAnchor.constraint(equalToConstant: dragHandleSize.height),
+        modalDragHandleView.widthAnchor .constraint(equalToConstant: dragHandleSize.width ),
+      ])
+    };
     
     if let bgDimmingView = self.backgroundDimmingView {
       bgDimmingView.translatesAutoresizingMaskIntoConstraints = false;
@@ -703,6 +782,7 @@ public class AdaptiveModalManager: NSObject {
   
   private func cleanupViews() {
     let viewsToCleanup: [UIView?] = [
+      self.modalDragHandleView,
       self.dummyModalView,
       self.modalWrapperView,
       // self.modalWrapperTransformView,
@@ -725,6 +805,7 @@ public class AdaptiveModalManager: NSObject {
     self.modalView = nil;
     self.targetView = nil;
     
+    self.modalDragHandleView = nil;
     self.modalBackgroundView = nil;
     self.modalBackgroundVisualEffectView = nil;
     self.backgroundDimmingView = nil;
@@ -1747,11 +1828,11 @@ public class AdaptiveModalManager: NSObject {
         self.notifyOnModalWillSnap();
         
       case .cancelled, .ended:
-        guard self.shouldEnableSnapping else {
+        defer {
           self.clearGestureValues();
-          return;
         };
-        
+      
+        guard self.shouldEnableSnapping else { return };
         let gestureFinalPointRaw = self.gestureFinalPoint ?? gesturePoint;
         
         let gestureFinalPoint =
@@ -1760,8 +1841,6 @@ public class AdaptiveModalManager: NSObject {
         self.snapToClosestSnapPoint(forPoint: gestureFinalPoint) {
           self.notifyOnModalDidSnap();
         };
-        
-        self.clearGestureValues();
         
       default:
         break;
