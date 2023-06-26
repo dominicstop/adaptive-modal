@@ -1187,24 +1187,56 @@ public class AdaptiveModalManager: NSObject {
         return self.modalFrame;
       };
       
-      guard !self.shouldLockAxisToModalDirection else {
+      guard !self.shouldLockAxisToModalDirection,
+            let secondaryAxis = self.modalSecondaryAxisValue
+      else {
         return nextRect;
       };
       
-      let secondaryAxis = self.modalSecondaryAxisValue ??
-        nextRect.origin[keyPath: self.modalConfig.secondarySwipeAxis];
+      let secondaryAxisAdj: CGFloat = {
+        let dampingPercentRaw = self.interpolate(
+          inputValue: inputPercentValue,
+          rangeOutputKey: \.secondaryGestureAxisDampingPercent
+        );
+        
+        if dampingPercentRaw == 1 {
+          return nextRect.origin[keyPath: self.modalConfig.secondarySwipeAxis];
+        };
+        
+        if dampingPercentRaw == 0 {
+          return secondaryAxis;
+        };
+        
+        guard let dampingPercentRaw = dampingPercentRaw else {
+          return secondaryAxis;
+        };
+        
+        let dampingPercent =
+          AdaptiveModalUtilities.invertPercent(dampingPercentRaw);
+        
+        let secondaryAxisAdj =  AdaptiveModalUtilities.interpolate(
+          inputValue: dampingPercent,
+          rangeInput: [0, 1],
+          rangeOutput: [
+            nextRect.origin[keyPath: self.modalConfig.secondarySwipeAxis],
+            secondaryAxis
+          ]
+        );
+        
+        return secondaryAxisAdj ?? secondaryAxis;
+      }();
       
       let nextOrigin: CGPoint = {
         if self.modalConfig.snapDirection.isVertical {
           return CGPoint(
-            x: secondaryAxis,
+            x: secondaryAxisAdj,
             y: nextRect.origin.y
           );
         };
         
         return CGPoint(
           x: nextRect.origin.x,
-          y: secondaryAxis
+          y: secondaryAxisAdj
         );
       }();
       

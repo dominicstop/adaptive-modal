@@ -24,12 +24,13 @@ public struct AdaptiveModalInterpolationPoint: Equatable {
   public var percent: CGFloat;
   public var snapPointIndex: Int;
 
-  /// The computed frames of the modal based on the snap points
   public var computedRect: CGRect;
   public var modalPadding: UIEdgeInsets;
   
   // MARK: - Properties - Keyframes
   // ------------------------------
+  
+  public var secondaryGestureAxisDampingPercent: CGFloat;
   
   public var modalRotation: CGFloat;
   
@@ -306,6 +307,10 @@ public extension AdaptiveModalInterpolationPoint {
     
     let isFirstSnapPoint = snapPointIndex == 0;
     let keyframeCurrent = snapPointConfig.animationKeyframe;
+    
+    self.secondaryGestureAxisDampingPercent = keyframeCurrent?.secondaryGestureAxisDampingPercent
+      ?? keyframePrev?.secondaryGestureAxisDampingPercent
+      ?? 1;
   
     self.modalRotation = keyframeCurrent?.modalRotation
       ?? keyframePrev?.modalRotation

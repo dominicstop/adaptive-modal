@@ -9,6 +9,8 @@ import UIKit
 
 public struct AdaptiveModalAnimationConfig {
 
+  public var secondaryGestureAxisDampingPercent: CGFloat?;
+
   public var modalRotation: CGFloat?;
   
   public var modalScaleX: CGFloat?;
@@ -44,6 +46,7 @@ public struct AdaptiveModalAnimationConfig {
   public var backgroundVisualEffectIntensity: CGFloat?;
   
   public init(
+    secondaryGestureAxisDampingPercent: CGFloat? = nil,
      modalRotation: CGFloat? = nil,
      modalScaleX: CGFloat? = nil,
      modalScaleY: CGFloat? = nil,
@@ -69,6 +72,8 @@ public struct AdaptiveModalAnimationConfig {
      backgroundVisualEffectOpacity: CGFloat? = nil,
      backgroundVisualEffectIntensity: CGFloat? = nil
   ) {
+  
+    self.secondaryGestureAxisDampingPercent = secondaryGestureAxisDampingPercent;
   
     self.modalRotation = modalRotation;
     
