@@ -6,7 +6,6 @@
 
 ## WIP
 
-- [ ] `TODO:2023-06-24-23-55-57` - Impl: `AdaptiveModalManager.isSwipeGestureEnabled`.
 - [ ] `TODO:2023-06-23-18-13-34` -  Impl:  `AdaptiveModalManager.shouldLockAxisToModalDirection`.
 - [ ] `TODO:2023-06-25-02-31-12` -  Impl: Modal drag handle.
 
@@ -66,6 +65,7 @@
 
 ## Completed
 
+- [x] `TODO:2023-06-24-23-55-57` - Impl: `AdaptiveModalManager.isSwipeGestureEnabled`.
 - [x] `TODO:2023-06-24-23-46-58` - Impl:  `AdaptiveModalManagers.shouldDismissKeyboardOnGestureSwipe`.
 - [x] `TODO:2023-06-25-05-24-18` - Impl: `isAnimated` arg. for `AdaptiveModalManager.animateTo` and related functions.
 - [x] `TODO:2023-06-23-18-13-12` - Impl:  `AdaptiveModalManager.clearSnapPointOverride`.
