@@ -17,6 +17,13 @@ public struct AdaptiveModalConfig {
     case topToBottom;
     case leftToRight;
     case rightToLeft;
+    
+    public var isVertical: Bool {
+      switch self {
+        case .bottomToTop, .topToBottom: return true;
+        case .leftToRight, .rightToLeft: return false;
+      };
+    };
   };
   
   public enum SnapPercentStrategy {
@@ -91,6 +98,13 @@ public struct AdaptiveModalConfig {
       default: return false;
     };
   };
+  
+  public var secondarySwipeAxis: KeyPath<CGPoint, CGFloat> {
+      switch self.snapDirection {
+        case .bottomToTop, .topToBottom: return \.x;
+        case .leftToRight, .rightToLeft: return \.y;
+      };
+    };
   
   // MARK: - Init
   // ------------

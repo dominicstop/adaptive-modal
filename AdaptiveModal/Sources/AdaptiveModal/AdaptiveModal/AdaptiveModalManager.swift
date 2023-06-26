@@ -22,6 +22,8 @@ public class AdaptiveModalManager: NSObject {
   public var shouldEnableOverShooting = true;
   public var shouldDismissKeyboardOnGestureSwipe = true;
   
+  public var shouldLockAxisToModalDirection = true;
+  
   public var shouldSnapToUnderShootSnapPoint = true;
   public var shouldSnapToOvershootSnapPoint = false;
   
@@ -69,6 +71,8 @@ public class AdaptiveModalManager: NSObject {
       self.dummyModalView.frame;
     }
   };
+  
+  private var modalSecondaryAxisValue: CGFloat? = nil;
   
   private weak var modalConstraintLeft  : NSLayoutConstraint?;
   private weak var modalConstraintRight : NSLayoutConstraint?;
@@ -1174,9 +1178,41 @@ public class AdaptiveModalManager: NSObject {
   ) {
     guard let modalView = self.modalView else { return };
     
-    self.modalFrame = self.interpolateModalRect(
-      forInputPercentValue: inputPercentValue
-    );
+    self.modalFrame = {
+      let nextRect = self.interpolateModalRect(
+        forInputPercentValue: inputPercentValue
+      );
+      
+      guard let nextRect = nextRect else {
+        return self.modalFrame;
+      };
+      
+      guard !self.shouldLockAxisToModalDirection else {
+        return nextRect;
+      };
+      
+      let secondaryAxis = self.modalSecondaryAxisValue ??
+        nextRect.origin[keyPath: self.modalConfig.secondarySwipeAxis];
+      
+      let nextOrigin: CGPoint = {
+        if self.modalConfig.snapDirection.isVertical {
+          return CGPoint(
+            x: secondaryAxis,
+            y: nextRect.origin.y
+          );
+        };
+        
+        return CGPoint(
+          x: nextRect.origin.x,
+          y: secondaryAxis
+        );
+      }();
+      
+      return CGRect(
+        origin: nextOrigin,
+        size: nextRect.size
+      );
+    }();
     
     self.applyInterpolationToModalPadding(
       forInputPercentValue: inputPercentValue
@@ -1370,6 +1406,11 @@ public class AdaptiveModalManager: NSObject {
   private func applyInterpolationToModal(forGesturePoint gesturePoint: CGPoint) {
     let gesturePointWithOffset =
       self.applyGestureOffsets(forGesturePoint: gesturePoint);
+      
+    if !self.shouldLockAxisToModalDirection {
+      self.modalSecondaryAxisValue =
+        gesturePointWithOffset[keyPath: self.modalConfig.secondarySwipeAxis];
+    };
   
     self.applyInterpolationToModal(forPoint: gesturePointWithOffset);
   };
