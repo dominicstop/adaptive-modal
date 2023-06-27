@@ -59,15 +59,16 @@ public struct AdaptiveModalInterpolationPoint: Equatable {
   public var modalBackgroundVisualEffectOpacity: CGFloat;
   public var modalBackgroundVisualEffectIntensity: CGFloat;
   
+  public var modalDragHandleOffset: CGFloat;
+  public var modalDragHandleColor: UIColor;
+  public var modalDragHandleOpacity: CGFloat;
+  
   public var backgroundColor: UIColor;
   public var backgroundOpacity: CGFloat;
   
   public var backgroundVisualEffect: UIVisualEffect?;
   public var backgroundVisualEffectOpacity: CGFloat;
   public var backgroundVisualEffectIntensity: CGFloat;
-  
-  public var modalDragHandleOffset: CGFloat;
-  public var modalDragHandleColor: UIColor;
   
   // MARK: - Computed Properties
   // ---------------------------
@@ -245,12 +246,12 @@ public struct AdaptiveModalInterpolationPoint: Equatable {
       modalView.setNeedsLayout();
     };
     
-    
-    
     block:
     if let modalDragHandleView = modalDragHandleView {
     
       modalDragHandleView.backgroundColor = self.modalDragHandleColor;
+      modalDragHandleView.alpha = self.modalDragHandleOpacity;
+      
       guard let constraint = modalDragHandleOffsetConstraint else { break block };
        
       constraint.constant = {
@@ -425,6 +426,10 @@ public extension AdaptiveModalInterpolationPoint {
     self.modalDragHandleColor = keyframeCurrent?.modalDragHandleColor
       ?? keyframePrev?.modalDragHandleColor
       ?? .systemGray;
+      
+    self.modalDragHandleOpacity = keyframeCurrent?.modalDragHandleOpacity
+      ?? keyframePrev?.modalDragHandleOpacity
+      ?? 0.8;
       
     self.backgroundColor = keyframeCurrent?.backgroundColor
       ?? keyframePrev?.backgroundColor
