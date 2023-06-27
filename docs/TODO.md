@@ -6,7 +6,6 @@
 
 ## Current
 
-- [ ] `TODO:2023-06-26-12-17-15` - Impl: Modal drag handle interpolation opacity.
 - [ ]  `TODO:2023-06-27-21-11-15` - Refactor: Precompute all "modal handle"-related values.
 - [ ] `TODO:2023-06-27-21-01-08` - Impl: Modal content opacity keyframe.
 - [ ] `TODO:2023-06-23-03-17-21` - Impl: Respect `isAnimated` arg. when showing/hiding the modal.
@@ -64,6 +63,8 @@
 <br><br>
 
 ## Completed
+
+- [x] `TODO:2023-06-26-12-17-15` - Impl: Modal drag handle interpolation opacity keyframe.
 
 - [x] `TODO:2023-06-27-21-11-07` - Fix: Keyboard-related bug - Drag becomes unresponsive.
 
