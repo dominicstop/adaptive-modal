@@ -7,31 +7,29 @@
 ## Current
 
 - [ ] `TODO:2023-06-26-12-17-15` - Impl: Modal drag handle interpolation opacity.
+- [ ]  `TODO:2023-06-27-21-11-15` - Refactor: Precompute all "modal handle"-related values.
+- [ ] `TODO:2023-06-27-21-01-08` - Impl: Modal content opacity keyframe.
+- [ ] `TODO:2023-06-23-03-17-21` - Impl: Respect `isAnimated` arg. when showing/hiding the modal.
+- [ ] `TODO:2023-06-23-18-15-59` - Impl: `AdaptiveModal` - Update present/dismiss functions to support accepting "extra animations" block.
+- [ ] `TODO:2023-06-28-04-16-09` - Impl: Update presentation-related delegates/subclass to integrate more with the modal transition + presentation/dismissal.
+- [ ] `TODO:2023-06-28-04-17-14` - s Impl. auto recalculating of views when device is rotated.
+- [ ] `TODO:2023-06-23-18-13-25` - Impl: `AdaptiveModal` - Config - Background interaction - `dismiss`, `passthrough`, `none`.
+- [ ] `TODO:2023-06-23-18-14-24` -  Impl: `AdaptiveModal` - Add support for modal's w/ scrollviews.
 
 <br><br>
 
 ## WIP
 
-- [ ] `TODO:2023-06-27-21-01-08` - Impl: Modal content opacity keyframe.
-- [ ]  `TODO:2023-06-27-21-11-15` - Refactor: Precompute all "modal handle"-related values.
-
-<br>
-
 - [ ] `TODO:2023-06-24-23-15-29`  - Impl:  `AdaptiveModalConfig.keyboardOverrideSnapPoint`.
-- [ ] `TODO:` Impl: Optimization - Conditionally initialize views only when needed.s
+- [ ] `TODO:2023-06-28-04-17-34` Impl: Optimization - Conditionally initialize views only when needed.s
 
-- [ ] `TODO:2023-06-23-18-13-25` - Impl: `AdaptiveModal` - Config - Background interaction - `dismiss`, `passthrough`, `none`.
 - [ ] `TODO:2023-06-23-18-13-58` -  Impl: `AdaptiveModal` - Add support for passing a user-created gesture handler.
-- [ ] `TODO:2023-06-23-18-14-24` -  Impl: `AdaptiveModal` - Add support for modal's w/ scrollviews.
-- [ ] `TODO:2023-06-23-18-14-53` -  Impl: `AdaptiveModal` - Add support for creating a drag handlers.
 - [ ] `TODO:2023-06-23-18-15-46` -  Impl: `AdaptiveModal` - Add support for animating the home gesture bar + status bar.
 - [ ] `TODO:2023-06-23-18-15-46` -  Impl: `AdaptiveModal` - Adaptive config based on rules (i.e. the current size class, device type, device orientation, window size, etc).
-- [ ] `TODO:2023-06-23-18-15-59` -  Impl: `AdaptiveModal` - Update present/dismiss/snap functions to support accepting "extra animations" block.
 - [ ] ` TODO:2023-06-23-18-16-28` - Impl: `AdaptiveModal` -Add support for "in-between" snap points.
 - [ ] `TODO:2023-06-23-18-17-01` - Impl: `AdaptiveModal` - Expose root view as computed property.
 - [ ] `TODO:2023-06-23-18-17-09` - Impl: `RNILayout` - `x` and `y` offsets.
 - [ ] `TODO:2023-06-23-18-17-09` - Impl: `RNILayout` - raw rect layout value.
-- [ ] `TODO:2023-06-23-03-17-21` - Impl: Respect `isAnimated` arg. when showing/hiding the modal.
 - [ ] `TODO:2023-06-23-18-17-19` - Impl: Modal Events Delegate - Will/Did show/hide modal events.
 - [ ] `TODO:2023-06-23-18-17-27` - Impl: Modal Events Delegate - Drag begin/end event.
   * Send a ref of the animator so the user can attach custom animators.
@@ -42,7 +40,8 @@
 
 <br><br>
 
-- [ ] `TODO:2023-06-26-08-30-23` - Fix: Abrupt animation when  `AdaptiveModalManagers.shouldDismissKeyboardOnGestureSwipe` is enabled.
+## Docs-Related
+
 - [ ] `TODO:2023-06-26-08-30-23` - Docs: Create `AdaptiveModalExample00` - Basic usage - Presenting a simple modal with one snap point.
 - [ ] `TODO:` - Docs: Create `AdaptiveModalExample00` - Basic usage - Modal with one snap point + undershoot and overshoot preset.
 - [ ] `TODO:` - Docs: Create `AdaptiveModalExample00` - Basic usage - Modal with one snap point + custom undershoot and overshoot config.
