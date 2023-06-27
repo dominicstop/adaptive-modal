@@ -223,6 +223,8 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
               modalBackgroundOpacity: 0.87,
               modalBackgroundVisualEffect: UIBlurEffect(style: .regular),
               modalBackgroundVisualEffectIntensity: 1,
+              modalDragHandleOffset: -14,
+              modalDragHandleColor: .systemBackground,
               backgroundVisualEffect: UIBlurEffect(style: .regular),
               backgroundVisualEffectIntensity: 0.04
             )
@@ -245,6 +247,8 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
               modalCornerRadius: 15,
               modalBackgroundOpacity: 0.9,
               modalBackgroundVisualEffectIntensity: 0.5,
+              modalDragHandleOffset: 6,
+              modalDragHandleColor: .systemGray,
               backgroundVisualEffectIntensity: 0.5
             )
           ),
@@ -256,13 +260,13 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
             modalScaleX: 0.5,
             modalScaleY: 0.5,
             modalCornerRadius: 5,
+            modalDragHandleOffset: -14,
             backgroundVisualEffectIntensity: 0
           )
         ),
         overshootSnapPoint: AdaptiveModalSnapPointPreset(
           layoutPreset: .offscreenRight
-        ),
-        dragHandlePosition: .none
+        )
       );
       
       case .demo04: return AdaptiveModalConfig(
@@ -525,6 +529,7 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
               modalBackgroundOpacity: 0,
               modalBackgroundVisualEffectOpacity: 0,
               modalBackgroundVisualEffectIntensity: 0,
+              modalDragHandleOpacity: 0,
               backgroundColor: .white,
               backgroundOpacity: 0.75,
               backgroundVisualEffectIntensity: 1
@@ -692,6 +697,8 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
               modalCornerRadius: 15,
               modalBackgroundOpacity: 0.9,
               modalBackgroundVisualEffectIntensity: 0.6,
+              modalDragHandleOffset: 6,
+              modalDragHandleColor: .systemGray,
               backgroundVisualEffectIntensity: 0.4
             )
           ),
