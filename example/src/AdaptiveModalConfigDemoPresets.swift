@@ -670,6 +670,8 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
               modalBackgroundOpacity: 0.87,
               modalBackgroundVisualEffect: UIBlurEffect(style: .regular),
               modalBackgroundVisualEffectIntensity: 1,
+              modalDragHandleOffset: -14,
+              modalDragHandleColor: .systemBackground,
               backgroundVisualEffect: UIBlurEffect(style: .regular),
               backgroundVisualEffectIntensity: 0.04
             )
@@ -709,6 +711,8 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
               modalCornerRadius: 20,
               modalBackgroundOpacity: 0.87,
               modalBackgroundVisualEffectIntensity: 0.4,
+              modalDragHandleOffset: 6,
+              modalDragHandleColor: .systemGray,
               backgroundVisualEffectIntensity: 0.9
             )
           ),
@@ -720,13 +724,13 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
             modalScaleX: 0.5,
             modalScaleY: 0.5,
             modalCornerRadius: 5,
+            modalDragHandleOffset: -14,
             backgroundVisualEffectIntensity: 0
           )
         ),
         overshootSnapPoint: AdaptiveModalSnapPointPreset(
           layoutPreset: .fitScreenHorizontally
-        ),
-        dragHandlePosition: .none
+        )
       );
       
       case .demo11: return AdaptiveModalConfig(
