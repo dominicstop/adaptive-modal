@@ -6,7 +6,6 @@
 
 ## WIP
 
-- [ ] `TODO:2023-06-26-12-16-58` - Impl: Modal drag handle interpolation color.
 - [ ] `TODO:2023-06-26-12-17-15` - Impl: Modal drag handle interpolation opacity.
 
 <br>
@@ -60,6 +59,7 @@
 
 ## Completed
 
+- [x] `TODO:2023-06-26-12-16-58` - Impl: Modal drag handle interpolation color keyframe.
 - [x] `TODO:2023-06-26-12-16-49` - Impl: Modal drag handle interpolation offset keyframe.
 - [x] `TODO:2023-06-25-02-31-12` -  Impl: Modal drag handle + modal drag handle config.
 - [x] `TODO:2023-06-26-12-16-31` - Fix: `AdaptiveModalManagers.shouldDismissKeyboardOnGestureSwipe` abrupt animation.
