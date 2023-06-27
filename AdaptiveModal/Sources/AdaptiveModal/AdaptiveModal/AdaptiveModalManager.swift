@@ -479,7 +479,7 @@ public class AdaptiveModalManager: NSObject {
   func setupViewControllers() {
     guard let modalVC = self.modalViewController else { return };
   
-    modalVC.modalPresentationStyle = .overCurrentContext;
+    modalVC.modalPresentationStyle = .custom;
     modalVC.transitioningDelegate = self;
   };
   

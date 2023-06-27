@@ -34,5 +34,12 @@ class AdaptiveModalPresentationController: UIPresentationController {
     to size: CGSize,
     with coordinator: UIViewControllerTransitionCoordinator
   ) {
-  }
+  };
+  
+  override func containerViewWillLayoutSubviews(){
+  };
+  
+  override func  containerViewDidLayoutSubviews(){
+    self.modalManager.notifyDidLayoutSubviews();
+  };
 };
