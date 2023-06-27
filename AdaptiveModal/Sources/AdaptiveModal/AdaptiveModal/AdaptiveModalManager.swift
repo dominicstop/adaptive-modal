@@ -1273,13 +1273,16 @@ public class AdaptiveModalManager: NSObject {
           let modalConstraintLeft   = self.modalConstraintLeft  ,
           let modalConstraintRight  = self.modalConstraintRight ,
           let modalConstraintTop    = self.modalConstraintTop   ,
-          let modalConstraintBottom = self.modalConstraintBottom,
-          
-          modalConstraintLeft  .constant != nextPaddingLeft  ,
-          modalConstraintRight .constant != nextPaddingRight ,
-          modalConstraintTop   .constant != nextPaddingTop   ,
-          modalConstraintBottom.constant != nextPaddingBottom
+          let modalConstraintBottom = self.modalConstraintBottom
     else { return };
+    
+    let didChange =
+         modalConstraintLeft  .constant != nextPaddingLeft
+      || modalConstraintRight .constant != nextPaddingRight
+      || modalConstraintTop   .constant != nextPaddingTop
+      || modalConstraintBottom.constant != nextPaddingBottom;
+      
+    guard didChange else { return };
     
     modalConstraintLeft  .constant = nextPaddingLeft;
     modalConstraintRight .constant = nextPaddingRight;
@@ -1974,16 +1977,6 @@ public class AdaptiveModalManager: NSObject {
     self.isKeyboardVisible = true;
     self.layoutKeyboardValues = keyboardValues;
     self.computeSnapPoints();
-    
-    print(
-      "onKeyboardDidShow",
-      "\n - frameBegin:", keyboardValues.frameBegin,
-      "\n - frameEnd:", keyboardValues.frameEnd,
-      "\n - animationDuration:", keyboardValues.animationDuration,
-      "\n - animationCurve:", keyboardValues.animationCurve,
-      "\n - notification:", notification,
-      "\n"
-    );
   };
 
   @objc private func onKeyboardWillHide(notification: NSNotification) {
