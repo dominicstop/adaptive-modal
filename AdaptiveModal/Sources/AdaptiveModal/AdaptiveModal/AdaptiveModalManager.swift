@@ -494,7 +494,6 @@ public class AdaptiveModalManager: NSObject {
       let dragHandle = UIView();
       self.modalDragHandleView = dragHandle;
       
-      dragHandle.backgroundColor = self.modalConfig.dragHandleColor;
       dragHandle.alpha = self.modalConfig.dragHandleOpacity;
       dragHandle.layer.cornerRadius = self.modalConfig.dragHandleCornerRadius;
     };

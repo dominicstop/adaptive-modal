@@ -55,7 +55,6 @@ public struct AdaptiveModalConfig {
   
   public let dragHandlePosition: DragHandlePosition;
   public let dragHandleSize: CGSize;
-  public let dragHandleColor: UIColor;
   public let dragHandleOpacity: CGFloat;
   public let dragHandleCornerRadius: CGFloat;
   
@@ -144,7 +143,6 @@ public struct AdaptiveModalConfig {
     overshootSnapPoint: AdaptiveModalSnapPointPreset? = nil,
     dragHandlePosition: DragHandlePosition = .automatic,
     dragHandleSize: CGSize? = nil,
-    dragHandleColor: UIColor? = nil,
     dragHandleOpacity: CGFloat? = nil,
     dragHandleCornerRadius: CGFloat? = nil
   ) {
@@ -178,10 +176,7 @@ public struct AdaptiveModalConfig {
     }();
     
     self.dragHandleSize = dragHandleSize ?? CGSize(width: 40, height: 6);
-    
-    self.dragHandleColor   = dragHandleColor   ?? .systemGray;
     self.dragHandleOpacity = dragHandleOpacity ?? 0.8;
-    
     self.dragHandleCornerRadius = dragHandleCornerRadius ?? 3;
   };
   
