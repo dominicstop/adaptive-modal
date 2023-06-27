@@ -4,9 +4,21 @@
 
 <br><br>
 
-## WIP
+## Current
 
 - [ ] `TODO:2023-06-26-12-17-15` - Impl: Modal drag handle interpolation opacity.
+- [ ] `TODO:2023-06-27-21-11-07` - Fix: Keyboard-related bug - Drag becomes unresponsive.
+	*  Persists even after dismissal + reset.
+	* Can be reproduced by dismissing a modal while the keyboard is visible.
+	* Fixes itself when the keyboard becomes visible again is dismissed via dragging.
+	* Some state related to the keyboard might not be reset, triggering the gesture to cancel prematurely,
+
+<br><br>
+
+## WIP
+
+- [ ] `TODO:2023-06-27-21-01-08` - Impl: Modal content opacity keyframe.
+- [ ]  `TODO:2023-06-27-21-11-15` - Refactor: Precompute all "modal handle"-related values.
 
 <br>
 
