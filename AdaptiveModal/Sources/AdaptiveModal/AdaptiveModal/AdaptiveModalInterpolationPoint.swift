@@ -67,6 +67,7 @@ public struct AdaptiveModalInterpolationPoint: Equatable {
   public var backgroundVisualEffectIntensity: CGFloat;
   
   public var modalDragHandleOffset: CGFloat;
+  public var modalDragHandleColor: UIColor;
   
   // MARK: - Computed Properties
   // ---------------------------
@@ -244,8 +245,13 @@ public struct AdaptiveModalInterpolationPoint: Equatable {
       modalView.setNeedsLayout();
     };
     
-    if let modalDragHandleView = modalDragHandleView,
-       let constraint = modalDragHandleConstraint {
+    
+    
+    block:
+    if let modalDragHandleView = modalDragHandleView {
+    
+      modalDragHandleView.backgroundColor = self.modalDragHandleColor;
+      guard let constraint = modalDragHandleConstraint else { break block };
        
       constraint.constant = {
         switch modalConfig.dragHandlePosition {
@@ -412,6 +418,14 @@ public extension AdaptiveModalInterpolationPoint {
       ?? keyframePrev?.modalBackgroundVisualEffectIntensity
       ?? (isFirstSnapPoint ? 0 : 1);
       
+    self.modalDragHandleOffset = keyframeCurrent?.modalDragHandleOffset
+      ?? keyframePrev?.modalDragHandleOffset
+      ?? 8;
+      
+    self.modalDragHandleColor = keyframeCurrent?.modalDragHandleColor
+      ?? keyframePrev?.modalDragHandleColor
+      ?? .systemGray;
+      
     self.backgroundColor = keyframeCurrent?.backgroundColor
       ?? keyframePrev?.backgroundColor
       ?? .black;
@@ -430,10 +444,6 @@ public extension AdaptiveModalInterpolationPoint {
     self.backgroundVisualEffectIntensity = keyframeCurrent?.backgroundVisualEffectIntensity
       ?? keyframePrev?.backgroundVisualEffectIntensity
       ?? (isFirstSnapPoint ? 0 : 1);
-      
-    self.modalDragHandleOffset = keyframeCurrent?.modalDragHandleOffset
-      ?? keyframePrev?.modalDragHandleOffset
-      ?? 8;
   };
 };
 

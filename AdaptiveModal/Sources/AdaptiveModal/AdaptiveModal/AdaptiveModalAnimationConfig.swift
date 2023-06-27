@@ -39,6 +39,7 @@ public struct AdaptiveModalAnimationConfig {
   public var modalBackgroundVisualEffectIntensity: CGFloat?;
   
   public var modalDragHandleOffset: CGFloat?;
+  public var modalDragHandleColor: UIColor?;
   
   public var backgroundColor: UIColor?;
   public var backgroundOpacity: CGFloat?;
@@ -69,6 +70,7 @@ public struct AdaptiveModalAnimationConfig {
      modalBackgroundVisualEffectOpacity: CGFloat? = nil,
      modalBackgroundVisualEffectIntensity: CGFloat? = nil,
      modalDragHandleOffset: CGFloat? = nil,
+     modalDragHandleColor: UIColor? = nil,
      backgroundColor: UIColor? = nil,
      backgroundOpacity: CGFloat? = nil,
      backgroundVisualEffect: UIVisualEffect? = nil,
@@ -106,6 +108,7 @@ public struct AdaptiveModalAnimationConfig {
     self.modalBackgroundVisualEffectIntensity = modalBackgroundVisualEffectIntensity;
     
     self.modalDragHandleOffset = modalDragHandleOffset
+    self.modalDragHandleColor = modalDragHandleColor;
     
     self.backgroundColor = backgroundColor;
     self.backgroundOpacity = backgroundOpacity;

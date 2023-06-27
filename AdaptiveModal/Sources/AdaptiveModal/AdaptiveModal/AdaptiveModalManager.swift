@@ -1530,6 +1530,15 @@ public class AdaptiveModalManager: NSObject {
     );
     
     AdaptiveModalUtilities.unwrapAndSetProperty(
+      forObject: self.modalDragHandleView,
+      forPropertyKey: \.backgroundColor,
+      withValue:  self.interpolateColor(
+        inputValue: inputPercentValue,
+        rangeOutputKey: \.modalDragHandleColor
+      )
+    );
+    
+    AdaptiveModalUtilities.unwrapAndSetProperty(
       forObject: self.backgroundDimmingView,
       forPropertyKey: \.backgroundColor,
       withValue:  self.interpolateColor(
