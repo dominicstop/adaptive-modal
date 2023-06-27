@@ -166,7 +166,7 @@ public struct AdaptiveModalInterpolationPoint: Equatable {
     toModalConstraintTop modalConstraintTop: NSLayoutConstraint?,
     toModalConstraintBottom modalConstraintBottom: NSLayoutConstraint?,
     toModalDragHandleView modalDragHandleView: UIView?,
-    toModalDragHandleConstraint modalDragHandleConstraint: NSLayoutConstraint?
+    toModalDragHandleConstraint modalDragHandleOffsetConstraint: NSLayoutConstraint?
   ){
     modalView.alpha = self.modalOpacity;
     modalWrapperView.frame = self.computedRect;
@@ -251,7 +251,7 @@ public struct AdaptiveModalInterpolationPoint: Equatable {
     if let modalDragHandleView = modalDragHandleView {
     
       modalDragHandleView.backgroundColor = self.modalDragHandleColor;
-      guard let constraint = modalDragHandleConstraint else { break block };
+      guard let constraint = modalDragHandleOffsetConstraint else { break block };
        
       constraint.constant = {
         switch modalConfig.dragHandlePosition {

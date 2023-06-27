@@ -94,7 +94,7 @@ public class AdaptiveModalManager: NSObject {
   private weak var modalConstraintTop   : NSLayoutConstraint?;
   private weak var modalConstraintBottom: NSLayoutConstraint?;
   
-  private weak var modalDragHandleConstraint: NSLayoutConstraint?;
+  private weak var modalDragHandleOffsetConstraint: NSLayoutConstraint?;
   
   private var layoutKeyboardValues: RNILayoutKeyboardValues?;
   
@@ -713,7 +713,7 @@ public class AdaptiveModalManager: NSObject {
         default: break;
       };
       
-      self.modalDragHandleConstraint = constraint.first;
+      self.modalDragHandleOffsetConstraint = constraint.first;
       
       switch self.modalConfig.dragHandlePosition {
         case .top, .bottom: constraint.append(
@@ -1306,7 +1306,7 @@ public class AdaptiveModalManager: NSObject {
     );
 
     guard let nextDragHandleOffset = nextDragHandleOffset,
-          let modalDragHandleConstraint = self.modalDragHandleConstraint
+          let modalDragHandleOffsetConstraint = self.modalDragHandleOffsetConstraint
     else { return };
     
     let nextDragHandleOffsetAdj: CGFloat = {
@@ -1321,10 +1321,10 @@ public class AdaptiveModalManager: NSObject {
       };
     }();
     
-    guard modalDragHandleConstraint.constant != nextDragHandleOffsetAdj
+    guard modalDragHandleOffsetConstraint.constant != nextDragHandleOffsetAdj
     else { return };
     
-    modalDragHandleConstraint.constant = nextDragHandleOffsetAdj;
+    modalDragHandleOffsetConstraint.constant = nextDragHandleOffsetAdj;
     
     modalDragHandleView.updateConstraints();
     modalDragHandleView.setNeedsLayout();
@@ -1830,7 +1830,7 @@ public class AdaptiveModalManager: NSObject {
         toModalConstraintTop: self.modalConstraintTop,
         toModalConstraintBottom: self.modalConstraintBottom,
         toModalDragHandleView: self.modalDragHandleView,
-        toModalDragHandleConstraint: self.modalDragHandleConstraint
+        toModalDragHandleConstraint: self.modalDragHandleOffsetConstraint
       );
     };
     
