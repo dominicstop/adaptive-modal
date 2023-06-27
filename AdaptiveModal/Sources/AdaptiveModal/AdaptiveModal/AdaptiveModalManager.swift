@@ -672,7 +672,14 @@ public class AdaptiveModalManager: NSObject {
     if let modalDragHandleView = self.modalDragHandleView {
       modalDragHandleView.translatesAutoresizingMaskIntoConstraints = false;
       
-      let dragHandleOffset = self.modalConfig.dragHandleOffset;
+      let dragHandleOffset: CGFloat = {
+        guard let interpolationSteps = self.interpolationSteps,
+              let undershoot = interpolationSteps.first
+        else { return 0 };
+        
+        return undershoot.modalDragHandleOffset;
+      }();
+      
       var constraint: [NSLayoutConstraint] = [];
       
       switch self.modalConfig.dragHandlePosition {
