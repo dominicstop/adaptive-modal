@@ -400,8 +400,8 @@ public class AdaptiveModalManager: NSObject {
   // MARK: -  Properties
   // -------------------
   
-  private var didTriggerSetup = false;
-  public var presentationState: PresentationState = .none;
+  private(set) var didTriggerSetup = false;
+  internal(set) public var presentationState: PresentationState = .none;
   
   public weak var eventDelegate: AdaptiveModalEventNotifiable?;
 
@@ -2264,20 +2264,33 @@ public class AdaptiveModalManager: NSObject {
     );
   };
   
-  func showModal(completion: (() -> Void)? = nil) {
+  func showModal(
+    isAnimated: Bool = true,
+    completion: (() -> Void)? = nil
+  ) {
     let nextIndex = self.modalConfig.initialSnapPointIndex;
-    self.snapTo(interpolationIndex: nextIndex, completion: completion);
+    
+    self.snapTo(
+      interpolationIndex: nextIndex,
+      isAnimated: isAnimated,
+      completion: completion
+    );
   };
   
   func hideModal(
     useInBetweenSnapPoints: Bool = false,
+    isAnimated: Bool = true,
     completion: (() -> Void)? = nil
   ){
   
     let nextIndex = 0;
     
     if useInBetweenSnapPoints {
-      self.snapTo(interpolationIndex: nextIndex, completion: completion);
+      self.snapTo(
+        interpolationIndex: nextIndex,
+        isAnimated: isAnimated,
+        completion: completion
+      );
     
     } else {
       self.computeSnapPoints();
@@ -2303,6 +2316,7 @@ public class AdaptiveModalManager: NSObject {
       self.snapTo(
         interpolationIndex: nextIndex,
         interpolationPoint: undershootInterpolationPoint,
+        isAnimated: isAnimated,
         completion: completion
       );
     };
