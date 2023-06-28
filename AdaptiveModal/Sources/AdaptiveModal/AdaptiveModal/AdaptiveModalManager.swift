@@ -2406,6 +2406,18 @@ public class AdaptiveModalManager: NSObject {
     );
   };
   
+  public func dismissModal(
+    animated: Bool = true,
+    completion: (() -> Void)? = nil
+  ) {
+    guard let modalVC = self.modalViewController else { return };
+    
+    modalVC.dismiss(
+      animated: animated,
+      completion: completion
+    );
+  };
+  
   public func snapToClosestSnapPoint(
     isAnimated: Bool = true,
     extraAnimation: (() -> Void)? = nil,
