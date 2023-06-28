@@ -67,6 +67,7 @@ public class AdaptiveModalManager: NSObject {
   public var modalDragHandleView: UIView?;
   
   public private(set) var prevModalFrame: CGRect = .zero;
+  public private(set) var prevTargetFrame: CGRect = .zero;
   
   public private(set) var modalBackgroundView: UIView?;
   public private(set) var modalBackgroundVisualEffectView: UIVisualEffectView?;
@@ -845,18 +846,21 @@ public class AdaptiveModalManager: NSObject {
     self.modalView = nil;
     self.targetView = nil;
     
+    self.prevModalFrame = .zero;
+    self.prevTargetFrame = .zero;
+    
     self.modalDragHandleView = nil;
     self.modalBackgroundView = nil;
     self.modalBackgroundVisualEffectView = nil;
     self.backgroundDimmingView = nil;
     self.backgroundVisualEffectView = nil;
     
-    self.didTriggerSetup = false;
-    
     self.modalConstraintLeft = nil;
     self.modalConstraintRight = nil;
     self.modalConstraintTop = nil;
     self.modalConstraintBottom = nil;
+    
+    self.didTriggerSetup = false;
   };
   
   private func cleanupSnapPointOverride(){
@@ -2380,6 +2384,14 @@ public class AdaptiveModalManager: NSObject {
   };
   
   public func notifyDidLayoutSubviews() {
+    guard let targetView = self.targetView else { return };
+    
+    let prevTargetFrame = self.prevTargetFrame;
+    let nextTargetFrame = targetView.frame;
+    
+    guard prevTargetFrame != nextTargetFrame else { return };
+    self.prevTargetFrame = nextTargetFrame;
+  
     self.computeSnapPoints();
     self.updateModal();
   };
