@@ -23,10 +23,8 @@ public struct AdaptiveModalRangePropertyAnimator {
   
   private weak var component: AnyObject?;
   
-  private var range: [AdaptiveModalInterpolationPoint] {[
-    self.interpolationRangeStart,
-    self.interpolationRangeEnd
-  ]};
+  private var rangeInput : [CGFloat]!;
+  private var rangeOutput: [CGFloat]!;
   
   // MARK: - Init
   // ------------
@@ -58,10 +56,32 @@ public struct AdaptiveModalRangePropertyAnimator {
     };
     
     self.animator = animator;
+    self.computeRanges();
   };
   
   // MARK: - Functions
   // -----------------
+  
+  private mutating func computeRanges(){
+    let range = [
+      self.interpolationRangeStart,
+      self.interpolationRangeEnd
+    ];
+    
+    self.rangeOutput = {
+      if let interpolationOutputKey = self.interpolationOutputKey {
+        return range.map {
+          $0[keyPath: interpolationOutputKey]
+        }
+      };
+      
+      return [0, 1];
+    }();
+    
+    self.rangeInput = range.map {
+      $0.percent
+    };
+  };
   
   public func didRangeChange(
     interpolationRangeStart: AdaptiveModalInterpolationPoint,
@@ -78,39 +98,26 @@ public struct AdaptiveModalRangePropertyAnimator {
     interpolationRangeStart: AdaptiveModalInterpolationPoint,
     interpolationRangeEnd: AdaptiveModalInterpolationPoint
   ){
-    let didChange =
-      interpolationRangeStart != self.interpolationRangeStart ||
-      interpolationRangeEnd   != self.interpolationRangeEnd;
-  
-    guard didChange else { return };
-    
     self.interpolationRangeStart = interpolationRangeStart;
     self.interpolationRangeEnd = interpolationRangeEnd;
+    
+    self.computeRanges();
   };
   
   public func setFractionComplete(forPercent percent: CGFloat) {
+    guard self.animator.fractionComplete != percent else { return };
     self.animator.fractionComplete = percent;
   };
   
   public func setFractionComplete(
     forInputPercentValue inputPercentValue: CGFloat
   ) {
-    let rangeOutput: [CGFloat] = {
-      if let interpolationOutputKey = self.interpolationOutputKey {
-        return range.map {
-          $0[keyPath: interpolationOutputKey]
-        }
-      };
-      
-      return [0, 1];
-    }();
+    
   
     let percent = AdaptiveModalUtilities.interpolate(
       inputValue: inputPercentValue,
-      rangeInput: range.map {
-        $0.percent
-      },
-      rangeOutput: rangeOutput
+      rangeInput: self.rangeInput,
+      rangeOutput: self.rangeOutput
     );
     
     guard let percent = percent else { return };
