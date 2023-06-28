@@ -20,7 +20,7 @@ public class AdaptiveModalManager: NSObject {
   
   public var shouldEnableSnapping = true;
   public var shouldEnableOverShooting = true;
-  public var shouldDismissKeyboardOnGestureSwipe = true;
+  public var shouldDismissKeyboardOnGestureSwipe = false;
   
   public var shouldLockAxisToModalDirection = true;
   
@@ -2222,10 +2222,11 @@ public class AdaptiveModalManager: NSObject {
   };
   
   private func notifyOnModalWillHide(){
-    // wip
-    //UIView.animate(withDuration: 1){
-    //  self.targetViewController?.view.transform = .identity;
-    //};
+    if self.isKeyboardVisible,
+       let modalView = self.modalView {
+       
+      modalView.endEditing(true);
+    };
   };
   
   private func notifyOnModalDidHide(){
