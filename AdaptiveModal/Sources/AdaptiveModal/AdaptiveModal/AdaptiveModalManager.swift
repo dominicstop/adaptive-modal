@@ -1164,7 +1164,16 @@ public class AdaptiveModalManager: NSObject {
         interpolationRangeEnd: interpolationRange.rangeEnd
       );
     
-      if let animator = animator, !animatorRangeDidChange! {
+      if var animator = animator,
+         let animatorRangeDidChange = animatorRangeDidChange {
+         
+        if animatorRangeDidChange {
+          animator.update(
+            interpolationRangeStart: interpolationRange.rangeStart,
+            interpolationRangeEnd: interpolationRange.rangeEnd
+          );
+        };
+         
         return animator;
       };
       
@@ -1205,12 +1214,21 @@ public class AdaptiveModalManager: NSObject {
       guard let interpolationRange = interpolationRange else { return nil };
       let animator = self.backgroundVisualEffectAnimator;
       
-      let animatorDidRangeChange = animator?.didRangeChange(
+      let animatorRangeDidChange = animator?.didRangeChange(
         interpolationRangeStart: interpolationRange.rangeStart,
         interpolationRangeEnd: interpolationRange.rangeEnd
       );
     
-      if let animator = animator, !animatorDidRangeChange! {
+      if var animator = animator,
+         let animatorRangeDidChange = animatorRangeDidChange {
+         
+        if animatorRangeDidChange {
+          animator.update(
+            interpolationRangeStart: interpolationRange.rangeStart,
+            interpolationRangeEnd: interpolationRange.rangeEnd
+          );
+        };
+         
         return animator;
       };
       
@@ -1326,6 +1344,18 @@ public class AdaptiveModalManager: NSObject {
   
   // MARK: - Functions - Apply Interpolators
   // ----------------------------------------
+  
+  private func applyInterpolationToRangeAnimators(
+    forInputPercentValue inputPercentValue: CGFloat
+  ) {
+    self.applyInterpolationToBackgroundVisualEffect(
+      forInputPercentValue: inputPercentValue
+    );
+    
+    self.applyInterpolationToModalBackgroundVisualEffect(
+      forInputPercentValue: inputPercentValue
+    );
+  };
   
   private func applyInterpolationToModal(
     forInputPercentValue inputPercentValue: CGFloat
@@ -1580,11 +1610,7 @@ public class AdaptiveModalManager: NSObject {
       )
     );
     
-    self.applyInterpolationToBackgroundVisualEffect(
-      forInputPercentValue: inputPercentValue
-    );
-    
-    self.applyInterpolationToModalBackgroundVisualEffect(
+    self.applyInterpolationToRangeAnimators(
       forInputPercentValue: inputPercentValue
     );
   };
@@ -1736,9 +1762,9 @@ public class AdaptiveModalManager: NSObject {
       self.applyInterpolationToModal(forGesturePoint: gesturePoint);
     
     } else if self.currentInterpolationStep.computedRect != self.modalFrame {
-      self.applyInterpolationToModal(
-        forInputPercentValue: currentInterpolationStep.percent
-      );
+      let percent = currentInterpolationStep.percent;
+      
+      self.applyInterpolationToModal(forInputPercentValue: percent);
     };
   };
   
@@ -2088,11 +2114,7 @@ public class AdaptiveModalManager: NSObject {
       ? AdaptiveModalUtilities.invertPercent(percent)
       : percent;
     
-    self.applyInterpolationToBackgroundVisualEffect(
-      forInputPercentValue: percentAdj
-    );
-    
-    self.applyInterpolationToModalBackgroundVisualEffect(
+    self.applyInterpolationToRangeAnimators(
       forInputPercentValue: percentAdj
     );
     
