@@ -8,7 +8,6 @@
 
 - [ ]  `TODO:2023-06-27-21-11-15` - Refactor: Precompute all "modal handle"-related values.
 - [ ] `TODO:2023-06-27-21-01-08` - Impl: Modal content opacity keyframe.
-- [ ] `TODO:2023-06-23-03-17-21` - Impl: Respect `isAnimated` arg. when showing/hiding the modal.
 - [ ] `TODO:2023-06-23-18-15-59` - Impl: `AdaptiveModal` - Update present/dismiss functions to support accepting "extra animations" block.
 - [ ] `TODO:2023-06-28-04-16-09` - Impl: Update presentation-related delegates/subclass to integrate more with the modal transition + presentation/dismissal.
 - [ ] `TODO:2023-06-23-18-13-25` - Impl: `AdaptiveModal` - Config - Background interaction - `dismiss`, `passthrough`, `none`.
@@ -62,6 +61,8 @@
 <br><br>
 
 ## Completed
+
+- [x] `TODO:2023-06-23-03-17-21` - Impl: Respect `isAnimated` arg. when showing/hiding the modal.
 
 - [x] `TODO:2023-06-28-04-17-14` -  Impl. auto recalculating of views when device is rotated.
 
