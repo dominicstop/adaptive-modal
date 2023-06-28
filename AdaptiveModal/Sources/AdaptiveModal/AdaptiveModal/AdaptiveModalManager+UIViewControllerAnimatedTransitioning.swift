@@ -30,16 +30,20 @@ extension AdaptiveModalManager: UIViewControllerAnimatedTransitioning {
         self.prepareForPresentation();
         
         self.showModal(
-          isAnimated: transitionContext.isAnimated
+          isAnimated: transitionContext.isAnimated,
+          extraAnimation: self.extraAnimationBlockPresent
         ) {
           transitionContext.completeTransition(true);
+          self.extraAnimationBlockPresent = nil;
         };
       
       case .dismissing:
         self.hideModal(
-          isAnimated: transitionContext.isAnimated
+          isAnimated: transitionContext.isAnimated,
+          extraAnimation: self.extraAnimationBlockDismiss
         ){
           transitionContext.completeTransition(true);
+          self.extraAnimationBlockDismiss = nil;
         };
         
       case .none:

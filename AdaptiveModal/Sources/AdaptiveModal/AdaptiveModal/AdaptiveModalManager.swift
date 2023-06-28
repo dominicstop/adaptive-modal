@@ -268,6 +268,9 @@ public class AdaptiveModalManager: NSObject {
   // ---------------------------------------
   
   private var modalAnimator: UIViewPropertyAnimator?;
+  
+  internal var extraAnimationBlockPresent: (() -> Void)?;
+  internal var extraAnimationBlockDismiss: (() -> Void)?;
 
   private var backgroundVisualEffectAnimator: AdaptiveModalRangePropertyAnimator?;
   private var modalBackgroundVisualEffectAnimator: AdaptiveModalRangePropertyAnimator?;
@@ -2266,6 +2269,7 @@ public class AdaptiveModalManager: NSObject {
   
   func showModal(
     isAnimated: Bool = true,
+    extraAnimation: (() -> Void)? = nil,
     completion: (() -> Void)? = nil
   ) {
     let nextIndex = self.modalConfig.initialSnapPointIndex;
@@ -2273,6 +2277,7 @@ public class AdaptiveModalManager: NSObject {
     self.snapTo(
       interpolationIndex: nextIndex,
       isAnimated: isAnimated,
+      extraAnimation: extraAnimation,
       completion: completion
     );
   };
@@ -2280,6 +2285,7 @@ public class AdaptiveModalManager: NSObject {
   func hideModal(
     useInBetweenSnapPoints: Bool = false,
     isAnimated: Bool = true,
+    extraAnimation: (() -> Void)? = nil,
     completion: (() -> Void)? = nil
   ){
   
@@ -2289,6 +2295,7 @@ public class AdaptiveModalManager: NSObject {
       self.snapTo(
         interpolationIndex: nextIndex,
         isAnimated: isAnimated,
+        extraAnimation: extraAnimation,
         completion: completion
       );
     
@@ -2317,6 +2324,7 @@ public class AdaptiveModalManager: NSObject {
         interpolationIndex: nextIndex,
         interpolationPoint: undershootInterpolationPoint,
         isAnimated: isAnimated,
+        extraAnimation: extraAnimation,
         completion: completion
       );
     };
@@ -2391,9 +2399,13 @@ public class AdaptiveModalManager: NSObject {
   public func presentModal(
     viewControllerToPresent modalVC: UIViewController,
     presentingViewController targetVC: UIViewController,
+    extraAnimation: (() -> Void)? = nil,
     animated: Bool = true,
     completion: (() -> Void)? = nil
   ) {
+  
+    self.extraAnimationBlockPresent = extraAnimation;
+  
     self.prepareForPresentation(
       viewControllerToPresent: modalVC,
       presentingViewController: targetVC
@@ -2408,9 +2420,11 @@ public class AdaptiveModalManager: NSObject {
   
   public func dismissModal(
     animated: Bool = true,
+    extraAnimation: (() -> Void)? = nil,
     completion: (() -> Void)? = nil
   ) {
     guard let modalVC = self.modalViewController else { return };
+    self.extraAnimationBlockDismiss = extraAnimation;
     
     modalVC.dismiss(
       animated: animated,
