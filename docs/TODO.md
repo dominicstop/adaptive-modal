@@ -6,6 +6,7 @@
 
 ## Current
 
+- [ ] `TODO:2023-06-28-10-33-55` - Impl: Optimize - `notifyDidLayoutSubviews`.
 - [ ] `TODO:2023-06-28-04-16-09` - Impl: Update presentation-related delegates/subclass to integrate more with the modal transition + presentation/dismissal.
 - [ ] `TODO:2023-06-23-18-13-25` - Impl: `AdaptiveModal` - Config - Background interaction - `dismiss`, `passthrough`, `none`.
 - [ ] `TODO:2023-06-23-18-14-24` -  Impl: `AdaptiveModal` - Add support for modal's w/ scrollviews.
