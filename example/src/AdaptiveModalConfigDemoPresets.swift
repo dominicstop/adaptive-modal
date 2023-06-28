@@ -672,6 +672,7 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
               modalShadowRadius: 8,
               modalCornerRadius: 10,
               modalMaskedCorners: .rightCorners,
+              modalContentOpacity: 1,
               modalBackgroundOpacity: 0.87,
               modalBackgroundVisualEffect: UIBlurEffect(style: .regular),
               modalBackgroundVisualEffectIntensity: 1,
@@ -731,6 +732,7 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
             modalScaleX: 0.5,
             modalScaleY: 0.5,
             modalCornerRadius: 5,
+            modalContentOpacity: 0.25,
             modalDragHandleOffset: -14,
             backgroundVisualEffectIntensity: 0
           )
