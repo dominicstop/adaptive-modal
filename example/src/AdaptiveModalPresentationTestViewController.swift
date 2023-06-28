@@ -185,24 +185,32 @@ class AdaptiveModalPresentationTestViewController : UIViewController {
   };
   
   var currentModalManagerAdjustmentBlock: () -> Void {
+    let modalManager = self.adaptiveModalManager;
+  
     let defaultBlock = {
-      self.adaptiveModalManager.shouldEnableOverShooting = true;
+      modalManager.shouldEnableOverShooting = true;
     
-      self.adaptiveModalManager.shouldSnapToUnderShootSnapPoint = true;
-      self.adaptiveModalManager.shouldSnapToOvershootSnapPoint = false;
+      modalManager.shouldSnapToUnderShootSnapPoint = true;
+      modalManager.shouldSnapToOvershootSnapPoint = false;
       
-      self.adaptiveModalManager.shouldDismissModalOnSnapToUnderShootSnapPoint = true;
-      self.adaptiveModalManager.shouldDismissModalOnSnapToOverShootSnapPoint = false;
+      modalManager.shouldDismissModalOnSnapToUnderShootSnapPoint = true;
+      modalManager.shouldDismissModalOnSnapToOverShootSnapPoint = false;
+      
+      modalManager.shouldDismissKeyboardOnGestureSwipe = false;
     };
   
     switch self.currentModalConfigPreset {
       case .demo04: return {
-        self.adaptiveModalManager.shouldSnapToOvershootSnapPoint = true;
-        self.adaptiveModalManager.shouldDismissModalOnSnapToOverShootSnapPoint = true;
+        modalManager.shouldSnapToOvershootSnapPoint = true;
+        modalManager.shouldDismissModalOnSnapToOverShootSnapPoint = true;
+      };
+      
+      case .demo09: return {
+        modalManager.shouldDismissKeyboardOnGestureSwipe = true;
       };
       
       case .demo07: return {
-        self.adaptiveModalManager.shouldEnableOverShooting = false;
+        modalManager.shouldEnableOverShooting = false;
       };
       
       default: return defaultBlock;
