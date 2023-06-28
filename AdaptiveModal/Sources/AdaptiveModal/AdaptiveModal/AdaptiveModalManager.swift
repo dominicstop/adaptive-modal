@@ -1417,6 +1417,15 @@ public class AdaptiveModalManager: NSObject {
       forPropertyKey: \.alpha,
       withValue:  self.interpolate(
         inputValue: inputPercentValue,
+        rangeOutputKey: \.modalContentOpacity
+      )
+    );
+    
+    AdaptiveModalUtilities.unwrapAndSetProperty(
+      forObject: self.modalWrapperView,
+      forPropertyKey: \.alpha,
+      withValue:  self.interpolate(
+        inputValue: inputPercentValue,
         rangeOutputKey: \.modalOpacity
       )
     );
@@ -1813,7 +1822,6 @@ public class AdaptiveModalManager: NSObject {
       extraAnimation?();
         
       interpolationPoint.apply(
-        modalConfig: self.modalConfig,
         toModalView: modalView,
         toModalWrapperView: self.modalWrapperView,
         toModalWrapperTransformView: self.modalWrapperTransformView,
