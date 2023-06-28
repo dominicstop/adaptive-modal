@@ -695,7 +695,7 @@ public class AdaptiveModalManager: NSObject {
         case .bottom: constraint.append(
           modalDragHandleView.bottomAnchor.constraint(
             equalTo: modalWrapperShadowView.bottomAnchor,
-            constant: -dragHandleOffset
+            constant: dragHandleOffset
           )
         );
           
@@ -709,7 +709,7 @@ public class AdaptiveModalManager: NSObject {
         case .right: constraint.append(
           modalDragHandleView.rightAnchor.constraint(
             equalTo: modalWrapperShadowView.rightAnchor,
-            constant: -dragHandleOffset
+            constant: dragHandleOffset
           )
         );
           
@@ -1310,24 +1310,11 @@ public class AdaptiveModalManager: NSObject {
 
     guard let nextDragHandleOffset = nextDragHandleOffset,
           let modalDragHandleOffsetConstraint = self.modalDragHandleOffsetConstraint
-    else { return };
-    
-    let nextDragHandleOffsetAdj: CGFloat = {
-      switch self.modalConfig.dragHandlePosition {
-        case .top, .left:
-          return nextDragHandleOffset;
           
-        case .bottom, .right:
-          return -nextDragHandleOffset;
-          
-        default: return nextDragHandleOffset;
-      };
-    }();
-    
-    guard modalDragHandleOffsetConstraint.constant != nextDragHandleOffsetAdj
+          //modalDragHandleOffsetConstraint.constant != nextDragHandleOffset
     else { return };
-    
-    modalDragHandleOffsetConstraint.constant = nextDragHandleOffsetAdj;
+
+    modalDragHandleOffsetConstraint.constant = nextDragHandleOffset;
     
     modalDragHandleView.updateConstraints();
     modalDragHandleView.setNeedsLayout();

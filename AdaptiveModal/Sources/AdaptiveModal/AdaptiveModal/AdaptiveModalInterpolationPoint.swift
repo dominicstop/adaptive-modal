@@ -253,18 +253,7 @@ public struct AdaptiveModalInterpolationPoint: Equatable {
       modalDragHandleView.alpha = self.modalDragHandleOpacity;
       
       guard let constraint = modalDragHandleOffsetConstraint else { break block };
-       
-      constraint.constant = {
-        switch modalConfig.dragHandlePosition {
-          case .top, .left:
-            return self.modalDragHandleOffset;
-            
-          case .bottom, .right:
-            return -self.modalDragHandleOffset;
-            
-          default: return self.modalDragHandleOffset;
-        };
-      }();
+      constraint.constant = self.modalDragHandleOffset;
       
       modalDragHandleView.updateConstraints()
       modalDragHandleView.setNeedsLayout();
@@ -419,9 +408,28 @@ public extension AdaptiveModalInterpolationPoint {
       ?? keyframePrev?.modalBackgroundVisualEffectIntensity
       ?? (isFirstSnapPoint ? 0 : 1);
       
-    self.modalDragHandleOffset = keyframeCurrent?.modalDragHandleOffset
-      ?? keyframePrev?.modalDragHandleOffset
-      ?? 8;
+    self.modalDragHandleOffset = {
+      let currentOffsetRaw = keyframeCurrent?.modalDragHandleOffset
+    
+      if currentOffsetRaw == nil,
+         let modalDragHandleOffset = keyframePrev?.modalDragHandleOffset {
+         
+        return modalDragHandleOffset;
+      };
+      
+      let nextOffset = currentOffsetRaw ?? 8;
+      
+      switch modalConfig.dragHandlePosition {
+        case .top, .left:
+          return nextOffset;
+          
+        case .bottom, .right:
+          return -nextOffset;
+          
+        default:
+          return 0;
+      };
+    }();
       
     self.modalDragHandleColor = keyframeCurrent?.modalDragHandleColor
       ?? keyframePrev?.modalDragHandleColor
