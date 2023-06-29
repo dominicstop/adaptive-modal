@@ -297,6 +297,7 @@ public class AdaptiveModalManager: NSObject {
   
   weak var modalGesture: UIGestureRecognizer?;
   weak var modalDragHandleGesture: UIGestureRecognizer?;
+  weak var backgroundTapGesture: UITapGestureRecognizer?;
   
   private var gestureOffset: CGPoint?;
   private var gestureVelocity: CGPoint?;
@@ -527,6 +528,17 @@ public class AdaptiveModalManager: NSObject {
       gesture.isEnabled = self.isModalDragHandleGestureEnabled;
       
       modalDragHandleView.addGestureRecognizer(gesture);
+    };
+    
+    if let bgDimmingView = self.backgroundDimmingView {
+      let gesture = UITapGestureRecognizer(
+        target: self,
+        action: #selector(self.onBackgroundTapGesture(_:))
+      );
+      
+      gesture.isEnabled = false;
+      self.backgroundTapGesture = gesture;
+      bgDimmingView.addGestureRecognizer(gesture);
     };
   };
   
@@ -1851,7 +1863,7 @@ public class AdaptiveModalManager: NSObject {
     let animationBlock = {
       extraAnimation?();
         
-      interpolationPoint.apply(
+      interpolationPoint.applyAnimation(
         toModalView: modalView,
         toModalWrapperView: self.modalWrapperView,
         toModalWrapperTransformView: self.modalWrapperTransformView,
@@ -1909,7 +1921,7 @@ public class AdaptiveModalManager: NSObject {
     } else {
       animationBlock();
       
-      interpolationPoint.apply(
+      interpolationPoint.applyAnimation(
         toModalBackgroundEffectView: self.modalBackgroundVisualEffectView,
         toBackgroundVisualEffectView: self.backgroundVisualEffectView
       );
@@ -1980,6 +1992,10 @@ public class AdaptiveModalManager: NSObject {
       default:
         break;
     };
+  };
+  
+  @objc private func onBackgroundTapGesture(_ sender: UITapGestureRecognizer) {
+  
   };
   
   @objc private func onKeyboardWillShow(notification: NSNotification) {

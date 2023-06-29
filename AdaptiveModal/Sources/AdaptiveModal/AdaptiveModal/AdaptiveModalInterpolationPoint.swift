@@ -151,7 +151,7 @@ public struct AdaptiveModalInterpolationPoint: Equatable {
     };
   };
   
-  func apply(
+  func applyAnimation(
     toModalView modalView: UIView,
     toModalWrapperView modalWrapperView: UIView,
     toModalWrapperTransformView modalWrapperTransformView: UIView?,
@@ -266,7 +266,7 @@ public struct AdaptiveModalInterpolationPoint: Equatable {
     modalDragHandleView?.layoutIfNeeded();
   };
   
-  func apply(
+  func applyAnimation(
     toModalBackgroundEffectView modalBgEffectView: UIVisualEffectView?,
     toBackgroundVisualEffectView bgVisualEffectView: UIVisualEffectView?
   ){
