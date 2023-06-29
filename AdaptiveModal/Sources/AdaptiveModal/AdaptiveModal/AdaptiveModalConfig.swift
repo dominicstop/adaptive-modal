@@ -24,6 +24,10 @@ public struct AdaptiveModalConfig {
         case .leftToRight, .rightToLeft: return false;
       };
     };
+    
+    public var isHorizontal: Bool {
+      !self.isVertical;
+    };
   };
   
   public enum SnapPercentStrategy {
