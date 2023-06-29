@@ -10,6 +10,9 @@ import UIKit
 public struct AdaptiveModalKeyframeConfig {
 
   public var secondaryGestureAxisDampingPercent: CGFloat?;
+  
+  // MARK: - Properties - Keyframes
+  // ------------------------------
 
   public var modalRotation: CGFloat?;
   

@@ -27,10 +27,10 @@ public struct AdaptiveModalInterpolationPoint: Equatable {
   public var computedRect: CGRect;
   public var modalPadding: UIEdgeInsets;
   
+  public var secondaryGestureAxisDampingPercent: CGFloat;
+  
   // MARK: - Properties - Keyframes
   // ------------------------------
-  
-  public var secondaryGestureAxisDampingPercent: CGFloat;
   
   public var modalRotation: CGFloat;
   
