@@ -133,7 +133,7 @@ fileprivate class TestModalViewController: UIViewController, AdaptiveModalEventN
           .constant(15),
         ])
       ),
-      animationKeyframe: .init(
+      keyframeConfig: .init(
         modalCornerRadius: 15,
         modalMaskedCorners: .allCorners,
         modalBackgroundOpacity: 0.9,

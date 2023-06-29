@@ -330,7 +330,7 @@ public extension AdaptiveModalInterpolationPoint {
     }();
     
     let isFirstSnapPoint = snapPointIndex == 0;
-    let keyframeCurrent = snapPointConfig.animationKeyframe;
+    let keyframeCurrent = snapPointConfig.keyframeConfig;
     
     self.secondaryGestureAxisDampingPercent = keyframeCurrent?.secondaryGestureAxisDampingPercent
       ?? keyframePrev?.secondaryGestureAxisDampingPercent

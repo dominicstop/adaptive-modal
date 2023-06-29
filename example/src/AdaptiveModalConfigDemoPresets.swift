@@ -34,7 +34,7 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
               width: .stretch,
               height: .percent(percentValue: 0.3)
             ),
-            animationKeyframe: AdaptiveModalAnimationConfig(
+            keyframeConfig: AdaptiveModalKeyframeConfig(
               modalShadowOffset: .init(width: 0, height: -2),
               modalShadowOpacity: 0.2,
               modalShadowRadius: 7,
@@ -63,7 +63,7 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
                 minValue: .constant(15)
               )
             ),
-            animationKeyframe: AdaptiveModalAnimationConfig(
+            keyframeConfig: AdaptiveModalKeyframeConfig(
               modalShadowOffset: .init(width: 2, height: 2),
               modalShadowOpacity: 0.2,
               modalShadowRadius: 15,
@@ -90,7 +90,7 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
                 maxValue: .constant(ScreenSize.iPhone8.size.height)
               )
             ),
-            animationKeyframe: AdaptiveModalAnimationConfig(
+            keyframeConfig: AdaptiveModalKeyframeConfig(
               modalShadowOffset: .init(width: 2, height: 2),
               modalShadowOpacity: 0.3,
               modalShadowRadius: 10,
@@ -116,7 +116,7 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
               ),
               marginTop: .safeAreaInsets(insetKey: \.top)
             ),
-            animationKeyframe: AdaptiveModalAnimationConfig(
+            keyframeConfig: AdaptiveModalKeyframeConfig(
               modalShadowOffset: .init(width: 0, height: -1),
               modalShadowOpacity: 0.4,
               modalShadowRadius: 10,
@@ -149,7 +149,7 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
               width: .percent(percentValue: 0.8),
               height: .percent(percentValue: 0.2)
             ),
-            animationKeyframe: AdaptiveModalAnimationConfig(
+            keyframeConfig: AdaptiveModalKeyframeConfig(
               modalShadowOffset: .init(width: 0, height: -2),
               modalShadowOpacity: 0.3,
               modalShadowRadius: 7,
@@ -169,7 +169,7 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
               width: .percent(percentValue: 0.8),
               height: .percent(percentValue: 0.4)
             ),
-            animationKeyframe: AdaptiveModalAnimationConfig(
+            keyframeConfig: AdaptiveModalKeyframeConfig(
               modalShadowOffset: .init(width: 1, height: 1),
               modalShadowOpacity: 0.4,
               modalShadowRadius: 7,
@@ -186,7 +186,7 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
               width: .percent(percentValue: 0.9),
               height: .percent(percentValue: 0.7)
             ),
-            animationKeyframe: AdaptiveModalAnimationConfig(
+            keyframeConfig: AdaptiveModalKeyframeConfig(
               modalShadowOffset: .init(width: 2, height: 2),
               modalShadowOpacity: 0.3,
               modalShadowRadius: 8,
@@ -213,7 +213,7 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
               height: .percent(percentValue: 0.65),
               marginLeft: .constant(15)
             ),
-            animationKeyframe: AdaptiveModalAnimationConfig(
+            keyframeConfig: AdaptiveModalKeyframeConfig(
               modalScaleX: 1,
               modalScaleY: 1,
               modalShadowOffset: .init(width: 1, height: 1),
@@ -240,7 +240,7 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
               marginLeft: .constant(20),
               marginRight: .constant(20)
             ),
-            animationKeyframe: AdaptiveModalAnimationConfig(
+            keyframeConfig: AdaptiveModalKeyframeConfig(
               modalShadowOffset: .init(width: 2, height: 2),
               modalShadowOpacity: 0.2,
               modalShadowRadius: 15,
@@ -256,7 +256,7 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
         snapDirection: .leftToRight,
         undershootSnapPoint: .init(
           layoutPreset: .offscreenLeft,
-          animationKeyframe: .init(
+          keyframeConfig: .init(
             modalScaleX: 0.5,
             modalScaleY: 0.5,
             modalCornerRadius: 5,
@@ -285,7 +285,7 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
                 .constant(10)
               ])
             ),
-            animationKeyframe: .init(
+            keyframeConfig: .init(
               modalScaleX: 1,
               modalScaleY: 1,
               modalShadowOpacity: 0.3,
@@ -304,7 +304,7 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
               marginLeft: .constant(15),
               marginRight: .constant(15)
             ),
-            animationKeyframe: .init(
+            keyframeConfig: .init(
               modalShadowOffset: .init(width: 2, height: 2),
               modalShadowOpacity: 0.2,
               modalShadowRadius: 5,
@@ -316,14 +316,14 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
         snapDirection: .topToBottom,
         undershootSnapPoint: .init(
           layoutPreset: .offscreenTop,
-          animationKeyframe: .init(
+          keyframeConfig: .init(
             modalScaleX: 0.75,
             modalScaleY: 0.75
           )
         ),
         overshootSnapPoint: .init(
           layoutPreset: .offscreenBottom,
-          animationKeyframe: .init(
+          keyframeConfig: .init(
             modalScaleX: 0.9,
             modalScaleY: 0.9,
             modalOpacity: 0.8,
@@ -342,7 +342,7 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
               width: .percent(percentValue: 0.7),
               height: .stretch
             ),
-            animationKeyframe: AdaptiveModalAnimationConfig(
+            keyframeConfig: AdaptiveModalKeyframeConfig(
               modalShadowOffset: .init(width: 1, height: 0),
               modalShadowOpacity: 0.3,
               modalShadowRadius: 8,
@@ -372,7 +372,7 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
                 offsetOperation: .subtract
               )
             ),
-            animationKeyframe: AdaptiveModalAnimationConfig(
+            keyframeConfig: AdaptiveModalKeyframeConfig(
               modalShadowOffset: .init(width: 2, height: 2),
               modalShadowOpacity: 0.2,
               modalShadowRadius: 15,
@@ -386,7 +386,7 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
         snapDirection: .leftToRight,
         undershootSnapPoint: .init(
           layoutPreset: .offscreenLeft,
-          animationKeyframe: .init(
+          keyframeConfig: .init(
             backgroundVisualEffectIntensity: 0
           )
         ),
@@ -409,7 +409,7 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
                 minValue: .constant(15)
               )
             ),
-            animationKeyframe: AdaptiveModalAnimationConfig(
+            keyframeConfig: AdaptiveModalKeyframeConfig(
               modalShadowOffset: .init(width: 0, height: -2),
               modalShadowOpacity: 0.3,
               modalShadowRadius: 7,
@@ -432,7 +432,7 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
                 minValue: .constant(15)
               )
             ),
-            animationKeyframe: AdaptiveModalAnimationConfig(
+            keyframeConfig: AdaptiveModalKeyframeConfig(
               modalShadowOffset: .init(width: 1, height: 1),
               modalShadowOpacity: 0.4,
               modalShadowRadius: 7,
@@ -453,7 +453,7 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
                 minValue: .constant(15)
               )
             ),
-            animationKeyframe: AdaptiveModalAnimationConfig(
+            keyframeConfig: AdaptiveModalKeyframeConfig(
               modalShadowOffset: .init(width: 2, height: 2),
               modalShadowOpacity: 0.3,
               modalShadowRadius: 8,
@@ -480,7 +480,7 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
               )
             )
           ),
-          animationKeyframe: AdaptiveModalAnimationConfig(
+          keyframeConfig: AdaptiveModalKeyframeConfig(
             modalShadowOffset: .init(width: 3, height: 3),
             modalShadowOpacity: 0.35,
             modalShadowRadius: 15
@@ -499,7 +499,7 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
               height: .percent(percentValue: 0.65),
               marginLeft: .constant(15)
             ),
-            animationKeyframe: AdaptiveModalAnimationConfig(
+            keyframeConfig: AdaptiveModalKeyframeConfig(
               modalScaleX: 1,
               modalScaleY: 1,
               modalShadowOffset: .init(width: 1, height: 1),
@@ -522,7 +522,7 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
               width: .stretch,
               height: .stretch
             ),
-            animationKeyframe: AdaptiveModalAnimationConfig(
+            keyframeConfig: AdaptiveModalKeyframeConfig(
               modalShadowOffset: .zero,
               modalShadowOpacity: 0,
               modalShadowRadius: 0,
@@ -539,7 +539,7 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
         snapDirection: .leftToRight,
         undershootSnapPoint: .init(
           layoutPreset: .offscreenLeft,
-          animationKeyframe: .init(
+          keyframeConfig: .init(
             modalScaleX: 0.5,
             modalScaleY: 0.5,
             modalCornerRadius: 10,
@@ -565,7 +565,7 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
               width: .stretch,
               height: .percent(percentValue: 0.3)
             ),
-            animationKeyframe: AdaptiveModalAnimationConfig(
+            keyframeConfig: AdaptiveModalKeyframeConfig(
               modalShadowOffset: .init(width: 0, height: -2),
               modalShadowOpacity: 0.2,
               modalShadowRadius: 7,
@@ -590,7 +590,7 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
               width: .stretch,
               height: .percent(percentValue: 0.75)
             ),
-            animationKeyframe: AdaptiveModalAnimationConfig(
+            keyframeConfig: AdaptiveModalKeyframeConfig(
               modalShadowOffset: .init(width: 0, height: -2),
               modalShadowOpacity: 0.2,
               modalShadowRadius: 7,
@@ -634,7 +634,7 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
                 .constant(15)
               ])
             ),
-            animationKeyframe: AdaptiveModalAnimationConfig(
+            keyframeConfig: AdaptiveModalKeyframeConfig(
               modalShadowOffset: .init(width: 0, height: -2),
               modalShadowOpacity: 0.2,
               modalShadowRadius: 7,
@@ -664,7 +664,7 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
               width: .percent(percentValue: 0.5),
               height: .percent(percentValue: 0.5)
             ),
-            animationKeyframe: AdaptiveModalAnimationConfig(
+            keyframeConfig: AdaptiveModalKeyframeConfig(
               modalScaleX: 1,
               modalScaleY: 1,
               modalShadowOffset: .init(width: 1, height: 1),
@@ -691,7 +691,7 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
               width: .percent(percentValue: 0.7),
               height: .percent(percentValue: 0.85)
             ),
-            animationKeyframe: AdaptiveModalAnimationConfig(
+            keyframeConfig: AdaptiveModalKeyframeConfig(
               modalShadowOffset: .init(width: 2, height: 2),
               modalShadowOpacity: 0.2,
               modalShadowRadius: 12,
@@ -712,7 +712,7 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
               width: .percent(percentValue: 0.95),
               height: .stretch
             ),
-            animationKeyframe: AdaptiveModalAnimationConfig(
+            keyframeConfig: AdaptiveModalKeyframeConfig(
               modalShadowOffset: .init(width: 2.5, height: 0),
               modalShadowOpacity: 0.35,
               modalShadowRadius: 10,
@@ -728,7 +728,7 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
         snapDirection: .leftToRight,
         undershootSnapPoint: .init(
           layoutPreset: .offscreenLeft,
-          animationKeyframe: .init(
+          keyframeConfig: .init(
             modalScaleX: 0.5,
             modalScaleY: 0.5,
             modalCornerRadius: 5,
@@ -772,7 +772,7 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
                 falseValue: .safeAreaInsets(insetKey: \.bottom)
               )
             ),
-            animationKeyframe: AdaptiveModalAnimationConfig(
+            keyframeConfig: AdaptiveModalKeyframeConfig(
               modalShadowOffset: .init(width: 0, height: -2),
               modalShadowOpacity: 0.25,
               modalShadowRadius: 7,

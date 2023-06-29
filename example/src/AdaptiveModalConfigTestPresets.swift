@@ -41,7 +41,7 @@ enum AdaptiveModalConfigTestPresets: CaseIterable {
                 mode: .percent(percentValue: 0.2)
               )
             ),
-            animationKeyframe: AdaptiveModalAnimationConfig(
+            keyframeConfig: AdaptiveModalKeyframeConfig(
               modalRotation: 0.2,
               modalScaleX: 0.5,
               modalScaleY: 0.5,
@@ -62,7 +62,7 @@ enum AdaptiveModalConfigTestPresets: CaseIterable {
                 mode: .percent(percentValue: 0.4)
               )
             ),
-            animationKeyframe: AdaptiveModalAnimationConfig(
+            keyframeConfig: AdaptiveModalKeyframeConfig(
               modalRotation: -0.2,
               modalScaleX: 0.5,
               modalScaleY: 1,
@@ -82,7 +82,7 @@ enum AdaptiveModalConfigTestPresets: CaseIterable {
                 mode: .percent(percentValue: 0.6)
               )
             ),
-            animationKeyframe: AdaptiveModalAnimationConfig(
+            keyframeConfig: AdaptiveModalKeyframeConfig(
               //modalRotation: 1,
               modalScaleX: 1,
               modalScaleY: 1
@@ -111,7 +111,7 @@ enum AdaptiveModalConfigTestPresets: CaseIterable {
                 mode: .percent(percentValue: 0.2)
               )
             ),
-            animationKeyframe: AdaptiveModalAnimationConfig(
+            keyframeConfig: AdaptiveModalKeyframeConfig(
               modalScaleX: 1,
               modalScaleY: 1
             )
@@ -129,7 +129,7 @@ enum AdaptiveModalConfigTestPresets: CaseIterable {
                 mode: .percent(percentValue: 0.4)
               )
             ),
-            animationKeyframe: AdaptiveModalAnimationConfig(
+            keyframeConfig: AdaptiveModalKeyframeConfig(
               modalScaleX: 0.5,
               modalScaleY: 1
             )
@@ -146,7 +146,7 @@ enum AdaptiveModalConfigTestPresets: CaseIterable {
                 mode: .percent(percentValue: 0.6)
               )
             ),
-            animationKeyframe: AdaptiveModalAnimationConfig(
+            keyframeConfig: AdaptiveModalKeyframeConfig(
               modalScaleX: 1.5,
               modalScaleY: 1.5
             )
@@ -155,7 +155,7 @@ enum AdaptiveModalConfigTestPresets: CaseIterable {
         snapDirection: .bottomToTop,
         undershootSnapPoint: .init(
           layoutPreset: .offscreenBottom,
-          animationKeyframe: .init(
+          keyframeConfig: .init(
             modalScaleX: 0.25,
             modalScaleY: 0.25
           )
@@ -175,7 +175,7 @@ enum AdaptiveModalConfigTestPresets: CaseIterable {
               width: .percent(percentValue: 0.8),
               height: .percent(percentValue: 0.2)
             ),
-            animationKeyframe: AdaptiveModalAnimationConfig(
+            keyframeConfig: AdaptiveModalKeyframeConfig(
               modalBorderWidth: 2,
               modalBorderColor: .blue,
               modalShadowColor: .blue,
@@ -193,7 +193,7 @@ enum AdaptiveModalConfigTestPresets: CaseIterable {
               width: .percent(percentValue: 0.8),
               height: .percent(percentValue: 0.4)
             ),
-            animationKeyframe: AdaptiveModalAnimationConfig(
+            keyframeConfig: AdaptiveModalKeyframeConfig(
               modalBorderWidth: 4,
               modalBorderColor: .cyan,
               modalShadowColor: .green,
@@ -210,7 +210,7 @@ enum AdaptiveModalConfigTestPresets: CaseIterable {
               width: .percent(percentValue: 0.9),
               height: .percent(percentValue: 0.7)
             ),
-            animationKeyframe: AdaptiveModalAnimationConfig(
+            keyframeConfig: AdaptiveModalKeyframeConfig(
               modalBorderWidth: 8,
               modalBorderColor: .green,
               modalShadowColor: .purple,
@@ -237,7 +237,7 @@ enum AdaptiveModalConfigTestPresets: CaseIterable {
               height: .percent(percentValue: 0.65),
               marginLeft: .constant(15)
             ),
-            animationKeyframe: AdaptiveModalAnimationConfig(
+            keyframeConfig: AdaptiveModalKeyframeConfig(
             )
           ),
           // snap point - 2
@@ -250,7 +250,7 @@ enum AdaptiveModalConfigTestPresets: CaseIterable {
               marginLeft: .constant(20),
               marginRight: .constant(20)
             ),
-            animationKeyframe: AdaptiveModalAnimationConfig(
+            keyframeConfig: AdaptiveModalKeyframeConfig(
             )
           ),
         ],
@@ -316,7 +316,7 @@ enum AdaptiveModalConfigTestPresets: CaseIterable {
               width: .stretch,
               height: .percent(percentValue: 0.3)
             ),
-            animationKeyframe: AdaptiveModalAnimationConfig(
+            keyframeConfig: AdaptiveModalKeyframeConfig(
               modalCornerRadius: 15,
               modalMaskedCorners: [
                 .layerMinXMinYCorner,
@@ -339,7 +339,7 @@ enum AdaptiveModalConfigTestPresets: CaseIterable {
                 maxValue: .constant(ScreenSize.iPhone8.size.height)
               )
             ),
-            animationKeyframe: AdaptiveModalAnimationConfig(
+            keyframeConfig: AdaptiveModalKeyframeConfig(
               modalCornerRadius: 20,
               modalMaskedCorners: [
                 .layerMinXMinYCorner,

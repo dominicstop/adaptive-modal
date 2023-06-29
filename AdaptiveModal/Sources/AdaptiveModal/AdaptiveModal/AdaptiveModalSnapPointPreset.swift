@@ -10,14 +10,14 @@ import Foundation
 public struct AdaptiveModalSnapPointPreset {
 
   public let layoutPreset: RNILayoutPreset;
-  public let animationKeyframe: AdaptiveModalAnimationConfig?;
+  public let keyframeConfig: AdaptiveModalKeyframeConfig?;
   
   public init(
     layoutPreset: RNILayoutPreset,
-    animationKeyframe: AdaptiveModalAnimationConfig? = nil
+    keyframeConfig: AdaptiveModalKeyframeConfig? = nil
   ) {
     self.layoutPreset = layoutPreset;
-    self.animationKeyframe = animationKeyframe;
+    self.keyframeConfig = keyframeConfig;
   };
 };
 

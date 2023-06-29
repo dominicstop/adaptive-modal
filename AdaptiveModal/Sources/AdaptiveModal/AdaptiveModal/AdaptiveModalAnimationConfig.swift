@@ -1,5 +1,5 @@
 //
-//  AdaptiveModalAnimationConfig.swift
+//  AdaptiveModalKeyframeConfig.swift
 //  swift-programmatic-modal
 //
 //  Created by Dominic Go on 5/23/23.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-public struct AdaptiveModalAnimationConfig {
+public struct AdaptiveModalKeyframeConfig {
 
   public var secondaryGestureAxisDampingPercent: CGFloat?;
 

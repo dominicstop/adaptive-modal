@@ -25,7 +25,7 @@ public struct AdaptiveModalSnapPointConfig {
   public let key: SnapPointKey;
   
   public let snapPoint: RNILayout;
-  public let animationKeyframe: AdaptiveModalAnimationConfig?;
+  public let keyframeConfig: AdaptiveModalKeyframeConfig?;
   
   // MARK: Init
   // ----------
@@ -33,11 +33,11 @@ public struct AdaptiveModalSnapPointConfig {
   public init(
     key: SnapPointKey = .unspecified,
     snapPoint: RNILayout,
-    animationKeyframe: AdaptiveModalAnimationConfig? = nil
+    keyframeConfig: AdaptiveModalKeyframeConfig? = nil
   ) {
     self.key = key;
     self.snapPoint = snapPoint;
-    self.animationKeyframe = animationKeyframe;
+    self.keyframeConfig = keyframeConfig;
   };
   
   public init(
@@ -53,17 +53,17 @@ public struct AdaptiveModalSnapPointConfig {
     
     self.key = key;
     self.snapPoint = snapPointLayout;
-    self.animationKeyframe = snapPointPreset.animationKeyframe;
+    self.keyframeConfig = snapPointPreset.keyframeConfig;
   };
   
   public init(
     fromBase base: Self,
     newKey: SnapPointKey,
     newSnapPoint: RNILayout? = nil,
-    newAnimationKeyframe: AdaptiveModalAnimationConfig? = nil
+    newAnimationKeyframe: AdaptiveModalKeyframeConfig? = nil
   ){
     self.snapPoint = newSnapPoint ?? base.snapPoint;
-    self.animationKeyframe = newAnimationKeyframe ?? base.animationKeyframe;
+    self.keyframeConfig = newAnimationKeyframe ?? base.keyframeConfig;
     
     self.key = base.key == .unspecified
       ? newKey
