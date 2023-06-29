@@ -115,7 +115,7 @@ fileprivate class TestModalViewController: UIViewController, AdaptiveModalEventN
   @objc func onPressButtonCustomSnapPoint(_ sender: UIButton){
     let snapPoint = AdaptiveModalSnapPointConfig(
       key: .string("custom"),
-      snapPoint: .init(
+      layoutConfig: .init(
         horizontalAlignment: .center,
         verticalAlignment: .center,
         width: .stretch(

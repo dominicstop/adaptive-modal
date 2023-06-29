@@ -31,7 +31,7 @@ enum AdaptiveModalConfigTestPresets: CaseIterable {
         snapPoints: [
           // snap point - 0
           AdaptiveModalSnapPointConfig(
-            snapPoint: RNILayout(
+            layoutConfig: RNILayout(
               horizontalAlignment: .center,
               verticalAlignment: .bottom,
               width: RNILayoutValue(
@@ -52,7 +52,7 @@ enum AdaptiveModalConfigTestPresets: CaseIterable {
           
           // snap point - 1
           AdaptiveModalSnapPointConfig(
-            snapPoint: RNILayout(
+            layoutConfig: RNILayout(
               horizontalAlignment: .center,
               verticalAlignment: .bottom,
               width: RNILayoutValue(
@@ -72,7 +72,7 @@ enum AdaptiveModalConfigTestPresets: CaseIterable {
           ),
           // snap point - 2
           AdaptiveModalSnapPointConfig(
-            snapPoint: RNILayout(
+            layoutConfig: RNILayout(
               horizontalAlignment: .center,
               verticalAlignment: .bottom,
               width: RNILayoutValue(
@@ -101,7 +101,7 @@ enum AdaptiveModalConfigTestPresets: CaseIterable {
         snapPoints: [
           // snap point - 0
           AdaptiveModalSnapPointConfig(
-            snapPoint: RNILayout(
+            layoutConfig: RNILayout(
               horizontalAlignment: .center,
               verticalAlignment: .bottom,
               width: RNILayoutValue(
@@ -119,7 +119,7 @@ enum AdaptiveModalConfigTestPresets: CaseIterable {
           
           // snap point - 1
           AdaptiveModalSnapPointConfig(
-            snapPoint: RNILayout(
+            layoutConfig: RNILayout(
               horizontalAlignment: .center,
               verticalAlignment: .bottom,
               width: RNILayoutValue(
@@ -136,7 +136,7 @@ enum AdaptiveModalConfigTestPresets: CaseIterable {
           ),
           // snap point - 2
           AdaptiveModalSnapPointConfig(
-            snapPoint: RNILayout(
+            layoutConfig: RNILayout(
               horizontalAlignment: .center,
               verticalAlignment: .bottom,
               width: RNILayoutValue(
@@ -169,7 +169,7 @@ enum AdaptiveModalConfigTestPresets: CaseIterable {
         snapPoints: [
           // snap point - 0
           AdaptiveModalSnapPointConfig(
-            snapPoint: RNILayout(
+            layoutConfig: RNILayout(
               horizontalAlignment: .center,
               verticalAlignment: .bottom,
               width: .percent(percentValue: 0.8),
@@ -187,7 +187,7 @@ enum AdaptiveModalConfigTestPresets: CaseIterable {
           
           // snap point - 1
           AdaptiveModalSnapPointConfig(
-            snapPoint: RNILayout(
+            layoutConfig: RNILayout(
               horizontalAlignment: .center,
               verticalAlignment: .bottom,
               width: .percent(percentValue: 0.8),
@@ -204,7 +204,7 @@ enum AdaptiveModalConfigTestPresets: CaseIterable {
           ),
           // snap point - 2
           AdaptiveModalSnapPointConfig(
-            snapPoint: RNILayout(
+            layoutConfig: RNILayout(
               horizontalAlignment: .center,
               verticalAlignment: .bottom,
               width: .percent(percentValue: 0.9),
@@ -230,7 +230,7 @@ enum AdaptiveModalConfigTestPresets: CaseIterable {
         snapPoints: [
           // snap point - 1
           AdaptiveModalSnapPointConfig(
-            snapPoint: RNILayout(
+            layoutConfig: RNILayout(
               horizontalAlignment: .left,
               verticalAlignment: .center,
               width: .percent(percentValue: 0.5),
@@ -242,7 +242,7 @@ enum AdaptiveModalConfigTestPresets: CaseIterable {
           ),
           // snap point - 2
           AdaptiveModalSnapPointConfig(
-            snapPoint: RNILayout(
+            layoutConfig: RNILayout(
               horizontalAlignment: .center,
               verticalAlignment: .center,
               width: .stretch,
@@ -263,7 +263,7 @@ enum AdaptiveModalConfigTestPresets: CaseIterable {
       case .testTopToBottom: return AdaptiveModalConfig(
         snapPoints: [
           .init(
-            snapPoint: .init(
+            layoutConfig: .init(
               horizontalAlignment: .center,
               verticalAlignment: .top,
               width: .stretch,
@@ -280,7 +280,7 @@ enum AdaptiveModalConfigTestPresets: CaseIterable {
       case .test01: return AdaptiveModalConfig(
         snapPoints:  [
           AdaptiveModalSnapPointConfig(
-            snapPoint: RNILayout(
+            layoutConfig: RNILayout(
               horizontalAlignment: .center,
               verticalAlignment: .bottom,
               width: .stretch,
@@ -288,7 +288,7 @@ enum AdaptiveModalConfigTestPresets: CaseIterable {
             )
           ),
           AdaptiveModalSnapPointConfig(
-            snapPoint: RNILayout(
+            layoutConfig: RNILayout(
               horizontalAlignment: .center,
               verticalAlignment: .bottom,
               width: .stretch,
@@ -296,7 +296,7 @@ enum AdaptiveModalConfigTestPresets: CaseIterable {
             )
           ),
           AdaptiveModalSnapPointConfig(
-            snapPoint: RNILayout(
+            layoutConfig: RNILayout(
               horizontalAlignment: .center,
               verticalAlignment: .bottom,
               width: .stretch,
@@ -310,7 +310,7 @@ enum AdaptiveModalConfigTestPresets: CaseIterable {
       case .test02: return AdaptiveModalConfig(
         snapPoints: [
           AdaptiveModalSnapPointConfig(
-            snapPoint: RNILayout(
+            layoutConfig: RNILayout(
               horizontalAlignment: .center,
               verticalAlignment: .bottom,
               width: .stretch,
@@ -327,7 +327,7 @@ enum AdaptiveModalConfigTestPresets: CaseIterable {
             )
           ),
           AdaptiveModalSnapPointConfig(
-            snapPoint: RNILayout(
+            layoutConfig: RNILayout(
               horizontalAlignment: .center,
               verticalAlignment: .center,
               width: RNILayoutValue(

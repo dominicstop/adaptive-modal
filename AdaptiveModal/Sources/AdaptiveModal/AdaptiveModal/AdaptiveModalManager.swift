@@ -2345,7 +2345,7 @@ public class AdaptiveModalManager: NSObject {
   
       let undershootSnapPointConfig = AdaptiveModalSnapPointConfig(
         fromSnapPointPreset: self.modalConfig.undershootSnapPoint,
-        fromBaseLayoutConfig: currentSnapPointConfig.snapPoint
+        fromBaseLayoutConfig: currentSnapPointConfig.layoutConfig
       );
       
       var undershootInterpolationPoint = AdaptiveModalInterpolationPoint(
@@ -2567,7 +2567,7 @@ public class AdaptiveModalManager: NSObject {
       
     let overshootSnapPointConfig = AdaptiveModalSnapPointConfig(
       fromSnapPointPreset: overshootSnapPointPreset,
-      fromBaseLayoutConfig: overrideSnapPointConfig.snapPoint
+      fromBaseLayoutConfig: overrideSnapPointConfig.layoutConfig
     );
   
     let snapPoints = prevSnapPointConfigs + [

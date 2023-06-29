@@ -24,7 +24,7 @@ public struct AdaptiveModalSnapPointConfig {
 
   public let key: SnapPointKey;
   
-  public let snapPoint: RNILayout;
+  public let layoutConfig: RNILayout;
   public let keyframeConfig: AdaptiveModalKeyframeConfig?;
   
   // MARK: Init
@@ -32,11 +32,11 @@ public struct AdaptiveModalSnapPointConfig {
   
   public init(
     key: SnapPointKey = .unspecified,
-    snapPoint: RNILayout,
+    layoutConfig: RNILayout,
     keyframeConfig: AdaptiveModalKeyframeConfig? = nil
   ) {
     self.key = key;
-    self.snapPoint = snapPoint;
+    self.layoutConfig = layoutConfig;
     self.keyframeConfig = keyframeConfig;
   };
   
@@ -52,7 +52,7 @@ public struct AdaptiveModalSnapPointConfig {
     );
     
     self.key = key;
-    self.snapPoint = snapPointLayout;
+    self.layoutConfig = snapPointLayout;
     self.keyframeConfig = snapPointPreset.keyframeConfig;
   };
   
@@ -62,7 +62,7 @@ public struct AdaptiveModalSnapPointConfig {
     newSnapPoint: RNILayout? = nil,
     newAnimationKeyframe: AdaptiveModalKeyframeConfig? = nil
   ){
-    self.snapPoint = newSnapPoint ?? base.snapPoint;
+    self.layoutConfig = newSnapPoint ?? base.layoutConfig;
     self.keyframeConfig = newAnimationKeyframe ?? base.keyframeConfig;
     
     self.key = base.key == .unspecified
@@ -88,7 +88,7 @@ extension AdaptiveModalSnapPointConfig {
       let initialSnapPointConfig = AdaptiveModalSnapPointConfig(
         key: .undershootPoint,
         fromSnapPointPreset: undershootSnapPoint,
-        fromBaseLayoutConfig: snapPointFirst.snapPoint
+        fromBaseLayoutConfig: snapPointFirst.layoutConfig
       );
       
       items.append(initialSnapPointConfig);
@@ -102,7 +102,7 @@ extension AdaptiveModalSnapPointConfig {
       let overshootSnapPointConfig = AdaptiveModalSnapPointConfig(
         key: .overshootPoint,
         fromSnapPointPreset: overshootSnapPoint,
-        fromBaseLayoutConfig: snapPointLast.snapPoint
+        fromBaseLayoutConfig: snapPointLast.layoutConfig
       );
       
       items.append(overshootSnapPointConfig);

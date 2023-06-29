@@ -291,7 +291,7 @@ public extension AdaptiveModalInterpolationPoint {
     self.key = snapPointConfig.key;
     self.snapPointIndex = snapPointIndex;
     
-    let computedRect = snapPointConfig.snapPoint.computeRect(
+    let computedRect = snapPointConfig.layoutConfig.computeRect(
       usingLayoutValueContext: baseContext
     );
     
@@ -302,7 +302,7 @@ public extension AdaptiveModalInterpolationPoint {
     
     self.computedRect = computedRect;
     
-    self.modalPadding = snapPointConfig.snapPoint.computePadding(
+    self.modalPadding = snapPointConfig.layoutConfig.computePadding(
       usingLayoutValueContext: context
     );
     
