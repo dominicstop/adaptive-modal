@@ -22,7 +22,7 @@ public class AdaptiveModalManager: NSObject {
   public var shouldEnableOverShooting = true;
   public var shouldDismissKeyboardOnGestureSwipe = false;
   
-  public var shouldLockAxisToModalDirection = true;
+  public var shouldLockAxisToModalDirection = false;
   
   public var shouldSnapToUnderShootSnapPoint = true;
   public var shouldSnapToOvershootSnapPoint = false;
@@ -378,21 +378,29 @@ public class AdaptiveModalManager: NSObject {
     
     let xOffset: CGFloat = {
       switch self.modalConfig.snapDirection {
-        case .bottomToTop, .rightToLeft:
+        case .rightToLeft:
           return gestureInitialPoint.x - modalRect.minX;
           
-        case .topToBottom, .leftToRight:
+        case .leftToRight:
           return modalRect.maxX - gestureInitialPoint.x;
+          
+        case .bottomToTop, .topToBottom:
+          // secondary axis
+          return gestureInitialPoint.x - modalRect.minX;
       };
     }();
     
     let yOffset: CGFloat = {
       switch self.modalConfig.snapDirection {
-        case .bottomToTop, .rightToLeft:
+        case .bottomToTop:
           return gestureInitialPoint.y - modalRect.minY;
           
-        case .topToBottom, .leftToRight:
+        case .topToBottom:
           return modalRect.maxY - gestureInitialPoint.y;
+          
+        case .leftToRight, .rightToLeft:
+          // secondary axis
+          return gestureInitialPoint.y - modalRect.minY;
       };
     }();
   
@@ -1430,6 +1438,15 @@ public class AdaptiveModalManager: NSObject {
           );
         };
         
+        print(
+          "secondaryAxis: ", secondaryAxis,
+          "\n - nextRect: ", nextRect,
+          "\n - secondaryAxisAdj: ", secondaryAxisAdj,
+          "\n - gesturePoint: ", self.gesturePoint ?? .zero,
+          "\n - computedGestureOffset: ", self.computedGestureOffset ?? .zero,
+          "\n"
+        );
+        
         return CGPoint(
           x: nextRect.origin.x,
           y: secondaryAxisAdj
@@ -1698,17 +1715,35 @@ public class AdaptiveModalManager: NSObject {
     guard let computedGestureOffset = self.computedGestureOffset
     else { return gesturePoint };
     
-    switch self.modalConfig.snapDirection {
-      case .bottomToTop, .rightToLeft: return CGPoint(
-        x: gesturePoint.x - computedGestureOffset.x,
-        y: gesturePoint.y - computedGestureOffset.y
-      );
-        
-      case .topToBottom, .leftToRight: return CGPoint(
-        x: gesturePoint.x + computedGestureOffset.x,
-        y: gesturePoint.y + computedGestureOffset.y
-      );
-    };
+    let x: CGFloat = {
+      switch self.modalConfig.snapDirection {
+        case .leftToRight:
+          return gesturePoint.x + computedGestureOffset.x;
+          
+        case .rightToLeft:
+          return gesturePoint.x - computedGestureOffset.x;
+      
+        case .bottomToTop, .topToBottom:
+          // secondary axis
+          return gesturePoint.x - computedGestureOffset.x;
+      };
+    }();
+    
+    let y: CGFloat = {
+      switch self.modalConfig.snapDirection {
+        case .topToBottom:
+          return gesturePoint.y + computedGestureOffset.y;
+          
+        case .bottomToTop:
+          return gesturePoint.y - computedGestureOffset.y;
+          
+        case .leftToRight, .rightToLeft:
+          // secondary axis
+          return gesturePoint.y - computedGestureOffset.y;
+      };
+    }();
+    
+    return CGPoint(x: x, y: y);
   };
   
   func debug(prefix: String? = ""){
