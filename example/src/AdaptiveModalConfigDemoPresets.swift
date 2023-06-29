@@ -24,6 +24,8 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
   
   var config: AdaptiveModalConfig {
     switch self {
+    
+      // Index: 0
       case .demo01: return AdaptiveModalConfig(
         snapPoints: [
           // Snap Point 1
@@ -64,6 +66,7 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
               )
             ),
             keyframeConfig: AdaptiveModalKeyframeConfig(
+              secondaryGestureAxisDampingPercent: 1,
               modalShadowOffset: .init(width: 2, height: 2),
               modalShadowOpacity: 0.2,
               modalShadowRadius: 15,
@@ -91,6 +94,7 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
               )
             ),
             keyframeConfig: AdaptiveModalKeyframeConfig(
+              secondaryGestureAxisDampingPercent: 0.8,
               modalShadowOffset: .init(width: 2, height: 2),
               modalShadowOpacity: 0.3,
               modalShadowRadius: 10,
@@ -117,6 +121,7 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
               marginTop: .safeAreaInsets(insetKey: \.top)
             ),
             keyframeConfig: AdaptiveModalKeyframeConfig(
+              secondaryGestureAxisDampingPercent: 1,
               modalShadowOffset: .init(width: 0, height: -1),
               modalShadowOpacity: 0.4,
               modalShadowRadius: 10,
@@ -139,6 +144,7 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
         )
       );
       
+      // Index: 1
       case .demo02: return AdaptiveModalConfig(
         snapPoints: [
           // snap point - 1
@@ -202,6 +208,7 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
         )
       );
       
+      // Index: 2
       case .demo03: return AdaptiveModalConfig(
         snapPoints: [
           // snap point - 1
@@ -214,12 +221,14 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
               marginLeft: .constant(15)
             ),
             keyframeConfig: AdaptiveModalKeyframeConfig(
+              secondaryGestureAxisDampingPercent: 0.5,
               modalScaleX: 1,
               modalScaleY: 1,
               modalShadowOffset: .init(width: 1, height: 1),
               modalShadowOpacity: 0.3,
               modalShadowRadius: 8,
               modalCornerRadius: 10,
+              modalContentOpacity: 1,
               modalBackgroundOpacity: 0.87,
               modalBackgroundVisualEffect: UIBlurEffect(style: .regular),
               modalBackgroundVisualEffectIntensity: 1,
@@ -241,6 +250,7 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
               marginRight: .constant(20)
             ),
             keyframeConfig: AdaptiveModalKeyframeConfig(
+              secondaryGestureAxisDampingPercent: 1,
               modalShadowOffset: .init(width: 2, height: 2),
               modalShadowOpacity: 0.2,
               modalShadowRadius: 15,
@@ -260,6 +270,7 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
             modalScaleX: 0.5,
             modalScaleY: 0.5,
             modalCornerRadius: 5,
+            modalContentOpacity: 0.3,
             modalDragHandleOffset: -14,
             backgroundVisualEffectIntensity: 0
           )
@@ -269,6 +280,7 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
         )
       );
       
+      // Index: 3
       case .demo04: return AdaptiveModalConfig(
         snapPoints: [
           // 1
@@ -332,6 +344,7 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
         )
       );
       
+      // Index: 4
       case .demo05: return AdaptiveModalConfig(
         snapPoints: [
           // snap point - 1
@@ -395,6 +408,7 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
         )
       );
       
+      // Index: 5
       case .demo06: return AdaptiveModalConfig(
         snapPoints: [
           // snap point - 1
@@ -488,6 +502,7 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
         )
       );
       
+      // Index: 6
       case .demo07: return AdaptiveModalConfig(
         snapPoints: [
           // snap point - 1
@@ -500,6 +515,7 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
               marginLeft: .constant(15)
             ),
             keyframeConfig: AdaptiveModalKeyframeConfig(
+              secondaryGestureAxisDampingPercent: 0.8,
               modalScaleX: 1,
               modalScaleY: 1,
               modalShadowOffset: .init(width: 1, height: 1),
@@ -523,6 +539,7 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
               height: .stretch
             ),
             keyframeConfig: AdaptiveModalKeyframeConfig(
+              secondaryGestureAxisDampingPercent: 1,
               modalShadowOffset: .zero,
               modalShadowOpacity: 0,
               modalShadowRadius: 0,
@@ -555,6 +572,7 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
         )
       );
       
+      // Index: 7
       case .demo08: return AdaptiveModalConfig(
         snapPoints: [
           // Snap Point 1
@@ -611,6 +629,7 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
         )
       );
       
+      // Index: 8
       case .demo09: return AdaptiveModalConfig(
         snapPoints: [
           // Snap Point 1
@@ -654,6 +673,7 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
         )
       );
       
+      // Index: 9
       case .demo10: return AdaptiveModalConfig(
         snapPoints: [
           // snap point - 1
@@ -742,6 +762,7 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
         )
       );
       
+      // Index: 10
       case .demo11: return AdaptiveModalConfig(
         snapPoints: [
           // Snap Point 1
