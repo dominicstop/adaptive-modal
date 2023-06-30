@@ -53,16 +53,6 @@ extension AdaptiveModalManager: UIViewControllerAnimatedTransitioning {
             let bgTapInteraction =
               currentInterpolationStep.derivedBackgroundTapInteraction;
               
-            print(
-              "backgroundTapInteraction:", currentInterpolationStep.backgroundTapInteraction,
-              "\n - derivedBackgroundTapInteraction:", currentInterpolationStep.derivedBackgroundTapInteraction,
-              "\n - isBgDimmingViewSeeThrough:", currentInterpolationStep.isBgDimmingViewSeeThrough,
-              "\n - isBgVisualEffectSeeThrough:", currentInterpolationStep.isBgVisualEffectSeeThrough,
-              "\n - isBgSeeThrough:", currentInterpolationStep.isBgSeeThrough,
-              "\n - isPassThrough:", bgTapInteraction.isPassThrough,
-              "\n"
-            );
-            
             if bgTapInteraction.isPassThrough {
               return nil;
             };
