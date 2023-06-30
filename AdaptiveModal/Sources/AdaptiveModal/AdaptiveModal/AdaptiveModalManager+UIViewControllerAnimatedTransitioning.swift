@@ -22,12 +22,54 @@ extension AdaptiveModalManager: UIViewControllerAnimatedTransitioning {
     guard let fromVC = transitionContext.viewController(forKey: .from)
     else { return };
     
+    self.transitionContext = transitionContext;
+    
     switch self.presentationState {
       case .presenting:
-        self.targetView = transitionContext.containerView;
+        let containerView = transitionContext.containerView
+      
+        self.targetView = containerView;
         self.targetViewController = fromVC;
         
         self.prepareForPresentation();
+        
+        AdaptiveModalUtilities.swizzleHitTest(
+          forView: containerView
+        ) { originalImp, selector in
+        
+          /// This the new imp that will replace the `hitTest` method in
+          /// `containerView`
+          return { _self, point, event in
+            
+            // Call the original implementation.
+            let hitView = originalImp(_self, selector, point, event);
+            
+            guard let _self = _self as? UIView,
+                  hitView === _self
+            else { return hitView };
+            
+            let currentInterpolationStep = self.currentInterpolationStep;
+            
+            let bgTapInteraction =
+              currentInterpolationStep.derivedBackgroundTapInteraction;
+              
+            print(
+              "backgroundTapInteraction:", currentInterpolationStep.backgroundTapInteraction,
+              "\n - derivedBackgroundTapInteraction:", currentInterpolationStep.derivedBackgroundTapInteraction,
+              "\n - isBgDimmingViewSeeThrough:", currentInterpolationStep.isBgDimmingViewSeeThrough,
+              "\n - isBgVisualEffectSeeThrough:", currentInterpolationStep.isBgVisualEffectSeeThrough,
+              "\n - isBgSeeThrough:", currentInterpolationStep.isBgSeeThrough,
+              "\n - isPassThrough:", bgTapInteraction.isPassThrough,
+              "\n"
+            );
+            
+            if bgTapInteraction.isPassThrough {
+              return nil;
+            };
+            
+            return hitView;
+          };
+        };
         
         self.showModal(
           isAnimated: transitionContext.isAnimated,

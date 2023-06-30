@@ -9,6 +9,24 @@ import UIKit
 
 public struct AdaptiveModalKeyframeConfig {
 
+  public enum BackgroundInteractionMode: String {
+    static let `default`: Self = .automatic;
+  
+    case automatic;
+    case dismiss, passthrough, none;
+    
+    var isPassThrough: Bool {
+      switch self {
+        case .passthrough: return true;
+        default: return false;
+      };
+    };
+  };
+
+  // MARK: - Properties
+  // ------------------
+
+  public var backgroundTapInteraction: BackgroundInteractionMode?;
   public var secondaryGestureAxisDampingPercent: CGFloat?;
   
   // MARK: - Properties - Keyframes
@@ -54,37 +72,39 @@ public struct AdaptiveModalKeyframeConfig {
   public var backgroundVisualEffectIntensity: CGFloat?;
   
   public init(
-     secondaryGestureAxisDampingPercent: CGFloat? = nil,
-     modalRotation: CGFloat? = nil,
-     modalScaleX: CGFloat? = nil,
-     modalScaleY: CGFloat? = nil,
-     modalTranslateX: CGFloat? = nil,
-     modalTranslateY: CGFloat? = nil,
-     modalBorderWidth: CGFloat? = nil,
-     modalBorderColor: UIColor? = nil,
-     modalShadowColor: UIColor? = nil,
-     modalShadowOffset: CGSize? = nil,
-     modalShadowOpacity: CGFloat? = nil,
-     modalShadowRadius: CGFloat? = nil,
-     modalCornerRadius: CGFloat? = nil,
-     modalMaskedCorners: CACornerMask? = nil,
-     modalOpacity: CGFloat? = nil,
-     modalContentOpacity: CGFloat? = nil,
-     modalBackgroundColor: UIColor? = nil,
-     modalBackgroundOpacity: CGFloat? = nil,
-     modalBackgroundVisualEffect: UIVisualEffect? = nil,
-     modalBackgroundVisualEffectOpacity: CGFloat? = nil,
-     modalBackgroundVisualEffectIntensity: CGFloat? = nil,
-     modalDragHandleOffset: CGFloat? = nil,
-     modalDragHandleColor: UIColor? = nil,
-     modalDragHandleOpacity: CGFloat? = nil,
-     backgroundColor: UIColor? = nil,
-     backgroundOpacity: CGFloat? = nil,
-     backgroundVisualEffect: UIVisualEffect? = nil,
-     backgroundVisualEffectOpacity: CGFloat? = nil,
-     backgroundVisualEffectIntensity: CGFloat? = nil
+    backgroundTapInteraction: BackgroundInteractionMode? = nil,
+    secondaryGestureAxisDampingPercent: CGFloat? = nil,
+    modalRotation: CGFloat? = nil,
+    modalScaleX: CGFloat? = nil,
+    modalScaleY: CGFloat? = nil,
+    modalTranslateX: CGFloat? = nil,
+    modalTranslateY: CGFloat? = nil,
+    modalBorderWidth: CGFloat? = nil,
+    modalBorderColor: UIColor? = nil,
+    modalShadowColor: UIColor? = nil,
+    modalShadowOffset: CGSize? = nil,
+    modalShadowOpacity: CGFloat? = nil,
+    modalShadowRadius: CGFloat? = nil,
+    modalCornerRadius: CGFloat? = nil,
+    modalMaskedCorners: CACornerMask? = nil,
+    modalOpacity: CGFloat? = nil,
+    modalContentOpacity: CGFloat? = nil,
+    modalBackgroundColor: UIColor? = nil,
+    modalBackgroundOpacity: CGFloat? = nil,
+    modalBackgroundVisualEffect: UIVisualEffect? = nil,
+    modalBackgroundVisualEffectOpacity: CGFloat? = nil,
+    modalBackgroundVisualEffectIntensity: CGFloat? = nil,
+    modalDragHandleOffset: CGFloat? = nil,
+    modalDragHandleColor: UIColor? = nil,
+    modalDragHandleOpacity: CGFloat? = nil,
+    backgroundColor: UIColor? = nil,
+    backgroundOpacity: CGFloat? = nil,
+    backgroundVisualEffect: UIVisualEffect? = nil,
+    backgroundVisualEffectOpacity: CGFloat? = nil,
+    backgroundVisualEffectIntensity: CGFloat? = nil
   ) {
-  
+    
+    self.backgroundTapInteraction = backgroundTapInteraction;
     self.secondaryGestureAxisDampingPercent = secondaryGestureAxisDampingPercent;
   
     self.modalRotation = modalRotation;

@@ -9,6 +9,9 @@ import UIKit
 
 public struct AdaptiveModalInterpolationPoint: Equatable {
 
+  public typealias BackgroundInteractionMode =
+    AdaptiveModalKeyframeConfig.BackgroundInteractionMode
+
   static let defaultModalBackground: UIColor = {
     if #available(iOS 13.0, *) {
       return .systemBackground
@@ -27,6 +30,7 @@ public struct AdaptiveModalInterpolationPoint: Equatable {
   public var computedRect: CGRect;
   public var modalPadding: UIEdgeInsets;
   
+  public var backgroundTapInteraction: BackgroundInteractionMode;
   public var secondaryGestureAxisDampingPercent: CGFloat;
   
   // MARK: - Properties - Keyframes
@@ -105,6 +109,33 @@ public struct AdaptiveModalInterpolationPoint: Equatable {
       bottom: -self.modalPadding.bottom,
       right : -self.modalPadding.right
     );
+  };
+  
+  public var isBgVisualEffectSeeThrough: Bool {
+       self.backgroundVisualEffect == nil
+    || self.backgroundVisualEffectOpacity == 0
+    || self.backgroundVisualEffectIntensity == 0;
+  };
+  
+  public var isBgDimmingViewSeeThrough: Bool {
+       self.backgroundColor == .clear
+    || self.backgroundColor.rgba.a == 0
+    || self.backgroundOpacity == 0;
+  };
+  
+  public var isBgSeeThrough: Bool {
+       self.isBgVisualEffectSeeThrough
+    || self.isBgDimmingViewSeeThrough;
+  };
+  
+  public var derivedBackgroundTapInteraction: BackgroundInteractionMode {
+    switch self.backgroundTapInteraction {
+      case .automatic:
+        return self.isBgSeeThrough ? .passthrough : .none;
+        
+      default:
+        return self.backgroundTapInteraction;
+    };
   };
   
   // MARK: - Functions
@@ -273,6 +304,27 @@ public struct AdaptiveModalInterpolationPoint: Equatable {
     modalBgEffectView?.effect = self.modalBackgroundVisualEffect;
     bgVisualEffectView?.effect = self.backgroundVisualEffect;
   };
+  
+  func applyConfig(toModalManager modalManager: AdaptiveModalManager){
+    let bgTapInteraction = self.derivedBackgroundTapInteraction;
+    let shouldAllowUserInteraction = !bgTapInteraction.isPassThrough;
+    
+    if let targetView = modalManager.targetView {
+      //targetView.isUserInteractionEnabled = allowsUserInteraction;
+    };
+  
+    if let bgVisualEffectView = modalManager.backgroundVisualEffectView {
+      bgVisualEffectView.isUserInteractionEnabled = shouldAllowUserInteraction;
+    };
+    
+    if let bgDimmingView = modalManager.backgroundDimmingView {
+      bgDimmingView.isUserInteractionEnabled = shouldAllowUserInteraction;
+    };
+    
+    if let bgTapGesture = modalManager.backgroundTapGesture {
+      bgTapGesture.isEnabled = shouldAllowUserInteraction;
+    };
+  };
 };
 
 // MARK: - Init
@@ -331,6 +383,10 @@ public extension AdaptiveModalInterpolationPoint {
     
     let isFirstSnapPoint = snapPointIndex == 0;
     let keyframeCurrent = snapPointConfig.keyframeConfig;
+    
+    self.backgroundTapInteraction = keyframeCurrent?.backgroundTapInteraction
+      ?? keyframePrev?.backgroundTapInteraction
+      ?? .default;
     
     self.secondaryGestureAxisDampingPercent = keyframeCurrent?.secondaryGestureAxisDampingPercent
       ?? keyframePrev?.secondaryGestureAxisDampingPercent

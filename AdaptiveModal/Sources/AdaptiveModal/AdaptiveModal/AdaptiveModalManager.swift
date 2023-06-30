@@ -268,6 +268,8 @@ public class AdaptiveModalManager: NSObject {
   // MARK: -  Properties - Animation-Related
   // ---------------------------------------
   
+  internal weak var transitionContext: UIViewControllerContextTransitioning?;
+  
   private var modalAnimator: UIViewPropertyAnimator?;
   
   internal var extraAnimationBlockPresent: (() -> Void)?;
@@ -2232,6 +2234,8 @@ public class AdaptiveModalManager: NSObject {
       snapPointConfig: self.currentSnapPointConfig,
       interpolationPoint: self.currentInterpolationStep
     );
+    
+    self.currentInterpolationStep.applyConfig(toModalManager: self);
     
     let shouldDismissOnSnapToUnderShootSnapPoint =
       self.currentInterpolationIndex == 0 &&
