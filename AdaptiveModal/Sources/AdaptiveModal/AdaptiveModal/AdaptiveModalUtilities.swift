@@ -211,80 +211,59 @@ class AdaptiveModalUtilities {
     
     valueType[keyPath: propertyKey] = newValue;
   };
-  
-  typealias IMP_HitTestMethod =
-    @convention(c) (Any, Selector, CGPoint, UIEvent?) -> UIView?;
-    
-  typealias IMP_HitTestBlock =
-    @convention(block) (Any, CGPoint, UIEvent?) -> UIView?;
-  
-  static func swizzleHitTest(
-    forView view: UIView,
-    hitTestBlockMaker: @escaping (
-      _ originalImp: IMP_HitTestMethod,
+
+  @discardableResult
+  static func swizzleWithBlock<T>(
+    impMethodType: T.Type,
+    forObject object: AnyObject,
+    withSelector selector: Selector,
+    newImpMaker: @escaping (
+      _ originalImp: T,
       _ selector: Selector
-    ) -> IMP_HitTestBlock
-  ) {
-    let type = type(of: view);
-    let selector = #selector(UIView.hitTest(_:with:));
-    
+    ) -> Any
+  ) -> IMP? {
+  
     // Retrieve the class method/IMP that matches the selector for the
     // given type.
-    let originalMethod = class_getInstanceMethod(type, selector);
-    guard let originalMethod = originalMethod else { return };
+    let originalMethod = class_getInstanceMethod(type(of: object), selector);
+    guard let originalMethod = originalMethod else { return nil };
     
     /// An `IMP` is just a C function pointer where the first two args are
     /// `self` and `_cmd`.
-    ///
-    let originalImpRaw = method_getImplementation(originalMethod);
-
-    /// This an `IMP` pointer to `UIView.hitTest(_:with:)` or:
-    /// `func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView?`
-    ///
-    let originalImpFunc = unsafeBitCast(
-      originalImpRaw,
-      to: IMP_HitTestMethod.self
-    );
-    
-    let newHitTestBlock = hitTestBlockMaker(originalImpFunc, selector);
-    let newImp = imp_implementationWithBlock(newHitTestBlock);
-
-    // Swizzle - Replace `originalImpFunc` w/ `newImp`
-    method_setImplementation(originalMethod, newImp)
-  };
-  
-  typealias IMP_PointMethod =
-    @convention(c) (Any, Selector, CGPoint, UIEvent?) -> Bool;
-    
-  typealias IMP_PointBlock =
-    @convention(block) (Any, CGPoint, UIEvent?) -> Bool;
-  
-  static func swizzlePoint(
-    forView view: UIView,
-    newImpMaker: @escaping (
-      _ originalImp: IMP_PointMethod,
-      _ selector: Selector
-    ) -> IMP_PointBlock
-  ) {
-    let type = type(of: view);
-    let selector = #selector(UIView.point(inside:with:));
-    
-    // Retrieve the class method/IMP that matches the selector for the
-    // given type.
-    let originalMethod = class_getInstanceMethod(type, selector);
-    guard let originalMethod = originalMethod else { return };
-    
-    let originalImpRaw = method_getImplementation(originalMethod);
-    
-    let originalImpFunc = unsafeBitCast(
-      originalImpRaw,
-      to: IMP_PointMethod.self
-    );
+    let originalImp = method_getImplementation(originalMethod);
+    let originalImpFunc = unsafeBitCast(originalImp, to: T.self);
     
     let newImpBlock = newImpMaker(originalImpFunc, selector);
     let newImp = imp_implementationWithBlock(newImpBlock);
 
     // Swizzle - Replace `originalImpFunc` w/ `newImp`
-    method_setImplementation(originalMethod, newImp)
+    return method_setImplementation(originalMethod, newImp);
+  };
+
+  @discardableResult
+  static func swizzleHitTest<T, U>(
+    /// `UIView.hitTest(_:with:)` or:
+    /// `func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView?`
+    ///
+    impMethodType: T.Type =
+      @convention(c) (Any, Selector, CGPoint, UIEvent?) -> UIView?,
+      
+    impBlockType: U.Type =
+      @convention(block) (Any, CGPoint, UIEvent?) -> UIView?,
+      
+    forView view: UIView,
+    hitTestBlockMaker: @escaping (
+      _ originalImp: T,
+      _ selector: Selector
+    ) -> U
+  ) -> IMP? {
+    let selector = #selector(UIView.hitTest(_:with:));
+    
+    return Self.swizzleWithBlock(
+      impMethodType: impMethodType,
+      forObject: view,
+      withSelector: selector,
+      newImpMaker: hitTestBlockMaker
+    );
   };
 };
