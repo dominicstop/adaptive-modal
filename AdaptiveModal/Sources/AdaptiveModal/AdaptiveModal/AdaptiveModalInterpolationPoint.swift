@@ -184,11 +184,11 @@ public struct AdaptiveModalInterpolationPoint: Equatable {
   
   func applyAnimation(
     toModalView modalView: UIView,
-    toModalWrapperView modalWrapperView: UIView,
+    toModalWrapperView modalWrapperView: UIView?,
     toModalWrapperTransformView modalWrapperTransformView: UIView?,
     toModalWrapperShadowView modalWrapperShadowView: UIView?,
-    toModalContentWrapperView modalContentWrapperView: UIView,
-    toDummyModalView dummyModalView: UIView,
+    toModalContentWrapperView modalContentWrapperView: UIView?,
+    toDummyModalView dummyModalView: UIView?,
     toModalBackgroundView modalBgView: UIView?,
     toBackgroundView bgView: UIView?,
     toModalBackgroundEffectView modalBgEffectView: UIVisualEffectView?,
@@ -203,8 +203,10 @@ public struct AdaptiveModalInterpolationPoint: Equatable {
   
     modalView.alpha = self.modalContentOpacity;
     
-    modalWrapperView.frame = self.computedRect;
-    modalWrapperView.alpha = self.modalOpacity;
+    if let modalWrapperView = modalWrapperView {
+      modalWrapperView.frame = self.computedRect;
+      modalWrapperView.alpha = self.modalOpacity;
+    };
     
     if let view = modalWrapperTransformView {
       view.transform = self.modalTransform;
@@ -222,10 +224,14 @@ public struct AdaptiveModalInterpolationPoint: Equatable {
       view.layer.shadowRadius = self.modalShadowRadius;
     };
     
-    modalContentWrapperView.layer.cornerRadius = self.modalCornerRadius;
-    modalContentWrapperView.layer.maskedCorners = self.modalMaskedCorners;
+    if let modalContentWrapperView = modalContentWrapperView {
+      modalContentWrapperView.layer.cornerRadius = self.modalCornerRadius;
+      modalContentWrapperView.layer.maskedCorners = self.modalMaskedCorners;
+    };
     
-    dummyModalView.frame = self.computedRect;
+    if let dummyModalView = dummyModalView {
+      dummyModalView.frame = self.computedRect;
+    };
     
     if let view = modalBgView {
       view.alpha = self.modalBackgroundOpacity;
@@ -293,7 +299,7 @@ public struct AdaptiveModalInterpolationPoint: Equatable {
       modalDragHandleView.setNeedsLayout();
     };
     
-    modalContentWrapperView.layoutIfNeeded();
+    modalContentWrapperView?.layoutIfNeeded();
     modalDragHandleView?.layoutIfNeeded();
   };
   
@@ -308,10 +314,6 @@ public struct AdaptiveModalInterpolationPoint: Equatable {
   func applyConfig(toModalManager modalManager: AdaptiveModalManager){
     let bgTapInteraction = self.derivedBackgroundTapInteraction;
     let shouldAllowUserInteraction = !bgTapInteraction.isPassThrough;
-    
-    if let targetView = modalManager.targetView {
-      //targetView.isUserInteractionEnabled = allowsUserInteraction;
-    };
   
     if let bgVisualEffectView = modalManager.backgroundVisualEffectView {
       bgVisualEffectView.isUserInteractionEnabled = shouldAllowUserInteraction;
