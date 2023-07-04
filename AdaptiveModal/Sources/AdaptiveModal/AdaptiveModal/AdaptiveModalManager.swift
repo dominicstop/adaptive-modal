@@ -53,7 +53,7 @@ public class AdaptiveModalManager: NSObject {
   // ------------------------------------
   
   public weak var modalViewController: UIViewController?;
-  public weak var targetViewController: UIViewController?;
+  public weak var presentingViewController: UIViewController?;
   
   public weak var targetView: UIView?;
   public weak var modalView: UIView?;
@@ -102,7 +102,7 @@ public class AdaptiveModalManager: NSObject {
   
   private var layoutValueContext: RNILayoutValueContext {
     let context: RNILayoutValueContext? = {
-      if let targetVC = self.targetViewController {
+      if let targetVC = self.presentingViewController {
         return .init(
           fromTargetViewController: targetVC,
           keyboardValues: self.layoutKeyboardValues
@@ -1832,7 +1832,7 @@ public class AdaptiveModalManager: NSObject {
       + "\n - targetView frame: \(self.targetView?.frame.debugDescription ?? "N/A")"
       + "\n - targetView superview: \(self.targetView?.superview.debugDescription ?? "N/A")"
       + "\n - modalViewController: \(self.modalViewController?.debugDescription ?? "N/A")"
-      + "\n - targetViewController: \(self.targetViewController?.debugDescription ?? "N/A")"
+      + "\n - presentingViewController: \(self.presentingViewController?.debugDescription ?? "N/A")"
       + "\n - currentInterpolationIndex: \(self.currentInterpolationIndex)"
       + "\n - currentOverrideInterpolationIndex: \(self.currentOverrideInterpolationIndex)"
       + "\n - currentConfigInterpolationIndex: \(self.currentConfigInterpolationIndex)"
