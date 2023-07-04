@@ -114,10 +114,10 @@ class RNIDraggableTestViewController : UIViewController {
   };
   
   @objc func onPressButtonPresentViewController(_ sender: UIButton){
-    self.modalManager.prepareForPresentation(
-      modalView: self.floatingView,
-      targetView: self.view
-    );
+    // self.modalManager.prepareForPresentation(
+    //   modalView: self.floatingView,
+    //   targetView: self.view
+    // );
   
     //self.modalManager.showModal();
   };

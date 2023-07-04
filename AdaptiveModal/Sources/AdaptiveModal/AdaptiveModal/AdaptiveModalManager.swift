@@ -55,8 +55,12 @@ public class AdaptiveModalManager: NSObject {
   public weak var modalViewController: UIViewController?;
   public weak var presentingViewController: UIViewController?;
   
+  /// `transitionContext.containerView`
   public weak var targetView: UIView?;
-  public weak var modalView: UIView?;
+  
+  public var modalView: UIView? {
+    self.modalViewController?.view;
+  };
   
   public var dummyModalView: UIView!;
   
@@ -932,9 +936,7 @@ public class AdaptiveModalManager: NSObject {
       view.removeFromSuperview();
     };
     
-    self.modalView = nil;
     self.targetView = nil;
-    
     self.dummyModalView = nil;
     
     self.modalWrapperLayoutView = nil;
@@ -2485,7 +2487,6 @@ public class AdaptiveModalManager: NSObject {
   // ------------------------------
   
   public func prepareForPresentation(
-    modalView: UIView? = nil,
     targetView: UIView? = nil,
     shouldForceReset: Bool = false
   ) {
@@ -2502,8 +2503,7 @@ public class AdaptiveModalManager: NSObject {
     if shouldReset {
       self.cleanup();
     };
-
-    self.modalView = modalView;
+    
     self.targetView = targetView;
   
     self.computeSnapPoints();
@@ -2526,11 +2526,11 @@ public class AdaptiveModalManager: NSObject {
   };
   
   public func prepareForPresentation(
-    viewControllerToPresent presentingVC: UIViewController,
-    presentingViewController presentedVC: UIViewController
+    viewControllerToPresent presentedVC: UIViewController,
+    presentingViewController presentingVC: UIViewController
   ) {
-    self.modalViewController = presentingVC;
-    self.modalView = presentingVC.view;
+    self.modalViewController = presentedVC;
+    self.presentingViewController = presentingVC;
     
     self.setupViewControllers();
   };
