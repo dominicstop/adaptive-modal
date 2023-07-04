@@ -60,7 +60,7 @@ public class AdaptiveModalManager: NSObject {
   
   public var dummyModalView: UIView!;
   
-  public var modalWrapperView: UIView?;
+  public var modalWrapperLayoutView: UIView?;
   public var modalWrapperTransformView: UIView?;
   public var modalWrapperShadowView: UIView?;
   public var modalContentWrapperView: UIView?;
@@ -81,7 +81,7 @@ public class AdaptiveModalManager: NSObject {
       guard let newValue = newValue else { return };
       self.prevModalFrame = dummyModalView.frame;
       
-      self.modalWrapperView?.frame = newValue;
+      self.modalWrapperLayoutView?.frame = newValue;
       self.dummyModalView.frame = newValue;
     }
     get {
@@ -502,7 +502,7 @@ public class AdaptiveModalManager: NSObject {
   func setupInitViews() {
     self.dummyModalView = UIView();
     
-    self.modalWrapperView = UIView();
+    self.modalWrapperLayoutView = UIView();
     self.modalWrapperTransformView = UIView();
     self.modalWrapperShadowView = UIView();
     self.modalContentWrapperView = UIView();
@@ -595,7 +595,7 @@ public class AdaptiveModalManager: NSObject {
     
     let wrapperViews: [UIView] = {
       let views = [
-        self.modalWrapperView,
+        self.modalWrapperLayoutView,
         self.modalWrapperTransformView,
         self.modalWrapperShadowView,
         self.modalContentWrapperView,
@@ -913,7 +913,7 @@ public class AdaptiveModalManager: NSObject {
     let viewsToCleanup: [UIView?] = [
       self.modalDragHandleView,
       self.dummyModalView,
-      self.modalWrapperView,
+      self.modalWrapperLayoutView,
       // self.modalWrapperTransformView,
       self.modalWrapperShadowView,
       // self.modalContentWrapperView,
@@ -936,7 +936,8 @@ public class AdaptiveModalManager: NSObject {
     self.targetView = nil;
     
     self.dummyModalView = nil;
-    self.modalWrapperView = nil;
+    
+    self.modalWrapperLayoutView = nil;
     self.modalWrapperTransformView = nil;
     self.modalWrapperShadowView = nil;
     self.modalContentWrapperView = nil;
@@ -1560,7 +1561,7 @@ public class AdaptiveModalManager: NSObject {
     );
     
     AdaptiveModalUtilities.unwrapAndSetProperty(
-      forObject: self.modalWrapperView,
+      forObject: self.modalWrapperLayoutView,
       forPropertyKey: \.alpha,
       withValue:  self.interpolate(
         inputValue: inputPercentValue,
@@ -1975,7 +1976,7 @@ public class AdaptiveModalManager: NSObject {
         
       interpolationPoint.applyAnimation(
         toModalView: modalView,
-        toModalWrapperView: self.modalWrapperView,
+        toModalWrapperLayoutView: self.modalWrapperLayoutView,
         toModalWrapperTransformView: self.modalWrapperTransformView,
         toModalWrapperShadowView: self.modalWrapperShadowView,
         toModalContentWrapperView: self.modalContentWrapperView,
@@ -2521,7 +2522,7 @@ public class AdaptiveModalManager: NSObject {
     self.didTriggerSetup = true;
     
     self.modalContentWrapperView?.updateConstraints();
-    self.modalWrapperView?.layoutIfNeeded();
+    self.modalWrapperLayoutView?.layoutIfNeeded();
   };
   
   public func prepareForPresentation(

@@ -184,7 +184,7 @@ public struct AdaptiveModalInterpolationPoint: Equatable {
   
   func applyAnimation(
     toModalView modalView: UIView,
-    toModalWrapperView modalWrapperView: UIView?,
+    toModalWrapperLayoutView modalWrapperLayoutView: UIView?,
     toModalWrapperTransformView modalWrapperTransformView: UIView?,
     toModalWrapperShadowView modalWrapperShadowView: UIView?,
     toModalContentWrapperView modalContentWrapperView: UIView?,
@@ -203,9 +203,9 @@ public struct AdaptiveModalInterpolationPoint: Equatable {
   
     modalView.alpha = self.modalContentOpacity;
     
-    if let modalWrapperView = modalWrapperView {
-      modalWrapperView.frame = self.computedRect;
-      modalWrapperView.alpha = self.modalOpacity;
+    if let modalWrapperLayoutView = modalWrapperLayoutView {
+      modalWrapperLayoutView.frame = self.computedRect;
+      modalWrapperLayoutView.alpha = self.modalOpacity;
     };
     
     if let view = modalWrapperTransformView {
