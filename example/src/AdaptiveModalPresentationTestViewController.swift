@@ -15,6 +15,8 @@ fileprivate class TestModalViewController: UIViewController, AdaptiveModalEventN
   var showDismissButton = true;
   var showCustomSnapPointButton = false;
   var showTextInputField = false;
+  
+  var shouldSetOverrideOverShootSnapPoint = false;
 
   lazy var floatingViewLabel: UILabel = {
     let label = UILabel();
@@ -140,10 +142,16 @@ fileprivate class TestModalViewController: UIViewController, AdaptiveModalEventN
         backgroundOpacity: 0
       )
     );
+    
+    let overShootSnapPoint = AdaptiveModalSnapPointPreset(
+      layoutPreset: .offscreenLeft
+    );
   
-    //self.dismiss(animated: true);
     try? self.modalManager?.snapTo(
-      overrideSnapPointConfig: snapPoint
+      overrideSnapPointConfig: snapPoint,
+      overshootSnapPointPreset: self.shouldSetOverrideOverShootSnapPoint
+        ? overShootSnapPoint
+        : nil
     );
   };
   
@@ -331,6 +339,7 @@ class AdaptiveModalPresentationTestViewController : UIViewController {
         
       case .demo12:
         testVC.showCustomSnapPointButton = true;
+        testVC.shouldSetOverrideOverShootSnapPoint = true;
       
       default: break;
     };

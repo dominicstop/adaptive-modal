@@ -210,10 +210,10 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
       );
       
       // Index: 2
-      case .demo03: return AdaptiveModalConfig(
+      case .demo03: return .init(
         snapPoints: [
           // snap point - 1
-          AdaptiveModalSnapPointConfig(
+          .init(
             layoutConfig: RNILayout(
               horizontalAlignment: .left,
               verticalAlignment: .center,
@@ -241,7 +241,7 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
           ),
           
           // snap point - 2
-          AdaptiveModalSnapPointConfig(
+          .init(
             layoutConfig: RNILayout(
               horizontalAlignment: .center,
               verticalAlignment: .center,
@@ -276,7 +276,7 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
             backgroundVisualEffectIntensity: 0
           )
         ),
-        overshootSnapPoint: AdaptiveModalSnapPointPreset(
+        overshootSnapPoint: .init(
           layoutPreset: .offscreenRight
         )
       );
@@ -829,6 +829,7 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
               ])
             ),
             keyframeConfig: .init(
+              secondaryGestureAxisDampingPercent: 0.25,
               modalCornerRadius: 10
             )
           ),
