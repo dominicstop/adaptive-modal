@@ -30,8 +30,8 @@ extension AdaptiveModalSnapPointPreset {
       switch direction {
         case .bottomToTop: return .edgeTop;
         case .topToBottom: return .edgeBottom;
-        case .leftToRight: return .edgeLeft;
-        case .rightToLeft: return .edgeRight;
+        case .leftToRight: return .edgeRight;
+        case .rightToLeft: return .edgeLeft;
       };
     }();
   
