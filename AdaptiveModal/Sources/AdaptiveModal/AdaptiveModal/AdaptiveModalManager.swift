@@ -80,7 +80,7 @@ public class AdaptiveModalManager: NSObject {
     self.modalViewController?.view;
   };
   
-  public var dummyModalView: UIView!;
+  public var dummyModalView: UIView?;
   
   public var modalWrapperLayoutView: UIView?;
   public var modalWrapperTransformView: UIView?;
@@ -98,16 +98,19 @@ public class AdaptiveModalManager: NSObject {
   public private(set) var backgroundDimmingView: UIView?;
   public private(set) var backgroundVisualEffectView: UIVisualEffectView?;
   
-  public private(set) var modalFrame: CGRect! {
+  public private(set) var modalFrame: CGRect? {
     set {
       guard let newValue = newValue else { return };
-      self.prevModalFrame = dummyModalView.frame;
+      
+      if let prevModalFrame = self.modalFrame {
+        self.prevModalFrame = prevModalFrame;
+      };
       
       self.modalWrapperLayoutView?.frame = newValue;
-      self.dummyModalView.frame = newValue;
+      self.dummyModalView?.frame = newValue;
     }
     get {
-      self.dummyModalView.frame;
+      self.dummyModalView?.frame;
     }
   };
   
@@ -1028,6 +1031,7 @@ public class AdaptiveModalManager: NSObject {
     
     self.cleanupSnapPointOverride();
     self.removeObservers();
+    self.endDisplayLink();
     
     self.currentInterpolationIndex = 0;
   };
@@ -2246,13 +2250,24 @@ public class AdaptiveModalManager: NSObject {
   };
   
   @objc private func onDisplayLinkTick(displayLink: CADisplayLink) {
-    guard let dummyModalViewPresentationLayer =
-            self.dummyModalView.layer.presentation(),
+    var shouldEndDisplayLink = false;
+    
+    defer {
+      if shouldEndDisplayLink {
+        self.endDisplayLink();
+      };
+    };
+  
+    guard let dummyModalView = self.dummyModalView,
+          let dummyModalViewLayer = dummyModalView.layer.presentation(),
           let interpolationRangeMaxInput = self.interpolationRangeMaxInput
-    else { return };
+    else {
+      shouldEndDisplayLink = true;
+      return;
+    };
     
     if self.isSwiping && !self.isKeyboardVisible {
-      self.endDisplayLink();
+      shouldEndDisplayLink = true;
     };
     
     if self.displayLinkStartTimestamp == nil {
@@ -2260,7 +2275,7 @@ public class AdaptiveModalManager: NSObject {
     };
     
     let prevModalFrame = self.prevModalFrame;
-    let nextModalFrame = dummyModalViewPresentationLayer.frame;
+    let nextModalFrame = dummyModalViewLayer.frame;
 
     guard prevModalFrame != nextModalFrame else { return };
     
@@ -2634,7 +2649,9 @@ public class AdaptiveModalManager: NSObject {
     extraAnimation: (() -> Void)? = nil,
     completion: (() -> Void)? = nil
   ) {
-    let closestSnapPoint = self.getClosestSnapPoint(forRect: self.modalFrame);
+    let closestSnapPoint = self.getClosestSnapPoint(
+      forRect: self.modalFrame ?? .zero
+    );
     
     let nextInterpolationIndex =
       self.adjustInterpolationIndex(for: closestSnapPoint.interpolationIndex);
