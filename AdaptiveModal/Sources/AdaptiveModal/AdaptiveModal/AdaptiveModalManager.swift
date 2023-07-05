@@ -2694,6 +2694,7 @@ public class AdaptiveModalManager: NSObject {
     prevSnapPointConfigs: [AdaptiveModalSnapPointConfig]? = nil,
     overshootSnapPointPreset: AdaptiveModalSnapPointPreset? = nil,
     fallbackSnapPointKey: AdaptiveModalSnapPointConfig.SnapPointKey? = nil,
+    inBetweenSnapPointsMinPercentDiff: CGFloat = 0.1,
     isAnimated: Bool = true,
     extraAnimation: (() -> Void)? = nil,
     completion: (() -> Void)? = nil
@@ -2715,7 +2716,11 @@ public class AdaptiveModalManager: NSObject {
         );
         
         let items = self.configInterpolationSteps.filter {
-          $0.percent < overrideInterpolationPoint.percent;
+          let delta = $0.percent - overrideInterpolationPoint.percent;
+          guard delta <= 0 else { return false };
+          
+          // tolerance
+          return abs(delta) >= inBetweenSnapPointsMinPercentDiff;
         };
         
         guard items.count > 0 else {
