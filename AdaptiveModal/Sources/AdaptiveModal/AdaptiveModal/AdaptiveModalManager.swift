@@ -1565,15 +1565,6 @@ public class AdaptiveModalManager: NSObject {
           );
         };
         
-        print(
-          "secondaryAxis: ", secondaryAxis,
-          "\n - nextRect: ", nextRect,
-          "\n - secondaryAxisAdj: ", secondaryAxisAdj,
-          "\n - gesturePoint: ", self.gesturePoint ?? .zero,
-          "\n - computedGestureOffset: ", self.computedGestureOffset ?? .zero,
-          "\n"
-        );
-        
         return CGPoint(
           x: nextRect.origin.x,
           y: secondaryAxisAdj
@@ -2172,16 +2163,6 @@ public class AdaptiveModalManager: NSObject {
     self.animateModal(
       to: self.currentInterpolationStep,
       animator: keyboardValues.keyboardAnimator
-    );
-    
-    print(
-      "onKeyboardWillShow",
-      "\n - frameBegin:", keyboardValues.frameBegin,
-      "\n - frameEnd:", keyboardValues.frameEnd,
-      "\n - animationDuration:", keyboardValues.animationDuration,
-      "\n - animationCurve:", keyboardValues.animationCurve,
-      "\n - notification:", notification,
-      "\n"
     );
   };
   
