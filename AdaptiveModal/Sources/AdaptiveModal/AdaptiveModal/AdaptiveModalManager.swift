@@ -52,11 +52,29 @@ public class AdaptiveModalManager: NSObject {
   // MARK: -  Properties - Layout-Related
   // ------------------------------------
   
+  public var modalWrapperViewController: AdaptiveModalRootViewController?;
+  
   public weak var modalViewController: UIViewController?;
   public weak var presentingViewController: UIViewController?;
   
-  /// `transitionContext.containerView`
+  public weak var presentedViewController: UIViewController? {
+       self.modalWrapperViewController
+    ?? self.modalViewController;
+  };
+  
+  /// `transitionContext.containerView` or `UITransitionView`
   public weak var targetView: UIView?;
+  
+  /// If `modalViewController` was presented via the modal manager,
+  /// then the "root view" (i.e. the view in which we place the modal-related
+  /// views) will be `modalWrapperViewController`
+  ///
+  /// Otherwise, the "root view" will be `targetView`.
+  ///
+  public var modalRootView: UIView? {
+       self.modalWrapperViewController?.view
+    ?? self.targetView
+  };
   
   public var modalView: UIView? {
     self.modalViewController?.view;
@@ -497,10 +515,10 @@ public class AdaptiveModalManager: NSObject {
   };
   
   func setupViewControllers() {
-    guard let modalVC = self.modalViewController else { return };
+    guard let presentedVC = self.presentedViewController else { return };
   
-    modalVC.modalPresentationStyle = .custom;
-    modalVC.transitioningDelegate = self;
+    presentedVC.modalPresentationStyle = .custom;
+    presentedVC.transitioningDelegate = self;
   };
   
   func setupInitViews() {
@@ -578,11 +596,17 @@ public class AdaptiveModalManager: NSObject {
 
   func setupAddViews() {
     guard let modalView = self.modalView,
-          let targetView = self.targetView
+          let modalRootView = self.modalRootView
     else { return };
     
+    if let targetView = self.targetView,
+       let modalRootView = self.modalWrapperViewController?.view {
+       
+      targetView.addSubview(modalRootView);
+    };
+    
     if let bgVisualEffectView = self.backgroundVisualEffectView {
-      targetView.addSubview(bgVisualEffectView);
+      modalRootView.addSubview(bgVisualEffectView);
       
       bgVisualEffectView.clipsToBounds = true;
       bgVisualEffectView.backgroundColor = .clear;
@@ -590,7 +614,7 @@ public class AdaptiveModalManager: NSObject {
     };
     
     if let bgDimmingView = self.backgroundDimmingView {
-      targetView.addSubview(bgDimmingView);
+      modalRootView.addSubview(bgDimmingView);
       
       bgDimmingView.clipsToBounds = true;
       bgDimmingView.backgroundColor = .black;
@@ -611,7 +635,7 @@ public class AdaptiveModalManager: NSObject {
     
     wrapperViews.enumerated().forEach {
       guard let prev = wrapperViews[safeIndex: $0.offset - 1] else {
-        targetView.addSubview($0.element);
+        modalRootView.addSubview($0.element);
         return;
       };
       
@@ -655,19 +679,32 @@ public class AdaptiveModalManager: NSObject {
   
   func setupViewConstraints() {
     guard let modalView = self.modalView,
-          let targetView = self.targetView,
+          let modalRootView = self.modalRootView,
           
           let modalContentWrapperView = self.modalContentWrapperView
     else { return };
+    
+    if let targetView = self.targetView,
+       let modalRootView = self.modalWrapperViewController?.view {
+       
+      modalRootView.translatesAutoresizingMaskIntoConstraints = false;
+       
+      NSLayoutConstraint.activate([
+        modalRootView.topAnchor     .constraint(equalTo: targetView.topAnchor     ),
+        modalRootView.bottomAnchor  .constraint(equalTo: targetView.bottomAnchor  ),
+        modalRootView.leadingAnchor .constraint(equalTo: targetView.leadingAnchor ),
+        modalRootView.trailingAnchor.constraint(equalTo: targetView.trailingAnchor),
+      ]);
+    };
     
     if let bgVisualEffectView = self.backgroundVisualEffectView {
       bgVisualEffectView.translatesAutoresizingMaskIntoConstraints = false;
       
       NSLayoutConstraint.activate([
-        bgVisualEffectView.topAnchor     .constraint(equalTo: targetView.topAnchor     ),
-        bgVisualEffectView.bottomAnchor  .constraint(equalTo: targetView.bottomAnchor  ),
-        bgVisualEffectView.leadingAnchor .constraint(equalTo: targetView.leadingAnchor ),
-        bgVisualEffectView.trailingAnchor.constraint(equalTo: targetView.trailingAnchor),
+        bgVisualEffectView.topAnchor     .constraint(equalTo: modalRootView.topAnchor     ),
+        bgVisualEffectView.bottomAnchor  .constraint(equalTo: modalRootView.bottomAnchor  ),
+        bgVisualEffectView.leadingAnchor .constraint(equalTo: modalRootView.leadingAnchor ),
+        bgVisualEffectView.trailingAnchor.constraint(equalTo: modalRootView.trailingAnchor),
       ]);
     };
     
@@ -808,19 +845,19 @@ public class AdaptiveModalManager: NSObject {
       
       NSLayoutConstraint.activate([
         bgDimmingView.topAnchor.constraint(
-          equalTo: targetView.topAnchor
+          equalTo: modalRootView.topAnchor
         ),
         
         bgDimmingView.bottomAnchor.constraint(
-          equalTo: targetView.bottomAnchor
+          equalTo: modalRootView.bottomAnchor
         ),
         
         bgDimmingView.leadingAnchor.constraint(
-          equalTo: targetView.leadingAnchor
+          equalTo: modalRootView.leadingAnchor
         ),
         
         bgDimmingView.trailingAnchor.constraint(
-          equalTo: targetView.trailingAnchor
+          equalTo: modalRootView.trailingAnchor
         ),
       ]);
     };
@@ -913,6 +950,16 @@ public class AdaptiveModalManager: NSObject {
     NotificationCenter.default.removeObserver(self);
   };
   
+  private func cleanupViewControllers(){
+    guard self.modalWrapperViewController != nil,
+          let modalVC = self.modalViewController
+    else { return };
+  
+    modalVC.willMove(toParent: nil);
+    modalVC.removeFromParent();
+    modalVC.view.removeFromSuperview();
+  };
+  
   private func cleanupViews() {
     let viewsToCleanup: [UIView?] = [
       self.modalDragHandleView,
@@ -976,7 +1023,9 @@ public class AdaptiveModalManager: NSObject {
     self.clearAnimators();
     self.clearLayoutKeyboardValues();
     
+    self.cleanupViewControllers();
     self.cleanupViews();
+    
     self.cleanupSnapPointOverride();
     self.removeObservers();
     
@@ -2501,11 +2550,10 @@ public class AdaptiveModalManager: NSObject {
       !self.didTriggerSetup || didViewsChange || shouldForceReset;
     
     if shouldReset {
-      self.cleanup();
+      //self.cleanup();
     };
     
     self.targetView = targetView;
-  
     self.computeSnapPoints();
     
     if shouldReset {
@@ -2531,6 +2579,13 @@ public class AdaptiveModalManager: NSObject {
   ) {
     self.modalViewController = presentedVC;
     self.presentingViewController = presentingVC;
+    
+    let modalWrapperVC = AdaptiveModalRootViewController();
+    self.modalWrapperViewController = modalWrapperVC;
+    
+    modalWrapperVC.view.addSubview(presentedVC.view);
+    modalWrapperVC.addChild(presentedVC);
+    presentedVC.didMove(toParent: presentedVC);
     
     self.setupViewControllers();
   };
@@ -2570,8 +2625,10 @@ public class AdaptiveModalManager: NSObject {
       presentingViewController: targetVC
     );
     
+    guard let presentedVC = self.presentedViewController else { return };
+    
     targetVC.present(
-      modalVC,
+      presentedVC,
       animated: animated,
       completion: completion
     );
