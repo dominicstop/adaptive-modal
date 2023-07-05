@@ -21,6 +21,7 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
   case demo09;
   case demo10;
   case demo11;
+  case demo12;
   
   var config: AdaptiveModalConfig {
     switch self {
@@ -812,6 +813,44 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
           layoutPreset: .fitScreenVertically
         )
       );
+      
+      // Index: 11
+      case .demo12: return AdaptiveModalConfig(
+        snapPoints: [
+          .init(
+            layoutConfig: .init(
+              horizontalAlignment: .right,
+              verticalAlignment: .center,
+              width: .percent(percentValue: 0.5),
+              height: .percent(percentValue: 0.5),
+              marginRight: .multipleValues([
+                .safeAreaInsets(insetKey: \.right),
+                .constant(10),
+              ])
+            ),
+            keyframeConfig: .init(
+              modalCornerRadius: 10
+            )
+          ),
+          .init(
+            layoutConfig: .init(
+              horizontalAlignment: .left,
+              verticalAlignment: .center,
+              width: .percent(percentValue: 0.5),
+              height: .percent(percentValue: 0.5),
+              marginLeft: .multipleValues([
+                .safeAreaInsets(insetKey: \.left),
+                .constant(10),
+              ])
+            )
+          ),
+        ],
+        snapDirection: .rightToLeft,
+        overshootSnapPoint: .init(
+          layoutPreset: .offscreenLeft
+        ),
+        dragHandlePosition: .none
+      )
     };
   };
 };

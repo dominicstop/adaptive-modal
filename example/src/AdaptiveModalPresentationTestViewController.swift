@@ -211,6 +211,11 @@ class AdaptiveModalPresentationTestViewController : UIViewController {
         $0.shouldEnableOverShooting = false;
       };
       
+      case .demo12: return {
+        $0.shouldSnapToOvershootSnapPoint = true;
+        $0.shouldDismissModalOnSnapToOverShootSnapPoint = true;
+      };
+      
       default: return defaultBlock;
     };
   };
@@ -323,6 +328,9 @@ class AdaptiveModalPresentationTestViewController : UIViewController {
       case .demo11:
         testVC.showTextInputField = true;
         testVC.showCustomSnapPointButton = true;
+        
+      case .demo12:
+        testVC.showCustomSnapPointButton = true;
       
       default: break;
     };
@@ -343,6 +351,9 @@ class AdaptiveModalPresentationTestViewController : UIViewController {
       );
       
     } else {
+      self.adaptiveModalManager.modalConfig =
+        self.currentModalConfigPreset.config;
+        
       self.currentModalManagerAdjustmentBlock(self.adaptiveModalManager);
       
       self.adaptiveModalManager.presentModal(
@@ -355,7 +366,5 @@ class AdaptiveModalPresentationTestViewController : UIViewController {
   @objc func onPressButtonNextConfig(_ sender: UIButton) {
     self.currentModalConfigPresetCounter += 1;
     self.counterLabel!.text = "\(self.currentModalConfigPresetIndex)";
-    
-    self.adaptiveModalManager.modalConfig = self.currentModalConfigPreset.config;
   };
 };
