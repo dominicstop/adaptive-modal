@@ -125,7 +125,7 @@ public struct AdaptiveModalInterpolationPoint: Equatable {
   
   public var isBgSeeThrough: Bool {
        self.isBgVisualEffectSeeThrough
-    || self.isBgDimmingViewSeeThrough;
+    && self.isBgDimmingViewSeeThrough;
   };
   
   public var derivedBackgroundTapInteraction: BackgroundInteractionMode {
