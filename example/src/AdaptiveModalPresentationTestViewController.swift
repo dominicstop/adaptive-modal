@@ -184,33 +184,31 @@ class AdaptiveModalPresentationTestViewController : UIViewController {
     self.modalConfigs[self.currentModalConfigPresetIndex];
   };
   
-  var currentModalManagerAdjustmentBlock: () -> Void {
-    let modalManager = self.adaptiveModalManager;
-  
-    let defaultBlock = {
-      modalManager.shouldEnableOverShooting = true;
+  var currentModalManagerAdjustmentBlock: (AdaptiveModalManager) -> Void {
+    let defaultBlock: (AdaptiveModalManager) -> Void = {
+      $0.shouldEnableOverShooting = true;
     
-      modalManager.shouldSnapToUnderShootSnapPoint = true;
-      modalManager.shouldSnapToOvershootSnapPoint = false;
+      $0.shouldSnapToUnderShootSnapPoint = true;
+      $0.shouldSnapToOvershootSnapPoint = false;
       
-      modalManager.shouldDismissModalOnSnapToUnderShootSnapPoint = true;
-      modalManager.shouldDismissModalOnSnapToOverShootSnapPoint = false;
+      $0.shouldDismissModalOnSnapToUnderShootSnapPoint = true;
+      $0.shouldDismissModalOnSnapToOverShootSnapPoint = false;
       
-      modalManager.shouldDismissKeyboardOnGestureSwipe = false;
+      $0.shouldDismissKeyboardOnGestureSwipe = false;
     };
   
     switch self.currentModalConfigPreset {
       case .demo04: return {
-        modalManager.shouldSnapToOvershootSnapPoint = true;
-        modalManager.shouldDismissModalOnSnapToOverShootSnapPoint = true;
+        $0.shouldSnapToOvershootSnapPoint = true;
+        $0.shouldDismissModalOnSnapToOverShootSnapPoint = true;
       };
       
       case .demo09: return {
-        modalManager.shouldDismissKeyboardOnGestureSwipe = true;
+        $0.shouldDismissKeyboardOnGestureSwipe = true;
       };
       
       case .demo07: return {
-        modalManager.shouldEnableOverShooting = false;
+        $0.shouldEnableOverShooting = false;
       };
       
       default: return defaultBlock;
@@ -332,10 +330,26 @@ class AdaptiveModalPresentationTestViewController : UIViewController {
     self.adaptiveModalManager.eventDelegate = testVC;
     testVC.modalManager = self.adaptiveModalManager;
     
-    self.adaptiveModalManager.presentModal(
-      viewControllerToPresent: testVC,
-      presentingViewController: self
-    );
+    if let presentedVC = self.presentedViewController {
+      let modalManager = AdaptiveModalManager(
+        modalConfig: self.currentModalConfigPreset.config
+      );
+      
+      self.currentModalManagerAdjustmentBlock(modalManager);
+      
+      modalManager.presentModal(
+        viewControllerToPresent: testVC,
+        presentingViewController: presentedVC
+      );
+      
+    } else {
+      self.currentModalManagerAdjustmentBlock(self.adaptiveModalManager);
+      
+      self.adaptiveModalManager.presentModal(
+        viewControllerToPresent: testVC,
+        presentingViewController: self
+      );
+    };
   };
   
   @objc func onPressButtonNextConfig(_ sender: UIButton) {
@@ -343,6 +357,5 @@ class AdaptiveModalPresentationTestViewController : UIViewController {
     self.counterLabel!.text = "\(self.currentModalConfigPresetIndex)";
     
     self.adaptiveModalManager.modalConfig = self.currentModalConfigPreset.config;
-    self.currentModalManagerAdjustmentBlock();
   };
 };
