@@ -59,7 +59,6 @@ public struct AdaptiveModalConfig {
   
   public let dragHandlePosition: DragHandlePosition;
   public let dragHandleSize: CGSize;
-  public let dragHandleOpacity: CGFloat;
   public let dragHandleCornerRadius: CGFloat;
   
   // let entranceConfig: AdaptiveModalEntranceConfig;
@@ -147,7 +146,6 @@ public struct AdaptiveModalConfig {
     overshootSnapPoint: AdaptiveModalSnapPointPreset? = nil,
     dragHandlePosition: DragHandlePosition = .automatic,
     dragHandleSize: CGSize? = nil,
-    dragHandleOpacity: CGFloat? = nil,
     dragHandleCornerRadius: CGFloat? = nil
   ) {
     self.baseSnapPoints = snapPoints;
@@ -180,7 +178,6 @@ public struct AdaptiveModalConfig {
     }();
     
     self.dragHandleSize = dragHandleSize ?? CGSize(width: 40, height: 6);
-    self.dragHandleOpacity = dragHandleOpacity ?? 0.8;
     self.dragHandleCornerRadius = dragHandleCornerRadius ?? 3;
   };
   
