@@ -6,7 +6,6 @@
 
 ## Current
 
-- [ ] `TODO:2023-07-09-11-12-04` - Impl: `modalSwipeGestureEdgeHeight`.
 - [ ] `TODO:2023-07-09-19-43-23` - Refactor: Update modal drag handle to work when outside the modal content bounds. 
 - [ ] `TODO:2023-06-23-18-17-09` - Impl: `RNILayout` - `x` and `y` offsets.
 - [ ] `TODO:2023-06-23-18-17-09` - Impl: `RNILayout` - raw rect layout value.
@@ -57,6 +56,8 @@
 <br><br>
 
 ## Completed
+
+- [x] `TODO:2023-07-09-11-12-04` - Impl: `modalSwipeGestureEdgeHeight`.
 
 - [x] `TODO:2023-07-09-11-04-39`  - Impl: "Drag Handle" `hitSlop` /`pointInsideInset`.
 
