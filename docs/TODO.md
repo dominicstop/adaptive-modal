@@ -6,8 +6,6 @@
 
 ## Current
 
-- [ ] `TODO:2023-06-23-18-14-24` -  Impl: `AdaptiveModal` - Add support for modal's w/ scrollviews.
-
 <br><br>
 
 ## WIP
@@ -57,6 +55,8 @@
 <br><br>
 
 ## Completed
+
+- [x] `TODO:2023-06-23-18-14-24` -  Impl: `AdaptiveModal` - Add support for modal's w/ scrollviews.
 
 - [x] `TODO:2023-06-23-18-13-25` - Impl: `AdaptiveModal` - Config - Background interaction - `automatic`,  `dismiss`, `passthrough`, `none`.
 
