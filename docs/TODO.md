@@ -6,13 +6,16 @@
 
 ## Current
 
+- [ ] `TODO:2023-07-09-11-04-39`  - Impl: "Drag Handle" `hitSlop` /`pointInsideInset`.
+- [ ] `TODO:2023-07-09-11-12-04` - Impl: `modalSwipeGestureEdgeHeight`.
+
 <br><br>
 
 ## WIP
 
 - [ ] `TODO:2023-06-28-04-16-09` - Impl: Update presentation-related delegates/subclass to integrate more with the modal transition + presentation/dismissal.
 - [ ] `TODO:2023-06-24-23-15-29`  - Impl:  `AdaptiveModalConfig.keyboardOverrideSnapPoint`.
-- [ ] `TODO:2023-06-28-04-17-34` Impl: Optimization - Conditionally initialize views only when needed.s
+- [ ] `TODO:2023-06-28-04-17-34` Impl: Optimization - Conditionally initialize views only when needed.
 
 - [ ] `TODO:2023-06-23-18-13-58` -  Impl: `AdaptiveModal` - Add support for passing a user-created gesture handler.
 - [ ] `TODO:2023-06-23-18-15-46` -  Impl: `AdaptiveModal` - Add support for animating the home gesture bar + status bar.
