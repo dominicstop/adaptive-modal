@@ -10,7 +10,13 @@ import AdaptiveModal
 
 fileprivate class TestModalViewController: UIViewController, AdaptiveModalEventNotifiable {
 
+  enum ContentMode {
+    case buttons, scrollview;
+  };
+
   weak var modalManager: AdaptiveModalManager?;
+  
+  var contentMode: ContentMode = .buttons;
   
   var showDismissButton = true;
   var showCustomSnapPointButton = false;
@@ -76,7 +82,7 @@ fileprivate class TestModalViewController: UIViewController, AdaptiveModalEventN
       return textField;
     }();
     
-    let stackView: UIStackView = {
+    let controlsView: UIStackView = {
       let stack = UIStackView();
       
       stack.axis = .vertical;
@@ -101,13 +107,79 @@ fileprivate class TestModalViewController: UIViewController, AdaptiveModalEventN
       return stack;
     }();
     
-    stackView.translatesAutoresizingMaskIntoConstraints = false;
-    self.view.addSubview(stackView);
-    
-    NSLayoutConstraint.activate([
-      stackView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-      stackView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor),
-    ]);
+    switch self.contentMode {
+      case .buttons:
+        controlsView.translatesAutoresizingMaskIntoConstraints = false;
+        self.view.addSubview(controlsView);
+        
+        NSLayoutConstraint.activate([
+          controlsView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+          controlsView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor),
+        ]);
+            
+      case .scrollview:
+        let stackView: UIStackView = {
+          let stack = UIStackView();
+          
+          stack.axis = .vertical;
+          stack.distribution = .fillProportionally;
+          stack.alignment = .center;
+          stack.spacing = 15;
+                    
+          return stack;
+        }();
+        
+        stackView.addArrangedSubview(controlsView);
+        stackView.setCustomSpacing(40, after: controlsView);
+        
+        for index in 0...30 {
+          let label = UILabel();
+          
+          label.text = "\(index)";
+          label.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0.5);
+          label.font = .boldSystemFont(ofSize: 22);
+
+          stackView.addArrangedSubview(label);
+          stackView.setCustomSpacing(15, after: label);
+        };
+        
+        let scrollView: UIScrollView = {
+          let scrollView = UIScrollView();
+          
+          scrollView.showsHorizontalScrollIndicator = false;
+          scrollView.showsVerticalScrollIndicator = false;
+          return scrollView
+        }();
+        
+        stackView.translatesAutoresizingMaskIntoConstraints = false;
+        scrollView.addSubview(stackView);
+        
+        NSLayoutConstraint.activate([
+          stackView.topAnchor.constraint(
+            equalTo: scrollView.topAnchor,
+            constant: 40
+          ),
+          
+          stackView.bottomAnchor.constraint(
+            equalTo: scrollView.bottomAnchor,
+            constant: -100
+          ),
+          
+          stackView.centerXAnchor.constraint(
+            equalTo: scrollView.centerXAnchor
+          ),
+        ]);
+        
+        scrollView.translatesAutoresizingMaskIntoConstraints = false;
+        self.view.addSubview(scrollView);
+        
+        NSLayoutConstraint.activate([
+          scrollView.topAnchor     .constraint(equalTo: self.view.topAnchor     ),
+          scrollView.bottomAnchor  .constraint(equalTo: self.view.bottomAnchor  ),
+          scrollView.leadingAnchor .constraint(equalTo: self.view.leadingAnchor ),
+          scrollView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+        ]);
+    };
   };
   
   @objc func onPressButtonDismiss(_ sender: UIButton){
