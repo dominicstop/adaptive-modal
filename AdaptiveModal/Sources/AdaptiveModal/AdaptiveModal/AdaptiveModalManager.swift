@@ -468,6 +468,18 @@ public class AdaptiveModalManager: NSObject {
     return offset;
   };
   
+  private var modalSwipeGestureEdgeRect: CGRect? {
+    guard let modalFrame = self.modalFrame else { return nil };
+    
+    return CGRect(
+      origin: modalFrame.origin,
+      size: CGSize(
+        width: modalFrame.width,
+        height: self.modalConfig.modalSwipeGestureEdgeHeight
+      )
+    );
+  };
+  
   // MARK: -  Properties
   // -------------------
   
@@ -2931,6 +2943,13 @@ extension AdaptiveModalManager: UIGestureRecognizerDelegate {
       return true;
     };
     
+    if let modalSwipeGestureEdgeRect = self.modalSwipeGestureEdgeRect,
+       modalSwipeGestureEdgeRect.contains(gesturePoint) {
+      
+      cancelOtherGesture();
+      return true;
+    };
+    
     if modalContentScrollView.isDecelerating {
       return false;
     };
@@ -2949,7 +2968,6 @@ extension AdaptiveModalManager: UIGestureRecognizerDelegate {
     if modalContentScrollViewOffset >= modalContentMaxScrollViewOffset,
        gestureVelocityCoord < 0 {
     
-      cancelOtherGesture();
       return true;
     };
     

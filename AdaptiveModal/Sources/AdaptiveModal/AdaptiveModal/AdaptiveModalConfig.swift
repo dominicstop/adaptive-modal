@@ -62,6 +62,8 @@ public struct AdaptiveModalConfig {
   public let dragHandleCornerRadius: CGFloat;
   public let dragHandleHitSlop: CGPoint;
   
+  public let modalSwipeGestureEdgeHeight: CGFloat;
+  
   // let entranceConfig: AdaptiveModalEntranceConfig;
   // let snapSwipeVelocityThreshold: CGFloat = 0;
   
@@ -148,7 +150,8 @@ public struct AdaptiveModalConfig {
     dragHandlePosition: DragHandlePosition = .automatic,
     dragHandleSize: CGSize? = nil,
     dragHandleHitSlop: CGPoint? = nil,
-    dragHandleCornerRadius: CGFloat? = nil
+    dragHandleCornerRadius: CGFloat? = nil,
+    modalSwipeGestureEdgeHeight: CGFloat? = nil
   ) {
     self.baseSnapPoints = snapPoints;
     
@@ -182,6 +185,8 @@ public struct AdaptiveModalConfig {
     self.dragHandleSize = dragHandleSize ?? CGSize(width: 40, height: 6);
     self.dragHandleCornerRadius = dragHandleCornerRadius ?? 3;
     self.dragHandleHitSlop = dragHandleHitSlop ?? .init(x: 15, y: 15);
+    
+    self.modalSwipeGestureEdgeHeight = modalSwipeGestureEdgeHeight ?? 20;
   };
   
   // MARK: - Functions
