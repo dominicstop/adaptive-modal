@@ -6,7 +6,6 @@
 
 ## Current
 
-- [ ] `TODO:2023-07-09-11-04-39`  - Impl: "Drag Handle" `hitSlop` /`pointInsideInset`.
 - [ ] `TODO:2023-07-09-11-12-04` - Impl: `modalSwipeGestureEdgeHeight`.
 
 <br><br>
@@ -58,6 +57,8 @@
 <br><br>
 
 ## Completed
+
+- [x] `TODO:2023-07-09-11-04-39`  - Impl: "Drag Handle" `hitSlop` /`pointInsideInset`.
 
 - [x] `TODO:2023-06-23-18-14-24` -  Impl: `AdaptiveModal` - Add support for modal's w/ scrollviews.
 
