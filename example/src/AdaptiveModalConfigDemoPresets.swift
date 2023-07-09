@@ -22,6 +22,7 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
   case demo10;
   case demo11;
   case demo12;
+  case demo13;
   
   var config: AdaptiveModalConfig {
     switch self {
@@ -851,7 +852,58 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
           layoutPreset: .offscreenLeft
         ),
         dragHandlePosition: .none
-      )
+      );
+      
+      // Index: 12
+      case .demo13: return AdaptiveModalConfig(
+        snapPoints: [
+          // snap point - 1
+          AdaptiveModalSnapPointConfig(
+            layoutConfig: .init(
+              horizontalAlignment: .center,
+              verticalAlignment: .bottom,
+              width: .percent(percentValue: 0.9),
+              height: .percent(percentValue: 0.3)
+            ),
+            keyframeConfig: .init(
+              modalShadowOffset: .init(width: 0, height: -2),
+              modalShadowOpacity: 0.3,
+              modalShadowRadius: 7,
+              modalCornerRadius: 10,
+              modalMaskedCorners: .topCorners,
+              modalBackgroundOpacity: 0.9,
+              modalBackgroundVisualEffect: UIBlurEffect(style: .regular),
+              modalBackgroundVisualEffectIntensity: 1,
+              backgroundOpacity: 0,
+              backgroundVisualEffect: UIBlurEffect(style: .regular),
+              backgroundVisualEffectIntensity: 0
+            )
+          ),
+          
+          // snap point - 2
+          AdaptiveModalSnapPointConfig(
+            layoutConfig: RNILayout(
+              horizontalAlignment: .center,
+              verticalAlignment: .bottom,
+              width: .percent(percentValue: 0.9),
+              height: .percent(percentValue: 0.7)
+            ),
+            keyframeConfig: AdaptiveModalKeyframeConfig(
+              modalShadowOffset: .init(width: 2, height: 2),
+              modalShadowOpacity: 0.3,
+              modalShadowRadius: 8,
+              modalBackgroundOpacity: 0.8,
+              modalBackgroundVisualEffectIntensity: 0.8,
+              backgroundOpacity: 0.2,
+              backgroundVisualEffectIntensity: 0.1
+            )
+          ),
+        ],
+        snapDirection: .bottomToTop,
+        overshootSnapPoint: AdaptiveModalSnapPointPreset(
+          layoutPreset: .fitScreenVertically
+        )
+      );
     };
   };
 };

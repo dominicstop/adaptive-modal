@@ -35,7 +35,7 @@ fileprivate class TestModalViewController: UIViewController, AdaptiveModalEventN
   }();
   
   override func viewDidLoad() {
-    self.view.backgroundColor = .white;
+    self.view.backgroundColor = .clear;
     
     let dismissButton: UIButton = {
       let button = UIButton();
@@ -412,6 +412,9 @@ class AdaptiveModalPresentationTestViewController : UIViewController {
       case .demo12:
         testVC.showCustomSnapPointButton = true;
         testVC.shouldSetOverrideOverShootSnapPoint = true;
+        
+      case .demo13:
+        testVC.contentMode = .scrollview;
       
       default: break;
     };
