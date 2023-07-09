@@ -87,7 +87,7 @@ public class AdaptiveModalManager: NSObject {
   public var modalWrapperShadowView: UIView?;
   public var modalContentWrapperView: UIView?;
   
-  public var modalDragHandleView: UIView?;
+  public var modalDragHandleView: AdaptiveModalDragHandleView?;
   
   public weak var modalContentScrollView: UIScrollView?;
   
@@ -541,10 +541,11 @@ public class AdaptiveModalManager: NSObject {
     self.backgroundVisualEffectView = UIVisualEffectView();
     
     if self.modalConfig.dragHandlePosition != .none {
-      let dragHandle = UIView();
-      self.modalDragHandleView = dragHandle;
-      
+      let dragHandle = AdaptiveModalDragHandleView();
       dragHandle.layer.cornerRadius = self.modalConfig.dragHandleCornerRadius;
+      dragHandle.pointInsideHitSlop = self.modalConfig.dragHandleHitSlop;
+      
+      self.modalDragHandleView = dragHandle;
     };
   };
   
