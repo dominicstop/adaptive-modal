@@ -332,7 +332,35 @@ public class AdaptiveModalManager: NSObject {
   private var gestureOffset: CGPoint?;
   private var gestureVelocity: CGPoint?;
   private var gestureInitialPoint: CGPoint?;
-  private var gesturePoint: CGPoint?;
+  
+  private var gesturePointPrev: CGPoint?;
+  private var gesturePoint: CGPoint? {
+    didSet {
+      self.gesturePointPrev = oldValue;
+    }
+  };
+  
+  private var gesturePointDeltaInitial: CGPoint? {
+    guard let gestureInitialPoint = self.gestureInitialPoint,
+          let gesturePoint = self.gesturePoint
+    else { return nil };
+    
+    return CGPoint(
+      x: gestureInitialPoint.x - gesturePoint.x,
+      y: gestureInitialPoint.y - gesturePoint.y
+    );
+  };
+  
+  private var gesturePointDeltaPrev: CGPoint? {
+    guard let gesturePointPrev = self.gesturePointPrev,
+          let gesturePoint = self.gesturePoint
+    else { return nil };
+    
+    return CGPoint(
+      x: gesturePointPrev.x - gesturePoint.x,
+      y: gesturePointPrev.y - gesturePoint.y
+    );
+  };
   
   private var gestureInitialVelocity: CGVector {
     guard let gestureInitialPoint = self.gestureInitialPoint,
