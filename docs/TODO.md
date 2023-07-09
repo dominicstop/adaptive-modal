@@ -7,6 +7,10 @@
 ## Current
 
 - [ ] `TODO:2023-07-09-11-12-04` - Impl: `modalSwipeGestureEdgeHeight`.
+- [ ] `TODO:2023-07-09-19-43-23` - Refactor: Update modal drag handle to work when outside the modal content bounds. 
+- [ ] `TODO:2023-06-23-18-17-09` - Impl: `RNILayout` - `x` and `y` offsets.
+- [ ] `TODO:2023-06-23-18-17-09` - Impl: `RNILayout` - raw rect layout value.
+- [ ] `TODO:2023-06-23-18-13-58` -  Impl: `AdaptiveModal` - Add support for passing a user-created `UIScreenEdgePanGestureRecognizer` gesture handler.
 
 <br><br>
 
@@ -15,16 +19,12 @@
 - [ ] `TODO:2023-06-28-04-16-09` - Impl: Update presentation-related delegates/subclass to integrate more with the modal transition + presentation/dismissal.
 - [ ] `TODO:2023-06-24-23-15-29`  - Impl:  `AdaptiveModalConfig.keyboardOverrideSnapPoint`.
 - [ ] `TODO:2023-06-28-04-17-34` Impl: Optimization - Conditionally initialize views only when needed.
-
-- [ ] `TODO:2023-06-23-18-13-58` -  Impl: `AdaptiveModal` - Add support for passing a user-created gesture handler.
 - [ ] `TODO:2023-06-23-18-15-46` -  Impl: `AdaptiveModal` - Add support for animating the home gesture bar + status bar.
 - [ ] `TODO:2023-06-23-18-15-46` -  Impl: `AdaptiveModal` - Adaptive config based on rules (i.e. the current size class, device type, device orientation, window size, etc).
 - [ ] ` TODO:2023-06-23-18-16-28` - Impl: `AdaptiveModal` -Add support for "in-between" snap points.
 - [ ] `TODO:2023-06-23-18-17-01` - Impl: `AdaptiveModal` - Expose root view as computed property.
-- [ ] `TODO:2023-06-23-18-17-09` - Impl: `RNILayout` - `x` and `y` offsets.
-- [ ] `TODO:2023-06-23-18-17-09` - Impl: `RNILayout` - raw rect layout value.
-- [ ] `TODO:2023-06-23-18-17-19` - Impl: Modal Events Delegate - Will/Did show/hide modal events.
-- [ ] `TODO:2023-06-23-18-17-27` - Impl: Modal Events Delegate - Drag begin/end event.
+- [ ] `TODO:2023-06-23-18-17-19` - Impl: Modal Events Delegate - Will/did show/hide modal events.
+- [ ] `TODO:2023-06-23-18-17-27` - Impl: Modal Events Delegate - Modal drag begin/end event.
   * Send a ref of the animator so the user can attach custom animators.
 
 <br>
