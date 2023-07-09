@@ -89,6 +89,8 @@ public class AdaptiveModalManager: NSObject {
   
   public var modalDragHandleView: UIView?;
   
+  public weak var modalContentScrollView: UIScrollView?;
+  
   public private(set) var prevModalFrame: CGRect = .zero;
   public private(set) var prevTargetFrame: CGRect = .zero;
   
@@ -323,8 +325,8 @@ public class AdaptiveModalManager: NSObject {
   // MARK: -  Properties - Gesture-Related
   // -------------------------------------
   
-  weak var modalGesture: UIGestureRecognizer?;
-  weak var modalDragHandleGesture: UIGestureRecognizer?;
+  weak var modalGesture: UIPanGestureRecognizer?;
+  weak var modalDragHandleGesture: UIPanGestureRecognizer?;
   weak var backgroundTapGesture: UITapGestureRecognizer?;
   
   private var gestureOffset: CGPoint?;
@@ -558,6 +560,7 @@ public class AdaptiveModalManager: NSObject {
     
     self.modalGesture = gesture;
     gesture.isEnabled = self.isModalContentSwipeGestureEnabled;
+    gesture.delegate = self;
     
     modalView.addGestureRecognizer(gesture);
     
@@ -908,6 +911,25 @@ public class AdaptiveModalManager: NSObject {
         ),
       ]);
     };
+  };
+  
+  func setupExtractScrollView(){
+    guard let modalView = self.modalView
+    else { return };
+    
+    func extractScrollView(inView view: UIView) -> UIScrollView? {
+      for subview in view.subviews {
+        if let scrollView = subview as? UIScrollView {
+          return scrollView;
+        };
+        
+        return extractScrollView(inView: subview);
+      };
+      
+      return nil;
+    };
+    
+    self.modalContentScrollView = extractScrollView(inView: modalView);
   };
   
   // MARK: - Functions - Cleanup-Related
@@ -2560,6 +2582,8 @@ public class AdaptiveModalManager: NSObject {
       self.setupAddViews();
       self.setupViewConstraints();
       self.setupObservers();
+      
+      self.setupExtractScrollView();
     };
     
     self.updateModal();
@@ -2817,5 +2841,95 @@ public class AdaptiveModalManager: NSObject {
       self.notifyOnModalDidSnap();
       completion?();
     };
+  };
+};
+
+// MARK: - UIGestureRecognizerDelegate
+// -----------------------------------
+
+extension AdaptiveModalManager: UIGestureRecognizerDelegate {
+  
+  public func gestureRecognizer(
+    _ gestureRecognizer: UIGestureRecognizer,
+    shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer
+  ) -> Bool {
+  
+    guard let modalView = self.modalView,
+          let panGesture = gestureRecognizer as? UIPanGestureRecognizer,
+          let modalContentScrollView = self.modalContentScrollView
+    else { return false };
+    
+    func cancelOtherGesture() {
+      otherGestureRecognizer.isEnabled.toggle();
+      otherGestureRecognizer.isEnabled.toggle();
+    };
+    
+    let gesturePoint = panGesture.location(in: self.targetView);
+    
+    let modalContentScrollViewGestures = modalContentScrollView.gestureRecognizers;
+    
+    let gestureVelocity = panGesture.velocity(in: modalView);
+    
+    let gestureVelocityCoord = gestureVelocity[
+      keyPath: self.modalConfig.inputValueKeyForPoint
+    ];
+      
+    let modalContentScrollViewOffset = modalContentScrollView.contentOffset[
+      keyPath: self.modalConfig.inputValueKeyForPoint
+    ];
+    
+    let modalContentMinScrollViewOffset = modalContentScrollView.minContentOffset[
+      keyPath: self.modalConfig.inputValueKeyForPoint
+    ];
+    
+    let modalContentMaxScrollViewOffset = modalContentScrollView.maxContentOffset[
+      keyPath: self.modalConfig.inputValueKeyForPoint
+    ];
+    
+
+    print(
+      "\n - gestureVelocityCoord:", gestureVelocityCoord,
+      "\n - modalContentScrollViewOffset:", modalContentScrollViewOffset,
+      "\n - modalContentMinScrollViewOffset:", modalContentMinScrollViewOffset,
+      "\n - modalContentMaxScrollViewOffset:", modalContentMaxScrollViewOffset,
+      "\n - modalContentScrollView.isDragging:", modalContentScrollView.isDragging,
+      "\n - modalContentScrollView.isDecelerating:", modalContentScrollView.isDecelerating,
+      "\n - gesturePoint:", gesturePoint,
+      "\n - dummyModalView.frame:", self.dummyModalView?.frame ?? .zero,
+      "\n"
+    );
+    
+    if !modalContentScrollView.isScrollEnabled {
+      return true;
+    };
+    
+    if modalContentScrollView.isDecelerating {
+      return false;
+    };
+    
+    if abs(gestureVelocityCoord) > 500 {
+      return false;
+    };
+    
+    if modalContentScrollViewOffset <= modalContentMinScrollViewOffset,
+       gestureVelocityCoord > 0 {
+      
+      cancelOtherGesture();
+      return true;
+    };
+    
+    if modalContentScrollViewOffset >= modalContentMaxScrollViewOffset,
+       gestureVelocityCoord < 0 {
+    
+      cancelOtherGesture();
+      return true;
+    };
+    
+    if abs(gestureVelocityCoord) < 100 {
+      cancelOtherGesture();
+      return true;
+    };
+  
+    return false;
   };
 };
