@@ -11,6 +11,9 @@
 - [ ] `TODO:2023-06-23-18-17-09` - Impl: `RNILayout` - `x` and `y` offsets.
 - [ ] `TODO:2023-06-23-18-17-09` - Impl: `RNILayout` - raw rect layout value.
 - [ ] `TODO:2023-06-23-18-13-58` -  Impl: `AdaptiveModal` - Add support for passing a user-created `UIScreenEdgePanGestureRecognizer` gesture handler.
+- [ ] `TODO:2023-07-10-11-30-47` - Impl: Make Overshoot snap point config optional.
+- [ ] `TODO:2023-07-10-11-31-01` - Impl: Update `AdaptiveModalSnapPointPreset` to accept automatic.
+- [ ] `TODO:2023-07-10-11-32-03` - Impl: Detect and warn against interpolation percent  collision.
 
 <br><br>
 
