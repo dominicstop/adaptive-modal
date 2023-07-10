@@ -23,6 +23,7 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
   case demo11;
   case demo12;
   case demo13;
+  case demo14;
   
   var config: AdaptiveModalConfig {
     switch self {
@@ -903,6 +904,42 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
         overshootSnapPoint: AdaptiveModalSnapPointPreset(
           layoutPreset: .fitScreenVertically
         )
+      );
+      
+      // Index: 13
+      case .demo14: return AdaptiveModalConfig(
+        snapPoints: [
+          // snap point - 1
+          AdaptiveModalSnapPointConfig(
+            layoutConfig: .init(
+              horizontalAlignment: .center,
+              verticalAlignment: .bottom,
+              width: .stretch,
+              height: .stretch
+            ),
+            keyframeConfig: .init(
+              modalContentOpacity: 1,
+              backgroundOpacity: 0.2,
+              backgroundVisualEffectIntensity: 1
+            )
+          ),
+        ],
+        snapDirection: .bottomToTop,
+        undershootSnapPoint: .init(
+          layoutPreset: .offscreenBottom,
+          keyframeConfig: .init(
+            modalContentOpacity: 0,
+            modalBackgroundOpacity: 0,
+            backgroundColor: .white,
+            backgroundOpacity: 0,
+            backgroundVisualEffect: UIBlurEffect(style: .regular),
+            backgroundVisualEffectIntensity: 0
+          )
+        ),
+        overshootSnapPoint: AdaptiveModalSnapPointPreset(
+          layoutPreset: .halfOffscreenTop
+        ),
+        dragHandlePosition: .none
       );
     };
   };

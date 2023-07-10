@@ -415,6 +415,9 @@ class AdaptiveModalPresentationTestViewController : UIViewController {
         
       case .demo13:
         testVC.contentMode = .scrollview;
+        
+      case .demo14:
+        testVC.contentMode = .scrollview;
       
       default: break;
     };
