@@ -43,6 +43,9 @@ public class AdaptiveModalManager: NSObject {
     }
   };
   
+  public var allowModalToDragWhenAtMinScrollViewOffset = true;
+  public var allowModalToDragWhenAtMaxScrollViewOffset = true;
+  
   public var isModalDragHandleGestureEnabled = true {
     willSet {
        self.modalDragHandleGesture?.isEnabled = newValue;
@@ -2949,14 +2952,16 @@ extension AdaptiveModalManager: UIGestureRecognizerDelegate {
       return false;
     };
     
-    if modalContentScrollViewOffset <= modalContentMinScrollViewOffset,
+    if self.allowModalToDragWhenAtMinScrollViewOffset,
+       modalContentScrollViewOffset <= modalContentMinScrollViewOffset,
        gestureVelocityCoord > 0 {
       
       cancelOtherGesture();
       return true;
     };
     
-    if modalContentScrollViewOffset >= modalContentMaxScrollViewOffset,
+    if self.allowModalToDragWhenAtMaxScrollViewOffset,
+       modalContentScrollViewOffset >= modalContentMaxScrollViewOffset,
        gestureVelocityCoord < 0 {
     
       return true;
