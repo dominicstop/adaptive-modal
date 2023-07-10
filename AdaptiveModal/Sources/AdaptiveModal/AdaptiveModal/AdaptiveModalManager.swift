@@ -121,12 +121,12 @@ public class AdaptiveModalManager: NSObject {
   
   private var modalSecondaryAxisValue: CGFloat? = nil;
   
-  private weak var modalConstraintLeft  : NSLayoutConstraint?;
-  private weak var modalConstraintRight : NSLayoutConstraint?;
-  private weak var modalConstraintTop   : NSLayoutConstraint?;
-  private weak var modalConstraintBottom: NSLayoutConstraint?;
+  internal weak var modalConstraintLeft  : NSLayoutConstraint?;
+  internal weak var modalConstraintRight : NSLayoutConstraint?;
+  internal weak var modalConstraintTop   : NSLayoutConstraint?;
+  internal weak var modalConstraintBottom: NSLayoutConstraint?;
   
-  private weak var modalDragHandleOffsetConstraint: NSLayoutConstraint?;
+  internal weak var modalDragHandleOffsetConstraint: NSLayoutConstraint?;
   
   private var layoutKeyboardValues: RNILayoutKeyboardValues?;
   
@@ -2080,29 +2080,11 @@ public class AdaptiveModalManager: NSObject {
     extraAnimation: (() -> Void)? = nil,
     completion: ((UIViewAnimatingPosition) -> Void)? = nil
   ) {
-    guard let modalView = self.modalView else { return };
-    
+  
     let animationBlock = {
       extraAnimation?();
         
-      interpolationPoint.applyAnimation(
-        toModalView: modalView,
-        toModalWrapperLayoutView: self.modalWrapperLayoutView,
-        toModalWrapperTransformView: self.modalWrapperTransformView,
-        toModalWrapperShadowView: self.modalWrapperShadowView,
-        toModalContentWrapperView: self.modalContentWrapperView,
-        toDummyModalView: self.dummyModalView,
-        toModalBackgroundView: self.modalBackgroundView,
-        toBackgroundView: self.backgroundDimmingView,
-        toModalBackgroundEffectView: self.modalBackgroundVisualEffectView,
-        toBackgroundVisualEffectView: self.backgroundVisualEffectView,
-        toModalConstraintLeft: self.modalConstraintLeft,
-        toModalConstraintRight: self.modalConstraintRight,
-        toModalConstraintTop: self.modalConstraintTop,
-        toModalConstraintBottom: self.modalConstraintBottom,
-        toModalDragHandleView: self.modalDragHandleView,
-        toModalDragHandleConstraint: self.modalDragHandleOffsetConstraint
-      );
+      interpolationPoint.applyAnimation(toModalManager: self);
     };
     
     if isAnimated {

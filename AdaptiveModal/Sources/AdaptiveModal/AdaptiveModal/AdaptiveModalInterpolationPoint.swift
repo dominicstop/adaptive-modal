@@ -183,124 +183,115 @@ public struct AdaptiveModalInterpolationPoint: Equatable {
   };
   
   func applyAnimation(
-    toModalView modalView: UIView,
-    toModalWrapperLayoutView modalWrapperLayoutView: UIView?,
-    toModalWrapperTransformView modalWrapperTransformView: UIView?,
-    toModalWrapperShadowView modalWrapperShadowView: UIView?,
-    toModalContentWrapperView modalContentWrapperView: UIView?,
-    toDummyModalView dummyModalView: UIView?,
-    toModalBackgroundView modalBgView: UIView?,
-    toBackgroundView bgView: UIView?,
-    toModalBackgroundEffectView modalBgEffectView: UIVisualEffectView?,
-    toBackgroundVisualEffectView bgVisualEffectView: UIVisualEffectView?,
-    toModalConstraintLeft modalConstraintLeft: NSLayoutConstraint?,
-    toModalConstraintRight modalConstraintRight: NSLayoutConstraint?,
-    toModalConstraintTop modalConstraintTop: NSLayoutConstraint?,
-    toModalConstraintBottom modalConstraintBottom: NSLayoutConstraint?,
-    toModalDragHandleView modalDragHandleView: UIView?,
-    toModalDragHandleConstraint modalDragHandleOffsetConstraint: NSLayoutConstraint?
+    toModalManager modalManager: AdaptiveModalManager
   ){
-  
-    modalView.alpha = self.modalContentOpacity;
     
-    if let modalWrapperLayoutView = modalWrapperLayoutView {
+    if let modalView = modalManager.modalView {
+      modalView.alpha = self.modalContentOpacity;
+    };
+    
+    if let modalWrapperLayoutView = modalManager.modalWrapperLayoutView {
       modalWrapperLayoutView.frame = self.computedRect;
       modalWrapperLayoutView.alpha = self.modalOpacity;
     };
     
-    if let view = modalWrapperTransformView {
-      view.transform = self.modalTransform;
+    if let modalWrapperTransformView = modalManager.modalWrapperTransformView {
+      modalWrapperTransformView.transform = self.modalTransform;
     };
     
-    if let view = modalWrapperShadowView {
+    if let modalWrapperShadowView = modalManager.modalWrapperShadowView {
       // border
-      view.layer.borderWidth = self.modalBorderWidth;
-      view.layer.borderColor = self.modalBorderColor.cgColor;
+      modalWrapperShadowView.layer.borderWidth = self.modalBorderWidth;
+      modalWrapperShadowView.layer.borderColor = self.modalBorderColor.cgColor;
 
       // shadow
-      view.layer.shadowColor = self.modalShadowColor.cgColor;
-      view.layer.shadowOffset = self.modalShadowOffset;
-      view.layer.shadowOpacity = Float(self.modalShadowOpacity);
-      view.layer.shadowRadius = self.modalShadowRadius;
+      modalWrapperShadowView.layer.shadowColor = self.modalShadowColor.cgColor;
+      modalWrapperShadowView.layer.shadowOffset = self.modalShadowOffset;
+      modalWrapperShadowView.layer.shadowOpacity = Float(self.modalShadowOpacity);
+      modalWrapperShadowView.layer.shadowRadius = self.modalShadowRadius;
     };
     
-    if let modalContentWrapperView = modalContentWrapperView {
+    if let modalContentWrapperView = modalManager.modalContentWrapperView {
       modalContentWrapperView.layer.cornerRadius = self.modalCornerRadius;
       modalContentWrapperView.layer.maskedCorners = self.modalMaskedCorners;
     };
     
-    if let dummyModalView = dummyModalView {
+    if let dummyModalView = modalManager.dummyModalView {
       dummyModalView.frame = self.computedRect;
     };
     
-    if let view = modalBgView {
-      view.alpha = self.modalBackgroundOpacity;
-      view.backgroundColor = self.modalBackgroundColor;
+    if let modalBgView = modalManager.modalBackgroundView {
+      modalBgView.alpha = self.modalBackgroundOpacity;
+      modalBgView.backgroundColor = self.modalBackgroundColor;
     };
     
-    if let bgView = bgView {
+    if let bgView = modalManager.backgroundDimmingView {
       bgView.alpha = self.backgroundOpacity;
       bgView.backgroundColor = self.backgroundColor;
     };
     
-    if let effectView = modalBgEffectView {
-      effectView.alpha = self.modalBackgroundVisualEffectOpacity;
+    if let modalBgEffectView = modalManager.modalBackgroundVisualEffectView {
+      modalBgEffectView.alpha = self.modalBackgroundVisualEffectOpacity;
     };
     
-    if let effectView = bgVisualEffectView {
-      effectView.alpha = self.backgroundVisualEffectOpacity;
+    if let bgVisualEffectView = modalManager.backgroundVisualEffectView {
+      bgVisualEffectView.alpha = self.backgroundVisualEffectOpacity;
     };
     
     var shouldUpdateConstraints = false;
     
-    if let constraintLeft = modalConstraintLeft,
+    if let constraintLeft = modalManager.modalConstraintLeft,
        constraintLeft.constant != self.modalPaddingAdjusted.left {
       
       constraintLeft.constant = self.modalPaddingAdjusted.left;
       shouldUpdateConstraints = true;
     };
     
-    if let constraintRight = modalConstraintRight,
+    if let constraintRight = modalManager.modalConstraintRight,
        constraintRight.constant != self.modalPaddingAdjusted.right {
       
       constraintRight.constant = self.modalPaddingAdjusted.right;
       shouldUpdateConstraints = true;
     };
     
-    if let constraintTop = modalConstraintTop,
+    if let constraintTop = modalManager.modalConstraintTop,
        constraintTop.constant != self.modalPaddingAdjusted.top {
       
       constraintTop.constant = self.modalPaddingAdjusted.top;
       shouldUpdateConstraints = true;
     };
     
-    if let constraintBottom = modalConstraintBottom,
+    if let constraintBottom = modalManager.modalConstraintBottom,
        constraintBottom.constant != self.modalPaddingAdjusted.bottom {
       
       constraintBottom.constant = self.modalPaddingAdjusted.bottom;
       shouldUpdateConstraints = true;
     };
     
-    if shouldUpdateConstraints {
+    if shouldUpdateConstraints,
+       let modalView = modalManager.modalView {
+       
       modalView.updateConstraints();
       modalView.setNeedsLayout();
     };
     
     block:
-    if let modalDragHandleView = modalDragHandleView {
+    if let modalDragHandleView = modalManager.modalDragHandleView {
     
       modalDragHandleView.backgroundColor = self.modalDragHandleColor;
       modalDragHandleView.alpha = self.modalDragHandleOpacity;
       
-      guard let constraint = modalDragHandleOffsetConstraint else { break block };
+      guard let constraint = modalManager.modalDragHandleOffsetConstraint
+      else { break block };
+      
       constraint.constant = self.modalDragHandleOffset;
       
       modalDragHandleView.updateConstraints()
       modalDragHandleView.setNeedsLayout();
     };
     
-    modalContentWrapperView?.layoutIfNeeded();
-    modalDragHandleView?.layoutIfNeeded();
+    modalManager.modalContentWrapperView?.layoutIfNeeded();
+    modalManager.modalDragHandleView?.layoutIfNeeded();
   };
   
   func applyAnimation(
