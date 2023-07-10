@@ -2899,14 +2899,18 @@ extension AdaptiveModalManager: UIGestureRecognizerDelegate {
           let modalContentScrollView = self.modalContentScrollView
     else { return false };
     
+    let modalContentScrollViewGestures =
+      modalContentScrollView.gestureRecognizers ?? [];
+      
+    guard modalContentScrollViewGestures.contains(otherGestureRecognizer)
+    else { return false };
+    
     func cancelOtherGesture() {
       otherGestureRecognizer.isEnabled.toggle();
       otherGestureRecognizer.isEnabled.toggle();
     };
     
     let gesturePoint = panGesture.location(in: self.targetView);
-    
-    let modalContentScrollViewGestures = modalContentScrollView.gestureRecognizers;
     
     let gestureVelocity = panGesture.velocity(in: modalView);
     
@@ -2925,19 +2929,6 @@ extension AdaptiveModalManager: UIGestureRecognizerDelegate {
     let modalContentMaxScrollViewOffset = modalContentScrollView.maxContentOffset[
       keyPath: self.modalConfig.inputValueKeyForPoint
     ];
-    
-
-    print(
-      "\n - gestureVelocityCoord:", gestureVelocityCoord,
-      "\n - modalContentScrollViewOffset:", modalContentScrollViewOffset,
-      "\n - modalContentMinScrollViewOffset:", modalContentMinScrollViewOffset,
-      "\n - modalContentMaxScrollViewOffset:", modalContentMaxScrollViewOffset,
-      "\n - modalContentScrollView.isDragging:", modalContentScrollView.isDragging,
-      "\n - modalContentScrollView.isDecelerating:", modalContentScrollView.isDecelerating,
-      "\n - gesturePoint:", gesturePoint,
-      "\n - dummyModalView.frame:", self.dummyModalView?.frame ?? .zero,
-      "\n"
-    );
     
     if !modalContentScrollView.isScrollEnabled {
       return true;
@@ -2968,11 +2959,6 @@ extension AdaptiveModalManager: UIGestureRecognizerDelegate {
     if modalContentScrollViewOffset >= modalContentMaxScrollViewOffset,
        gestureVelocityCoord < 0 {
     
-      return true;
-    };
-    
-    if abs(gestureVelocityCoord) < 100 {
-      cancelOtherGesture();
       return true;
     };
   
