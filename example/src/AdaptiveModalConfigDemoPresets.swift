@@ -24,6 +24,7 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
   case demo12;
   case demo13;
   case demo14;
+  case demo15;
   
   var config: AdaptiveModalConfig {
     switch self {
@@ -940,6 +941,93 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
           layoutPreset: .halfOffscreenTop
         ),
         dragHandlePosition: .none
+      );
+      
+      // Index: 14
+      case .demo15: return AdaptiveModalConfig(
+        snapPoints: [
+          // snap point - 1
+          AdaptiveModalSnapPointConfig(
+            layoutConfig: .init(
+              horizontalAlignment: .center,
+              verticalAlignment: .bottom,
+              width: .percent(percentValue: 0.9),
+              height: .percent(
+                percentValue: 0.3,
+                minValue: .constant(300)
+              ),
+              marginBottom: .safeAreaInsets(
+                insetKey: \.bottom,
+                minValue: .constant(15)
+              )
+            ),
+            keyframeConfig: .init(
+              secondaryGestureAxisDampingPercent: 0.5,
+              modalScaleX: 1,
+              modalScaleY: 1,
+              modalShadowOffset: .init(width: 0, height: -2),
+              modalShadowOpacity: 0.3,
+              modalShadowRadius: 7,
+              modalCornerRadius: 15,
+              modalMaskedCorners: .allCorners,
+              modalContentOpacity: 1,
+              modalBackgroundOpacity: 0.9,
+              modalBackgroundVisualEffect: UIBlurEffect(style: .regular),
+              modalBackgroundVisualEffectIntensity: 1,
+              modalDragHandleOffset: -15,
+              modalDragHandleColor: .white,
+              modalDragHandleOpacity: 0.8,
+              backgroundOpacity: 0,
+              backgroundVisualEffect: UIBlurEffect(style: .regular),
+              backgroundVisualEffectIntensity: 0
+            )
+          ),
+          
+          // snap point - 2
+          AdaptiveModalSnapPointConfig(
+            layoutConfig: RNILayout(
+              horizontalAlignment: .center,
+              verticalAlignment: .bottom,
+              width: .stretch,
+              height: .stretch,
+              marginTop: .multipleValues([
+                .safeAreaInsets(insetKey: \.top),
+                .constant(10),
+              ])
+              
+            ),
+            keyframeConfig: AdaptiveModalKeyframeConfig(
+              secondaryGestureAxisDampingPercent: 1,
+              modalShadowOffset: .init(width: 2, height: 2),
+              modalShadowOpacity: 0.3,
+              modalShadowRadius: 7,
+              modalCornerRadius: 10,
+              modalMaskedCorners: .topCorners,
+              modalBackgroundOpacity: 0.8,
+              modalBackgroundVisualEffectIntensity: 0.8,
+              modalDragHandleOffset: 8,
+              modalDragHandleColor: .gray,
+              modalDragHandleOpacity: 0.9,
+              backgroundOpacity: 0.2,
+              backgroundVisualEffectIntensity: 0.1
+            )
+          ),
+        ],
+        snapDirection: .bottomToTop,
+        undershootSnapPoint: .init(
+          layoutPreset: .offscreenBottom,
+          keyframeConfig: .init(
+            modalScaleX: 0.75,
+            modalScaleY: 0.75,
+            modalCornerRadius: 15,
+            modalMaskedCorners: .allCorners,
+            modalContentOpacity: 0.25
+          )
+        ),
+        overshootSnapPoint: AdaptiveModalSnapPointPreset(
+          layoutPreset: .fitScreenVertically
+        ),
+        modalSwipeGestureEdgeHeight: 20
       );
     };
   };
