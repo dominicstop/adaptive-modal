@@ -2985,6 +2985,29 @@ public class AdaptiveModalManager: NSObject {
 // -----------------------------------
 
 extension AdaptiveModalManager: UIGestureRecognizerDelegate {
+
+  public func gestureRecognizerShouldBegin(
+    _ gestureRecognizer: UIGestureRecognizer
+  ) -> Bool {
+  
+    guard let panGesture = gestureRecognizer as? UIPanGestureRecognizer
+    else { return true };
+  
+    let currentInterpolationStep = self.currentInterpolationStep;
+    
+    let secondaryGestureAxisDampingPercent =
+      currentInterpolationStep.secondaryGestureAxisDampingPercent;
+      
+    let isLockedToPrimaryAxis = secondaryGestureAxisDampingPercent >= 1;
+    let velocity = panGesture.velocity(in: self.modalView);
+    
+    let primaryAxisVelocity =
+      velocity[keyPath: self.modalConfig.inputValueKeyForPoint];
+    
+    return isLockedToPrimaryAxis
+      ? abs(primaryAxisVelocity) > 0
+      : true;
+  };
   
   public func gestureRecognizer(
     _ gestureRecognizer: UIGestureRecognizer,
