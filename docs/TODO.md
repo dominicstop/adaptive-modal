@@ -6,7 +6,6 @@
 
 ## Current
 
-- [ ] `TODO:2023-07-09-19-43-23` - Refactor: Update modal drag handle to work when outside the modal content bounds. 
 - [ ] `TODO:2023-06-23-18-17-09` - Impl: `RNILayout` - `x` and `y` offsets.
 - [ ] `TODO:2023-06-23-18-17-09` - Impl: `RNILayout` - raw rect layout value.
 - [ ] `TODO:2023-06-23-18-13-58` -  Impl: `AdaptiveModal` - Add support for passing a user-created `UIScreenEdgePanGestureRecognizer` gesture handler.
@@ -61,6 +60,8 @@
 <br><br>
 
 ## Completed
+
+- [x] `TODO:2023-07-09-19-43-23` - Refactor: Update modal drag handle to work when outside the modal content bounds. 
 
 - [x] `TODO:2023-07-11-02-45-28` - Impl: Limit modal gesture via `gestureRecognizerShouldBegin` + the current `secondaryGestureAxisDampingPercent` value. 
 
