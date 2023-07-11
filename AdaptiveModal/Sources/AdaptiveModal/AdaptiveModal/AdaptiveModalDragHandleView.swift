@@ -9,14 +9,28 @@ import UIKit
 
 public class AdaptiveModalDragHandleView: UIView {
 
+  // extra size for hit test
   public var pointInsideHitSlop: CGPoint = .zero;
-
-  public override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
-    let boundsWithInset = bounds.insetBy(
+  
+  public var boundsWithHitSlop: CGRect {
+    self.bounds.insetBy(
       dx: -self.pointInsideHitSlop.x,
       dy: -self.pointInsideHitSlop.y
     );
-    
-    return boundsWithInset.contains(point);
+  };
+  
+  public var frameWithHitSlop: CGRect {
+    self.frame.insetBy(
+      dx: -self.pointInsideHitSlop.x,
+      dy: -self.pointInsideHitSlop.y
+    );
+  };
+
+  public override func point(
+    inside point: CGPoint,
+    with event: UIEvent?
+  ) -> Bool {
+  
+    return self.boundsWithHitSlop.contains(point);
   };
 };

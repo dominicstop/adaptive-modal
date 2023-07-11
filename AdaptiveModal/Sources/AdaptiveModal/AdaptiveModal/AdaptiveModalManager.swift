@@ -68,11 +68,14 @@ public class AdaptiveModalManager: NSObject {
   /// `transitionContext.containerView` or `UITransitionView`
   public weak var targetView: UIView?;
   
-  /// If `modalViewController` was presented via the modal manager,
-  /// then the "root view" (i.e. the view in which we place the modal-related
-  /// views) will be `modalWrapperViewController`
+  /// * If `modalViewController` was presented via the modal manager,
+  ///   then the "root view" (i.e. the view in which we place the modal-related
+  ///   views) will be `modalWrapperViewController`
   ///
-  /// Otherwise, the "root view" will be `targetView`.
+  /// * Otherwise, the "root view" will be `targetView`.
+  ///
+  /// * Note: This view is typically the size of the window, while the modal
+  ///   wrapper views are the size of the modal.
   ///
   public var modalRootView: UIView? {
        self.modalWrapperViewController?.view
@@ -85,9 +88,9 @@ public class AdaptiveModalManager: NSObject {
   
   public var dummyModalView: UIView?;
   
-  public var modalWrapperLayoutView: UIView?;
-  public var modalWrapperTransformView: UIView?;
-  public var modalWrapperShadowView: UIView?;
+  public var modalWrapperLayoutView: AdaptiveModalWrapperView?;
+  public var modalWrapperTransformView: AdaptiveModalWrapperView?;
+  public var modalWrapperShadowView: AdaptiveModalWrapperView?;
   public var modalContentWrapperView: UIView?;
   
   public var modalDragHandleView: AdaptiveModalDragHandleView?;
@@ -572,9 +575,27 @@ public class AdaptiveModalManager: NSObject {
   func setupInitViews() {
     self.dummyModalView = UIView();
     
-    self.modalWrapperLayoutView = UIView();
-    self.modalWrapperTransformView = UIView();
-    self.modalWrapperShadowView = UIView();
+    self.modalWrapperLayoutView = {
+      let wrapperView = AdaptiveModalWrapperView();
+      wrapperView.modalManager = self;
+      
+      return wrapperView;
+    }();
+    
+    self.modalWrapperTransformView = {
+      let wrapperView = AdaptiveModalWrapperView();
+      wrapperView.modalManager = self;
+      
+      return wrapperView;
+    }();
+    
+    self.modalWrapperShadowView = {
+      let wrapperView = AdaptiveModalWrapperView();
+      wrapperView.modalManager = self;
+      
+      return wrapperView;
+    }();
+    
     self.modalContentWrapperView = UIView();
   
     self.modalBackgroundView = UIView();
@@ -716,7 +737,6 @@ public class AdaptiveModalManager: NSObject {
       
       modalBGVisualEffectView.clipsToBounds = true;
       modalBGVisualEffectView.backgroundColor = .clear;
-      //modalBGVisualEffectView.isUserInteractionEnabled = false;
     };
     
     if let modalDragHandleView = self.modalDragHandleView,
