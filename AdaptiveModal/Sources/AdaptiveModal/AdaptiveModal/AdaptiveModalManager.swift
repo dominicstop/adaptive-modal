@@ -1723,7 +1723,7 @@ public class AdaptiveModalManager: NSObject {
     
     block:
     if self.modalConfig.shouldSetModalScrollViewContentInsets,
-       let modalContentScrollView = modalContentScrollView {
+       let modalContentScrollView = self.modalContentScrollView {
        
       let interpolatedInsets = self.interpolateEdgeInsets(
         inputValue: inputPercentValue,
@@ -1734,6 +1734,36 @@ public class AdaptiveModalManager: NSObject {
       
       modalContentScrollView.contentInset = interpolatedInsets;
       modalContentScrollView.adjustedContentInsetDidChange();
+    };
+    
+    block:
+    if self.modalConfig.shouldSetModalScrollViewVerticalScrollIndicatorInsets,
+       let modalContentScrollView = self.modalContentScrollView {
+       
+      guard #available(iOS 11.1, *) else { break block };
+       
+      let interpolatedInsets = self.interpolateEdgeInsets(
+        inputValue: inputPercentValue,
+        rangeOutputKey: \.modalScrollViewVerticalScrollIndicatorInsets
+      );
+      
+      guard let interpolatedInsets = interpolatedInsets else { break block };
+      modalContentScrollView.verticalScrollIndicatorInsets = interpolatedInsets;
+    };
+    
+    block:
+    if self.modalConfig.shouldSetModalScrollViewHorizontalScrollIndicatorInsets,
+       let modalContentScrollView = self.modalContentScrollView {
+       
+      guard #available(iOS 11.1, *) else { break block };
+       
+      let interpolatedInsets = self.interpolateEdgeInsets(
+        inputValue: inputPercentValue,
+        rangeOutputKey: \.modalScrollViewHorizontalScrollIndicatorInsets
+      );
+      
+      guard let interpolatedInsets = interpolatedInsets else { break block };
+      modalContentScrollView.horizontalScrollIndicatorInsets = interpolatedInsets;
     };
     
     AdaptiveModalUtilities.unwrapAndSetProperty(

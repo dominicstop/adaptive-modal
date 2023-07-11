@@ -147,7 +147,7 @@ fileprivate class TestModalViewController: UIViewController, AdaptiveModalEventN
           let scrollView = UIScrollView();
           
           scrollView.showsHorizontalScrollIndicator = false;
-          scrollView.showsVerticalScrollIndicator = false;
+          scrollView.showsVerticalScrollIndicator = true;
           return scrollView
         }();
         

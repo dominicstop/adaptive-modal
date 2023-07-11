@@ -34,6 +34,8 @@ public struct AdaptiveModalInterpolationPoint: Equatable {
   public var secondaryGestureAxisDampingPercent: CGFloat;
   
   public var modalScrollViewContentInsets: UIEdgeInsets;
+  public var modalScrollViewVerticalScrollIndicatorInsets: UIEdgeInsets;
+  public var modalScrollViewHorizontalScrollIndicatorInsets: UIEdgeInsets;
   
   // MARK: - Properties - Keyframes
   // ------------------------------
@@ -187,6 +189,7 @@ public struct AdaptiveModalInterpolationPoint: Equatable {
   func applyAnimation(
     toModalManager modalManager: AdaptiveModalManager
   ){
+    let modalConfig = modalManager.modalConfig;
     
     if let modalView = modalManager.modalView {
       modalView.alpha = self.modalContentOpacity;
@@ -292,11 +295,24 @@ public struct AdaptiveModalInterpolationPoint: Equatable {
       modalDragHandleView.setNeedsLayout();
     };
     
-    if modalManager.modalConfig.shouldSetModalScrollViewContentInsets,
-       let modalContentScrollView = modalManager.modalContentScrollView {
-    
-      modalContentScrollView.contentInset = self.modalScrollViewContentInsets;
-      modalContentScrollView.adjustedContentInsetDidChange();
+    block:
+    if let modalContentScrollView = modalManager.modalContentScrollView {
+      if modalConfig.shouldSetModalScrollViewContentInsets {
+        modalContentScrollView.contentInset = self.modalScrollViewContentInsets;
+        modalContentScrollView.adjustedContentInsetDidChange();
+      };
+      
+      guard #available(iOS 11.1, *) else { break block };
+      
+      if modalConfig.shouldSetModalScrollViewVerticalScrollIndicatorInsets {
+        modalContentScrollView.verticalScrollIndicatorInsets =
+          self.modalScrollViewVerticalScrollIndicatorInsets;
+      };
+      
+      if modalConfig.shouldSetModalScrollViewHorizontalScrollIndicatorInsets {
+        modalContentScrollView.horizontalScrollIndicatorInsets =
+          self.modalScrollViewHorizontalScrollIndicatorInsets;
+      };
     };
     
     modalManager.modalContentWrapperView?.layoutIfNeeded();
@@ -542,6 +558,62 @@ public extension AdaptiveModalInterpolationPoint {
         bottom: modalMaskedCorners.isMaskingBottomCorners ? modalCornerRadius : 0,
         right : modalMaskedCorners.isMaskingRightCorners  ? modalCornerRadius : 0
       );
+    }();
+    
+    self.modalScrollViewVerticalScrollIndicatorInsets = {
+      let didSetModalScrollViewVerticalScrollIndicatorInsets =
+        modalConfig.didSetModalScrollViewVerticalScrollIndicatorInsets;
+      
+      if didSetModalScrollViewVerticalScrollIndicatorInsets,
+         let insets = keyframeCurrent?.modalScrollViewVerticalScrollIndicatorInsets {
+         
+        return insets;
+      };
+      
+      if didSetModalScrollViewVerticalScrollIndicatorInsets,
+         let insets = keyframePrev?.modalScrollViewVerticalScrollIndicatorInsets {
+         
+        return insets;
+      };
+      
+      if modalConfig.snapDirection.isVertical {
+        return UIEdgeInsets(
+          top   : modalMaskedCorners.isMaskingTopCorners    ? modalCornerRadius : 0,
+          left  : 0,
+          bottom: modalMaskedCorners.isMaskingBottomCorners ? modalCornerRadius : 0,
+          right : 0
+        );
+      };
+      
+      return .zero;
+    }();
+    
+    self.modalScrollViewHorizontalScrollIndicatorInsets = {
+      let didSetModalScrollViewHorizontalScrollIndicatorInsets =
+        modalConfig.didSetModalScrollViewHorizontalScrollIndicatorInsets;
+      
+      if didSetModalScrollViewHorizontalScrollIndicatorInsets,
+         let insets = keyframeCurrent?.modalScrollViewVerticalScrollIndicatorInsets {
+         
+        return insets;
+      };
+      
+      if didSetModalScrollViewHorizontalScrollIndicatorInsets,
+         let insets = keyframePrev?.modalScrollViewVerticalScrollIndicatorInsets {
+         
+        return insets;
+      };
+      
+      if modalConfig.snapDirection.isHorizontal {
+        return UIEdgeInsets(
+          top   : 0,
+          left  : modalMaskedCorners.isMaskingLeftCorners  ? modalCornerRadius : 0,
+          bottom: 0,
+          right : modalMaskedCorners.isMaskingRightCorners ? modalCornerRadius : 0
+        );
+      };
+      
+      return .zero;
     }();
   };
 };

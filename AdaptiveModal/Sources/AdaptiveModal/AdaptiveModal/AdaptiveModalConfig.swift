@@ -40,8 +40,8 @@ public struct AdaptiveModalConfig {
     case top, bottom, left, right;
   };
   
-  // MARK: - Properties
-  // ------------------
+  // MARK: - Properties - Config
+  // ---------------------------
   
   public let baseSnapPoints: [AdaptiveModalSnapPointConfig];
   public let snapDirection: Direction;
@@ -65,10 +65,12 @@ public struct AdaptiveModalConfig {
   public let modalSwipeGestureEdgeHeight: CGFloat;
   
   public let shouldSetModalScrollViewContentInsets: Bool;
+  public let shouldSetModalScrollViewVerticalScrollIndicatorInsets: Bool;
+  public let shouldSetModalScrollViewHorizontalScrollIndicatorInsets: Bool;
   
   // let entranceConfig: AdaptiveModalEntranceConfig;
   // let snapSwipeVelocityThreshold: CGFloat = 0;
-  
+
   // MARK: - Computed Properties
   // ---------------------------
   
@@ -78,6 +80,24 @@ public struct AdaptiveModalConfig {
       inBetweenSnapPoints: self.baseSnapPoints,
       overshootSnapPoint: self.overshootSnapPoint
     );
+  };
+  
+  var didSetModalScrollViewContentInsets: Bool {
+    self.snapPoints.allSatisfy {
+      $0.keyframeConfig?.modalScrollViewContentInsets != nil;
+    };
+  };
+  
+  var didSetModalScrollViewVerticalScrollIndicatorInsets: Bool {
+    self.snapPoints.allSatisfy {
+      $0.keyframeConfig?.modalScrollViewVerticalScrollIndicatorInsets != nil;
+    };
+  };
+  
+  var didSetModalScrollViewHorizontalScrollIndicatorInsets: Bool {
+    self.snapPoints.allSatisfy {
+      $0.keyframeConfig?.modalScrollViewHorizontalScrollIndicatorInsets != nil;
+    };
   };
   
   public var overshootSnapPointIndex: Int {
@@ -154,7 +174,9 @@ public struct AdaptiveModalConfig {
     dragHandleHitSlop: CGPoint? = nil,
     dragHandleCornerRadius: CGFloat? = nil,
     modalSwipeGestureEdgeHeight: CGFloat? = nil,
-    shouldSetModalScrollViewContentInsets: Bool = false
+    shouldSetModalScrollViewContentInsets: Bool = false,
+    shouldSetModalScrollViewVerticalScrollIndicatorInsets: Bool = true,
+    shouldSetModalScrollViewHorizontalScrollIndicatorInsets: Bool = true
   ) {
     self.baseSnapPoints = snapPoints;
     
@@ -191,7 +213,14 @@ public struct AdaptiveModalConfig {
     
     self.modalSwipeGestureEdgeHeight = modalSwipeGestureEdgeHeight ?? 20;
     
-    self.shouldSetModalScrollViewContentInsets = shouldSetModalScrollViewContentInsets;
+    self.shouldSetModalScrollViewContentInsets =
+      shouldSetModalScrollViewContentInsets;
+    
+    self.shouldSetModalScrollViewVerticalScrollIndicatorInsets =
+      shouldSetModalScrollViewVerticalScrollIndicatorInsets;
+      
+    self.shouldSetModalScrollViewHorizontalScrollIndicatorInsets =
+      shouldSetModalScrollViewHorizontalScrollIndicatorInsets;
   };
   
   // MARK: - Functions
