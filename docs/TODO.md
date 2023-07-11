@@ -6,14 +6,16 @@
 
 ## Current
 
+- [ ] `TODO:2023-07-12-07-37-27` - Impl: Keyframe - Modal drag handle size.
+- [ ] `TODO:2023-07-12-07-39-47` - Impl: Make separate default keyframe value for undershoot snap point.
+- [ ] `TODO:2023-07-10-11-32-03` - Impl: Detect and warn against interpolation percent collision.
+- [ ] `TODO:2023-07-10-11-30-47` - Impl: Make Overshoot snap point config optional.
 - [ ] `TODO:2023-06-23-18-17-09` - Impl: `RNILayout` - `x` and `y` offsets.
 - [ ] `TODO:2023-06-23-18-17-09` - Impl: `RNILayout` - raw rect layout value.
-- [ ] `TODO:2023-06-23-18-13-58` -  Impl: `AdaptiveModal` - Add support for passing a user-created `UIScreenEdgePanGestureRecognizer` gesture handler.
-- [ ] `TODO:2023-07-10-11-30-47` - Impl: Make Overshoot snap point config optional.
 - [ ] `TODO:2023-07-10-11-31-01` - Impl: Update `AdaptiveModalSnapPointPreset` to accept automatic.
-- [ ] `TODO:2023-07-10-11-32-03` - Impl: Detect and warn against interpolation percent collision.
-- [ ] `TODO:2023-07-11-22-45-46` - Impl: Keyframe - Update `modalShadowRadius` to accept a constant or percentage, then compute based on the modal size.
+- [ ] `TODO:2023-07-11-22-45-46` - Impl: Keyframe - Update `modalCornerRadius` to accept a constant or percentage, then compute based on the modal size.
 - [ ] `TODO:2023-07-11-22-37-10` - Impl: Keyframe - Update `modalScrollViewContentInsets`, `modalScrollViewVerticalScrollIndicatorInsets`, and `modalScrollViewHorizontalScrollIndicatorInsets` to accept `RNILayoutValue`.
+- [ ] `TODO:2023-06-23-18-13-58` -  Impl: `AdaptiveModal` - Add support for passing a user-created `UIScreenEdgePanGestureRecognizer` gesture handler.
 
 <br><br>
 
