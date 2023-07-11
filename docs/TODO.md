@@ -6,8 +6,6 @@
 
 ## Current
 
-- [ ] `TODO:2023-07-10-17-50-34` - Impl: Keyframe -  `modalScrollViewVerticalScrollIndicatorInsets`.
-- [ ] `TODO:2023-07-10-17-50-41` - Impl: Keyframe - `modalScrollViewHorizontalScrollIndicatorInsets`.
 - [ ] `TODO:2023-07-11-02-45-28` - Impl: Limit modal gesture via `gestureRecognizerShouldBegin` + the current `secondaryGestureAxisDampingPercent` value. 
 - [ ] `TODO:2023-07-09-19-43-23` - Refactor: Update modal drag handle to work when outside the modal content bounds. 
 - [ ] `TODO:2023-06-23-18-17-09` - Impl: `RNILayout` - `x` and `y` offsets.
@@ -63,6 +61,9 @@
 
 ## Completed
 
+- [x] `TODO:2023-07-10-17-50-34` - Impl: Keyframe -  `modalScrollViewVerticalScrollIndicatorInsets`.
+
+- [x] `TODO:2023-07-10-17-50-41` - Impl: Keyframe - `modalScrollViewHorizontalScrollIndicatorInsets`.
 - [x] `TODO:2023-07-10-11-00-02` - Impl: Keyframe - `modalScrollViewContentInsets`.
 
 - [x] `TODO:2023-07-10-17-53-41` - Impl: `allowModalToDragWhenAtMaxScrollViewOffset`.
