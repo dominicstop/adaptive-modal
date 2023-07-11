@@ -1152,6 +1152,73 @@ public class AdaptiveModalManager: NSObject {
     );
   };
   
+  private func interpolateEdgeInsets(
+    inputValue: CGFloat,
+    rangeInput: [CGFloat]? = nil,
+    rangeOutput: [AdaptiveModalInterpolationPoint]? = nil,
+    rangeOutputKey: KeyPath<AdaptiveModalInterpolationPoint, UIEdgeInsets>,
+    shouldClampMin: Bool = false,
+    shouldClampMax: Bool = false
+  ) -> UIEdgeInsets? {
+  
+    guard let interpolationSteps      = rangeOutput ?? self.interpolationSteps,
+          let interpolationRangeInput = rangeInput  ?? self.interpolationRangeInput
+    else { return nil };
+    
+    let insetTop = AdaptiveModalUtilities.interpolate(
+      inputValue: inputValue,
+      rangeInput: interpolationRangeInput,
+      rangeOutput: interpolationSteps.map {
+        $0[keyPath: rangeOutputKey].top;
+      },
+      shouldClampMin: shouldClampMin,
+      shouldClampMax: shouldClampMax
+    );
+    
+    let insetLeft = AdaptiveModalUtilities.interpolate(
+      inputValue: inputValue,
+      rangeInput: interpolationRangeInput,
+      rangeOutput: interpolationSteps.map {
+        $0[keyPath: rangeOutputKey].left;
+      },
+      shouldClampMin: shouldClampMin,
+      shouldClampMax: shouldClampMax
+    );
+    
+    let insetBottom = AdaptiveModalUtilities.interpolate(
+      inputValue: inputValue,
+      rangeInput: interpolationRangeInput,
+      rangeOutput: interpolationSteps.map {
+        $0[keyPath: rangeOutputKey].bottom;
+      },
+      shouldClampMin: shouldClampMin,
+      shouldClampMax: shouldClampMax
+    );
+    
+    let insetRight = AdaptiveModalUtilities.interpolate(
+      inputValue: inputValue,
+      rangeInput: interpolationRangeInput,
+      rangeOutput: interpolationSteps.map {
+        $0[keyPath: rangeOutputKey].right;
+      },
+      shouldClampMin: shouldClampMin,
+      shouldClampMax: shouldClampMax
+    );
+    
+    guard let insetTop = insetTop,
+          let insetLeft = insetLeft,
+          let insetBottom  = insetBottom,
+          let insetRight = insetRight
+    else { return nil };
+          
+    return UIEdgeInsets(
+      top: insetTop,
+      left: insetLeft,
+      bottom: insetBottom,
+      right: insetRight
+    );
+  };
+  
   private func getInterpolationStepRange(
    forInputPercentValue inputPercentValue: CGFloat
   ) -> (
@@ -1653,6 +1720,21 @@ public class AdaptiveModalManager: NSObject {
     self.applyInterpolationToModalDragHandleOffset(
       forInputPercentValue: inputPercentValue
     );
+    
+    block:
+    if self.modalConfig.shouldSetModalScrollViewContentInsets,
+       let modalContentScrollView = modalContentScrollView {
+       
+      let interpolatedInsets = self.interpolateEdgeInsets(
+        inputValue: inputPercentValue,
+        rangeOutputKey: \.modalScrollViewContentInsets
+      );
+      
+      guard let interpolatedInsets = interpolatedInsets else { break block };
+      
+      modalContentScrollView.contentInset = interpolatedInsets;
+      modalContentScrollView.adjustedContentInsetDidChange();
+    };
     
     AdaptiveModalUtilities.unwrapAndSetProperty(
       forObject: self.modalWrapperTransformView,

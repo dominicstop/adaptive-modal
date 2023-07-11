@@ -35,4 +35,27 @@ extension CACornerMask {
     .layerMaxXMinYCorner,
     .layerMaxXMaxYCorner,
   ];
+  
+  var isMaskingTopCorners: Bool {
+       self.contains(.layerMinXMinYCorner)
+    || self.contains(.layerMaxXMinYCorner);
+  };
+       
+    
+  var isMaskingLeftCorners: Bool {
+       self.contains(.layerMinXMinYCorner)
+    || self.contains(.layerMinXMaxYCorner);
+  };
+       
+    
+  var isMaskingBottomCorners: Bool {
+       self.contains(.layerMinXMaxYCorner)
+    || self.contains(.layerMaxXMaxYCorner);
+  };
+       
+    
+  var isMaskingRightCorners: Bool {
+       self.contains(.layerMaxXMinYCorner)
+    || self.contains(.layerMaxXMaxYCorner);
+  };
 };

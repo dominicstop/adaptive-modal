@@ -33,6 +33,8 @@ public struct AdaptiveModalInterpolationPoint: Equatable {
   public var backgroundTapInteraction: BackgroundInteractionMode;
   public var secondaryGestureAxisDampingPercent: CGFloat;
   
+  public var modalScrollViewContentInsets: UIEdgeInsets;
+  
   // MARK: - Properties - Keyframes
   // ------------------------------
   
@@ -290,6 +292,13 @@ public struct AdaptiveModalInterpolationPoint: Equatable {
       modalDragHandleView.setNeedsLayout();
     };
     
+    if modalManager.modalConfig.shouldSetModalScrollViewContentInsets,
+       let modalContentScrollView = modalManager.modalContentScrollView {
+    
+      modalContentScrollView.contentInset = self.modalScrollViewContentInsets;
+      modalContentScrollView.adjustedContentInsetDidChange();
+    };
+    
     modalManager.modalContentWrapperView?.layoutIfNeeded();
     modalManager.modalDragHandleView?.layoutIfNeeded();
   };
@@ -429,13 +438,17 @@ public extension AdaptiveModalInterpolationPoint {
       ?? keyframePrev?.modalShadowRadius
       ?? 0;
     
-    self.modalCornerRadius = keyframeCurrent?.modalCornerRadius
+    let modalCornerRadius = keyframeCurrent?.modalCornerRadius
       ?? keyframePrev?.modalCornerRadius
       ?? 0;
       
-    self.modalMaskedCorners = keyframeCurrent?.modalMaskedCorners
+    self.modalCornerRadius = modalCornerRadius;
+      
+    let modalMaskedCorners = keyframeCurrent?.modalMaskedCorners
       ?? keyframePrev?.modalMaskedCorners
       ?? .allCorners;
+      
+    self.modalMaskedCorners = modalMaskedCorners;
       
     self.modalOpacity = keyframeCurrent?.modalOpacity
       ?? keyframePrev?.modalOpacity
@@ -513,6 +526,23 @@ public extension AdaptiveModalInterpolationPoint {
     self.backgroundVisualEffectIntensity = keyframeCurrent?.backgroundVisualEffectIntensity
       ?? keyframePrev?.backgroundVisualEffectIntensity
       ?? (isFirstSnapPoint ? 0 : 1);
+      
+    self.modalScrollViewContentInsets = {
+      if let insets = keyframeCurrent?.modalScrollViewContentInsets {
+        return insets;
+      };
+      
+      if let insets = keyframePrev?.modalScrollViewContentInsets {
+        return insets;
+      };
+      
+      return UIEdgeInsets(
+        top   : modalMaskedCorners.isMaskingTopCorners    ? modalCornerRadius : 0,
+        left  : modalMaskedCorners.isMaskingLeftCorners   ? modalCornerRadius : 0,
+        bottom: modalMaskedCorners.isMaskingBottomCorners ? modalCornerRadius : 0,
+        right : modalMaskedCorners.isMaskingRightCorners  ? modalCornerRadius : 0
+      );
+    }();
   };
 };
 

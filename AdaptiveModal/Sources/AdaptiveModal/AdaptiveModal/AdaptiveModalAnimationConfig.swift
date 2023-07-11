@@ -29,6 +29,8 @@ public struct AdaptiveModalKeyframeConfig {
   public var backgroundTapInteraction: BackgroundInteractionMode?;
   public var secondaryGestureAxisDampingPercent: CGFloat?;
   
+  public var modalScrollViewContentInsets: UIEdgeInsets?;
+  
   // MARK: - Properties - Keyframes
   // ------------------------------
 
@@ -74,6 +76,8 @@ public struct AdaptiveModalKeyframeConfig {
   public init(
     backgroundTapInteraction: BackgroundInteractionMode? = nil,
     secondaryGestureAxisDampingPercent: CGFloat? = nil,
+    modalScrollViewContentInsets: UIEdgeInsets? = nil,
+    
     modalRotation: CGFloat? = nil,
     modalScaleX: CGFloat? = nil,
     modalScaleY: CGFloat? = nil,
@@ -106,6 +110,8 @@ public struct AdaptiveModalKeyframeConfig {
     
     self.backgroundTapInteraction = backgroundTapInteraction;
     self.secondaryGestureAxisDampingPercent = secondaryGestureAxisDampingPercent;
+    
+    self.modalScrollViewContentInsets = modalScrollViewContentInsets;
   
     self.modalRotation = modalRotation;
     

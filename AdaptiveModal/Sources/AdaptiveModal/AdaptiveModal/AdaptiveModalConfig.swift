@@ -64,6 +64,8 @@ public struct AdaptiveModalConfig {
   
   public let modalSwipeGestureEdgeHeight: CGFloat;
   
+  public let shouldSetModalScrollViewContentInsets: Bool;
+  
   // let entranceConfig: AdaptiveModalEntranceConfig;
   // let snapSwipeVelocityThreshold: CGFloat = 0;
   
@@ -151,7 +153,8 @@ public struct AdaptiveModalConfig {
     dragHandleSize: CGSize? = nil,
     dragHandleHitSlop: CGPoint? = nil,
     dragHandleCornerRadius: CGFloat? = nil,
-    modalSwipeGestureEdgeHeight: CGFloat? = nil
+    modalSwipeGestureEdgeHeight: CGFloat? = nil,
+    shouldSetModalScrollViewContentInsets: Bool = false
   ) {
     self.baseSnapPoints = snapPoints;
     
@@ -187,6 +190,8 @@ public struct AdaptiveModalConfig {
     self.dragHandleHitSlop = dragHandleHitSlop ?? .init(x: 15, y: 15);
     
     self.modalSwipeGestureEdgeHeight = modalSwipeGestureEdgeHeight ?? 20;
+    
+    self.shouldSetModalScrollViewContentInsets = shouldSetModalScrollViewContentInsets;
   };
   
   // MARK: - Functions
