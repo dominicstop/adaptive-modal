@@ -6,9 +6,6 @@
 
 ## Current
 
-
-
-- [ ] `TODO:2023-07-10-11-00-02` - Impl: Keyframe - `modalScrollViewContentInsets`.
 - [ ] `TODO:2023-07-10-17-50-34` - Impl: Keyframe -  `modalScrollViewVerticalScrollIndicatorInsets`.
 - [ ] `TODO:2023-07-10-17-50-41` - Impl: Keyframe - `modalScrollViewHorizontalScrollIndicatorInsets`.
 - [ ] `TODO:2023-07-11-02-45-28` - Impl: Limit modal gesture via `gestureRecognizerShouldBegin` + the current `secondaryGestureAxisDampingPercent` value. 
@@ -65,6 +62,8 @@
 <br><br>
 
 ## Completed
+
+- [x] `TODO:2023-07-10-11-00-02` - Impl: Keyframe - `modalScrollViewContentInsets`.
 
 - [x] `TODO:2023-07-10-17-53-41` - Impl: `allowModalToDragWhenAtMaxScrollViewOffset`.
 
