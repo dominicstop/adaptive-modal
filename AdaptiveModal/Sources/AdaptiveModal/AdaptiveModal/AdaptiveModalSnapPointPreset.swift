@@ -23,7 +23,7 @@ public struct AdaptiveModalSnapPointPreset {
 
 extension AdaptiveModalSnapPointPreset {
   static func getDefaultOvershootSnapPoint(
-    forDirection direction: AdaptiveModalConfig.Direction
+    forDirection direction: AdaptiveModalConfig.SnapDirection
   ) -> Self {
   
     let layoutPreset: RNILayoutPreset = {
@@ -39,7 +39,7 @@ extension AdaptiveModalSnapPointPreset {
   };
   
   static func getDefaultUnderShootSnapPoint(
-    forDirection direction: AdaptiveModalConfig.Direction
+    forDirection direction: AdaptiveModalConfig.SnapDirection
   ) -> Self {
   
     let layoutPreset: RNILayoutPreset = {

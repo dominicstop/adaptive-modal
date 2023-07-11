@@ -11,18 +11,27 @@ public struct AdaptiveModalConfig {
 
   // MARK: - Types
   // -------------
-
+  
   public enum Direction {
+    case vertical;
+    case horizontal;
+  };
+
+  public enum SnapDirection {
     case bottomToTop;
     case topToBottom;
     case leftToRight;
     case rightToLeft;
     
-    public var isVertical: Bool {
+    public var direction: Direction {
       switch self {
-        case .bottomToTop, .topToBottom: return true;
-        case .leftToRight, .rightToLeft: return false;
+        case .bottomToTop, .topToBottom: return .vertical;
+        case .leftToRight, .rightToLeft: return .horizontal;
       };
+    };
+    
+    public var isVertical: Bool {
+      self.direction == .vertical;
     };
     
     public var isHorizontal: Bool {
@@ -44,7 +53,7 @@ public struct AdaptiveModalConfig {
   // ---------------------------
   
   public let baseSnapPoints: [AdaptiveModalSnapPointConfig];
-  public let snapDirection: Direction;
+  public let snapDirection: SnapDirection;
   
   public let snapPercentStrategy: SnapPercentStrategy;
   
@@ -162,7 +171,7 @@ public struct AdaptiveModalConfig {
   
   public init(
     snapPoints: [AdaptiveModalSnapPointConfig],
-    snapDirection: Direction,
+    snapDirection: SnapDirection,
     snapPercentStrategy: SnapPercentStrategy = .position,
     snapAnimationConfig: AdaptiveModalSnapAnimationConfig = .default,
     interpolationClampingConfig: AdaptiveModalClampingConfig = .default,
