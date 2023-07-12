@@ -959,7 +959,8 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
               marginBottom: .safeAreaInsets(
                 insetKey: \.bottom,
                 minValue: .constant(15)
-              )
+              ),
+              paddingTop: .constant(0)
             ),
             keyframeConfig: .init(
               secondaryGestureAxisDampingPercent: 0.5,
@@ -974,7 +975,8 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
               modalBackgroundOpacity: 0.9,
               modalBackgroundVisualEffect: UIBlurEffect(style: .regular),
               modalBackgroundVisualEffectIntensity: 1,
-              modalDragHandleOffset: -15,
+              modalDragHandleSize: CGSize(width: 50, height: 6.5),
+              modalDragHandleOffset: -16.5,
               modalDragHandleColor: .white,
               modalDragHandleOpacity: 0.8,
               backgroundOpacity: 0,
@@ -993,7 +995,8 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
               marginTop: .multipleValues([
                 .safeAreaInsets(insetKey: \.top),
                 .constant(10),
-              ])
+              ]),
+              paddingTop: .constant(6 + 8 + 6)
               
             ),
             keyframeConfig: AdaptiveModalKeyframeConfig(
@@ -1005,6 +1008,7 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
               modalMaskedCorners: .topCorners,
               modalBackgroundOpacity: 0.8,
               modalBackgroundVisualEffectIntensity: 0.8,
+              modalDragHandleSize: CGSize(width: 40, height: 6),
               modalDragHandleOffset: 8,
               modalDragHandleColor: .gray,
               modalDragHandleOpacity: 0.9,
