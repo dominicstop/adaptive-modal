@@ -68,6 +68,7 @@ public struct AdaptiveModalInterpolationPoint: Equatable {
   public var modalBackgroundVisualEffectOpacity: CGFloat;
   public var modalBackgroundVisualEffectIntensity: CGFloat;
   
+  public var modalDragHandleSize: CGSize;
   public var modalDragHandleOffset: CGFloat;
   public var modalDragHandleColor: UIColor;
   public var modalDragHandleOpacity: CGFloat;
@@ -286,10 +287,30 @@ public struct AdaptiveModalInterpolationPoint: Equatable {
       modalDragHandleView.backgroundColor = self.modalDragHandleColor;
       modalDragHandleView.alpha = self.modalDragHandleOpacity;
       
-      guard let constraint = modalManager.modalDragHandleOffsetConstraint
-      else { break block };
+      var didUpdateConstraints = false;
       
-      constraint.constant = self.modalDragHandleOffset;
+      if let constraintOffset = modalManager.modalDragHandleConstraintOffset,
+         constraintOffset.constant != self.modalDragHandleOffset {
+         
+        constraintOffset.constant = self.modalDragHandleOffset;
+        didUpdateConstraints = true;
+      };
+      
+      if let constraintWidth = modalManager.modalDragHandleConstraintWidth,
+         constraintWidth.constant != self.modalDragHandleSize.width {
+         
+        constraintWidth.constant = self.modalDragHandleSize.width;
+        didUpdateConstraints = true;
+      };
+      
+      if let constraintHeight = modalManager.modalDragHandleConstraintHeight,
+         constraintHeight.constant != self.modalDragHandleSize.height {
+         
+        constraintHeight.constant = self.modalDragHandleSize.height;
+        didUpdateConstraints = true;
+      };
+      
+      guard didUpdateConstraints else { break block };
       
       modalDragHandleView.updateConstraints()
       modalDragHandleView.setNeedsLayout();
@@ -493,8 +514,31 @@ public extension AdaptiveModalInterpolationPoint {
       ?? keyframePrev?.modalBackgroundVisualEffectIntensity
       ?? (isFirstSnapPoint ? 0 : 1);
       
+    self.modalDragHandleSize = {
+      let currentSizeRaw = keyframeCurrent?.modalDragHandleSize;
+      
+      if currentSizeRaw == nil,
+         let modalDragHandleSize = keyframePrev?.modalDragHandleSize {
+         
+        return modalDragHandleSize;
+      };
+      
+      let nextSize = currentSizeRaw ?? CGSize(width: 40, height: 6);
+      
+      switch modalConfig.snapDirection {
+        case .bottomToTop, .topToBottom:
+          return nextSize;
+        
+        case .leftToRight, .rightToLeft:
+          return CGSize(
+            width : nextSize.height,
+            height: nextSize.width
+          );
+      };
+    }();
+      
     self.modalDragHandleOffset = {
-      let currentOffsetRaw = keyframeCurrent?.modalDragHandleOffset
+      let currentOffsetRaw = keyframeCurrent?.modalDragHandleOffset;
     
       if currentOffsetRaw == nil,
          let modalDragHandleOffset = keyframePrev?.modalDragHandleOffset {

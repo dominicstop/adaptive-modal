@@ -124,12 +124,14 @@ public class AdaptiveModalManager: NSObject {
   
   private var modalSecondaryAxisValue: CGFloat? = nil;
   
-  internal weak var modalConstraintLeft  : NSLayoutConstraint?;
-  internal weak var modalConstraintRight : NSLayoutConstraint?;
-  internal weak var modalConstraintTop   : NSLayoutConstraint?;
-  internal weak var modalConstraintBottom: NSLayoutConstraint?;
+  weak var modalConstraintLeft  : NSLayoutConstraint?;
+  weak var modalConstraintRight : NSLayoutConstraint?;
+  weak var modalConstraintTop   : NSLayoutConstraint?;
+  weak var modalConstraintBottom: NSLayoutConstraint?;
   
-  internal weak var modalDragHandleOffsetConstraint: NSLayoutConstraint?;
+  weak var modalDragHandleConstraintOffset: NSLayoutConstraint?;
+  weak var modalDragHandleConstraintHeight: NSLayoutConstraint?;
+  weak var modalDragHandleConstraintWidth : NSLayoutConstraint?;
   
   private var layoutKeyboardValues: RNILayoutKeyboardValues?;
   
@@ -833,6 +835,7 @@ public class AdaptiveModalManager: NSObject {
     scope:
     if let modalDragHandleView = self.modalDragHandleView,
        let modalWrapperShadowView = self.modalWrapperShadowView {
+       
       modalDragHandleView.translatesAutoresizingMaskIntoConstraints = false;
       
       let dragHandleOffset: CGFloat = {
@@ -843,50 +846,50 @@ public class AdaptiveModalManager: NSObject {
         return undershoot.modalDragHandleOffset;
       }();
       
-      var constraint: [NSLayoutConstraint] = [];
+      let offsetConstraint: NSLayoutConstraint? = {
+        switch self.modalConfig.dragHandlePosition {
+          case .top:
+            return modalDragHandleView.topAnchor.constraint(
+              equalTo: modalWrapperShadowView.topAnchor,
+              constant: dragHandleOffset
+            );
+            
+          case .bottom:
+            return modalDragHandleView.bottomAnchor.constraint(
+              equalTo: modalWrapperShadowView.bottomAnchor,
+              constant: dragHandleOffset
+            );
+            
+          case .left:
+            return modalDragHandleView.leftAnchor.constraint(
+              equalTo: modalWrapperShadowView.leftAnchor,
+              constant: dragHandleOffset
+            );
+            
+          case .right:
+            return modalDragHandleView.rightAnchor.constraint(
+              equalTo: modalWrapperShadowView.rightAnchor,
+              constant: dragHandleOffset
+            );
+            
+          default:
+            return nil;
+        };
+      }();
+      
+      guard let offsetConstraint = offsetConstraint else { break scope };
+      self.modalDragHandleConstraintOffset = offsetConstraint;
+      
+      var constraints = [offsetConstraint];
       
       switch self.modalConfig.dragHandlePosition {
-        case .top: constraint.append(
-          modalDragHandleView.topAnchor.constraint(
-            equalTo: modalWrapperShadowView.topAnchor,
-            constant: dragHandleOffset
-          )
-        );
-          
-        case .bottom: constraint.append(
-          modalDragHandleView.bottomAnchor.constraint(
-            equalTo: modalWrapperShadowView.bottomAnchor,
-            constant: dragHandleOffset
-          )
-        );
-          
-        case .left: constraint.append(
-          modalDragHandleView.leftAnchor.constraint(
-            equalTo: modalWrapperShadowView.leftAnchor,
-            constant: dragHandleOffset
-          )
-        );
-          
-        case .right: constraint.append(
-          modalDragHandleView.rightAnchor.constraint(
-            equalTo: modalWrapperShadowView.rightAnchor,
-            constant: dragHandleOffset
-          )
-        );
-          
-        default: break;
-      };
-      
-      self.modalDragHandleOffsetConstraint = constraint.first;
-      
-      switch self.modalConfig.dragHandlePosition {
-        case .top, .bottom: constraint.append(
+        case .top, .bottom: constraints.append(
           modalDragHandleView.centerXAnchor.constraint(
             equalTo: modalWrapperShadowView.centerXAnchor
           )
         );
           
-        case .left, .right: constraint.append(
+        case .left, .right: constraints.append(
           modalDragHandleView.centerYAnchor.constraint(
             equalTo: modalWrapperShadowView.centerYAnchor
           )
@@ -895,18 +898,24 @@ public class AdaptiveModalManager: NSObject {
         default: break;
       };
       
-      guard constraint.count > 0 else { break scope };
-      let dragHandleSize = self.modalConfig.dragHandleSizeAdj;
-      
-      NSLayoutConstraint.activate(constraint + [
-        modalDragHandleView.heightAnchor.constraint(
-          equalToConstant: dragHandleSize.height
-        ),
+      constraints += {
+        let dragHandleSize = self.currentInterpolationStep.modalDragHandleSize;
         
-        modalDragHandleView.widthAnchor.constraint(
+        let heightConstraint = modalDragHandleView.heightAnchor.constraint(
+          equalToConstant: dragHandleSize.height
+        );
+        
+        let widthConstraint = modalDragHandleView.widthAnchor.constraint(
           equalToConstant: dragHandleSize.width
-        ),
-      ])
+        );
+        
+        self.modalDragHandleConstraintHeight = heightConstraint;
+        self.modalDragHandleConstraintWidth = widthConstraint;
+        
+        return [heightConstraint, widthConstraint];
+      }();
+      
+      NSLayoutConstraint.activate(constraints);
     };
     
     if let bgDimmingView = self.backgroundDimmingView {
@@ -1634,12 +1643,51 @@ public class AdaptiveModalManager: NSObject {
     );
 
     guard let nextDragHandleOffset = nextDragHandleOffset,
-          let modalDragHandleOffsetConstraint = self.modalDragHandleOffsetConstraint
+          let modalDragHandleConstraintOffset = self.modalDragHandleConstraintOffset,
           
-          //modalDragHandleOffsetConstraint.constant != nextDragHandleOffset
+          modalDragHandleConstraintOffset.constant != nextDragHandleOffset
     else { return };
 
-    modalDragHandleOffsetConstraint.constant = nextDragHandleOffset;
+    modalDragHandleConstraintOffset.constant = nextDragHandleOffset;
+    
+    modalDragHandleView.updateConstraints();
+    modalDragHandleView.setNeedsLayout();
+  };
+  
+  private func applyInterpolationToModalDragHandleSize(
+    forInputPercentValue inputPercentValue: CGFloat
+  ) {
+    guard let modalDragHandleView = self.modalDragHandleView else { return };
+  
+    let nextWidth = self.interpolate(
+      inputValue: inputPercentValue,
+      rangeOutputKey: \.modalDragHandleSize.width,
+      shouldClampMin: true,
+      shouldClampMax: true
+    );
+    
+    let nextHeight = self.interpolate(
+      inputValue: inputPercentValue,
+      rangeOutputKey: \.modalDragHandleSize.height,
+      shouldClampMin: true,
+      shouldClampMax: true
+    );
+
+    guard let nextWidth = nextWidth,
+          let nextHeight = nextHeight,
+          
+          let dragHandleConstraintWidth = self.modalDragHandleConstraintWidth,
+          let dragHandleConstraintHeight = self.modalDragHandleConstraintHeight
+    else { return };
+    
+    let didSizeChange =
+         dragHandleConstraintWidth.constant != nextWidth
+      || dragHandleConstraintHeight.constant != nextHeight;
+      
+    guard didSizeChange else { return };
+
+    dragHandleConstraintWidth.constant = nextWidth;
+    dragHandleConstraintHeight.constant = nextHeight;
     
     modalDragHandleView.updateConstraints();
     modalDragHandleView.setNeedsLayout();
@@ -1734,6 +1782,10 @@ public class AdaptiveModalManager: NSObject {
     }();
     
     self.applyInterpolationToModalPadding(
+      forInputPercentValue: inputPercentValue
+    );
+    
+    self.applyInterpolationToModalDragHandleSize(
       forInputPercentValue: inputPercentValue
     );
     

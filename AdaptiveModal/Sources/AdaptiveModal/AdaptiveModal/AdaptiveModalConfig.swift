@@ -67,7 +67,6 @@ public struct AdaptiveModalConfig {
   public let initialSnapPointIndex: Int;
   
   public let dragHandlePosition: DragHandlePosition;
-  public let dragHandleSize: CGSize;
   public let dragHandleCornerRadius: CGFloat;
   public let dragHandleHitSlop: CGPoint;
   
@@ -153,19 +152,6 @@ public struct AdaptiveModalConfig {
     };
   };
   
-  public var dragHandleSizeAdj: CGSize {
-    switch self.snapDirection {
-      case .bottomToTop, .topToBottom:
-        return self.dragHandleSize;
-      
-      case .leftToRight, .rightToLeft:
-        return CGSize(
-          width : self.dragHandleSize.height,
-          height: self.dragHandleSize.width
-        );
-    };
-  };
-  
   // MARK: - Init
   // ------------
   
@@ -179,7 +165,6 @@ public struct AdaptiveModalConfig {
     undershootSnapPoint: AdaptiveModalSnapPointPreset? = nil,
     overshootSnapPoint: AdaptiveModalSnapPointPreset? = nil,
     dragHandlePosition: DragHandlePosition = .automatic,
-    dragHandleSize: CGSize? = nil,
     dragHandleHitSlop: CGPoint? = nil,
     dragHandleCornerRadius: CGFloat? = nil,
     modalSwipeGestureEdgeHeight: CGFloat? = nil,
@@ -216,7 +201,6 @@ public struct AdaptiveModalConfig {
       };
     }();
     
-    self.dragHandleSize = dragHandleSize ?? CGSize(width: 40, height: 6);
     self.dragHandleCornerRadius = dragHandleCornerRadius ?? 3;
     self.dragHandleHitSlop = dragHandleHitSlop ?? .init(x: 15, y: 15);
     
