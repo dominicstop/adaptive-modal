@@ -6,7 +6,6 @@
 
 ## Current
 
-- [ ] `TODO:2023-07-12-07-37-27` - Impl: Keyframe - Modal drag handle size.
 - [ ] `TODO:2023-07-12-07-39-47` - Impl: Make separate default keyframe value for undershoot snap point.
 - [ ] `TODO:2023-07-10-11-32-03` - Impl: Detect and warn against interpolation percent collision.
 - [ ] `TODO:2023-07-10-11-30-47` - Impl: Make Overshoot snap point config optional.
@@ -62,6 +61,8 @@
 <br><br>
 
 ## Completed
+
+- [x] `TODO:2023-07-12-07-37-27` - Impl: Keyframe - Modal drag handle size.
 
 - [x] `TODO:2023-07-09-19-43-23` - Refactor: Update modal drag handle to work when outside the modal content bounds. 
 
