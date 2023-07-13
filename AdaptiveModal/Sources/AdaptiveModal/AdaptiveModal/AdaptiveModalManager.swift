@@ -203,13 +203,13 @@ public class AdaptiveModalManager: NSObject {
     self.overrideInterpolationPoints?[self.currentOverrideInterpolationIndex];
   };
   
-  private var shouldUseOverrideSnapPoints: Bool {
+  var shouldUseOverrideSnapPoints: Bool {
        self.isOverridingSnapPoints
     && self.overrideSnapPoints          != nil
     && self.overrideInterpolationPoints != nil
   };
   
-  private var shouldClearOverrideSnapPoints: Bool {
+  var shouldClearOverrideSnapPoints: Bool {
        self.shouldUseOverrideSnapPoints
     && self.currentOverrideInterpolationIndex < overrideInterpolationPoints!.count - 2
     && self.presentationState != .dismissing
@@ -304,20 +304,20 @@ public class AdaptiveModalManager: NSObject {
   // MARK: -  Properties - Animation-Related
   // ---------------------------------------
   
-  internal weak var transitionContext: UIViewControllerContextTransitioning?;
+  weak var transitionContext: UIViewControllerContextTransitioning?;
   
   private var modalAnimator: UIViewPropertyAnimator?;
   
-  internal var extraAnimationBlockPresent: (() -> Void)?;
-  internal var extraAnimationBlockDismiss: (() -> Void)?;
+  var extraAnimationBlockPresent: (() -> Void)?;
+  var extraAnimationBlockDismiss: (() -> Void)?;
 
-  private var backgroundVisualEffectAnimator: AdaptiveModalRangePropertyAnimator?;
-  private var modalBackgroundVisualEffectAnimator: AdaptiveModalRangePropertyAnimator?;
+  var backgroundVisualEffectAnimator: AdaptiveModalRangePropertyAnimator?;
+  var modalBackgroundVisualEffectAnimator: AdaptiveModalRangePropertyAnimator?;
   
-  private var displayLink: CADisplayLink?;
-  private var displayLinkStartTimestamp: CFTimeInterval?;
+  var displayLink: CADisplayLink?;
+  var displayLinkStartTimestamp: CFTimeInterval?;
   
-  private var displayLinkEndTimestamp: CFTimeInterval? {
+  var displayLinkEndTimestamp: CFTimeInterval? {
     guard let animator = self.modalAnimator,
           let displayLinkStartTimestamp = self.displayLinkStartTimestamp
     else { return nil };
@@ -325,7 +325,7 @@ public class AdaptiveModalManager: NSObject {
     return displayLinkStartTimestamp + animator.duration;
   };
   
-  private var rangeAnimators: [AdaptiveModalRangePropertyAnimator?] {[
+  var rangeAnimators: [AdaptiveModalRangePropertyAnimator?] {[
     self.backgroundVisualEffectAnimator,
     self.modalBackgroundVisualEffectAnimator
   ]};
@@ -337,18 +337,18 @@ public class AdaptiveModalManager: NSObject {
   weak var modalDragHandleGesture: UIPanGestureRecognizer?;
   weak var backgroundTapGesture: UITapGestureRecognizer?;
   
-  private var gestureOffset: CGPoint?;
-  private var gestureVelocity: CGPoint?;
-  private var gestureInitialPoint: CGPoint?;
+  var gestureOffset: CGPoint?;
+  var gestureVelocity: CGPoint?;
+  var gestureInitialPoint: CGPoint?;
   
-  private var gesturePointPrev: CGPoint?;
-  private var gesturePoint: CGPoint? {
+  var gesturePointPrev: CGPoint?;
+  var gesturePoint: CGPoint? {
     didSet {
       self.gesturePointPrev = oldValue;
     }
   };
   
-  private var gesturePointDeltaInitial: CGPoint? {
+  var gesturePointDeltaInitial: CGPoint? {
     guard let gestureInitialPoint = self.gestureInitialPoint,
           let gesturePoint = self.gesturePoint
     else { return nil };
@@ -359,7 +359,7 @@ public class AdaptiveModalManager: NSObject {
     );
   };
   
-  private var gesturePointDeltaPrev: CGPoint? {
+  var gesturePointDeltaPrev: CGPoint? {
     guard let gesturePointPrev = self.gesturePointPrev,
           let gesturePoint = self.gesturePoint
     else { return nil };
@@ -370,7 +370,7 @@ public class AdaptiveModalManager: NSObject {
     );
   };
   
-  private var gestureInitialVelocity: CGVector {
+  var gestureInitialVelocity: CGVector {
     guard let gestureInitialPoint = self.gestureInitialPoint,
           let gestureFinalPoint   = self.gesturePoint,
           let gestureVelocity     = self.gestureVelocity
@@ -408,7 +408,7 @@ public class AdaptiveModalManager: NSObject {
   /// where would it eventually "stop" (i.e. it's final position) if it were to
   /// decelerate over time
   ///
-  private var gestureFinalPoint: CGPoint? {
+  var gestureFinalPoint: CGPoint? {
     guard let gesturePoint = self.gesturePoint,
           let gestureVelocity = self.gestureVelocity
     else { return nil };
@@ -433,7 +433,7 @@ public class AdaptiveModalManager: NSObject {
     return CGPoint(x: nextX, y: nextY);
   };
   
-  private var computedGestureOffset: CGPoint? {
+  var computedGestureOffset: CGPoint? {
     guard let gestureInitialPoint = self.gestureInitialPoint,
           let modalRect = self.modalFrame
     else { return nil };
@@ -476,7 +476,7 @@ public class AdaptiveModalManager: NSObject {
     return offset;
   };
   
-  private var modalSwipeGestureEdgeRect: CGRect? {
+  var modalSwipeGestureEdgeRect: CGRect? {
     guard let modalFrame = self.modalFrame else { return nil };
     
     return CGRect(
@@ -500,11 +500,21 @@ public class AdaptiveModalManager: NSObject {
   // ---------------------------
   
   public var isSwiping: Bool {
-    self.gestureInitialPoint != nil
+    let isModalGestureIdle =
+         self.modalGesture == nil
+      || self.modalGesture?.state == .ended
+      || self.modalGesture?.state == .cancelled;
+      
+    let isModalDragHandleGestureIdle =
+         self.modalDragHandleGesture == nil
+      || self.modalDragHandleGesture?.state == .ended
+      || self.modalDragHandleGesture?.state == .cancelled;
+
+    return isModalGestureIdle || isModalDragHandleGestureIdle;
   };
   
   public var isAnimating: Bool {
-     self.modalAnimator != nil || (self.modalAnimator?.isRunning ?? false);
+    self.modalAnimator?.isRunning ?? false;
   };
   
   public var currentSnapPointIndex: Int {
@@ -2488,7 +2498,7 @@ public class AdaptiveModalManager: NSObject {
         self.endDisplayLink();
       };
     };
-  
+    
     guard let dummyModalView = self.dummyModalView,
           let dummyModalViewLayer = dummyModalView.layer.presentation(),
           let interpolationRangeMaxInput = self.interpolationRangeMaxInput
