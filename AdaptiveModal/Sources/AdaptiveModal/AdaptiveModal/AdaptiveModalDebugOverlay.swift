@@ -51,6 +51,8 @@ class AdaptiveModalDebugOverlay: UIView {
   var labelGesturePointPrev: UILabel!;
   var labelGesturePoint: UILabel!;
   
+  var labelNextRect: UILabel!;
+  
   var labelModalFrameOrigin: UILabel!;
   var labelModalFrameSize: UILabel!;
   var labelPrevModalFrameOrigin: UILabel!;
@@ -237,6 +239,19 @@ class AdaptiveModalDebugOverlay: UIView {
     stackView.addArrangedSubview({
       let stack = makeLabelRowStack();
       
+      let labelDetail = makeLabelDetail(text: "nextRect:");
+      stack.addArrangedSubview(labelDetail);
+      
+      let labelValue = makeLabelValue(text: "N/A");
+      stack.addArrangedSubview(labelValue);
+      
+      self.labelNextRect = labelValue;
+      return stack;
+    }());
+    
+    stackView.addArrangedSubview({
+      let stack = makeLabelRowStack();
+      
       let labelDetail = makeLabelDetail(text: "modalFrame.origin:");
       stack.addArrangedSubview(labelDetail);
       
@@ -353,7 +368,7 @@ class AdaptiveModalDebugOverlay: UIView {
     
     self.labelModalFrameMaxOrigin.text = modalFrameMaxOrigin?.debugDescription ?? "N/A";
     
-    let modalFrameMaxCenter: CGPoint? = {
+    let modalFrameCenter: CGPoint? = {
       guard let modalFrame = modalFrame else { return nil };
       
       return CGPoint(
@@ -363,7 +378,7 @@ class AdaptiveModalDebugOverlay: UIView {
     }();
     
     
-    self.labelModalFrameCenter.text = modalFrameMaxCenter?.debugDescription ?? "N/A";
+    self.labelModalFrameCenter.text = modalFrameCenter?.debugDescription ?? "N/A";
   };
   
   func notifyOnDragPanGesture(_ gesture: UIPanGestureRecognizer){
@@ -382,13 +397,19 @@ class AdaptiveModalDebugOverlay: UIView {
     };
   };
   
-  func animateModal(){
+  func animateModal(
+    interpolationPoint: AdaptiveModalInterpolationPoint
+  ){
     self.labelInvoke.text = "animateModal";
+    self.labelNextRect.text = interpolationPoint.computedRect.debugDescription;
+    
     self.sharedUpdate();
   };
   
   func animateModalCompletion(){
     self.labelInvoke.text = "animateModalCompletion";
+    self.labelNextRect.text = "N/A";
+    
     self.sharedUpdate();
   };
   
@@ -404,6 +425,11 @@ class AdaptiveModalDebugOverlay: UIView {
   
   func notifyOnModalDidSnap(){
     self.labelInvoke.text = "notifyOnModalDidSnap";
+    self.sharedUpdate();
+  };
+  
+  func notifyDidCleanup(){
+    self.labelInvoke.text = "notifyDidCleanup";
     self.sharedUpdate();
   };
 };

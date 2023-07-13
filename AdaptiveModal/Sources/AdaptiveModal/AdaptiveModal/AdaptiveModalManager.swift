@@ -1172,6 +1172,10 @@ public class AdaptiveModalManager: NSObject {
     self.endDisplayLink();
     
     self.currentInterpolationIndex = 0;
+    
+    #if DEBUG
+    self.debugView?.notifyDidCleanup();
+    #endif
   };
 
   // MARK: - Functions - Interpolation-Related Helpers
@@ -2375,7 +2379,7 @@ public class AdaptiveModalManager: NSObject {
     };
     
     #if DEBUG
-    self.debugView?.animateModal();
+    self.debugView?.animateModal(interpolationPoint: interpolationPoint);
     #endif
   };
   
