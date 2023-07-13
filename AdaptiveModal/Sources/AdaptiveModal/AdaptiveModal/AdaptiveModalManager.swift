@@ -504,17 +504,13 @@ public class AdaptiveModalManager: NSObject {
   // ---------------------------
   
   public var isSwiping: Bool {
-    let isModalGestureIdle =
-         self.modalGesture == nil
-      || self.modalGesture?.state == .ended
-      || self.modalGesture?.state == .cancelled;
+    let isModalGestureActive =
+     self.modalGesture?.state.isActive ?? false;
       
-    let isModalDragHandleGestureIdle =
-         self.modalDragHandleGesture == nil
-      || self.modalDragHandleGesture?.state == .ended
-      || self.modalDragHandleGesture?.state == .cancelled;
+    let isModalDragHandleGestureActive =
+      self.modalDragHandleGesture?.state.isActive ?? false;
 
-    return isModalGestureIdle || isModalDragHandleGestureIdle;
+    return isModalGestureActive || isModalDragHandleGestureActive;
   };
   
   public var isAnimating: Bool {
@@ -2423,7 +2419,7 @@ public class AdaptiveModalManager: NSObject {
         };
     
       case .changed:
-        if !self.isKeyboardVisible {
+        if !self.isKeyboardVisible || self.isAnimating {
           self.modalAnimator?.stopAnimation(true);
         };
         

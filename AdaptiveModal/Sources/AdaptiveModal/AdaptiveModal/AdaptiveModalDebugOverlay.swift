@@ -20,6 +20,19 @@ extension UIGestureRecognizer.State {
       @unknown default: return "unknown";
     };
   };
+  
+  var isActive: Bool {
+    switch self {
+      case .began, .changed:
+        return true;
+      
+      case .ended, .cancelled, .failed:
+        return false;
+      
+      @unknown default:
+        return false;
+    };
+  };
 };
 
 
