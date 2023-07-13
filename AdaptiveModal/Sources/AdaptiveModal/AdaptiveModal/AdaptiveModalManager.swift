@@ -12,6 +12,8 @@ public class AdaptiveModalManager: NSObject {
   public enum PresentationState {
     case presenting, dismissing, none;
   };
+  
+  public static var showDebugOverlay = false;
 
   // MARK: -  Properties - Config-Related
   // ------------------------------------
@@ -54,6 +56,8 @@ public class AdaptiveModalManager: NSObject {
   
   // MARK: -  Properties - Layout-Related
   // ------------------------------------
+  
+  var debugView: AdaptiveModalDebugOverlay?;
   
   public var modalWrapperViewController: AdaptiveModalRootViewController?;
   
@@ -756,6 +760,15 @@ public class AdaptiveModalManager: NSObject {
        
       modalWrapperShadowView.addSubview(modalDragHandleView);
     };
+    
+    #if DEBUG
+    if Self.showDebugOverlay {
+      let debugView = AdaptiveModalDebugOverlay(modalManager: self);
+      self.debugView = debugView;
+      
+      modalRootView.addSubview(debugView);
+    };
+    #endif
   };
   
   func setupViewConstraints() {
@@ -993,6 +1006,31 @@ public class AdaptiveModalManager: NSObject {
         ),
       ]);
     };
+    
+    
+    #if DEBUG
+    if let debugView = self.debugView {
+      debugView.translatesAutoresizingMaskIntoConstraints = false;
+      
+      NSLayoutConstraint.activate([
+        debugView.topAnchor.constraint(
+          equalTo: modalRootView.topAnchor
+        ),
+        
+        debugView.bottomAnchor.constraint(
+          equalTo: modalRootView.bottomAnchor
+        ),
+        
+        debugView.leadingAnchor.constraint(
+          equalTo: modalRootView.leadingAnchor
+        ),
+        
+        debugView.trailingAnchor.constraint(
+          equalTo: modalRootView.trailingAnchor
+        ),
+      ]);
+    };
+    #endif
   };
   
   func setupExtractScrollView(){
@@ -2023,6 +2061,10 @@ public class AdaptiveModalManager: NSObject {
     self.applyInterpolationToRangeAnimators(
       forInputPercentValue: inputPercentValue
     );
+    
+    #if DEBUG
+    self.debugView?.applyInterpolationToModal();
+    #endif
   };
   
   private func applyInterpolationToModal(forPoint point: CGPoint) {
@@ -2311,6 +2353,10 @@ public class AdaptiveModalManager: NSObject {
       animator.addCompletion { _ in
         self.endDisplayLink();
         self.modalAnimator = nil;
+        
+        #if DEBUG
+        self.debugView?.animateModalCompletion();
+        #endif
       };
     
       animator.startAnimation();
@@ -2326,7 +2372,15 @@ public class AdaptiveModalManager: NSObject {
     
       extraAnimation?();
       completion?(.end);
+      
+      #if DEBUG
+      self.debugView?.animateModalCompletion();
+      #endif
     };
+    
+    #if DEBUG
+    self.debugView?.animateModal();
+    #endif
   };
   
   private func cancelModalGesture(){
@@ -2351,6 +2405,10 @@ public class AdaptiveModalManager: NSObject {
     
     let gestureVelocity = sender.velocity(in: self.targetView);
     self.gestureVelocity = gestureVelocity;
+    
+    #if DEBUG
+    self.debugView?.notifyOnDragPanGesture(sender);
+    #endif
     
     switch sender.state {
       case .began:
@@ -2494,6 +2552,10 @@ public class AdaptiveModalManager: NSObject {
     var shouldEndDisplayLink = false;
     
     defer {
+      #if DEBUG
+      self.debugView?.notifyOnDisplayLinkTick();
+      #endif
+    
       if shouldEndDisplayLink {
         self.endDisplayLink();
       };
@@ -2586,6 +2648,10 @@ public class AdaptiveModalManager: NSObject {
   };
   
   private func notifyOnModalDidSnap() {
+    #if DEBUG
+    self.debugView?.notifyOnModalDidSnap();
+    #endif
+  
     self.eventDelegate?.notifyOnModalDidSnap(
       prevSnapPointIndex:
         self.interpolationSteps[self.prevInterpolationIndex].snapPointIndex,
