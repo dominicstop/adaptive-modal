@@ -40,7 +40,11 @@ class AdaptiveModalDebugOverlay: UIView {
 
   weak var modalManager: AdaptiveModalManager?;
   
+  var invokeHistory: [String] = [];
+  
   var labelInvoke: UILabel!;
+  var labelInvokePrev: UILabel!;
+  
   var labelGestureState: UILabel!;
   var labelIsAnimating: UILabel!;
   var labelIsSwiping: UILabel!;
@@ -51,7 +55,13 @@ class AdaptiveModalDebugOverlay: UIView {
   var labelGesturePointPrev: UILabel!;
   var labelGesturePoint: UILabel!;
   
-  var labelNextRect: UILabel!;
+  var labelNextRectOrigin: UILabel!;
+  var labelNextRectSize: UILabel!;
+  var labelNextRectMaxOrigin: UILabel!;
+  
+  var labelPrevRectOrigin: UILabel!;
+  var labelPrevRectSize: UILabel!;
+  var labelPrevRectMaxOrigin: UILabel!;
   
   var labelModalFrameOrigin: UILabel!;
   var labelModalFrameSize: UILabel!;
@@ -131,6 +141,20 @@ class AdaptiveModalDebugOverlay: UIView {
       self.labelInvoke = labelValue;
       return stack;
     }());
+    
+    stackView.addArrangedSubview({
+      let stack = makeLabelRowStack();
+      
+      let labelDetail = makeLabelDetail(text: "invokePrev:");
+      stack.addArrangedSubview(labelDetail);
+      
+      let labelValue = makeLabelValue(text: "N/A");
+      stack.addArrangedSubview(labelValue);
+      
+      self.labelInvokePrev = labelValue;
+      return stack;
+    }());
+    
     
     stackView.addArrangedSubview({
       let stack = makeLabelRowStack();
@@ -239,13 +263,78 @@ class AdaptiveModalDebugOverlay: UIView {
     stackView.addArrangedSubview({
       let stack = makeLabelRowStack();
       
-      let labelDetail = makeLabelDetail(text: "nextRect:");
+      let labelDetail = makeLabelDetail(text: "nextRectOrigin:");
       stack.addArrangedSubview(labelDetail);
       
       let labelValue = makeLabelValue(text: "N/A");
       stack.addArrangedSubview(labelValue);
       
-      self.labelNextRect = labelValue;
+      self.labelNextRectOrigin = labelValue;
+      return stack;
+    }());
+    
+    stackView.addArrangedSubview({
+      let stack = makeLabelRowStack();
+      
+      let labelDetail = makeLabelDetail(text: "nextRectSize:");
+      stack.addArrangedSubview(labelDetail);
+      
+      let labelValue = makeLabelValue(text: "N/A");
+      stack.addArrangedSubview(labelValue);
+      
+      self.labelNextRectSize = labelValue;
+      return stack;
+    }());
+    
+    stackView.addArrangedSubview({
+      let stack = makeLabelRowStack();
+      
+      let labelDetail = makeLabelDetail(text: "nextRectMaxOrigin:");
+      stack.addArrangedSubview(labelDetail);
+      
+      let labelValue = makeLabelValue(text: "N/A");
+      stack.addArrangedSubview(labelValue);
+      
+      self.labelNextRectMaxOrigin = labelValue;
+      return stack;
+    }());
+    
+    stackView.addArrangedSubview({
+      let stack = makeLabelRowStack();
+      
+      let labelDetail = makeLabelDetail(text: "prevRectOrigin:");
+      stack.addArrangedSubview(labelDetail);
+      
+      let labelValue = makeLabelValue(text: "N/A");
+      stack.addArrangedSubview(labelValue);
+      
+      self.labelPrevRectOrigin = labelValue;
+      return stack;
+    }());
+    
+    stackView.addArrangedSubview({
+      let stack = makeLabelRowStack();
+      
+      let labelDetail = makeLabelDetail(text: "prevRectSize:");
+      stack.addArrangedSubview(labelDetail);
+      
+      let labelValue = makeLabelValue(text: "N/A");
+      stack.addArrangedSubview(labelValue);
+      
+      self.labelPrevRectSize = labelValue;
+      return stack;
+    }());
+    
+    stackView.addArrangedSubview({
+      let stack = makeLabelRowStack();
+      
+      let labelDetail = makeLabelDetail(text: "prevRectMaxOrigin:");
+      stack.addArrangedSubview(labelDetail);
+      
+      let labelValue = makeLabelValue(text: "N/A");
+      stack.addArrangedSubview(labelValue);
+      
+      self.labelPrevRectMaxOrigin = labelValue;
       return stack;
     }());
     
@@ -336,6 +425,14 @@ class AdaptiveModalDebugOverlay: UIView {
     ]);
   };
   
+  func setInvoke(_ string: String){
+    let prev = self.invokeHistory.last
+    self.invokeHistory.append(string);
+    
+    self.labelInvoke.text = string;
+    self.labelInvokePrev.text = prev ?? "N/A";
+  };
+  
   func sharedUpdate(){
     guard let modalManager = self.modalManager else { return };
     
@@ -382,14 +479,20 @@ class AdaptiveModalDebugOverlay: UIView {
   };
   
   func notifyOnDragPanGesture(_ gesture: UIPanGestureRecognizer){
-    self.labelInvoke.text = "notifyOnDragPanGesture";
     self.labelGestureState.text = gesture.state.string;
+    
+    self.labelNextRectOrigin.text = "N/A";
+    self.labelNextRectSize.text = "N/A";
+    self.labelNextRectMaxOrigin.text = "N/A";
+    self.labelPrevRectOrigin.text = "N/A";
+    self.labelPrevRectSize.text = "N/A";
+    self.labelPrevRectMaxOrigin.text = "N/A";
     
     self.sharedUpdate();
   };
   
   func applyInterpolationToModal(){
-    self.labelInvoke.text = "applyInterpolationToModal";
+    self.setInvoke("applyInterpolationToModal");
     self.sharedUpdate();
     
     if !(self.modalManager?.isAnimating ?? false) {
@@ -400,21 +503,50 @@ class AdaptiveModalDebugOverlay: UIView {
   func animateModal(
     interpolationPoint: AdaptiveModalInterpolationPoint
   ){
-    self.labelInvoke.text = "animateModal";
-    self.labelNextRect.text = interpolationPoint.computedRect.debugDescription;
+    self.setInvoke("animateModal");
+    
+    self.labelNextRectOrigin.text = interpolationPoint.computedRect.origin.debugDescription;
+    self.labelNextRectSize.text = interpolationPoint.computedRect.size.debugDescription;
+    
+    self.labelNextRectMaxOrigin.text = {
+      let maxPoint = CGPoint(
+        x: interpolationPoint.computedRect.maxX,
+        y: interpolationPoint.computedRect.maxY
+      );
+      
+      return maxPoint.debugDescription;
+    }();
+    
+    if let modalFrame = self.modalManager?.modalFrame {
+      self.labelPrevRectOrigin.text = modalFrame.origin.debugDescription;
+      self.labelPrevRectSize.text = modalFrame.size.debugDescription;
+      
+      let maxPoint = CGPoint(
+        x: modalFrame.maxX,
+        y: modalFrame.maxY
+      );
+      
+      self.labelPrevRectMaxOrigin.text = maxPoint.debugDescription;
+    };
     
     self.sharedUpdate();
   };
   
   func animateModalCompletion(){
-    self.labelInvoke.text = "animateModalCompletion";
-    self.labelNextRect.text = "N/A";
+    self.setInvoke("animateModalCompletion");
+    
+    self.labelNextRectOrigin.text = "N/A";
+    self.labelNextRectSize.text = "N/A";
+    self.labelNextRectMaxOrigin.text = "N/A";
+    self.labelPrevRectOrigin.text = "N/A";
+    self.labelPrevRectSize.text = "N/A";
+    self.labelPrevRectMaxOrigin.text = "N/A";
     
     self.sharedUpdate();
   };
   
   func notifyOnDisplayLinkTick(){
-    self.labelInvoke.text = "notifyOnDisplayLinkTick";
+    self.setInvoke("notifyOnDisplayLinkTick");
     self.sharedUpdate();
     
     let dummyModalView = self.modalManager?.dummyModalView;
@@ -424,12 +556,28 @@ class AdaptiveModalDebugOverlay: UIView {
   };
   
   func notifyOnModalDidSnap(){
-    self.labelInvoke.text = "notifyOnModalDidSnap";
+    self.setInvoke("notifyOnModalDidSnap");
+    
+    self.labelNextRectOrigin.text = "N/A";
+    self.labelNextRectSize.text = "N/A";
+    self.labelNextRectMaxOrigin.text = "N/A";
+    self.labelPrevRectOrigin.text = "N/A";
+    self.labelPrevRectSize.text = "N/A";
+    self.labelPrevRectMaxOrigin.text = "N/A";
+    
     self.sharedUpdate();
   };
   
   func notifyDidCleanup(){
-    self.labelInvoke.text = "notifyDidCleanup";
+    self.setInvoke("notifyDidCleanup");
+    
+    self.labelNextRectOrigin.text = "N/A";
+    self.labelNextRectSize.text = "N/A";
+    self.labelNextRectMaxOrigin.text = "N/A";
+    self.labelPrevRectOrigin.text = "N/A";
+    self.labelPrevRectSize.text = "N/A";
+    self.labelPrevRectMaxOrigin.text = "N/A";
+    
     self.sharedUpdate();
   };
 };
