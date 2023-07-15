@@ -210,7 +210,9 @@ fileprivate class TestModalViewController: UIViewController, AdaptiveModalEventN
       keyframeConfig: .init(
         modalCornerRadius: 15,
         modalMaskedCorners: .allCorners,
-        modalBackgroundOpacity: 0.9,
+        modalBackgroundOpacity: 0.85,
+        modalBackgroundVisualEffect: UIBlurEffect(style: .regular),
+        modalBackgroundVisualEffectIntensity: 1,
         backgroundOpacity: 0
       )
     );
