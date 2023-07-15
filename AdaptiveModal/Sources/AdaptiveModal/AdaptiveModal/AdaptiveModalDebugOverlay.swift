@@ -44,6 +44,7 @@ class AdaptiveModalDebugOverlay: UIView {
   
   var labelInvoke: UILabel!;
   var labelInvokePrev: UILabel!;
+  var labelInvokePrev2: UILabel!;
   
   var labelGestureState: UILabel!;
   var labelIsAnimating: UILabel!;
@@ -155,6 +156,18 @@ class AdaptiveModalDebugOverlay: UIView {
       return stack;
     }());
     
+    stackView.addArrangedSubview({
+      let stack = makeLabelRowStack();
+      
+      let labelDetail = makeLabelDetail(text: "invokePrev2:");
+      stack.addArrangedSubview(labelDetail);
+      
+      let labelValue = makeLabelValue(text: "N/A");
+      stack.addArrangedSubview(labelValue);
+      
+      self.labelInvokePrev2 = labelValue;
+      return stack;
+    }());
     
     stackView.addArrangedSubview({
       let stack = makeLabelRowStack();
@@ -426,11 +439,16 @@ class AdaptiveModalDebugOverlay: UIView {
   };
   
   func setInvoke(_ string: String){
-    let prev = self.invokeHistory.last
+    let lastIndex = self.invokeHistory.count - 1;
+  
+    let prev  = self.invokeHistory[safeIndex: lastIndex];
+    let prev2 = self.invokeHistory[safeIndex: lastIndex - 1];
+    
     self.invokeHistory.append(string);
     
     self.labelInvoke.text = string;
     self.labelInvokePrev.text = prev ?? "N/A";
+    self.labelInvokePrev2.text = prev2 ?? "N/A";
   };
   
   func sharedUpdate(){
@@ -479,6 +497,7 @@ class AdaptiveModalDebugOverlay: UIView {
   };
   
   func notifyOnDragPanGesture(_ gesture: UIPanGestureRecognizer){
+    self.setInvoke("notifyOnDragPanGesture");
     self.labelGestureState.text = gesture.state.string;
     
     self.labelNextRectOrigin.text = "N/A";

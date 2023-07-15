@@ -12,8 +12,6 @@ public class AdaptiveModalManager: NSObject {
   public enum PresentationState {
     case presenting, dismissing, none;
   };
-  
-  public static var showDebugOverlay = false;
 
   // MARK: -  Properties - Config-Related
   // ------------------------------------
@@ -495,6 +493,8 @@ public class AdaptiveModalManager: NSObject {
   // MARK: -  Properties
   // -------------------
   
+  public var showDebugOverlay = false;
+  
   private(set) var didTriggerSetup = false;
   internal(set) public var presentationState: PresentationState = .none;
   
@@ -758,7 +758,7 @@ public class AdaptiveModalManager: NSObject {
     };
     
     #if DEBUG
-    if Self.showDebugOverlay {
+    if self.showDebugOverlay {
       let debugView = AdaptiveModalDebugOverlay(modalManager: self);
       self.debugView = debugView;
       
@@ -2323,6 +2323,9 @@ public class AdaptiveModalManager: NSObject {
       interpolationPoint.applyAnimation(toModalManager: self);
     };
     
+    #if DEBUG
+    self.debugView?.animateModal(interpolationPoint: interpolationPoint);
+    #endif
     
     self.modalWrapperLayoutView?.layoutIfNeeded();
     
@@ -2380,10 +2383,6 @@ public class AdaptiveModalManager: NSObject {
       self.debugView?.animateModalCompletion();
       #endif
     };
-    
-    #if DEBUG
-    self.debugView?.animateModal(interpolationPoint: interpolationPoint);
-    #endif
   };
   
   private func cancelModalGesture(){
