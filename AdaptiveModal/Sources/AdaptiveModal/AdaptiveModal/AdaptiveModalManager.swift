@@ -495,7 +495,7 @@ public class AdaptiveModalManager: NSObject {
   // MARK: -  Properties
   // -------------------
   
-  public var showDebugOverlay = false;
+  private var _showDebugOverlay = false;
   
   private(set) var didTriggerSetup = false;
   internal(set) public var presentationState: PresentationState = .none;
@@ -504,6 +504,19 @@ public class AdaptiveModalManager: NSObject {
 
   // MARK: - Computed Properties
   // ---------------------------
+  
+  public var showDebugOverlay: Bool {
+    get {
+      #if DEBUG
+      return self._showDebugOverlay;
+      #else
+      return false;
+      #endif
+    }
+    set {
+      self._showDebugOverlay = newValue;
+    }
+  };
   
   public var isSwiping: Bool {
     let isModalGestureActive =
@@ -2071,7 +2084,7 @@ public class AdaptiveModalManager: NSObject {
     );
     
     #if DEBUG
-    self.debugView?.applyInterpolationToModal();
+    self.debugView?.notifyOnApplyInterpolationToModal();
     #endif
   };
   
@@ -2332,7 +2345,7 @@ public class AdaptiveModalManager: NSObject {
     };
     
     #if DEBUG
-    self.debugView?.animateModal(interpolationPoint: interpolationPoint);
+    self.debugView?.notifyOnAnimateModal(interpolationPoint: interpolationPoint);
     #endif
     
     self.modalWrapperLayoutView?.layoutIfNeeded();
@@ -2369,7 +2382,7 @@ public class AdaptiveModalManager: NSObject {
         self.modalAnimator = nil;
         
         #if DEBUG
-        self.debugView?.animateModalCompletion();
+        self.debugView?.notifyOnAnimateModalCompletion();
         #endif
       };
     
@@ -2388,7 +2401,7 @@ public class AdaptiveModalManager: NSObject {
       completion?(.end);
       
       #if DEBUG
-      self.debugView?.animateModalCompletion();
+      self.debugView?.notifyOnAnimateModalCompletion();
       #endif
     };
   };

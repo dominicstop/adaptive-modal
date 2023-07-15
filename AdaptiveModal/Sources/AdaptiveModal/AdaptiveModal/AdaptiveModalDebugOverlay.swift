@@ -26,7 +26,7 @@ extension UIGestureRecognizer.State {
       case .began, .changed:
         return true;
       
-      case .ended, .cancelled, .failed:
+      case .possible, .ended, .cancelled, .failed:
         return false;
       
       @unknown default:
@@ -35,42 +35,50 @@ extension UIGestureRecognizer.State {
   };
 };
 
-
 class AdaptiveModalDebugOverlay: UIView {
 
   weak var modalManager: AdaptiveModalManager?;
   
+  // MARK: - Properties
+  // ------------------
+  
   var invokeHistory: [String] = [];
   
-  var labelInvoke: UILabel!;
-  var labelInvokePrev: UILabel!;
-  var labelInvokePrev2: UILabel!;
+    // MARK: - Properties - UI Refs
+  // ------------------------------
   
-  var labelGestureState: UILabel!;
-  var labelIsAnimating: UILabel!;
-  var labelIsSwiping: UILabel!;
+  private var labelInvoke: UILabel!;
+  private var labelInvokePrev: UILabel!;
+  private var labelInvokePrev2: UILabel!;
   
-  var labelGestureOffset: UILabel!;
-  var labelGestureVelocity: UILabel!;
-  var labelGestureInitialPoint: UILabel!;
-  var labelGesturePointPrev: UILabel!;
-  var labelGesturePoint: UILabel!;
+  private var labelGestureState: UILabel!;
+  private var labelIsAnimating: UILabel!;
+  private var labelIsSwiping: UILabel!;
   
-  var labelNextRectOrigin: UILabel!;
-  var labelNextRectSize: UILabel!;
-  var labelNextRectMaxOrigin: UILabel!;
+  private var labelGestureOffset: UILabel!;
+  private var labelGestureVelocity: UILabel!;
+  private var labelGestureInitialPoint: UILabel!;
+  private var labelGesturePointPrev: UILabel!;
+  private var labelGesturePoint: UILabel!;
   
-  var labelPrevRectOrigin: UILabel!;
-  var labelPrevRectSize: UILabel!;
-  var labelPrevRectMaxOrigin: UILabel!;
+  private var labelNextRectOrigin: UILabel!;
+  private var labelNextRectSize: UILabel!;
+  private var labelNextRectMaxOrigin: UILabel!;
   
-  var labelModalFrameOrigin: UILabel!;
-  var labelModalFrameSize: UILabel!;
-  var labelPrevModalFrameOrigin: UILabel!;
-  var labelPrevModalFrameSize: UILabel!;
+  private var labelPrevRectOrigin: UILabel!;
+  private var labelPrevRectSize: UILabel!;
+  private var labelPrevRectMaxOrigin: UILabel!;
   
-  var labelModalFrameMaxOrigin: UILabel!;
-  var labelModalFrameCenter: UILabel!;
+  private var labelModalFrameOrigin: UILabel!;
+  private var labelModalFrameSize: UILabel!;
+  private var labelPrevModalFrameOrigin: UILabel!;
+  private var labelPrevModalFrameSize: UILabel!;
+  
+  private var labelModalFrameMaxOrigin: UILabel!;
+  private var labelModalFrameCenter: UILabel!;
+  
+  // MARK: - Init
+  // ------------
 
   init(modalManager: AdaptiveModalManager) {
     super.init(frame: .zero);
@@ -438,7 +446,10 @@ class AdaptiveModalDebugOverlay: UIView {
     ]);
   };
   
-  func setInvoke(_ string: String){
+  // MARK: - Functions
+  // -----------------
+  
+  private func setInvoke(_ string: String){
     let lastIndex = self.invokeHistory.count - 1;
   
     let prev  = self.invokeHistory[safeIndex: lastIndex];
@@ -451,7 +462,7 @@ class AdaptiveModalDebugOverlay: UIView {
     self.labelInvokePrev2.text = prev2 ?? "N/A";
   };
   
-  func sharedUpdate(){
+  private func sharedUpdate(){
     guard let modalManager = self.modalManager else { return };
     
     self.labelIsAnimating.text = modalManager.isAnimating.description;
@@ -464,7 +475,7 @@ class AdaptiveModalDebugOverlay: UIView {
     self.labelGesturePoint.text = modalManager.gesturePoint?.debugDescription ?? "N/A";
   };
   
-  func updateModalFrame(_ modalFrame: CGRect?){
+  private func updateModalFrame(_ modalFrame: CGRect?){
   
     self.labelModalFrameOrigin.text = modalFrame?.origin.debugDescription ?? "N/A";
     self.labelModalFrameSize.text = modalFrame?.size.debugDescription ?? "N/A";
@@ -496,6 +507,9 @@ class AdaptiveModalDebugOverlay: UIView {
     self.labelModalFrameCenter.text = modalFrameCenter?.debugDescription ?? "N/A";
   };
   
+  // MARK: - Functions - Notify
+  // --------------------------
+  
   func notifyOnDragPanGesture(_ gesture: UIPanGestureRecognizer){
     self.setInvoke("notifyOnDragPanGesture");
     self.labelGestureState.text = gesture.state.string;
@@ -510,7 +524,7 @@ class AdaptiveModalDebugOverlay: UIView {
     self.sharedUpdate();
   };
   
-  func applyInterpolationToModal(){
+  func notifyOnApplyInterpolationToModal(){
     self.setInvoke("applyInterpolationToModal");
     self.sharedUpdate();
     
@@ -519,7 +533,7 @@ class AdaptiveModalDebugOverlay: UIView {
     };
   };
   
-  func animateModal(
+  func notifyOnAnimateModal(
     interpolationPoint: AdaptiveModalInterpolationPoint
   ){
     self.setInvoke("animateModal");
@@ -551,7 +565,7 @@ class AdaptiveModalDebugOverlay: UIView {
     self.sharedUpdate();
   };
   
-  func animateModalCompletion(){
+  func notifyOnAnimateModalCompletion(){
     self.setInvoke("animateModalCompletion");
     
     self.labelNextRectOrigin.text = "N/A";
