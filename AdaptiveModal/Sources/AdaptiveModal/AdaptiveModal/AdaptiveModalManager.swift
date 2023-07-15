@@ -2323,6 +2323,9 @@ public class AdaptiveModalManager: NSObject {
       interpolationPoint.applyAnimation(toModalManager: self);
     };
     
+    
+    self.modalWrapperLayoutView?.layoutIfNeeded();
+    
     if isAnimated {
       let animator: UIViewPropertyAnimator = animator ?? {
         let gestureInitialVelocity = self.gestureInitialVelocity;
