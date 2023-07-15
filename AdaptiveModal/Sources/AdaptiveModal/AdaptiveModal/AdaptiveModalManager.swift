@@ -189,6 +189,8 @@ public class AdaptiveModalManager: NSObject {
   
   private(set) var isOverridingSnapPoints = false;
   
+  private var shouldResetRangePropertyAnimators = false;
+  
   var prevOverrideInterpolationIndex = 0;
   var nextOverrideInterpolationIndex: Int?;
   
@@ -1151,6 +1153,8 @@ public class AdaptiveModalManager: NSObject {
   
   private func cleanupSnapPointOverride(){
     self.isOverridingSnapPoints = false;
+    self.shouldResetRangePropertyAnimators = false;
+    
     self.overrideSnapPoints = nil;
     self.overrideInterpolationPoints = nil;
     
@@ -1523,8 +1527,9 @@ public class AdaptiveModalManager: NSObject {
         interpolationRangeStart: interpolationRange.rangeStart,
         interpolationRangeEnd: interpolationRange.rangeEnd
       );
-    
-      if var animator = animator,
+ 
+      if !self.shouldResetRangePropertyAnimators,
+         var animator = animator,
          let animatorRangeDidChange = animatorRangeDidChange {
          
         if animatorRangeDidChange {
@@ -1579,7 +1584,8 @@ public class AdaptiveModalManager: NSObject {
         interpolationRangeEnd: interpolationRange.rangeEnd
       );
     
-      if var animator = animator,
+      if !self.shouldResetRangePropertyAnimators,
+         var animator = animator,
          let animatorRangeDidChange = animatorRangeDidChange {
          
         if animatorRangeDidChange {
@@ -1754,6 +1760,8 @@ public class AdaptiveModalManager: NSObject {
     self.applyInterpolationToModalBackgroundVisualEffect(
       forInputPercentValue: inputPercentValue
     );
+    
+    self.shouldResetRangePropertyAnimators = false;
   };
   
   private func applyInterpolationToModal(
@@ -3072,6 +3080,7 @@ public class AdaptiveModalManager: NSObject {
     };
     
     self.isOverridingSnapPoints = true;
+    self.shouldResetRangePropertyAnimators = true;
     self.currentOverrideInterpolationIndex = nextInterpolationPointIndex;
     
     self.animateModal(
