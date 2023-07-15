@@ -198,10 +198,11 @@ public struct AdaptiveModalInterpolationPoint: Equatable {
     
     if let modalWrapperLayoutView = modalManager.modalWrapperLayoutView {
       if modalWrapperLayoutView.frame != self.computedRect {
+        modalWrapperLayoutView.frame = self.computedRect;
+        
         modalWrapperLayoutView.setNeedsLayout();
       };
-    
-      modalWrapperLayoutView.frame = self.computedRect;
+      
       modalWrapperLayoutView.alpha = self.modalOpacity;
     };
     
@@ -341,7 +342,6 @@ public struct AdaptiveModalInterpolationPoint: Equatable {
     };
     
     modalManager.modalWrapperLayoutView?.layoutIfNeeded();
-    modalManager.modalContentWrapperView?.layoutIfNeeded();
     modalManager.modalDragHandleView?.layoutIfNeeded();
   };
   

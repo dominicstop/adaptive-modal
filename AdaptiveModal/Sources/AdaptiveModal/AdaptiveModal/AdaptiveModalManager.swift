@@ -2451,10 +2451,7 @@ public class AdaptiveModalManager: NSObject {
         let gestureFinalPoint =
           self.applyGestureOffsets(forGesturePoint: gestureFinalPointRaw);
         
-        self.snapToClosestSnapPoint(forPoint: gestureFinalPoint) {
-          self.notifyOnModalDidSnap();
-        };
-        
+        self.snapToClosestSnapPoint(forPoint: gestureFinalPoint);
       default:
         break;
     };
@@ -2774,7 +2771,10 @@ public class AdaptiveModalManager: NSObject {
     let prevFrame = self.modalFrame;
     let nextFrame = nextInterpolationPoint.computedRect;
     
-    guard prevFrame != nextFrame else { return };
+    guard prevFrame != nextFrame else {
+      completion?();
+      return;
+    };
    
     self.snapTo(
       interpolationIndex: nextInterpolationIndex,
