@@ -172,7 +172,23 @@ public struct AdaptiveModalConfig {
     shouldSetModalScrollViewVerticalScrollIndicatorInsets: Bool = true,
     shouldSetModalScrollViewHorizontalScrollIndicatorInsets: Bool = true
   ) {
-    self.baseSnapPoints = snapPoints;
+  
+    self.baseSnapPoints = {
+      var snapPointsNew = snapPoints;
+    
+      if let firstSnapPoint = snapPoints.first,
+         var firstKeyframe = firstSnapPoint.keyframeConfig {
+         
+        firstKeyframe.setNonNilValues(using: .defaultFirstKeyframe);
+         
+        snapPointsNew[0] = .init(
+          fromBase: firstSnapPoint,
+          newAnimationKeyframe: firstKeyframe
+        );
+      };
+      
+      return snapPointsNew;
+    }();
     
     self.snapDirection = snapDirection;
     self.snapPercentStrategy = snapPercentStrategy;

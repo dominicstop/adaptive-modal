@@ -9,6 +9,22 @@ import UIKit
 
 public struct AdaptiveModalKeyframeConfig {
 
+  public static let defaultFirstKeyframe: Self = .init(
+    modalContentOpacity: 1
+  );
+
+  public static let defaultUndershootKeyframe: Self = .init(
+    backgroundTapInteraction: .default,
+    modalRotation: 0,
+    modalScaleX: 1,
+    modalScaleY: 1,
+    modalTranslateX: 0,
+    modalTranslateY: 0,
+    modalContentOpacity: 0.5,
+    backgroundOpacity: 0,
+    backgroundVisualEffectIntensity: 0
+  );
+
   public enum BackgroundInteractionMode: String {
     static let `default`: Self = .automatic;
   
@@ -22,7 +38,7 @@ public struct AdaptiveModalKeyframeConfig {
       };
     };
   };
-
+  
   // MARK: - Properties
   // ------------------
 
@@ -160,5 +176,143 @@ public struct AdaptiveModalKeyframeConfig {
     self.backgroundVisualEffect = backgroundVisualEffect;
     self.backgroundVisualEffectOpacity = backgroundVisualEffectOpacity;
     self.backgroundVisualEffectIntensity = backgroundVisualEffectIntensity;
+  };
+  
+  public mutating func setNonNilValues(using otherKeyframe: Self) {
+    if self.backgroundTapInteraction == nil {
+      self.backgroundTapInteraction = otherKeyframe.backgroundTapInteraction;
+    };
+    
+    if self.secondaryGestureAxisDampingPercent == nil {
+      self.secondaryGestureAxisDampingPercent = otherKeyframe.secondaryGestureAxisDampingPercent;
+    };
+    
+    if self.modalScrollViewContentInsets == nil {
+      self.modalScrollViewContentInsets = otherKeyframe.modalScrollViewContentInsets;
+    };
+    
+    if self.modalScrollViewVerticalScrollIndicatorInsets == nil {
+      self.modalScrollViewVerticalScrollIndicatorInsets = otherKeyframe.modalScrollViewVerticalScrollIndicatorInsets;
+    };
+    
+    if self.modalScrollViewHorizontalScrollIndicatorInsets == nil {
+      self.modalScrollViewHorizontalScrollIndicatorInsets = otherKeyframe.modalScrollViewHorizontalScrollIndicatorInsets;
+    };
+    
+    if self.modalRotation == nil {
+      self.modalRotation = otherKeyframe.modalRotation;
+    };
+    
+    if self.modalScaleX == nil {
+      self.modalScaleX = otherKeyframe.modalScaleX;
+    };
+    
+    if self.modalScaleY == nil {
+      self.modalScaleY = otherKeyframe.modalScaleY;
+    };
+    
+    if self.modalTranslateX == nil {
+      self.modalTranslateX = otherKeyframe.modalTranslateX;
+    };
+    
+    if self.modalTranslateY == nil {
+      self.modalTranslateY = otherKeyframe.modalTranslateY;
+    };
+    
+    if self.modalBorderWidth == nil {
+      self.modalBorderWidth = otherKeyframe.modalBorderWidth;
+    };
+    
+    if self.modalBorderColor == nil {
+      self.modalBorderColor = otherKeyframe.modalBorderColor;
+    };
+    
+    if self.modalShadowColor == nil {
+      self.modalShadowColor = otherKeyframe.modalShadowColor;
+    };
+    
+    if self.modalShadowOffset == nil {
+      self.modalShadowOffset = otherKeyframe.modalShadowOffset;
+    };
+    
+    if self.modalShadowOpacity == nil {
+      self.modalShadowOpacity = otherKeyframe.modalShadowOpacity;
+    };
+    
+    if self.modalShadowRadius == nil {
+      self.modalShadowRadius = otherKeyframe.modalShadowRadius;
+    };
+    
+    if self.modalCornerRadius == nil {
+      self.modalCornerRadius = otherKeyframe.modalCornerRadius;
+    };
+    
+    if self.modalMaskedCorners == nil {
+      self.modalMaskedCorners = otherKeyframe.modalMaskedCorners;
+    };
+    
+    if self.modalOpacity == nil {
+      self.modalOpacity = otherKeyframe.modalOpacity;
+    };
+    
+    if self.modalContentOpacity == nil {
+      self.modalContentOpacity = otherKeyframe.modalContentOpacity;
+    };
+    
+    if self.modalBackgroundColor == nil {
+      self.modalBackgroundColor = otherKeyframe.modalBackgroundColor;
+    };
+    
+    if self.modalBackgroundOpacity == nil {
+      self.modalBackgroundOpacity = otherKeyframe.modalBackgroundOpacity;
+    };
+    
+    if self.modalBackgroundVisualEffect == nil {
+      self.modalBackgroundVisualEffect = otherKeyframe.modalBackgroundVisualEffect;
+    };
+    
+    if self.modalBackgroundVisualEffectOpacity == nil {
+      self.modalBackgroundVisualEffectOpacity = otherKeyframe.modalBackgroundVisualEffectOpacity;
+    };
+    
+    if self.modalBackgroundVisualEffectIntensity == nil {
+      self.modalBackgroundVisualEffectIntensity = otherKeyframe.modalBackgroundVisualEffectIntensity;
+    };
+    
+    if self.modalDragHandleSize == nil {
+      self.modalDragHandleSize = otherKeyframe.modalDragHandleSize;
+    };
+    
+    if self.modalDragHandleOffset == nil {
+      self.modalDragHandleOffset = otherKeyframe.modalDragHandleOffset;
+    };
+    
+    if self.modalDragHandleColor == nil {
+      self.modalDragHandleColor = otherKeyframe.modalDragHandleColor;
+    };
+    
+    if self.modalDragHandleOpacity == nil {
+      self.modalDragHandleOpacity = otherKeyframe.modalDragHandleOpacity;
+    };
+    
+    if self.backgroundColor == nil {
+      self.backgroundColor = otherKeyframe.backgroundColor;
+    };
+    
+    if self.backgroundOpacity == nil {
+      self.backgroundOpacity = otherKeyframe.backgroundOpacity;
+    };
+    
+    if self.backgroundVisualEffect == nil {
+      self.backgroundVisualEffect = otherKeyframe.backgroundVisualEffect;
+    };
+    
+    if self.backgroundVisualEffectOpacity == nil {
+      self.backgroundVisualEffectOpacity = otherKeyframe.backgroundVisualEffectOpacity;
+    };
+    
+    if self.backgroundVisualEffectIntensity == nil {
+      self.backgroundVisualEffectIntensity = otherKeyframe.backgroundVisualEffectIntensity;
+    };
   };
 };

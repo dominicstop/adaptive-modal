@@ -58,7 +58,7 @@ public struct AdaptiveModalSnapPointConfig {
   
   public init(
     fromBase base: Self,
-    newKey: SnapPointKey,
+    newKey: SnapPointKey? = nil,
     newSnapPoint: RNILayout? = nil,
     newAnimationKeyframe: AdaptiveModalKeyframeConfig? = nil
   ){
@@ -66,7 +66,7 @@ public struct AdaptiveModalSnapPointConfig {
     self.keyframeConfig = newAnimationKeyframe ?? base.keyframeConfig;
     
     self.key = base.key == .unspecified
-      ? newKey
+      ? newKey ?? base.key
       : base.key;
   };
 };
@@ -85,11 +85,22 @@ extension AdaptiveModalSnapPointConfig {
     var items: [AdaptiveModalSnapPointConfig] = [];
     
     if let snapPointFirst = inBetweenSnapPoints.first {
-      let initialSnapPointConfig = AdaptiveModalSnapPointConfig(
+      var initialSnapPointConfig = AdaptiveModalSnapPointConfig(
         key: .undershootPoint,
         fromSnapPointPreset: undershootSnapPoint,
         fromBaseLayoutConfig: snapPointFirst.layoutConfig
       );
+      
+      if var initialSnapPointKeyframe = initialSnapPointConfig.keyframeConfig {
+        initialSnapPointKeyframe.setNonNilValues(
+          using: .defaultUndershootKeyframe
+        );
+      
+        initialSnapPointConfig = .init(
+          fromBase: initialSnapPointConfig,
+          newAnimationKeyframe: initialSnapPointKeyframe
+        );
+      };
       
       items.append(initialSnapPointConfig);
     };
