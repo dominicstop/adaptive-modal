@@ -693,6 +693,18 @@ public extension AdaptiveModalInterpolationPoint {
       );
     };
     
+    if let firstSnapPoint = snapPoints.first,
+       let secondInterpolationPoint = items[safeIndex: 1] {
+       
+      items[0] = AdaptiveModalInterpolationPoint(
+        usingModalConfig: modalConfig,
+        snapPointIndex: 0,
+        layoutValueContext: context,
+        snapPointConfig: firstSnapPoint,
+        prevInterpolationPoint: secondInterpolationPoint
+      );
+    };
+    
     return items;
   };
 };
