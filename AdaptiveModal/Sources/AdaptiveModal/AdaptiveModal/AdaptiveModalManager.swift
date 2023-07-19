@@ -2257,6 +2257,10 @@ public class AdaptiveModalManager: NSObject {
       
       self.applyInterpolationToModal(forInputPercentValue: percent);
     };
+    
+    #if DEBUG
+    self.debugView?.notifyOnUpdateModal();
+    #endif
   };
   
   private func getClosestSnapPoint(forCoord coord: CGFloat? = nil) -> (

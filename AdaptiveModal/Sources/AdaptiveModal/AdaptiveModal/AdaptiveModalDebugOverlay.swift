@@ -510,6 +510,13 @@ class AdaptiveModalDebugOverlay: UIView {
   // MARK: - Functions - Notify
   // --------------------------
   
+  func notifyOnUpdateModal(){
+    self.setInvoke("notifyOnUpdateModal");
+    self.sharedUpdate();
+    
+    self.updateModalFrame(self.modalManager?.modalFrame);
+  };
+  
   func notifyOnDragPanGesture(_ gesture: UIPanGestureRecognizer){
     self.setInvoke("notifyOnDragPanGesture");
     self.labelGestureState.text = gesture.state.string;
