@@ -417,24 +417,27 @@ class AdaptiveModalPresentationTestViewController : UIViewController {
         
       case .demo13:
         testVC.contentMode = .scrollview;
+        testVC.showCustomSnapPointButton = true;
         
       case .demo14:
         testVC.contentMode = .scrollview;
         
       case .demo15:
         testVC.contentMode = .scrollview;
+        testVC.showCustomSnapPointButton = true;
       
       default: break;
     };
     
     self.adaptiveModalManager.eventDelegate = testVC;
-    testVC.modalManager = self.adaptiveModalManager;
+    
     
     if let presentedVC = self.presentedViewController {
       let modalManager = AdaptiveModalManager(
         modalConfig: self.currentModalConfigPreset.config
       );
       
+      testVC.modalManager = modalManager;
       self.currentModalManagerAdjustmentBlock(modalManager);
       
       modalManager.presentModal(
@@ -445,7 +448,8 @@ class AdaptiveModalPresentationTestViewController : UIViewController {
     } else {
       self.adaptiveModalManager.modalConfig =
         self.currentModalConfigPreset.config;
-        
+      
+      testVC.modalManager = self.adaptiveModalManager;
       self.currentModalManagerAdjustmentBlock(self.adaptiveModalManager);
       
       self.adaptiveModalManager.presentModal(
