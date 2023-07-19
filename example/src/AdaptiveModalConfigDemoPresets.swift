@@ -850,6 +850,9 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
           ),
         ],
         snapDirection: .rightToLeft,
+        undershootSnapPoint: .init(
+          layoutPreset: .offscreenRight
+        ),
         overshootSnapPoint: .init(
           layoutPreset: .offscreenLeft
         ),

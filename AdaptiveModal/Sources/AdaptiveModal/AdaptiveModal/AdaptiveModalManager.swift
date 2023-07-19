@@ -2872,7 +2872,7 @@ public class AdaptiveModalManager: NSObject {
     guard let modalView = modalView ?? self.modalView,
           let targetView = targetView ?? self.targetView
     else { return };
-    
+
     let didViewsChange =
       modalView !== self.modalView || targetView !== self.targetView;
       
@@ -2899,10 +2899,10 @@ public class AdaptiveModalManager: NSObject {
     };
     
     self.updateModal();
-    self.didTriggerSetup = true;
-    
-    self.modalContentWrapperView?.updateConstraints();
+    self.modalFrame = self.currentInterpolationStep.computedRect;
     self.modalWrapperLayoutView?.layoutIfNeeded();
+    
+    self.didTriggerSetup = true;
   };
   
   public func prepareForPresentation(
