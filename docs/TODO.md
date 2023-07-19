@@ -6,7 +6,6 @@
 
 ## Current
 
-- [ ] `TODO:2023-07-10-11-32-03` - Impl: Detect and warn against interpolation percent collision.
 - [ ] `TODO:2023-07-10-11-30-47` - Impl: Make Overshoot snap point config optional.
 - [ ] `TODO:2023-06-23-18-17-09` - Impl: `RNILayout` - `x` and `y` offsets.
 - [ ] `TODO:2023-06-23-18-17-09` - Impl: `RNILayout` - raw rect layout value.
@@ -60,6 +59,8 @@
 <br><br>
 
 ## Completed
+
+- [x] `TODO:2023-07-10-11-32-03` - Impl: Detect and warn against interpolation percent collision.
 
 - [x] `TODO:2023-07-12-07-39-47` - Impl: Make separate default keyframe value for undershoot snap point.
 
