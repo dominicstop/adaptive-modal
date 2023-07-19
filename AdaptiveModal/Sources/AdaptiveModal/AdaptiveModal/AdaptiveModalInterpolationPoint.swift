@@ -672,6 +672,14 @@ public extension AdaptiveModalInterpolationPoint {
 
 public extension AdaptiveModalInterpolationPoint {
 
+  static func itemsWithPercentCollision(interpolationPoints: [Self]) -> [Self] {
+    interpolationPoints.filter { interpolationPoint in
+      interpolationPoints.contains {
+        $0 != interpolationPoint && $0.percent == interpolationPoint.percent;
+      };
+    };
+  };
+
   static func compute(
     usingModalConfig modalConfig: AdaptiveModalConfig,
     snapPoints: [AdaptiveModalSnapPointConfig]? = nil,
@@ -704,6 +712,21 @@ public extension AdaptiveModalInterpolationPoint {
         prevInterpolationPoint: secondInterpolationPoint
       );
     };
+    
+    #if DEBUG
+    let collisions = Self.itemsWithPercentCollision(interpolationPoints: items);
+      
+    collisions.forEach {
+      print(
+        "Warning: Snap point collision",
+        " - snapPointIndex: \($0.snapPointIndex)",
+        " - key: \($0.key)",
+        " - percent: \($0.percent)",
+        " - computedRect: \($0.computedRect)",
+        "\n"
+      );
+    };
+    #endif
     
     return items;
   };
