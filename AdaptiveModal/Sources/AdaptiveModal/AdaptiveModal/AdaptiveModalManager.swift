@@ -1068,9 +1068,11 @@ public class AdaptiveModalManager: NSObject {
   
   private func clearGestureValues() {
     self.gestureOffset = nil;
-    self.gestureInitialPoint = nil;
     self.gestureVelocity = nil;
+    
+    self.gesturePointPrev = nil;
     self.gesturePoint = nil;
+    self.gestureInitialPoint = nil;
   };
   
   private func clearAnimators() {
@@ -1147,9 +1149,6 @@ public class AdaptiveModalManager: NSObject {
     self.modalWrapperShadowView = nil;
     self.modalContentWrapperView = nil;
     
-    self.prevModalFrame = .zero;
-    self.prevTargetFrame = .zero;
-    
     self.modalDragHandleView = nil;
     self.modalBackgroundView = nil;
     self.modalBackgroundVisualEffectView = nil;
@@ -1177,11 +1176,14 @@ public class AdaptiveModalManager: NSObject {
   };
  
   private func cleanup() {
+    self.modalFrame = .zero;
+    self.prevModalFrame = .zero;
+    self.prevTargetFrame = .zero;
+    
     self.clearGestureValues();
     self.clearAnimators();
     self.clearLayoutKeyboardValues();
     
-    self.cleanupViewControllers();
     self.cleanupViews();
     
     self.cleanupSnapPointOverride();
@@ -2739,6 +2741,7 @@ public class AdaptiveModalManager: NSObject {
   private func notifyOnModalDidHide(){
     self.cleanup();
     self.modalViewController?.dismiss(animated: false);
+    self.cleanupViewControllers();
   };
   
   // MARK: - Functions
@@ -2880,7 +2883,7 @@ public class AdaptiveModalManager: NSObject {
       !self.didTriggerSetup || didViewsChange || shouldForceReset;
     
     if shouldReset {
-      //self.cleanup();
+      self.cleanup();
     };
     
     self.targetView = targetView;
