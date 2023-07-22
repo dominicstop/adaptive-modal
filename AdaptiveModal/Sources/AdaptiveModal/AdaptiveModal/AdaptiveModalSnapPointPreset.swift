@@ -9,6 +9,8 @@ import Foundation
 
 public struct AdaptiveModalSnapPointPreset {
 
+  public static let automatic: Self = .init(layoutPreset: .automatic);
+
   public let layoutPreset: RNILayoutPreset;
   public let keyframeConfig: AdaptiveModalKeyframeConfig?;
   

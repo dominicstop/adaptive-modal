@@ -162,8 +162,8 @@ public struct AdaptiveModalConfig {
     snapAnimationConfig: AdaptiveModalSnapAnimationConfig = .default,
     interpolationClampingConfig: AdaptiveModalClampingConfig = .default,
     initialSnapPointIndex: Int = 1,
-    undershootSnapPoint: AdaptiveModalSnapPointPreset? = nil,
-    overshootSnapPoint: AdaptiveModalSnapPointPreset? = nil,
+    undershootSnapPoint: AdaptiveModalSnapPointPreset = .automatic,
+    overshootSnapPoint: AdaptiveModalSnapPointPreset = .automatic,
     dragHandlePosition: DragHandlePosition = .automatic,
     dragHandleHitSlop: CGPoint? = nil,
     dragHandleCornerRadius: CGFloat? = nil,
@@ -198,11 +198,31 @@ public struct AdaptiveModalConfig {
     
     self.initialSnapPointIndex = initialSnapPointIndex;
     
-    self.undershootSnapPoint = undershootSnapPoint
-      ?? .getDefaultUnderShootSnapPoint(forDirection: snapDirection);
+    self.undershootSnapPoint = {
+      switch undershootSnapPoint.layoutPreset {
+        case .automatic:
+          return .getDefaultUnderShootSnapPoint(
+            forDirection: snapDirection,
+            keyframeConfig: undershootSnapPoint.keyframeConfig
+          );
+          
+        default:
+          return undershootSnapPoint;
+      };
+    }();
     
-    self.overshootSnapPoint = overshootSnapPoint
-      ?? .getDefaultOvershootSnapPoint(forDirection: snapDirection);
+    self.overshootSnapPoint = {
+      switch overshootSnapPoint.layoutPreset {
+        case .automatic:
+          return .getDefaultOvershootSnapPoint(
+            forDirection: snapDirection,
+            keyframeConfig: overshootSnapPoint.keyframeConfig
+          );
+        
+        default:
+          return overshootSnapPoint;
+      };
+    }();
       
     self.dragHandlePosition = {
       if dragHandlePosition != .automatic {

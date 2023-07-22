@@ -8,6 +8,9 @@
 import UIKit
 
 public enum RNILayoutPreset {
+
+  case automatic;
+
   case offscreenBottom,
        offscreenTop,
        offscreenLeft,
@@ -39,6 +42,9 @@ public enum RNILayoutPreset {
   ) -> RNILayout {
   
     switch self {
+      case .automatic:
+        return baseLayoutConfig;
+    
       case .offscreenBottom:
         return .init(
           derivedFrom: baseLayoutConfig,
