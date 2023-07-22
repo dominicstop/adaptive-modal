@@ -2108,7 +2108,7 @@ public class AdaptiveModalManager: NSObject {
     let percentClamped: CGFloat = {
       guard !self.shouldEnableOverShooting else { return percent };
       
-      let secondToLastIndex = self.modalConfig.overshootSnapPointIndex - 1;
+      let secondToLastIndex = self.modalConfig.snapPointLastIndex - 1;
       let maxPercent = self.interpolationRangeInput[secondToLastIndex];
       
       return percent.clamped(max: maxPercent);

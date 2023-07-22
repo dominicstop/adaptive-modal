@@ -79,7 +79,7 @@ extension AdaptiveModalSnapPointConfig {
   static func deriveSnapPoints(
     undershootSnapPoint: AdaptiveModalSnapPointPreset,
     inBetweenSnapPoints: [AdaptiveModalSnapPointConfig],
-    overshootSnapPoint: AdaptiveModalSnapPointPreset
+    overshootSnapPoint: AdaptiveModalSnapPointPreset?
   ) -> [AdaptiveModalSnapPointConfig] {
 
     var items: [AdaptiveModalSnapPointConfig] = [];
@@ -109,7 +109,9 @@ extension AdaptiveModalSnapPointConfig {
       .init(fromBase: $0, newKey: .index(items.count));
     };
     
-    if let snapPointLast = inBetweenSnapPoints.last {
+    if let overshootSnapPoint = overshootSnapPoint,
+       let snapPointLast = inBetweenSnapPoints.last {
+       
       let overshootSnapPointConfig = AdaptiveModalSnapPointConfig(
         key: .overshootPoint,
         fromSnapPointPreset: overshootSnapPoint,

@@ -61,7 +61,7 @@ public struct AdaptiveModalConfig {
   public let interpolationClampingConfig: AdaptiveModalClampingConfig;
   
   public let undershootSnapPoint: AdaptiveModalSnapPointPreset;
-  public let overshootSnapPoint: AdaptiveModalSnapPointPreset;
+  public let overshootSnapPoint: AdaptiveModalSnapPointPreset?;
   
   // the first snap point to snap to when the modal is first shown
   public let initialSnapPointIndex: Int;
@@ -81,6 +81,23 @@ public struct AdaptiveModalConfig {
 
   // MARK: - Computed Properties
   // ---------------------------
+  
+  public var snapPointLastIndex: Int {
+    var count = 0;
+    
+    // undershoot snap point
+    count += 1;
+    
+    // in-between snap points
+    count += (self.baseSnapPoints.count - 1);
+    
+    // overshoot snap point
+    if self.overshootSnapPoint != nil {
+      count += 1;
+    };
+    
+    return count;
+  };
   
   public var snapPoints: [AdaptiveModalSnapPointConfig] {
     .Element.deriveSnapPoints(
@@ -108,8 +125,10 @@ public struct AdaptiveModalConfig {
     };
   };
   
-  public var overshootSnapPointIndex: Int {
-    self.snapPoints.count - 1;
+  public var overshootSnapPointIndex: Int? {
+    self.overshootSnapPoint != nil
+      ? self.snapPoints.count - 1
+      : nil;
   };
   
   /// Defines which axis of the gesture point to use to drive the interpolation
@@ -163,7 +182,7 @@ public struct AdaptiveModalConfig {
     interpolationClampingConfig: AdaptiveModalClampingConfig = .default,
     initialSnapPointIndex: Int = 1,
     undershootSnapPoint: AdaptiveModalSnapPointPreset = .automatic,
-    overshootSnapPoint: AdaptiveModalSnapPointPreset = .automatic,
+    overshootSnapPoint: AdaptiveModalSnapPointPreset? = .automatic,
     dragHandlePosition: DragHandlePosition = .automatic,
     dragHandleHitSlop: CGPoint? = nil,
     dragHandleCornerRadius: CGFloat? = nil,
@@ -212,6 +231,8 @@ public struct AdaptiveModalConfig {
     }();
     
     self.overshootSnapPoint = {
+      guard let overshootSnapPoint = overshootSnapPoint else { return nil };
+    
       switch overshootSnapPoint.layoutPreset {
         case .automatic:
           return .getDefaultOvershootSnapPoint(
