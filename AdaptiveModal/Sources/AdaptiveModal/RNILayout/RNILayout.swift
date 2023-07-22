@@ -126,6 +126,33 @@ public struct RNILayout {
     self.offsetY = offsetY ?? prev.offsetY;
   };
   
+  public init(
+    rect: CGRect,
+    paddingLeft  : RNILayoutValue? = nil,
+    paddingRight : RNILayoutValue? = nil,
+    paddingTop   : RNILayoutValue? = nil,
+    paddingBottom: RNILayoutValue? = nil
+  ){
+    self.horizontalAlignment = .left;
+    self.verticalAlignment   = .top;
+  
+    self.width  = .constant(rect.width);
+    self.height = .constant(rect.height);
+    
+    self.marginLeft   = nil;
+    self.marginRight  = nil;
+    self.marginTop    = nil;
+    self.marginBottom = nil;
+  
+    self.paddingLeft   = paddingLeft;
+    self.paddingRight  = paddingRight;
+    self.paddingTop    = paddingTop;
+    self.paddingBottom = paddingBottom;
+    
+    self.offsetX = .constant(rect.origin.x);
+    self.offsetY = .constant(rect.origin.y);
+  };
+  
   // MARK: - Intermediate Functions
   // ------------------------------
   
