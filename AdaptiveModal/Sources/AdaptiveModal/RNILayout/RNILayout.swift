@@ -39,6 +39,9 @@ public struct RNILayout {
   public let paddingTop   : RNILayoutValue?;
   public let paddingBottom: RNILayoutValue?;
   
+  public let offsetX: RNILayoutValue?;
+  public let offsetY: RNILayoutValue?;
+  
   // MARK: - Init
   // ------------
   
@@ -57,7 +60,10 @@ public struct RNILayout {
     paddingLeft  : RNILayoutValue? = nil,
     paddingRight : RNILayoutValue? = nil,
     paddingTop   : RNILayoutValue? = nil,
-    paddingBottom: RNILayoutValue? = nil
+    paddingBottom: RNILayoutValue? = nil,
+    
+    offsetX: RNILayoutValue? = nil,
+    offsetY: RNILayoutValue? = nil
   ) {
     self.horizontalAlignment = horizontalAlignment;
     self.verticalAlignment   = verticalAlignment;
@@ -74,6 +80,9 @@ public struct RNILayout {
     self.paddingRight  = paddingRight;
     self.paddingTop    = paddingTop;
     self.paddingBottom = paddingBottom;
+    
+    self.offsetX = offsetX;
+    self.offsetY = offsetY;
   };
   
   public init(
@@ -92,7 +101,10 @@ public struct RNILayout {
     paddingLeft  : RNILayoutValue? = nil,
     paddingRight : RNILayoutValue? = nil,
     paddingTop   : RNILayoutValue? = nil,
-    paddingBottom: RNILayoutValue? = nil
+    paddingBottom: RNILayoutValue? = nil,
+    
+    offsetX: RNILayoutValue? = nil,
+    offsetY: RNILayoutValue? = nil
   ) {
     self.horizontalAlignment = horizontalAlignment ?? prev.horizontalAlignment;
     self.verticalAlignment   = verticalAlignment   ?? prev.verticalAlignment;
@@ -109,6 +121,9 @@ public struct RNILayout {
     self.paddingRight  = paddingRight  ?? prev.paddingRight;
     self.paddingTop    = paddingTop    ?? prev.paddingTop;
     self.paddingBottom = paddingBottom ?? prev.paddingBottom;
+    
+    self.offsetX = offsetX ?? prev.offsetX;
+    self.offsetY = offsetY ?? prev.offsetY;
   };
   
   // MARK: - Intermediate Functions
@@ -388,6 +403,24 @@ public struct RNILayout {
         ignoreYAxis: !shouldRecomputeYAxis
       );
     };
+    
+    rect.origin.x += {
+      let computedOffset = self.offsetX?.computeValue(
+        usingLayoutValueContext: context,
+        preferredSizeKey: \.width
+      );
+      
+      return computedOffset ?? 0;
+    }();
+    
+    rect.origin.y += {
+      let computedOffset = self.offsetY?.computeValue(
+        usingLayoutValueContext: context,
+        preferredSizeKey: \.height
+      );
+      
+      return computedOffset ?? 0;
+    }();
     
     return rect;
   };
