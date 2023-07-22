@@ -6,7 +6,6 @@
 
 ## Current
 
-- [ ] `TODO:2023-06-23-18-17-09` - Impl: `RNILayout` - `x` and `y` offsets.
 - [ ] `TODO:2023-06-23-18-17-09` - Impl: `RNILayout` - raw rect layout value.
 - [ ] `TODO:2023-07-10-11-31-01` - Impl: Update `AdaptiveModalSnapPointPreset` to accept automatic.
 - [ ] `TODO:2023-07-11-22-45-46` - Impl: Keyframe - Update `modalCornerRadius` to accept a constant or percentage, then compute based on the modal size.
@@ -58,6 +57,8 @@
 <br><br>
 
 ## Completed
+
+- [x] `TODO:2023-06-23-18-17-09` - Impl: `RNILayout` - `x` and `y` offsets.
 
 - [x] `TODO:2023-07-10-11-30-47` - Impl: Make Overshoot snap point config optional.
 
