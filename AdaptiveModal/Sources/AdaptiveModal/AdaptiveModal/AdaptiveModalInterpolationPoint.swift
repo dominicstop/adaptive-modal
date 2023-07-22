@@ -719,10 +719,10 @@ public extension AdaptiveModalInterpolationPoint {
     collisions.forEach {
       print(
         "Warning: Snap point collision",
-        " - snapPointIndex: \($0.snapPointIndex)",
-        " - key: \($0.key)",
-        " - percent: \($0.percent)",
-        " - computedRect: \($0.computedRect)",
+        "\n - snapPointIndex: \($0.snapPointIndex)",
+        "\n - key: \($0.key)",
+        "\n - percent: \($0.percent)",
+        "\n - computedRect: \($0.computedRect)",
         "\n"
       );
     };
