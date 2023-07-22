@@ -6,7 +6,6 @@
 
 ## Current
 
-- [ ] `TODO:2023-06-23-18-17-09` - Impl: `RNILayout` - raw rect layout value.
 - [ ] `TODO:2023-07-10-11-31-01` - Impl: Update `AdaptiveModalSnapPointPreset` to accept automatic.
 - [ ] `TODO:2023-07-11-22-45-46` - Impl: Keyframe - Update `modalCornerRadius` to accept a constant or percentage, then compute based on the modal size.
 - [ ] `TODO:2023-07-11-22-37-10` - Impl: Keyframe - Update `modalScrollViewContentInsets`, `modalScrollViewVerticalScrollIndicatorInsets`, and `modalScrollViewHorizontalScrollIndicatorInsets` to accept `RNILayoutValue`.
@@ -57,6 +56,8 @@
 <br><br>
 
 ## Completed
+
+- [x] `TODO:2023-06-23-18-17-09` - Impl: `RNILayout` - raw rect layout value.
 
 - [x] `TODO:2023-06-23-18-17-09` - Impl: `RNILayout` - `x` and `y` offsets.
 
