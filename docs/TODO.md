@@ -6,7 +6,6 @@
 
 ## Current
 
-- [ ] `TODO:2023-07-10-11-30-47` - Impl: Make Overshoot snap point config optional.
 - [ ] `TODO:2023-06-23-18-17-09` - Impl: `RNILayout` - `x` and `y` offsets.
 - [ ] `TODO:2023-06-23-18-17-09` - Impl: `RNILayout` - raw rect layout value.
 - [ ] `TODO:2023-07-10-11-31-01` - Impl: Update `AdaptiveModalSnapPointPreset` to accept automatic.
@@ -59,6 +58,8 @@
 <br><br>
 
 ## Completed
+
+- [x] `TODO:2023-07-10-11-30-47` - Impl: Make Overshoot snap point config optional.
 
 - [x] `TODO:2023-07-22-16-43-41` - Impl: `AdaptiveModalSnapPointPreset` + `RNILayoutPreset.automatic`. 
 
