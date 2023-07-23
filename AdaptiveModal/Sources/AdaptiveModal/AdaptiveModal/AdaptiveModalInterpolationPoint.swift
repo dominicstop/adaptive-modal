@@ -594,7 +594,7 @@ public extension AdaptiveModalInterpolationPoint {
       
     self.modalScrollViewContentInsets = {
       if let insets = keyframeCurrent?.modalScrollViewContentInsets {
-        return insets;
+        return insets.compute(usingLayoutValueContext: context);
       };
       
       if let insets = keyframePrev?.modalScrollViewContentInsets {
@@ -616,7 +616,7 @@ public extension AdaptiveModalInterpolationPoint {
       if didSetModalScrollViewVerticalScrollIndicatorInsets,
          let insets = keyframeCurrent?.modalScrollViewVerticalScrollIndicatorInsets {
          
-        return insets;
+        return insets.compute(usingLayoutValueContext: context);
       };
       
       if didSetModalScrollViewVerticalScrollIndicatorInsets,
@@ -644,7 +644,7 @@ public extension AdaptiveModalInterpolationPoint {
       if didSetModalScrollViewHorizontalScrollIndicatorInsets,
          let insets = keyframeCurrent?.modalScrollViewVerticalScrollIndicatorInsets {
          
-        return insets;
+        return insets.compute(usingLayoutValueContext: context);
       };
       
       if didSetModalScrollViewHorizontalScrollIndicatorInsets,

@@ -24,6 +24,9 @@ public struct AdaptiveModalKeyframeConfig {
     backgroundOpacity: 0,
     backgroundVisualEffectIntensity: 0
   );
+  
+  // MARK: - Embedded Types
+  // ----------------------
 
   public enum BackgroundInteractionMode: String {
     static let `default`: Self = .automatic;
@@ -39,15 +42,65 @@ public struct AdaptiveModalKeyframeConfig {
     };
   };
   
+  public enum LayoutValueEdgeInsets {
+    case edgeInsets(UIEdgeInsets);
+    
+    case layoutValue(
+      top   : RNILayoutValue,
+      left  : RNILayoutValue,
+      bottom: RNILayoutValue,
+      right : RNILayoutValue
+    );
+    
+    func compute(
+      usingLayoutValueContext context: RNILayoutValueContext
+    ) -> UIEdgeInsets {
+      
+      switch self {
+        case let .edgeInsets(edgeInsets):
+          return edgeInsets;
+          
+        case let .layoutValue(top, left, bottom, right):
+        
+          let computedValueTop = top.computeValue(
+            usingLayoutValueContext: context,
+            preferredSizeKey: nil
+          );
+          
+          let computedValueLeft = left.computeValue(
+            usingLayoutValueContext: context,
+            preferredSizeKey: nil
+          );
+          
+          let computedValueBottom = bottom.computeValue(
+            usingLayoutValueContext: context,
+            preferredSizeKey: nil
+          );
+          
+          let computedValueRight = right.computeValue(
+            usingLayoutValueContext: context,
+            preferredSizeKey: nil
+          );
+          
+          return .init(
+            top   : computedValueTop    ?? 0,
+            left  : computedValueLeft   ?? 0,
+            bottom: computedValueBottom ?? 0,
+            right : computedValueRight  ?? 0
+          );
+      };
+    };
+  };
+  
   // MARK: - Properties
   // ------------------
 
   public var backgroundTapInteraction: BackgroundInteractionMode?;
   public var secondaryGestureAxisDampingPercent: CGFloat?;
   
-  public var modalScrollViewContentInsets: UIEdgeInsets?;
-  public var modalScrollViewVerticalScrollIndicatorInsets: UIEdgeInsets?;
-  public var modalScrollViewHorizontalScrollIndicatorInsets: UIEdgeInsets?;
+  public var modalScrollViewContentInsets: LayoutValueEdgeInsets?;
+  public var modalScrollViewVerticalScrollIndicatorInsets: LayoutValueEdgeInsets?;
+  public var modalScrollViewHorizontalScrollIndicatorInsets: LayoutValueEdgeInsets?;
   
   // MARK: - Properties - Keyframes
   // ------------------------------
@@ -95,9 +148,9 @@ public struct AdaptiveModalKeyframeConfig {
   public init(
     backgroundTapInteraction: BackgroundInteractionMode? = nil,
     secondaryGestureAxisDampingPercent: CGFloat? = nil,
-    modalScrollViewContentInsets: UIEdgeInsets? = nil,
-    modalScrollViewVerticalScrollIndicatorInsets: UIEdgeInsets?  = nil,
-    modalScrollViewHorizontalScrollIndicatorInsets: UIEdgeInsets?  = nil,
+    modalScrollViewContentInsets: LayoutValueEdgeInsets? = nil,
+    modalScrollViewVerticalScrollIndicatorInsets: LayoutValueEdgeInsets?  = nil,
+    modalScrollViewHorizontalScrollIndicatorInsets: LayoutValueEdgeInsets?  = nil,
     
     modalRotation: CGFloat? = nil,
     modalScaleX: CGFloat? = nil,
