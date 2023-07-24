@@ -229,21 +229,53 @@ fileprivate class TestModalViewController: UIViewController, AdaptiveModalEventN
   };
   
   func notifyOnModalWillSnap(
+    sender: AdaptiveModalManager,
     prevSnapPointIndex: Int?,
     nextSnapPointIndex: Int,
     snapPointConfig: AdaptiveModalSnapPointConfig,
     interpolationPoint: AdaptiveModalInterpolationPoint
   ) {
     self.floatingViewLabel.text = "\(nextSnapPointIndex)";
+    
+    print(
+      "notifyOnModalWillSnap",
+      "\n - prevSnapPointIndex:", prevSnapPointIndex ?? -1,
+      "\n - nextSnapPointIndex:", nextSnapPointIndex,
+      "\n"
+    );
   };
   
   func notifyOnModalDidSnap(
+    sender: AdaptiveModalManager,
     prevSnapPointIndex: Int?,
     currentSnapPointIndex: Int,
     snapPointConfig: AdaptiveModalSnapPointConfig,
     interpolationPoint: AdaptiveModalInterpolationPoint
   ) {
     self.floatingViewLabel.text = "\(currentSnapPointIndex)";
+    
+    print(
+      "notifyOnModalDidSnap",
+      "\n - prevSnapPointIndex:", prevSnapPointIndex ?? -1,
+      "\n - currentSnapPointIndex:", currentSnapPointIndex,
+      "\n"
+    );
+  };
+  
+  func notifyOnAdaptiveModalWillShow(sender: AdaptiveModalManager) {
+    print("onAdaptiveModalWillShow");
+  };
+  
+  func notifyOnAdaptiveModalDidShow(sender: AdaptiveModalManager) {
+    print("onAdaptiveModalDidShow");
+  };
+  
+  func notifyOnAdaptiveModalWillHide(sender: AdaptiveModalManager) {
+    print("onAdaptiveModalWillHide");
+  };
+  
+  func notifyOnAdaptiveModalDidHide(sender: AdaptiveModalManager) {
+    print("onAdaptiveModalDidHide");
   };
 };
 

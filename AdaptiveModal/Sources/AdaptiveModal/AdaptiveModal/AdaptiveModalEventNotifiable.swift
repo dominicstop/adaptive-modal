@@ -11,6 +11,7 @@ import Foundation
 public protocol AdaptiveModalEventNotifiable: AnyObject {
   
   func notifyOnModalWillSnap(
+    sender: AdaptiveModalManager,
     prevSnapPointIndex: Int?,
     nextSnapPointIndex: Int,
     snapPointConfig: AdaptiveModalSnapPointConfig,
@@ -18,9 +19,26 @@ public protocol AdaptiveModalEventNotifiable: AnyObject {
   );
   
   func notifyOnModalDidSnap(
+    sender: AdaptiveModalManager,
     prevSnapPointIndex: Int?,
     currentSnapPointIndex: Int,
     snapPointConfig: AdaptiveModalSnapPointConfig,
     interpolationPoint: AdaptiveModalInterpolationPoint
+  );
+  
+  func notifyOnAdaptiveModalWillShow(
+    sender: AdaptiveModalManager
+  );
+  
+  func notifyOnAdaptiveModalDidShow(
+    sender: AdaptiveModalManager
+  );
+  
+  func notifyOnAdaptiveModalWillHide(
+    sender: AdaptiveModalManager
+  );
+  
+  func notifyOnAdaptiveModalDidHide(
+    sender: AdaptiveModalManager
   );
 };

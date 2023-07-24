@@ -2652,6 +2652,7 @@ public class AdaptiveModalManager: NSObject {
     self.onModalWillSnapPrevIndex = nextIndex;
     
     self.eventDelegate?.notifyOnModalWillSnap(
+      sender: self,
       prevSnapPointIndex: interpolationSteps[prevIndex].snapPointIndex,
       nextSnapPointIndex: interpolationSteps[nextIndex].snapPointIndex,
       snapPointConfig: self.modalConfig.snapPoints[nextPoint.snapPointIndex],
@@ -2687,6 +2688,7 @@ public class AdaptiveModalManager: NSObject {
     self.nextInterpolationIndex = nil;
   
     self.eventDelegate?.notifyOnModalDidSnap(
+      sender: self,
       prevSnapPointIndex:
         self.interpolationSteps[self.prevInterpolationIndex].snapPointIndex,
         
@@ -2728,14 +2730,11 @@ public class AdaptiveModalManager: NSObject {
   };
   
   private func notifyOnModalWillShow(){
-    // wip
+    self.eventDelegate?.notifyOnAdaptiveModalWillShow(sender: self);
   };
   
   private func notifyOnModalDidShow(){
-    // wip
-    //UIView.animate(withDuration: 1){
-    //  self.targetViewController?.view.transform = .init(scaleX: 0.5, y: 0.5);
-    //};
+    self.eventDelegate?.notifyOnAdaptiveModalDidShow(sender: self);
   };
   
   private func notifyOnModalWillHide(){
@@ -2744,12 +2743,16 @@ public class AdaptiveModalManager: NSObject {
        
       modalView.endEditing(true);
     };
+    
+    self.eventDelegate?.notifyOnAdaptiveModalWillHide(sender: self);
   };
   
   private func notifyOnModalDidHide(){
     self.cleanup();
     self.modalViewController?.dismiss(animated: false);
     self.cleanupViewControllers();
+    
+    self.eventDelegate?.notifyOnAdaptiveModalDidHide(sender: self);
   };
   
   // MARK: - Functions

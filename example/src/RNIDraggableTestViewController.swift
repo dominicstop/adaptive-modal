@@ -124,7 +124,9 @@ class RNIDraggableTestViewController : UIViewController {
 };
 
 extension RNIDraggableTestViewController: AdaptiveModalEventNotifiable {
+  
   func notifyOnModalWillSnap(
+    sender: AdaptiveModalManager,
     prevSnapPointIndex: Int?,
     nextSnapPointIndex: Int,
     snapPointConfig: AdaptiveModalSnapPointConfig,
@@ -134,11 +136,28 @@ extension RNIDraggableTestViewController: AdaptiveModalEventNotifiable {
   }
   
   func notifyOnModalDidSnap(
+    sender: AdaptiveModalManager,
     prevSnapPointIndex: Int?,
     currentSnapPointIndex: Int,
     snapPointConfig: AdaptiveModalSnapPointConfig,
     interpolationPoint: AdaptiveModalInterpolationPoint
   ) {
     self.floatingViewLabel.text = "\(currentSnapPointIndex)";
+  };
+  
+  func notifyOnAdaptiveModalWillShow(sender: AdaptiveModalManager) {
+    // no-op
+  };
+  
+  func notifyOnAdaptiveModalDidShow(sender: AdaptiveModalManager) {
+    // no-op
+  };
+  
+  func notifyOnAdaptiveModalWillHide(sender: AdaptiveModalManager) {
+    // no-op
+  };
+  
+  func notifyOnAdaptiveModalDidHide(sender: AdaptiveModalManager) {
+    // no-op
   };
 };
