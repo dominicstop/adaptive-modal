@@ -12,6 +12,7 @@
 - [ ] `TODO:2023-06-23-18-17-27` - Impl: Modal Events Delegate - Modal `onDragPanGesture` event + `gestureRecognizer` arg. 
 - [ ] `TODO:2023-07-24-14-59-51` - Impl: Modal Events Delegate - Modal `onPercentChange`
 - [ ] `TODO:2023-07-24-15-00-11` - Impl: Modal Events Delegate - Modal will/did snap.
+- [ ] `TODO:2023-07-24-23-03-17` - Impl: Adaptive moda state.
 
 <br><br>
 
