@@ -212,8 +212,7 @@ fileprivate class TestModalViewController: UIViewController, AdaptiveModalEventN
         modalMaskedCorners: .allCorners,
         modalBackgroundOpacity: 0.85,
         modalBackgroundVisualEffect: UIBlurEffect(style: .regular),
-        modalBackgroundVisualEffectIntensity: 1,
-        backgroundOpacity: 0
+        modalBackgroundVisualEffectIntensity: 1
       )
     );
     
