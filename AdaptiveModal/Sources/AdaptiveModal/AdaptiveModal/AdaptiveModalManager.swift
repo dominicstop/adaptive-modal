@@ -222,6 +222,9 @@ public class AdaptiveModalManager: NSObject {
   // MARK: -  Properties - Interpolation Points
   // ------------------------------------------
   
+  private var onModalWillSnapPrevIndex: Int?;
+  private var onModalWillSnapNextIndex: Int?;
+  
   public private(set) var prevInterpolationIndex: Int {
     get {
       self.shouldSnapToOvershootSnapPoint
@@ -240,12 +243,12 @@ public class AdaptiveModalManager: NSObject {
   
   public private(set) var nextInterpolationIndex: Int? {
     get {
-      self.shouldSnapToOvershootSnapPoint
+      self.shouldUseOverrideSnapPoints
         ? self.nextOverrideInterpolationIndex
         : self.nextConfigInterpolationIndex;
     }
     set {
-      if self.shouldSnapToOvershootSnapPoint {
+      if self.shouldUseOverrideSnapPoints {
         self.nextOverrideInterpolationIndex = newValue;
         
       } else {
@@ -2629,21 +2632,24 @@ public class AdaptiveModalManager: NSObject {
   
   private func notifyOnModalWillSnap() {
     let interpolationSteps = self.interpolationSteps!;
-    let prevIndex = self.currentInterpolationIndex;
     
-    let nextIndexRaw: Int = {
-      guard let nextIndex = self.nextInterpolationIndex else {
-        let closestSnapPoint = self.getClosestSnapPoint();
-        return closestSnapPoint.interpolationPoint.snapPointIndex;
-      };
+    let prevIndex = self.onModalWillSnapPrevIndex
+      ?? self.currentInterpolationIndex;
       
-      return nextIndex;
+    let nextIndexRaw: Int = {
+      if let nextIndex = self.nextInterpolationIndex {
+        return nextIndex;
+      };
+    
+      let closestSnapPoint = self.getClosestSnapPoint();
+      return closestSnapPoint.interpolationPoint.snapPointIndex;
     }();
     
     let nextIndex = self.adjustInterpolationIndex(for: nextIndexRaw);
     let nextPoint = self.interpolationSteps[nextIndex];
     
     guard prevIndex != nextIndex else { return };
+    self.onModalWillSnapPrevIndex = nextIndex;
     
     self.eventDelegate?.notifyOnModalWillSnap(
       prevSnapPointIndex: interpolationSteps[prevIndex].snapPointIndex,
@@ -2677,6 +2683,8 @@ public class AdaptiveModalManager: NSObject {
     #if DEBUG
     self.debugView?.notifyOnModalDidSnap();
     #endif
+    
+    self.nextInterpolationIndex = nil;
   
     self.eventDelegate?.notifyOnModalDidSnap(
       prevSnapPointIndex:
