@@ -8,7 +8,6 @@
 
 - [ ] `TODO:2023-06-23-18-15-46` -  Impl: `AdaptiveModal` - Adaptive config based on rules (i.e. the current size class, device type, device orientation, window size, etc).
 - [ ] ` TODO:2023-06-23-18-16-28` - Impl: `AdaptiveModal` -Add support for "in-between" snap points.
-- [ ] `TODO:2023-06-23-18-17-27` - Impl: Modal Events Delegate - Modal `onDragPanGesture` event + `gestureRecognizer` arg. 
 - [ ] `TODO:2023-07-24-14-59-51` - Impl: Modal Events Delegate - Modal `onPercentChange`
 - [ ] `TODO:2023-07-24-15-00-11` - Impl: Modal Events Delegate - Modal will/did snap.
 - [ ] `TODO:2023-07-24-23-03-17` - Impl: Adaptive moda state.
@@ -55,6 +54,8 @@
 <br><br>
 
 ## Completed
+
+- [x] `TODO:2023-06-23-18-17-27` - Impl: Modal Events Delegate - Modal `onDragPanGesture` event + `gestureRecognizer` arg. 
 
 - [x] `TODO:2023-06-23-18-17-19` - Impl: Modal Events Delegate - Will/did show/hide modal events.
 
