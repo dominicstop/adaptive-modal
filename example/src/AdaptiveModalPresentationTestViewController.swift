@@ -277,6 +277,20 @@ fileprivate class TestModalViewController: UIViewController, AdaptiveModalEventN
   func notifyOnAdaptiveModalDidHide(sender: AdaptiveModalManager) {
     print("onAdaptiveModalDidHide");
   };
+  
+  func notifyOnAdaptiveModalDragGesture(
+    sender: AdaptiveModalManager,
+    gestureRecognizer: UIGestureRecognizer
+  ) {
+    print(
+      "notifyOnAdaptiveModalDragGesture",
+      "\n - sender.gesturePoint:", sender.gesturePoint?.debugDescription ?? "N/A",
+      "\n - sender.gestureInitialPoint:", sender.gestureInitialPoint?.debugDescription ?? "N/A",
+      "\n - sender.gestureOffset:", sender.gestureOffset?.debugDescription ?? "N/A",
+      "\n - sender.gesturePointWithOffsets", sender.gesturePointWithOffsets?.debugDescription ?? "N/A",
+      "\n"
+    );
+  };
 };
 
 class AdaptiveModalPresentationTestViewController : UIViewController {

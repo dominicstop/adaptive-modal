@@ -344,12 +344,13 @@ public class AdaptiveModalManager: NSObject {
   weak var modalDragHandleGesture: UIPanGestureRecognizer?;
   weak var backgroundTapGesture: UITapGestureRecognizer?;
   
-  var gestureOffset: CGPoint?;
-  var gestureVelocity: CGPoint?;
-  var gestureInitialPoint: CGPoint?;
+  internal(set) public var gestureOffset: CGPoint?;
+  internal(set) public var gestureVelocity: CGPoint?;
+  internal(set) public var gestureInitialPoint: CGPoint?;
   
-  var gesturePointPrev: CGPoint?;
-  var gesturePoint: CGPoint? {
+  internal(set) public var gesturePointPrev: CGPoint?;
+  
+  internal(set) public var gesturePoint: CGPoint? {
     didSet {
       self.gesturePointPrev = oldValue;
     }
@@ -493,6 +494,11 @@ public class AdaptiveModalManager: NSObject {
         height: self.modalConfig.modalSwipeGestureEdgeHeight
       )
     );
+  };
+  
+  public var gesturePointWithOffsets: CGPoint? {
+    guard let gesturePoint = self.gesturePoint else { return nil };
+    return self.applyGestureOffsets(forGesturePoint: gesturePoint)
   };
   
   // MARK: -  Properties
@@ -2432,6 +2438,8 @@ public class AdaptiveModalManager: NSObject {
   // ----------------------------
   
   @objc private func onDragPanGesture(_ sender: UIPanGestureRecognizer) {
+    var shouldClearGestureValues = false;
+  
     let gesturePoint = sender.location(in: self.targetView);
     self.gesturePoint = gesturePoint;
     
@@ -2464,18 +2472,28 @@ public class AdaptiveModalManager: NSObject {
         
       case .cancelled, .ended:
         defer {
-          self.clearGestureValues();
+          shouldClearGestureValues = true;
         };
       
-        guard self.shouldEnableSnapping else { return };
+        guard self.shouldEnableSnapping else { break };
         let gestureFinalPointRaw = self.gestureFinalPoint ?? gesturePoint;
         
         let gestureFinalPoint =
           self.applyGestureOffsets(forGesturePoint: gestureFinalPointRaw);
         
         self.snapToClosestSnapPoint(forPoint: gestureFinalPoint);
+        
       default:
         break;
+    };
+    
+    self.eventDelegate?.notifyOnAdaptiveModalDragGesture(
+      sender: self,
+      gestureRecognizer: sender
+    );
+    
+    if shouldClearGestureValues {
+      self.clearGestureValues();
     };
   };
   
