@@ -10,7 +10,6 @@
 - [ ] ` TODO:2023-06-23-18-16-28` - Impl: `AdaptiveModal` - Add support for "in-between" snap points.
 - [ ] `TODO:2023-07-24-14-59-51` - Impl: Modal Events Delegate - Modal `onPercentChange`
 - [ ] `TODO:2023-07-24-23-03-17` - Impl: Adaptive modal state.
-- [ ] `TODO:2023-07-26-20-41-48` - Impl: Modal Events - `AdaptiveModalBackgroundTapDelegate`.
 
 <br><br>
 
