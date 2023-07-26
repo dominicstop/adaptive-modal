@@ -67,7 +67,6 @@ public struct AdaptiveModalConfig {
   public let initialSnapPointIndex: Int;
   
   public let dragHandlePosition: DragHandlePosition;
-  public let dragHandleCornerRadius: CGFloat;
   public let dragHandleHitSlop: CGPoint;
   
   public let modalSwipeGestureEdgeHeight: CGFloat;
@@ -258,7 +257,6 @@ public struct AdaptiveModalConfig {
       };
     }();
     
-    self.dragHandleCornerRadius = dragHandleCornerRadius ?? 3;
     self.dragHandleHitSlop = dragHandleHitSlop ?? .init(x: 15, y: 15);
     
     self.modalSwipeGestureEdgeHeight = modalSwipeGestureEdgeHeight ?? 20;

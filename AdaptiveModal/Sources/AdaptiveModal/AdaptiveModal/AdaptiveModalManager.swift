@@ -642,7 +642,6 @@ public class AdaptiveModalManager: NSObject {
     
     if self.modalConfig.dragHandlePosition != .none {
       let dragHandle = AdaptiveModalDragHandleView();
-      dragHandle.layer.cornerRadius = self.modalConfig.dragHandleCornerRadius;
       dragHandle.pointInsideHitSlop = self.modalConfig.dragHandleHitSlop;
       
       self.modalDragHandleView = dragHandle;
@@ -2060,6 +2059,15 @@ public class AdaptiveModalManager: NSObject {
       withValue:  self.interpolate(
         inputValue: inputPercentValue,
         rangeOutputKey: \.modalDragHandleOpacity
+      )
+    );
+    
+    AdaptiveModalUtilities.unwrapAndSetProperty(
+      forObject: self.modalDragHandleView,
+      forPropertyKey: \.layer.cornerRadius,
+      withValue:  self.interpolate(
+        inputValue: inputPercentValue,
+        rangeOutputKey: \.modalDragHandleCornerRadius
       )
     );
     

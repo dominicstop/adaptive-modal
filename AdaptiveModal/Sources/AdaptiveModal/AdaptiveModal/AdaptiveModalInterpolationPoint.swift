@@ -67,6 +67,7 @@ public struct AdaptiveModalInterpolationPoint: Equatable {
   public var modalBackgroundVisualEffect: UIVisualEffect?;
   public var modalBackgroundVisualEffectOpacity: CGFloat;
   public var modalBackgroundVisualEffectIntensity: CGFloat;
+  public var modalDragHandleCornerRadius: CGFloat;
   
   public var modalDragHandleSize: CGSize;
   public var modalDragHandleOffset: CGFloat;
@@ -291,6 +292,7 @@ public struct AdaptiveModalInterpolationPoint: Equatable {
     
       modalDragHandleView.backgroundColor = self.modalDragHandleColor;
       modalDragHandleView.alpha = self.modalDragHandleOpacity;
+      modalDragHandleView.layer.cornerRadius = self.modalDragHandleCornerRadius;
       
       var didUpdateConstraints = false;
       
@@ -572,6 +574,10 @@ public extension AdaptiveModalInterpolationPoint {
     self.modalDragHandleOpacity = keyframeCurrent?.modalDragHandleOpacity
       ?? keyframePrev?.modalDragHandleOpacity
       ?? 0.8;
+      
+    self.modalDragHandleCornerRadius = keyframeCurrent?.modalDragHandleCornerRadius
+      ?? keyframePrev?.modalDragHandleCornerRadius
+      ?? 3;
       
     self.backgroundColor = keyframeCurrent?.backgroundColor
       ?? keyframePrev?.backgroundColor

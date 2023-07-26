@@ -137,6 +137,7 @@ public struct AdaptiveModalKeyframeConfig {
   public var modalDragHandleOffset: CGFloat?;
   public var modalDragHandleColor: UIColor?;
   public var modalDragHandleOpacity: CGFloat?;
+  public var modalDragHandleCornerRadius: CGFloat?;
   
   public var backgroundColor: UIColor?;
   public var backgroundOpacity: CGFloat?;
@@ -176,6 +177,7 @@ public struct AdaptiveModalKeyframeConfig {
     modalDragHandleOffset: CGFloat? = nil,
     modalDragHandleColor: UIColor? = nil,
     modalDragHandleOpacity: CGFloat? = nil,
+    modalDragHandleCornerRadius: CGFloat? = nil,
     backgroundColor: UIColor? = nil,
     backgroundOpacity: CGFloat? = nil,
     backgroundVisualEffect: UIVisualEffect? = nil,
@@ -222,6 +224,7 @@ public struct AdaptiveModalKeyframeConfig {
     self.modalDragHandleOffset = modalDragHandleOffset
     self.modalDragHandleColor = modalDragHandleColor;
     self.modalDragHandleOpacity = modalDragHandleOpacity;
+    self.modalDragHandleCornerRadius = modalDragHandleCornerRadius;
     
     self.backgroundColor = backgroundColor;
     self.backgroundOpacity = backgroundOpacity;
