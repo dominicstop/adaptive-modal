@@ -8,8 +8,9 @@
 import UIKit
 import AdaptiveModal
 
-fileprivate class TestModalViewController: UIViewController, AdaptiveModalEventNotifiable {
-
+fileprivate class TestModalViewController:
+  UIViewController, AdaptiveModalEventNotifiable, AdaptiveModalBackgroundTapDelegate {
+  
   enum ContentMode {
     case buttons, scrollview;
   };
@@ -291,6 +292,10 @@ fileprivate class TestModalViewController: UIViewController, AdaptiveModalEventN
       "\n"
     );
   };
+  
+  func notifyOnBackgroundTapGesture(sender: UIGestureRecognizer) {
+    print("notifyOnBackgroundTapGesture");
+  };
 };
 
 class AdaptiveModalPresentationTestViewController : UIViewController {
@@ -474,15 +479,15 @@ class AdaptiveModalPresentationTestViewController : UIViewController {
       default: break;
     };
     
-    self.adaptiveModalManager.eventDelegate = testVC;
-    
-    
     if let presentedVC = self.presentedViewController {
       let modalManager = AdaptiveModalManager(
         modalConfig: self.currentModalConfigPreset.config
       );
       
       testVC.modalManager = modalManager;
+      modalManager.eventDelegate = testVC;
+      modalManager.backgroundTapDelegate = testVC;
+      
       self.currentModalManagerAdjustmentBlock(modalManager);
       
       modalManager.presentModal(
@@ -495,6 +500,9 @@ class AdaptiveModalPresentationTestViewController : UIViewController {
         self.currentModalConfigPreset.config;
       
       testVC.modalManager = self.adaptiveModalManager;
+      self.adaptiveModalManager.eventDelegate = testVC;
+      self.adaptiveModalManager.backgroundTapDelegate = testVC;
+      
       self.currentModalManagerAdjustmentBlock(self.adaptiveModalManager);
       
       self.adaptiveModalManager.presentModal(

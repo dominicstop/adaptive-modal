@@ -198,6 +198,7 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
               height: .percent(percentValue: 0.7)
             ),
             keyframeConfig: AdaptiveModalKeyframeConfig(
+              backgroundTapInteraction: .ignore,
               modalShadowOffset: .init(width: 2, height: 2),
               modalShadowOpacity: 0.3,
               modalShadowRadius: 8,
