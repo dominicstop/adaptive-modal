@@ -2506,7 +2506,13 @@ public class AdaptiveModalManager: NSObject {
   };
   
   @objc private func onBackgroundTapGesture(_ sender: UITapGestureRecognizer) {
-  
+    switch self.currentInterpolationStep.backgroundTapInteraction {
+      case .dismiss:
+        self.dismissModal();
+      
+      default:
+        break;
+    };
   };
   
   @objc private func onKeyboardWillShow(notification: NSNotification) {
