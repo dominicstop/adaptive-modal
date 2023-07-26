@@ -7,10 +7,12 @@
 ## Current
 
 - [ ] `TODO:2023-06-23-18-15-46` -  Impl: `AdaptiveModal` - Adaptive config based on rules (i.e. the current size class, device type, device orientation, window size, etc).
-- [ ] ` TODO:2023-06-23-18-16-28` - Impl: `AdaptiveModal` -Add support for "in-between" snap points.
+- [ ] ` TODO:2023-06-23-18-16-28` - Impl: `AdaptiveModal` - Add support for "in-between" snap points.
 - [ ] `TODO:2023-07-24-14-59-51` - Impl: Modal Events Delegate - Modal `onPercentChange`
-- [ ] `TODO:2023-07-24-15-00-11` - Impl: Modal Events Delegate - Modal will/did snap.
 - [ ] `TODO:2023-07-24-23-03-17` - Impl: Adaptive moda state.
+- [ ] `TODO:2023-07-26-20-24-06` - Impl: Keyframe - Modal drag handle corner radius.
+- [ ] `TODO:2023-07-26-20-41-48` - Impl: Modal Events - `AdaptiveModalBackgroundTapDelegate`.
+- [ ] `TODO:2023-07-26-20-39-39` - Impl: `backgroundTapInteraction` +  `onBackgroundTapGesture`.
 
 <br><br>
 
@@ -43,8 +45,8 @@
 - [ ] `TODO:` - Docs: Create `AdaptiveModalExample00` - Layout - Margins + Keyboard values.
 - [ ] `TODO:` - Docs: Create `AdaptiveModalExample00` - Animation Keyframes - Scale, transform, rotate and translate.
 - [ ] `TODO:` - Docs: Create `AdaptiveModalExample00` - Animation Keyframes - Modal borders.
-- [ ] `TODO:` - Docs: Create `AdaptiveModalExample00` - Animation Keyframes - Modal shadows.
-- [ ] `TODO:` - Docs: Create `AdaptiveModalExample00` - Animation Keyframes - Modal corner radius and corner radius masks.
+- [ ] `TODO:` - Docs: Create `AdaptiveModalExample00` - 
+- [ ] `TODO:` - Docs: Create `AdaptiveModalExample00` - Animation Keyframes - 
 - [ ] `TODO:` - Docs: Create `AdaptiveModalExample00` - Animation Keyframes - modal opacity + undershoot snap point.
 - [ ] `TODO:` - Docs: Create `AdaptiveModalExample00` - Animation Keyframes - Modal bg blur + opactiy.
 - [ ] `TODO:` - Docs: Create `AdaptiveModalExample00` - Animation Keyframes - Bg blur and Bg opacity.
