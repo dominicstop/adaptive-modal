@@ -3060,7 +3060,7 @@ public class AdaptiveModalManager: NSObject {
   public func snapTo(
     overrideSnapPointConfig: AdaptiveModalSnapPointConfig,
     prevSnapPointConfigs: [AdaptiveModalSnapPointConfig]? = nil,
-    overshootSnapPointPreset: AdaptiveModalSnapPointPreset? = nil,
+    overshootSnapPointPreset: AdaptiveModalSnapPointPreset? = .automatic,
     fallbackSnapPointKey: AdaptiveModalSnapPointConfig.SnapPointKey? = nil,
     inBetweenSnapPointsMinPercentDiff: CGFloat = 0.1,
     isAnimated: Bool = true,
@@ -3103,18 +3103,39 @@ public class AdaptiveModalManager: NSObject {
       };
     }();
     
-    let overshootSnapPointPreset = overshootSnapPointPreset
-      ?? .getDefaultOvershootSnapPoint(forDirection: modalConfig.snapDirection);
+    let overshootSnapPointPreset: AdaptiveModalSnapPointPreset? = {
+      guard let overshootSnapPointPreset = overshootSnapPointPreset
+      else { return nil };
+    
+      switch overshootSnapPointPreset.layoutPreset {
+        case .automatic:
+          return .getDefaultOvershootSnapPoint(
+            forDirection: self.modalConfig.snapDirection,
+            keyframeConfig: overshootSnapPointPreset.keyframeConfig
+          );
+        
+        default:
+          return overshootSnapPointPreset;
+      };
+    }();
+    
+    
+    let overshootSnapPointConfig: AdaptiveModalSnapPointConfig? = {
+      guard let overshootSnapPointPreset = overshootSnapPointPreset
+      else { return nil };
       
-    let overshootSnapPointConfig = AdaptiveModalSnapPointConfig(
-      fromSnapPointPreset: overshootSnapPointPreset,
-      fromBaseLayoutConfig: overrideSnapPointConfig.layoutConfig
-    );
+      return AdaptiveModalSnapPointConfig(
+        fromSnapPointPreset: overshootSnapPointPreset,
+        fromBaseLayoutConfig: overrideSnapPointConfig.layoutConfig
+      );
+    }();
   
-    let snapPoints = prevSnapPointConfigs + [
-      overrideSnapPointConfig,
-      overshootSnapPointConfig,
-    ];
+    var snapPoints = prevSnapPointConfigs;
+    snapPoints.append(overrideSnapPointConfig);
+    
+    if let overshootSnapPointConfig = overshootSnapPointConfig {
+      snapPoints.append(overshootSnapPointConfig);
+    };
     
     let nextInterpolationPointIndex = prevSnapPointConfigs.count;
     
