@@ -510,6 +510,7 @@ public class AdaptiveModalManager: NSObject {
   internal(set) public var presentationState: PresentationState = .none;
   
   public weak var eventDelegate: AdaptiveModalEventNotifiable?;
+  public weak var backgroundTapDelegate: AdaptiveModalBackgroundTapDelegate?;
 
   // MARK: - Computed Properties
   // ---------------------------
@@ -2506,6 +2507,8 @@ public class AdaptiveModalManager: NSObject {
   };
   
   @objc private func onBackgroundTapGesture(_ sender: UITapGestureRecognizer) {
+    self.backgroundTapDelegate?.notifyOnBackgroundTapGesture(sender: sender);
+    
     switch self.currentInterpolationStep.backgroundTapInteraction {
       case .dismiss:
         self.dismissModal();

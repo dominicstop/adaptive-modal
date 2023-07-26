@@ -137,7 +137,7 @@ public struct AdaptiveModalInterpolationPoint: Equatable {
   public var derivedBackgroundTapInteraction: BackgroundInteractionMode {
     switch self.backgroundTapInteraction {
       case .automatic:
-        return self.isBgSeeThrough ? .passthrough : .none;
+        return self.isBgSeeThrough ? .passthrough : .ignore;
         
       default:
         return self.backgroundTapInteraction;

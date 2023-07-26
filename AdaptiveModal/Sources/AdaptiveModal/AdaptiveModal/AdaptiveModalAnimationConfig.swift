@@ -32,7 +32,7 @@ public struct AdaptiveModalKeyframeConfig {
     static let `default`: Self = .automatic;
   
     case automatic;
-    case dismiss, passthrough, none;
+    case dismiss, passthrough, ignore;
     
     var isPassThrough: Bool {
       switch self {
