@@ -511,6 +511,7 @@ public class AdaptiveModalManager: NSObject {
   
   public weak var eventDelegate: AdaptiveModalEventNotifiable?;
   public weak var backgroundTapDelegate: AdaptiveModalBackgroundTapDelegate?;
+  public weak var animationEventDelegate: AdaptiveModalAnimationEventsNotifiable?;
 
   // MARK: - Computed Properties
   // ---------------------------
@@ -1091,7 +1092,7 @@ public class AdaptiveModalManager: NSObject {
     self.modalBackgroundVisualEffectAnimator?.clear();
     self.modalBackgroundVisualEffectAnimator = nil;
     
-    self.modalAnimator?.stopAnimation(true);
+    self.stopModalAnimator();
     self.modalAnimator = nil;
   };
   
@@ -2103,6 +2104,11 @@ public class AdaptiveModalManager: NSObject {
       forInputPercentValue: inputPercentValue
     );
     
+    self.animationEventDelegate?.notifyOnModalAnimatorPercentChanged(
+      sender: self,
+      percent: inputPercentValue
+    );
+    
     #if DEBUG
     self.debugView?.notifyOnApplyInterpolationToModal();
     #endif
@@ -2153,6 +2159,11 @@ public class AdaptiveModalManager: NSObject {
   
   // MARK: - Functions - Helpers/Utilities
   // -------------------------------------
+  
+  private func stopModalAnimator(){
+    self.modalAnimator?.stopAnimation(true);
+    self.animationEventDelegate?.notifyOnModalAnimatorStop(sender: self);
+  };
   
   private func adjustInterpolationIndex(for nextIndex: Int) -> Int {
     if nextIndex == 0 {
@@ -2390,7 +2401,7 @@ public class AdaptiveModalManager: NSObject {
         );
       }();
       
-      self.modalAnimator?.stopAnimation(true);
+      self.stopModalAnimator();
       self.modalAnimator = animator;
       
       animator.addAnimations {
@@ -2399,6 +2410,15 @@ public class AdaptiveModalManager: NSObject {
       
       if let completion = completion {
         animator.addCompletion(completion);
+      };
+      
+      if let delegate = self.animationEventDelegate {
+        animator.addCompletion {
+          delegate.notifyOnModalAnimatorCompletion(
+            sender: self,
+            position: $0
+          );
+        }
       };
       
       animator.addCompletion { _ in
@@ -2428,6 +2448,13 @@ public class AdaptiveModalManager: NSObject {
       self.debugView?.notifyOnAnimateModalCompletion();
       #endif
     };
+    
+    self.animationEventDelegate?.notifyOnModalAnimatorStart(
+      sender: self,
+      animator: self.modalAnimator,
+      interpolationPoint: interpolationPoint,
+      isAnimated: isAnimated
+    );
   };
   
   private func cancelModalGesture(){
@@ -2473,7 +2500,7 @@ public class AdaptiveModalManager: NSObject {
     
       case .changed:
         if !self.isKeyboardVisible || self.isAnimating {
-          self.modalAnimator?.stopAnimation(true);
+          self.stopModalAnimator();
         };
         
         self.applyInterpolationToModal(forGesturePoint: gesturePoint);
@@ -2789,7 +2816,7 @@ public class AdaptiveModalManager: NSObject {
     
     self.eventDelegate?.notifyOnAdaptiveModalDidHide(sender: self);
   };
-  
+
   // MARK: - Functions
   // -----------------
     
