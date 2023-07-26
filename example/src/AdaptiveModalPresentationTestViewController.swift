@@ -9,7 +9,8 @@ import UIKit
 import AdaptiveModal
 
 fileprivate class TestModalViewController:
-  UIViewController, AdaptiveModalEventNotifiable, AdaptiveModalBackgroundTapDelegate {
+  UIViewController, AdaptiveModalEventNotifiable, AdaptiveModalBackgroundTapDelegate,
+  AdaptiveModalAnimationEventsNotifiable {
   
   enum ContentMode {
     case buttons, scrollview;
@@ -296,6 +297,46 @@ fileprivate class TestModalViewController:
   func notifyOnBackgroundTapGesture(sender: UIGestureRecognizer) {
     print("notifyOnBackgroundTapGesture");
   };
+  
+  func notifyOnModalAnimatorStart(
+    sender: AdaptiveModalManager,
+    animator: UIViewPropertyAnimator?,
+    interpolationPoint: AdaptiveModalInterpolationPoint,
+    isAnimated: Bool
+  ) {
+    print(
+      "notifyOnModalAnimatorStart",
+      "\n - interpolationPoint.percent:", interpolationPoint.percent,
+      "\n - isAnimated:", isAnimated,
+      "\n"
+    );
+  };
+  
+  func notifyOnModalAnimatorStop(sender: AdaptiveModalManager) {
+    print("notifyOnModalAnimatorStop");
+  };
+  
+  func notifyOnModalAnimatorPercentChanged(
+    sender: AdaptiveModalManager,
+    percent: CGFloat
+  ) {
+    print(
+      "notifyOnModalAnimatorPercentChanged",
+      "\n - percent:", percent,
+      "\n"
+    );
+  };
+  
+  func notifyOnModalAnimatorCompletion(
+    sender: AdaptiveModalManager,
+    position: UIViewAnimatingPosition
+  ) {
+    print(
+      "notifyOnModalAnimatorCompletion",
+      "\n - position:", position,
+      "\n"
+    );
+  }
 };
 
 class AdaptiveModalPresentationTestViewController : UIViewController {
@@ -487,6 +528,7 @@ class AdaptiveModalPresentationTestViewController : UIViewController {
       testVC.modalManager = modalManager;
       modalManager.eventDelegate = testVC;
       modalManager.backgroundTapDelegate = testVC;
+      modalManager.animationEventDelegate = testVC;
       
       self.currentModalManagerAdjustmentBlock(modalManager);
       
@@ -502,6 +544,7 @@ class AdaptiveModalPresentationTestViewController : UIViewController {
       testVC.modalManager = self.adaptiveModalManager;
       self.adaptiveModalManager.eventDelegate = testVC;
       self.adaptiveModalManager.backgroundTapDelegate = testVC;
+      self.adaptiveModalManager.animationEventDelegate = testVC;
       
       self.currentModalManagerAdjustmentBlock(self.adaptiveModalManager);
       
