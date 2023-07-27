@@ -779,7 +779,7 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
               width: .stretch,
               height: .multipleValues([
                 .percent(percentValue: 0.3),
-                .conditionalValue(
+                .conditionalLayoutValue(
                   condition: .keyboardPresent,
                   trueValue: .keyboardRelativeSize(sizeKey: \.height),
                   falseValue: .safeAreaInsets(insetKey: \.bottom)
@@ -793,7 +793,7 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
                 .safeAreaInsets(insetKey: \.right),
                 .constant(15)
               ]),
-              paddingBottom: .conditionalValue(
+              paddingBottom: .conditionalLayoutValue(
                 condition: .keyboardPresent,
                 trueValue: .keyboardRelativeSize(sizeKey: \.height),
                 falseValue: .safeAreaInsets(insetKey: \.bottom)

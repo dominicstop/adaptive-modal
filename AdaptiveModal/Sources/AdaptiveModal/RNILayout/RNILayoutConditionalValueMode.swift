@@ -6,9 +6,10 @@
 
 import Foundation
 
-public enum RNILayoutConditionalValueMode: Equatable {
+public enum RNILayoutValueEvaluableCondition: Equatable {
 
   case isNilOrZero(_ value: RNILayoutValueMode);
+  
   case keyboardPresent;
   
   func evaluate(usingContext context: RNILayoutValueContext) -> Bool {

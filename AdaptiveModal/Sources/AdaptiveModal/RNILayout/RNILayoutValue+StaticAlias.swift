@@ -120,8 +120,8 @@ public extension RNILayoutValue {
     );
   };
   
-  static func conditionalValue(
-    condition: RNILayoutConditionalValueMode,
+  static func conditionalLayoutValue(
+    condition: RNILayoutValueEvaluableCondition,
     trueValue: RNILayoutValueMode?,
     falseValue: RNILayoutValueMode? = nil,
     offsetValue: RNILayoutValueMode? = nil,
@@ -131,7 +131,7 @@ public extension RNILayoutValue {
   ) -> Self {
   
     return .init(
-      mode: .conditionalValue(
+      mode: .conditionalLayoutValue(
         condition: condition,
         trueValue: trueValue,
         falseValue: falseValue

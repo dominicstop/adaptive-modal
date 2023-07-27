@@ -32,8 +32,8 @@ public indirect enum RNILayoutValueMode: Equatable {
   
   case multipleValues(_ values: [Self]);
   
-  case conditionalValue(
-    condition: RNILayoutConditionalValueMode,
+  case conditionalLayoutValue(
+    condition: RNILayoutValueEvaluableCondition,
     trueValue: Self?,
     falseValue: Self? = nil
   );
@@ -84,7 +84,7 @@ public indirect enum RNILayoutValueMode: Equatable {
           return $0 + (computedValue ?? 0);
         };
         
-      case let .conditionalValue(condition, trueValue, falseValue):
+      case let .conditionalLayoutValue(condition, trueValue, falseValue):
         return condition.evaluate(usingContext: context)
           ? trueValue? .compute(usingLayoutValueContext: context)
           : falseValue?.compute(usingLayoutValueContext: context);
