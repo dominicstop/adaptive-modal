@@ -2789,6 +2789,8 @@ public class AdaptiveModalManager: NSObject {
     if self.shouldClearOverrideSnapPoints {
       self.cleanupSnapPointOverride();
     };
+    
+    self.clearAnimators();
   };
   
   private func notifyOnModalWillShow(){
