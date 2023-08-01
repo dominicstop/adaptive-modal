@@ -10,6 +10,7 @@ import UIKit
 public struct RNILayoutValueContext {
 
   public static let `default`: Self = .init(
+    evaluableConditionContext: .default,
     targetRect: .zero,
     windowSize: nil,
     currentSize: nil,
@@ -17,6 +18,8 @@ public struct RNILayoutValueContext {
     keyboardScreenRect: nil,
     keyboardRelativeSize: nil
   );
+  
+  public let evaluableConditionContext: RNILayoutEvaluableConditionContext;
 
   public let targetRect: CGRect;
 
@@ -72,6 +75,18 @@ public extension RNILayoutValueContext {
       
       return keyboardSize ?? prev.keyboardRelativeSize;
     }();
+    
+    self.evaluableConditionContext = {
+      let next = RNILayoutEvaluableConditionContext(
+        window: targetView?.window,
+        targetView: targetView
+      );
+      
+      return .init(
+        derivedFrom: next,
+        withBase: prev.evaluableConditionContext
+      );
+    }();
   };
   
   init?(
@@ -91,6 +106,11 @@ public extension RNILayoutValueContext {
     
     self.keyboardRelativeSize =
       keyboardValues?.computeKeyboardSize(relativeToView: targetView);
+      
+    self.evaluableConditionContext = .init(
+      window: targetVC.view.window,
+      targetView: targetVC.view
+    );
   };
   
   init?(
@@ -108,5 +128,10 @@ public extension RNILayoutValueContext {
     
     self.keyboardRelativeSize =
       keyboardValues?.computeKeyboardSize(relativeToView: targetView);
+      
+    self.evaluableConditionContext = .init(
+      window: targetView.window,
+      targetView: targetView
+    );
   };
 };

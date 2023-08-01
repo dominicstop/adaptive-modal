@@ -142,4 +142,27 @@ public extension RNILayoutValue {
       maxValue: maxValue
     );
   };
+  
+  static func conditionalValue(
+    condition: RNILayoutEvaluableCondition,
+    trueValue: RNILayoutValueMode?,
+    falseValue: RNILayoutValueMode? = nil,
+    offsetValue: RNILayoutValueMode? = nil,
+    offsetOperation: RNILayoutComputableOffset.OffsetOperation? = nil,
+    minValue: RNILayoutValueMode? = nil,
+    maxValue: RNILayoutValueMode? = nil
+  ) -> Self {
+  
+    return .init(
+      mode: .conditionalValue(
+        condition: condition,
+        trueValue: trueValue,
+        falseValue: falseValue
+      ),
+      offsetValue: offsetValue,
+      offsetOperation: offsetOperation,
+      minValue: minValue,
+      maxValue: maxValue
+    );
+  };
 };

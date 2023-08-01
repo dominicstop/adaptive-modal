@@ -38,6 +38,12 @@ public indirect enum RNILayoutValueMode: Equatable {
     falseValue: Self? = nil
   );
   
+  case conditionalValue(
+    condition: RNILayoutEvaluableCondition,
+    trueValue: Self?,
+    falseValue: Self? = nil
+  );
+
   // MARK: Functions
   // ---------------
   
@@ -85,9 +91,24 @@ public indirect enum RNILayoutValueMode: Equatable {
         };
         
       case let .conditionalLayoutValue(condition, trueValue, falseValue):
-        return condition.evaluate(usingContext: context)
-          ? trueValue? .compute(usingLayoutValueContext: context)
-          : falseValue?.compute(usingLayoutValueContext: context);
+        let value = condition.evaluate(usingContext: context)
+          ? trueValue
+          : falseValue;
+          
+        return value?.compute(
+          usingLayoutValueContext: context,
+          preferredSizeKey: preferredSizeKey
+        );
+        
+      case let .conditionalValue(condition, trueValue, falseValue):
+        let value = condition.evaluate(usingContext: context.evaluableConditionContext)
+          ? trueValue
+          : falseValue;
+        
+        return value?.compute(
+          usingLayoutValueContext: context,
+          preferredSizeKey: preferredSizeKey
+        );
     };
   };
 };
