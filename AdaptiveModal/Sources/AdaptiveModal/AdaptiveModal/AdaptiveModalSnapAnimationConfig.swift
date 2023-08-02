@@ -7,7 +7,7 @@
 
 import UIKit
 
-public struct AdaptiveModalSnapAnimationConfig {
+public struct AdaptiveModalSnapAnimationConfig: Equatable {
   public static let `default`: Self = .init(
     springDampingRatio: 0.9,
     springAnimationSettlingTime: 0.4,

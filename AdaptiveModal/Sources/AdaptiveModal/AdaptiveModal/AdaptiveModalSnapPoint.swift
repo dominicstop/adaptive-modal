@@ -7,7 +7,7 @@
 
 import UIKit
 
-public struct AdaptiveModalSnapPointConfig {
+public struct AdaptiveModalSnapPointConfig: Equatable {
 
   // MARK: Types
   // -----------

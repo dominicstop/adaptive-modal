@@ -7,17 +7,17 @@
 
 import UIKit
 
-public struct AdaptiveModalConfig {
+public struct AdaptiveModalConfig: Equatable {
 
   // MARK: - Types
   // -------------
   
-  public enum Direction {
+  public enum Direction: Equatable {
     case vertical;
     case horizontal;
   };
 
-  public enum SnapDirection {
+  public enum SnapDirection: Equatable {
     case bottomToTop;
     case topToBottom;
     case leftToRight;
@@ -39,7 +39,7 @@ public struct AdaptiveModalConfig {
     };
   };
   
-  public enum SnapPercentStrategy {
+  public enum SnapPercentStrategy: Equatable {
     case index;
     case position;
   };

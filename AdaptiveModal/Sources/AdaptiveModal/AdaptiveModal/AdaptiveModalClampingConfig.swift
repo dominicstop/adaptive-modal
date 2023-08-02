@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct AdaptiveModalClampingConfig {
+public struct AdaptiveModalClampingConfig: Equatable {
   public static let `default`: Self = .init();
 
   public let shouldClampModalInitHeight: Bool;

@@ -7,7 +7,7 @@
 
 import UIKit
 
-public enum RNILayoutPreset {
+public enum RNILayoutPreset: Equatable {
 
   case automatic;
 

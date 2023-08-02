@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct AdaptiveModalSnapPointPreset {
+public struct AdaptiveModalSnapPointPreset: Equatable {
 
   public static let automatic: Self = .init(layoutPreset: .automatic);
 

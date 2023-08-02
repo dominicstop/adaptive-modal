@@ -7,16 +7,16 @@
 
 import UIKit
 
-public struct RNILayout {
+public struct RNILayout: Equatable {
 
   // MARK: - Public Types
   // --------------------
   
-  public enum HorizontalAlignment: String {
+  public enum HorizontalAlignment: String, Equatable {
     case left, right, center;
   };
   
-  public enum VerticalAlignment: String {
+  public enum VerticalAlignment: String, Equatable {
     case top, bottom, center;
   };
   

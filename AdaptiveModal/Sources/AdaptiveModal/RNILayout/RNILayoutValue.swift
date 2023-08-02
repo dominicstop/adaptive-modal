@@ -7,12 +7,12 @@
 
 import UIKit
 
-public struct RNILayoutValue {
+public struct RNILayoutValue: Equatable {
 
   // MARK: - Types
   // -------------
 
-  public enum Axis {
+  public enum Axis: Equatable {
     case horizontal, vertical;
   };
   

@@ -7,7 +7,7 @@
 
 import UIKit
 
-public struct AdaptiveModalKeyframeConfig {
+public struct AdaptiveModalKeyframeConfig: Equatable {
 
   public static let defaultFirstKeyframe: Self = .init(
     modalContentOpacity: 1
@@ -28,7 +28,7 @@ public struct AdaptiveModalKeyframeConfig {
   // MARK: - Embedded Types
   // ----------------------
 
-  public enum BackgroundInteractionMode: String {
+  public enum BackgroundInteractionMode: String, Equatable {
     static let `default`: Self = .automatic;
   
     case automatic;
@@ -42,7 +42,7 @@ public struct AdaptiveModalKeyframeConfig {
     };
   };
   
-  public enum LayoutValueEdgeInsets {
+  public enum LayoutValueEdgeInsets: Equatable {
     case edgeInsets(UIEdgeInsets);
     
     case layoutValue(
