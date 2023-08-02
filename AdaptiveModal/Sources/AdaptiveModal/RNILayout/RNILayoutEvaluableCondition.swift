@@ -212,6 +212,8 @@ public indirect enum RNILayoutEvaluableCondition: Equatable {
   case interfaceStyle(is: UserInterfaceStyle);
 
   case interfaceLevel(is: UserInterfaceLevel);
+  
+  case interfaceOrientation(is: UIInterfaceOrientation);
 
   case activeAppearance(is: UserInterfaceActiveAppearance);
 
@@ -279,6 +281,9 @@ public indirect enum RNILayoutEvaluableCondition: Equatable {
 
       case let .interfaceLevel(value):
         return value == context.interfaceLevel;
+        
+      case let .interfaceOrientation(value):
+        return value == context.interfaceOrientation;
 
       case let .activeAppearance(value):
         return value == context.activeAppearance;
