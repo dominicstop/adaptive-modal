@@ -10,6 +10,8 @@ import UIKit
 class AdaptiveModalPresentationController: UIPresentationController {
 
   weak var modalManager: AdaptiveModalManager!;
+  
+  var shouldPauseLayoutUpdates = false;
 
   init(
     presentedViewController: UIViewController,
@@ -34,12 +36,29 @@ class AdaptiveModalPresentationController: UIPresentationController {
     to size: CGSize,
     with coordinator: UIViewControllerTransitionCoordinator
   ) {
+  
+    super.viewWillTransition(to: size, with: coordinator);
+    self.modalManager.clearAnimators();
+    self.shouldPauseLayoutUpdates = true;
+    
+    coordinator.animate(
+      alongsideTransition: { _ in
+        self.modalManager.notifyDidLayoutSubviews();
+      },
+      completion: { _ in
+        self.modalManager.endDisplayLink();
+        self.shouldPauseLayoutUpdates = false;
+      }
+    );
+    
+    self.modalManager.startDisplayLink(shouldAutoEndDisplayLink: false);
   };
   
   override func containerViewWillLayoutSubviews(){
   };
   
-  override func  containerViewDidLayoutSubviews(){
+  override func containerViewDidLayoutSubviews(){
+    guard !self.shouldPauseLayoutUpdates else { return };
     self.modalManager.notifyDidLayoutSubviews();
   };
 };

@@ -332,6 +332,8 @@ public class AdaptiveModalManager: NSObject {
     return displayLinkStartTimestamp + animator.duration;
   };
   
+  var shouldAutoEndDisplayLink = true;
+  
   var rangeAnimators: [AdaptiveModalRangePropertyAnimator?] {[
     self.backgroundVisualEffectAnimator,
     self.modalBackgroundVisualEffectAnimator
@@ -2617,7 +2619,9 @@ public class AdaptiveModalManager: NSObject {
   // MARK: - Functions - DisplayLink-Related
   // ---------------------------------------
     
-  private func startDisplayLink() {
+  func startDisplayLink(shouldAutoEndDisplayLink: Bool) {
+    self.shouldAutoEndDisplayLink = shouldAutoEndDisplayLink;
+    
     let displayLink = CADisplayLink(
       target: self,
       selector: #selector(self.onDisplayLinkTick(displayLink:))
@@ -2635,7 +2639,8 @@ public class AdaptiveModalManager: NSObject {
     displayLink.add(to: .current, forMode: .common);
   };
   
-  private func endDisplayLink() {
+  func endDisplayLink() {
+    self.shouldAutoEndDisplayLink = true;
     self.displayLink?.invalidate();
   };
   
@@ -2647,7 +2652,7 @@ public class AdaptiveModalManager: NSObject {
       self.debugView?.notifyOnDisplayLinkTick();
       #endif
     
-      if shouldEndDisplayLink {
+      if shouldEndDisplayLink && self.shouldAutoEndDisplayLink {
         self.endDisplayLink();
       };
     };
