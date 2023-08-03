@@ -2286,9 +2286,7 @@ public class AdaptiveModalManager: NSObject {
       self.applyInterpolationToModal(forGesturePoint: gesturePoint);
     
     } else if self.currentInterpolationStep.computedRect != self.modalFrame {
-      let percent = currentInterpolationStep.percent;
-      
-      self.applyInterpolationToModal(forInputPercentValue: percent);
+      self.currentInterpolationStep.applyAnimation(toModalManager: self);
     };
     
     #if DEBUG
