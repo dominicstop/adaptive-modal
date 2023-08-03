@@ -148,6 +148,7 @@ public class AdaptiveModalManager: NSObject {
   weak var modalConstraintBottom: NSLayoutConstraint?;
   
   weak var modalDragHandleConstraintOffset: NSLayoutConstraint?;
+  weak var modalDragHandleConstraintCenter: NSLayoutConstraint?;
   weak var modalDragHandleConstraintHeight: NSLayoutConstraint?;
   weak var modalDragHandleConstraintWidth : NSLayoutConstraint?;
   
@@ -833,8 +834,9 @@ public class AdaptiveModalManager: NSObject {
     if shouldDeactivateOldConstraints {
       let dragHandleConstraintsKeys: [ReferenceWritableKeyPath<AdaptiveModalManager, NSLayoutConstraint?>] = [
         \.modalDragHandleConstraintOffset,
+        \.modalDragHandleConstraintCenter,
         \.modalDragHandleConstraintHeight,
-        \.modalDragHandleConstraintWidth,
+        \.modalDragHandleConstraintWidth ,
       ];
     
       let constraints = dragHandleConstraintsKeys.compactMap {
@@ -887,25 +889,33 @@ public class AdaptiveModalManager: NSObject {
       };
     }();
     
-    guard let offsetConstraint = offsetConstraint else { return };
-    self.modalDragHandleConstraintOffset = offsetConstraint;
+    var constraints: [NSLayoutConstraint] = [];
     
-    var constraints = [offsetConstraint];
+    if let offsetConstraint = offsetConstraint {
+      constraints.append(offsetConstraint);
+      self.modalDragHandleConstraintOffset = offsetConstraint;
+    };
     
-    switch self.currentModalConfig.dragHandlePosition {
-      case .top, .bottom: constraints.append(
-        modalDragHandleView.centerXAnchor.constraint(
-          equalTo: modalWrapperShadowView.centerXAnchor
-        )
-      );
-        
-      case .left, .right: constraints.append(
-        modalDragHandleView.centerYAnchor.constraint(
-          equalTo: modalWrapperShadowView.centerYAnchor
-        )
-      );
-        
-      default: break;
+    let centerConstraint: NSLayoutConstraint? = {
+      switch self.currentModalConfig.dragHandlePosition {
+        case .top, .bottom:
+          return modalDragHandleView.centerXAnchor.constraint(
+            equalTo: modalWrapperShadowView.centerXAnchor
+          );
+          
+        case .left, .right:
+          return modalDragHandleView.centerYAnchor.constraint(
+            equalTo: modalWrapperShadowView.centerYAnchor
+          );
+          
+        default:
+          return nil;
+      };
+    }();
+    
+    if let centerConstraint = centerConstraint {
+      constraints.append(centerConstraint);
+      self.modalDragHandleConstraintCenter = centerConstraint;
     };
     
     constraints += {
@@ -2430,6 +2440,17 @@ public class AdaptiveModalManager: NSObject {
       $0.element < $1.element;
     };
     
+    print(
+      "getClosestSnapPoint",
+      "\n - currentRect", currentRect,
+      "\n - delta:", delta.enumerated(),
+      "\n - deltaAvg:", deltaAvg.enumerated(),
+      "\n - deltaAvgFiltered:", deltaAvgFiltered,
+      "\n - deltaAvgSorted:", deltaAvgSorted,
+      "\n - deltaAvgSorted.first", deltaAvgSorted.first!,
+      "\n"
+    );
+    
     let closestInterpolationPointIndex = self.adjustInterpolationIndex(
       for: deltaAvgSorted.first!.offset
     );
@@ -2785,6 +2806,7 @@ public class AdaptiveModalManager: NSObject {
   // -----------------------
   
   private func notifyOnCurrentModalConfigDidChange(){
+    print("notifyOnCurrentModalConfigDidChange");
   };
   
   private func notifyOnModalWillSnap() {
@@ -3115,6 +3137,14 @@ public class AdaptiveModalManager: NSObject {
       self.computeSnapPoints();
       
       let closestSnapPoint = self.getClosestSnapPoint(forRect: modalFrame);
+      
+      print(
+        "notifyDidLayoutSubviews:",
+        "\n - self.currentConfigInterpolationIndex:", self.currentConfigInterpolationIndex,
+        "\n - closestSnapPoint.interpolationIndex:", closestSnapPoint.interpolationIndex,
+        "\n - closestSnapPoint.snapDistance:", closestSnapPoint.snapDistance,
+        "\n"
+      );
       
       self.currentConfigInterpolationIndex = closestSnapPoint.interpolationIndex;
       
