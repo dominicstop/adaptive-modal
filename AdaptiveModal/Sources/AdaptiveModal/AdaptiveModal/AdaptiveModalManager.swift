@@ -2335,31 +2335,38 @@ public class AdaptiveModalManager: NSObject {
     interpolationPoint: AdaptiveModalInterpolationPoint,
     snapDistance: CGFloat
   ) {
-    let delta = interpolationSteps.map {
-      CGRect(
-        x: abs($0.computedRect.origin.x - currentRect.origin.x),
-        y: abs($0.computedRect.origin.y - currentRect.origin.y),
-        width : abs($0.computedRect.size.height - currentRect.size.height),
-        height: abs($0.computedRect.size.height - currentRect.size.height)
-      );
-    };
+    let delta = interpolationSteps.map {[
+      abs($0.computedRect.minX - currentRect.minX),
+      abs($0.computedRect.midX - currentRect.midX),
+      abs($0.computedRect.maxX - currentRect.maxX),
+      abs($0.computedRect.minY - currentRect.minY),
+      abs($0.computedRect.midY - currentRect.midY),
+      abs($0.computedRect.maxY - currentRect.maxY)
+    ]};
     
     let deltaAvg = delta.map {
-      ($0.origin.x + $0.origin.y + $0.width + $0.height) / 4;
+      let sum = $0.reduce(0) { $0 + $1 };
+      return sum / CGFloat(delta.count);
     };
     
-    let deltaAvgSorted = deltaAvg.enumerated().sorted {
+    let deltaAvgFiltered = deltaAvg.enumerated().filter {
+      $0.offset != 0;
+    };
+    
+    let deltaAvgSorted = deltaAvgFiltered.sorted {
       $0.element < $1.element;
     };
     
-    let closestInterpolationPointIndex = deltaAvgSorted.first!.offset;
+    let closestInterpolationPointIndex = self.adjustInterpolationIndex(
+      for: deltaAvgSorted.first!.offset
+    );
       
     let closestInterpolationPoint =
       interpolationSteps[closestInterpolationPointIndex];
     
     return (
       interpolationIndex: closestInterpolationPointIndex,
-      snapPointConfig: self.modalConfig.snapPoints[closestInterpolationPointIndex],
+      snapPointConfig: self.currentModalConfig.snapPoints[closestInterpolationPointIndex],
       interpolationPoint: closestInterpolationPoint,
       snapDistance: deltaAvg[closestInterpolationPointIndex]
     );
