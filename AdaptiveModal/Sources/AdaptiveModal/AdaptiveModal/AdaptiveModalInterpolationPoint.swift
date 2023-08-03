@@ -191,7 +191,7 @@ public struct AdaptiveModalInterpolationPoint: Equatable {
   func applyAnimation(
     toModalManager modalManager: AdaptiveModalManager
   ){
-    let modalConfig = modalManager.modalConfig;
+    let modalConfig = modalManager.currentModalConfig;
     
     if let modalView = modalManager.modalView {
       modalView.alpha = self.modalContentOpacity;

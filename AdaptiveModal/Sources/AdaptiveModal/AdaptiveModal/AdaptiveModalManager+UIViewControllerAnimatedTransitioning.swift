@@ -13,7 +13,7 @@ extension AdaptiveModalManager: UIViewControllerAnimatedTransitioning {
     using transitionContext: UIViewControllerContextTransitioning?
   ) -> TimeInterval {
   
-    return self.modalConfig.snapAnimationConfig.springAnimationSettlingTime;
+    return self.currentModalConfig.snapAnimationConfig.springAnimationSettlingTime;
   };
   
   public func animateTransition(

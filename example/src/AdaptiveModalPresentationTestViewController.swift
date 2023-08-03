@@ -342,7 +342,7 @@ fileprivate class TestModalViewController:
 class AdaptiveModalPresentationTestViewController : UIViewController {
 
   lazy var adaptiveModalManager = AdaptiveModalManager(
-    modalConfig: self.currentModalConfigPreset.config
+    staticConfig: self.currentModalConfigPreset.config
   );
   
   let modalConfigs = AdaptiveModalConfigDemoPresets.allCases;
@@ -522,7 +522,7 @@ class AdaptiveModalPresentationTestViewController : UIViewController {
     
     if let presentedVC = self.presentedViewController {
       let modalManager = AdaptiveModalManager(
-        modalConfig: self.currentModalConfigPreset.config
+        staticConfig: self.currentModalConfigPreset.config
       );
       
       testVC.modalManager = modalManager;
@@ -538,9 +538,10 @@ class AdaptiveModalPresentationTestViewController : UIViewController {
       );
       
     } else {
-      self.adaptiveModalManager.modalConfig =
-        self.currentModalConfigPreset.config;
-      
+      self.adaptiveModalManager.modalConfig = .staticConfig(
+        self.currentModalConfigPreset.config
+      );
+        
       testVC.modalManager = self.adaptiveModalManager;
       self.adaptiveModalManager.eventDelegate = testVC;
       self.adaptiveModalManager.backgroundTapDelegate = testVC;

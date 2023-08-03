@@ -13,7 +13,7 @@ class RNIDraggableTestViewController : UIViewController {
   
   lazy var modalManager: AdaptiveModalManager = {
     let manager = AdaptiveModalManager(
-      modalConfig: AdaptiveModalConfigTestPresets.default.config
+      staticConfig: AdaptiveModalConfigTestPresets.default.config
     );
     
     manager.eventDelegate = self;

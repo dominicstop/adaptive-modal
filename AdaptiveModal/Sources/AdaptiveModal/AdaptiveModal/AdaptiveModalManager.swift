@@ -16,7 +16,23 @@ public class AdaptiveModalManager: NSObject {
   // MARK: -  Properties - Config-Related
   // ------------------------------------
   
-  public var modalConfig: AdaptiveModalConfig;
+  public var modalConfig: AdaptiveModalConfigMode;
+  
+  var prevModalConfig: AdaptiveModalConfig? = nil;
+  
+  private var _currentModalConfig: AdaptiveModalConfig?;
+  public var currentModalConfig: AdaptiveModalConfig {
+    get {
+      switch self.modalConfig {
+        case let .staticConfig(config):
+          return config;
+          
+        case let .adaptiveConfig(defaultConfig, _):
+          return self._currentModalConfig ?? defaultConfig;
+      };
+    }
+  };
+  
   
   public var shouldEnableSnapping = true;
   public var shouldEnableOverShooting = true;
@@ -161,6 +177,8 @@ public class AdaptiveModalManager: NSObject {
   
   private var isKeyboardVisible = false;
   
+  var pendingCurrentModalConfigUpdate = false;
+  
   // MARK: -  Properties - Config Interpolation Points
   // -------------------------------------------------
   
@@ -299,11 +317,11 @@ public class AdaptiveModalManager: NSObject {
   
   public var interpolationRangeMaxInput: CGFloat? {
     guard let targetView = self.targetView else { return nil };
-    return targetView.frame[keyPath: self.modalConfig.maxInputRangeKeyForRect];
+    return targetView.frame[keyPath: self.currentModalConfig.maxInputRangeKeyForRect];
   };
   
   public var currentSnapPointConfig: AdaptiveModalSnapPointConfig {
-    self.modalConfig.snapPoints[
+    self.currentModalConfig.snapPoints[
       self.currentInterpolationStep.snapPointIndex
     ];
   };
@@ -389,13 +407,13 @@ public class AdaptiveModalManager: NSObject {
     };
   
     let gestureInitialCoord =
-      gestureInitialPoint[keyPath: self.modalConfig.inputValueKeyForPoint];
+      gestureInitialPoint[keyPath: self.currentModalConfig.inputValueKeyForPoint];
       
     let gestureFinalCoord =
-      gestureFinalPoint[keyPath: self.modalConfig.inputValueKeyForPoint];
+      gestureFinalPoint[keyPath: self.currentModalConfig.inputValueKeyForPoint];
       
     let gestureVelocityCoord =
-      gestureVelocity[keyPath: self.modalConfig.inputValueKeyForPoint];
+      gestureVelocity[keyPath: self.currentModalConfig.inputValueKeyForPoint];
     
     var velocity: CGFloat = 0;
     let distance = gestureFinalCoord - gestureInitialCoord;
@@ -404,7 +422,7 @@ public class AdaptiveModalManager: NSObject {
       velocity = gestureVelocityCoord / distance;
     };
     
-    let snapAnimationConfig = self.modalConfig.snapAnimationConfig;
+    let snapAnimationConfig = self.currentModalConfig.snapAnimationConfig;
     
     velocity = velocity.clamped(
       min: -snapAnimationConfig.maxGestureVelocity,
@@ -453,7 +471,7 @@ public class AdaptiveModalManager: NSObject {
     };
     
     let xOffset: CGFloat = {
-      switch self.modalConfig.snapDirection {
+      switch self.currentModalConfig.snapDirection {
         case .rightToLeft:
           return gestureInitialPoint.x - modalRect.minX;
           
@@ -467,7 +485,7 @@ public class AdaptiveModalManager: NSObject {
     }();
     
     let yOffset: CGFloat = {
-      switch self.modalConfig.snapDirection {
+      switch self.currentModalConfig.snapDirection {
         case .bottomToTop:
           return gestureInitialPoint.y - modalRect.minY;
           
@@ -493,7 +511,7 @@ public class AdaptiveModalManager: NSObject {
       origin: modalFrame.origin,
       size: CGSize(
         width: modalFrame.width,
-        height: self.modalConfig.modalSwipeGestureEdgeHeight
+        height: self.currentModalConfig.modalSwipeGestureEdgeHeight
       )
     );
   };
@@ -552,10 +570,21 @@ public class AdaptiveModalManager: NSObject {
   // MARK: - Init
   // ------------
   
-  public init(modalConfig: AdaptiveModalConfig) {
-    self.modalConfig = modalConfig;
+  public init(staticConfig: AdaptiveModalConfig) {
+    self.modalConfig = .staticConfig(staticConfig);
     
     super.init();
+    
+    self.updateCurrentModalConfig();
+    self.computeSnapPoints();
+  };
+  
+  public init(adaptiveConfig: AdaptiveModalConfigMode) {
+    self.modalConfig = adaptiveConfig;
+    
+    super.init();
+    
+    self.updateCurrentModalConfig();
     self.computeSnapPoints();
   };
   
@@ -644,9 +673,9 @@ public class AdaptiveModalManager: NSObject {
     self.backgroundDimmingView = UIView();
     self.backgroundVisualEffectView = UIVisualEffectView();
     
-    if self.modalConfig.dragHandlePosition != .none {
+    if self.currentModalConfig.dragHandlePosition != .none {
       let dragHandle = AdaptiveModalDragHandleView();
-      dragHandle.pointInsideHitSlop = self.modalConfig.dragHandleHitSlop;
+      dragHandle.pointInsideHitSlop = self.currentModalConfig.dragHandleHitSlop;
       
       self.modalDragHandleView = dragHandle;
     };
@@ -794,6 +823,111 @@ public class AdaptiveModalManager: NSObject {
     #endif
   };
   
+  func setupDragHandleConstraints(shouldDeactivateOldConstraints: Bool){
+    guard let modalDragHandleView = self.modalDragHandleView,
+          let modalWrapperShadowView = self.modalWrapperShadowView
+    else { return };
+  
+    modalDragHandleView.translatesAutoresizingMaskIntoConstraints = false;
+    
+    if shouldDeactivateOldConstraints {
+      let dragHandleConstraintsKeys: [ReferenceWritableKeyPath<AdaptiveModalManager, NSLayoutConstraint?>] = [
+        \.modalDragHandleConstraintOffset,
+        \.modalDragHandleConstraintHeight,
+        \.modalDragHandleConstraintWidth,
+      ];
+    
+      let constraints = dragHandleConstraintsKeys.compactMap {
+        self[keyPath: $0];
+      };
+    
+      NSLayoutConstraint.deactivate(constraints);
+    
+      dragHandleConstraintsKeys.forEach {
+        self[keyPath: $0] = nil;
+      };
+    };
+    
+    let dragHandleOffset: CGFloat = {
+      guard let interpolationSteps = self.interpolationSteps,
+            let undershoot = interpolationSteps.first
+      else { return 0 };
+      
+      return undershoot.modalDragHandleOffset;
+    }();
+    
+    let offsetConstraint: NSLayoutConstraint? = {
+      switch self.currentModalConfig.dragHandlePosition {
+        case .top:
+          return modalDragHandleView.topAnchor.constraint(
+            equalTo: modalWrapperShadowView.topAnchor,
+            constant: dragHandleOffset
+          );
+          
+        case .bottom:
+          return modalDragHandleView.bottomAnchor.constraint(
+            equalTo: modalWrapperShadowView.bottomAnchor,
+            constant: dragHandleOffset
+          );
+          
+        case .left:
+          return modalDragHandleView.leftAnchor.constraint(
+            equalTo: modalWrapperShadowView.leftAnchor,
+            constant: dragHandleOffset
+          );
+          
+        case .right:
+          return modalDragHandleView.rightAnchor.constraint(
+            equalTo: modalWrapperShadowView.rightAnchor,
+            constant: dragHandleOffset
+          );
+          
+        default:
+          return nil;
+      };
+    }();
+    
+    guard let offsetConstraint = offsetConstraint else { return };
+    self.modalDragHandleConstraintOffset = offsetConstraint;
+    
+    var constraints = [offsetConstraint];
+    
+    switch self.currentModalConfig.dragHandlePosition {
+      case .top, .bottom: constraints.append(
+        modalDragHandleView.centerXAnchor.constraint(
+          equalTo: modalWrapperShadowView.centerXAnchor
+        )
+      );
+        
+      case .left, .right: constraints.append(
+        modalDragHandleView.centerYAnchor.constraint(
+          equalTo: modalWrapperShadowView.centerYAnchor
+        )
+      );
+        
+      default: break;
+    };
+    
+    constraints += {
+      let dragHandleSize = self.currentInterpolationStep.modalDragHandleSize;
+      
+      let heightConstraint = modalDragHandleView.heightAnchor.constraint(
+        equalToConstant: dragHandleSize.height
+      );
+      
+      let widthConstraint = modalDragHandleView.widthAnchor.constraint(
+        equalToConstant: dragHandleSize.width
+      );
+      
+      self.modalDragHandleConstraintHeight = heightConstraint;
+      self.modalDragHandleConstraintWidth = widthConstraint;
+      
+      return [heightConstraint, widthConstraint];
+    }();
+    
+    NSLayoutConstraint.activate(constraints);
+  };
+  
   func setupViewConstraints() {
     guard let modalView = self.modalView,
           let modalRootView = self.modalRootView,
@@ -877,92 +1011,7 @@ public class AdaptiveModalManager: NSObject {
       self.modalConstraintBottom!,
     ]);
 
-    
-    scope:
-    if let modalDragHandleView = self.modalDragHandleView,
-       let modalWrapperShadowView = self.modalWrapperShadowView {
-       
-      modalDragHandleView.translatesAutoresizingMaskIntoConstraints = false;
-      
-      let dragHandleOffset: CGFloat = {
-        guard let interpolationSteps = self.interpolationSteps,
-              let undershoot = interpolationSteps.first
-        else { return 0 };
-        
-        return undershoot.modalDragHandleOffset;
-      }();
-      
-      let offsetConstraint: NSLayoutConstraint? = {
-        switch self.modalConfig.dragHandlePosition {
-          case .top:
-            return modalDragHandleView.topAnchor.constraint(
-              equalTo: modalWrapperShadowView.topAnchor,
-              constant: dragHandleOffset
-            );
-            
-          case .bottom:
-            return modalDragHandleView.bottomAnchor.constraint(
-              equalTo: modalWrapperShadowView.bottomAnchor,
-              constant: dragHandleOffset
-            );
-            
-          case .left:
-            return modalDragHandleView.leftAnchor.constraint(
-              equalTo: modalWrapperShadowView.leftAnchor,
-              constant: dragHandleOffset
-            );
-            
-          case .right:
-            return modalDragHandleView.rightAnchor.constraint(
-              equalTo: modalWrapperShadowView.rightAnchor,
-              constant: dragHandleOffset
-            );
-            
-          default:
-            return nil;
-        };
-      }();
-      
-      guard let offsetConstraint = offsetConstraint else { break scope };
-      self.modalDragHandleConstraintOffset = offsetConstraint;
-      
-      var constraints = [offsetConstraint];
-      
-      switch self.modalConfig.dragHandlePosition {
-        case .top, .bottom: constraints.append(
-          modalDragHandleView.centerXAnchor.constraint(
-            equalTo: modalWrapperShadowView.centerXAnchor
-          )
-        );
-          
-        case .left, .right: constraints.append(
-          modalDragHandleView.centerYAnchor.constraint(
-            equalTo: modalWrapperShadowView.centerYAnchor
-          )
-        );
-          
-        default: break;
-      };
-      
-      constraints += {
-        let dragHandleSize = self.currentInterpolationStep.modalDragHandleSize;
-        
-        let heightConstraint = modalDragHandleView.heightAnchor.constraint(
-          equalToConstant: dragHandleSize.height
-        );
-        
-        let widthConstraint = modalDragHandleView.widthAnchor.constraint(
-          equalToConstant: dragHandleSize.width
-        );
-        
-        self.modalDragHandleConstraintHeight = heightConstraint;
-        self.modalDragHandleConstraintWidth = widthConstraint;
-        
-        return [heightConstraint, widthConstraint];
-      }();
-      
-      NSLayoutConstraint.activate(constraints);
-    };
+    self.setupDragHandleConstraints(shouldDeactivateOldConstraints: false);
     
     if let bgDimmingView = self.backgroundDimmingView {
       bgDimmingView.translatesAutoresizingMaskIntoConstraints = false;
@@ -1087,7 +1136,7 @@ public class AdaptiveModalManager: NSObject {
     self.gestureInitialPoint = nil;
   };
   
-  private func clearAnimators() {
+  func clearAnimators() {
     self.backgroundVisualEffectAnimator?.clear();
     self.backgroundVisualEffectAnimator = nil;
     
@@ -1203,6 +1252,8 @@ public class AdaptiveModalManager: NSObject {
     self.endDisplayLink();
     
     self.currentInterpolationIndex = 0;
+    self.modalSecondaryAxisValue = nil;
+    self.pendingCurrentModalConfigUpdate = false;
     
     #if DEBUG
     self.debugView?.notifyDidCleanup();
@@ -1386,7 +1437,7 @@ public class AdaptiveModalManager: NSObject {
     forInputPercentValue inputPercentValue: CGFloat
   ) -> CGRect? {
   
-    let clampConfig = modalConfig.interpolationClampingConfig;
+    let clampConfig = currentModalConfig.interpolationClampingConfig;
 
     let nextHeight = self.interpolate(
       inputValue: inputPercentValue,
@@ -1434,7 +1485,7 @@ public class AdaptiveModalManager: NSObject {
     forInputPercentValue inputPercentValue: CGFloat
   ) -> CGAffineTransform? {
 
-    let clampConfig = modalConfig.interpolationClampingConfig;
+    let clampConfig = currentModalConfig.interpolationClampingConfig;
 
     let nextModalRotation = self.interpolate(
       inputValue: inputPercentValue,
@@ -1818,7 +1869,7 @@ public class AdaptiveModalManager: NSObject {
         );
         
         if dampingPercentRaw == 1 {
-          return nextRect.origin[keyPath: self.modalConfig.secondarySwipeAxis];
+          return nextRect.origin[keyPath: self.currentModalConfig.secondarySwipeAxis];
         };
         
         if dampingPercentRaw == 0 {
@@ -1836,7 +1887,7 @@ public class AdaptiveModalManager: NSObject {
           inputValue: dampingPercent,
           rangeInput: [0, 1],
           rangeOutput: [
-            nextRect.origin[keyPath: self.modalConfig.secondarySwipeAxis],
+            nextRect.origin[keyPath: self.currentModalConfig.secondarySwipeAxis],
             secondaryAxis
           ]
         );
@@ -1845,7 +1896,7 @@ public class AdaptiveModalManager: NSObject {
       }();
       
       let nextOrigin: CGPoint = {
-        if self.modalConfig.snapDirection.isVertical {
+        if self.currentModalConfig.snapDirection.isVertical {
           return CGPoint(
             x: secondaryAxisAdj,
             y: nextRect.origin.y
@@ -1877,7 +1928,7 @@ public class AdaptiveModalManager: NSObject {
     );
     
     block:
-    if self.modalConfig.shouldSetModalScrollViewContentInsets,
+    if self.currentModalConfig.shouldSetModalScrollViewContentInsets,
        let modalContentScrollView = self.modalContentScrollView {
        
       let interpolatedInsets = self.interpolateEdgeInsets(
@@ -1892,7 +1943,7 @@ public class AdaptiveModalManager: NSObject {
     };
     
     block:
-    if self.modalConfig.shouldSetModalScrollViewVerticalScrollIndicatorInsets,
+    if self.currentModalConfig.shouldSetModalScrollViewVerticalScrollIndicatorInsets,
        let modalContentScrollView = self.modalContentScrollView {
        
       guard #available(iOS 11.1, *) else { break block };
@@ -1907,7 +1958,7 @@ public class AdaptiveModalManager: NSObject {
     };
     
     block:
-    if self.modalConfig.shouldSetModalScrollViewHorizontalScrollIndicatorInsets,
+    if self.currentModalConfig.shouldSetModalScrollViewHorizontalScrollIndicatorInsets,
        let modalContentScrollView = self.modalContentScrollView {
        
       guard #available(iOS 11.1, *) else { break block };
@@ -2120,10 +2171,10 @@ public class AdaptiveModalManager: NSObject {
     guard let interpolationRangeMaxInput = self.interpolationRangeMaxInput
     else { return };
     
-    let inputValue = point[keyPath: self.modalConfig.inputValueKeyForPoint];
+    let inputValue = point[keyPath: self.currentModalConfig.inputValueKeyForPoint];
     
     let shouldInvertPercent: Bool = {
-      switch modalConfig.snapDirection {
+      switch currentModalConfig.snapDirection {
         case .bottomToTop, .rightToLeft: return true;
         default: return false;
       };
@@ -2134,7 +2185,7 @@ public class AdaptiveModalManager: NSObject {
     let percentClamped: CGFloat = {
       guard !self.shouldEnableOverShooting else { return percent };
       
-      let secondToLastIndex = self.modalConfig.snapPointLastIndex - 1;
+      let secondToLastIndex = self.currentModalConfig.snapPointLastIndex - 1;
       let maxPercent = self.interpolationRangeInput[secondToLastIndex];
       
       return percent.clamped(max: maxPercent);
@@ -2153,7 +2204,7 @@ public class AdaptiveModalManager: NSObject {
       
     if !self.shouldLockAxisToModalDirection {
       self.modalSecondaryAxisValue =
-        gesturePointWithOffset[keyPath: self.modalConfig.secondarySwipeAxis];
+        gesturePointWithOffset[keyPath: self.currentModalConfig.secondarySwipeAxis];
     };
   
     self.applyInterpolationToModal(forPoint: gesturePointWithOffset);
@@ -2176,7 +2227,7 @@ public class AdaptiveModalManager: NSObject {
     
     let lastIndex = self.interpolationSteps.count - 1;
     
-    if nextIndex == lastIndex {
+    if nextIndex == self.currentModalConfig.overshootSnapPointIndex {
       return self.shouldSnapToOvershootSnapPoint
         ? nextIndex
         : lastIndex - 1;
@@ -2193,7 +2244,7 @@ public class AdaptiveModalManager: NSObject {
     else { return gesturePoint };
     
     let x: CGFloat = {
-      switch self.modalConfig.snapDirection {
+      switch self.currentModalConfig.snapDirection {
         case .leftToRight:
           return gesturePoint.x + computedGestureOffset.x;
           
@@ -2207,7 +2258,7 @@ public class AdaptiveModalManager: NSObject {
     }();
     
     let y: CGFloat = {
-      switch self.modalConfig.snapDirection {
+      switch self.currentModalConfig.snapDirection {
         case .topToBottom:
           return gesturePoint.y + computedGestureOffset.y;
           
@@ -2266,17 +2317,39 @@ public class AdaptiveModalManager: NSObject {
     let context = context ?? self.layoutValueContext;
     
     self.configInterpolationSteps = .Element.compute(
-      usingModalConfig: self.modalConfig,
+      usingModalConfig: self.currentModalConfig,
       layoutValueContext: context
     );
     
     if let overrideSnapPoints = self.overrideSnapPoints {
       self.overrideInterpolationPoints = .Element.compute(
-        usingModalConfig: self.modalConfig,
+        usingModalConfig: self.currentModalConfig,
         snapPoints: overrideSnapPoints,
         layoutValueContext: context
       );
     };
+  };
+  
+  private func updateCurrentModalConfig(){
+    guard case let .adaptiveConfig(defaultConfig, constrainedConfigs) = self.modalConfig
+    else { return };
+    
+    let context = self.layoutValueContext.evaluableConditionContext;
+    
+    let match = constrainedConfigs.first {
+      $0.evaluateConstraints(usingContext: context);
+    };
+    
+    let prevConfig = self._currentModalConfig;
+    let nextConfig = match?.config ?? defaultConfig;
+    
+    guard prevConfig != nextConfig else { return };
+    
+    self.prevModalConfig = prevConfig;
+    self._currentModalConfig = nextConfig;
+    
+    self.pendingCurrentModalConfigUpdate = self.currentInterpolationIndex > 0;
+    self.notifyOnCurrentModalConfigDidChange();
   };
   
   private func updateModal() {
@@ -2302,11 +2375,11 @@ public class AdaptiveModalManager: NSObject {
     let inputRect = self.modalFrame!;
     
     let inputCoord = coord ??
-      inputRect[keyPath: self.modalConfig.inputValueKeyForRect];
+      inputRect[keyPath: self.currentModalConfig.inputValueKeyForRect];
     
     let delta = self.interpolationSteps.map {
       let coord =
-        $0.computedRect[keyPath: self.modalConfig.inputValueKeyForRect];
+        $0.computedRect[keyPath: self.currentModalConfig.inputValueKeyForRect];
       
       return abs(inputCoord - coord);
     };
@@ -2395,7 +2468,7 @@ public class AdaptiveModalManager: NSObject {
     if isAnimated {
       let animator: UIViewPropertyAnimator = animator ?? {
         let gestureInitialVelocity = self.gestureInitialVelocity;
-        let snapAnimationConfig = self.modalConfig.snapAnimationConfig;
+        let snapAnimationConfig = self.currentModalConfig.snapAnimationConfig;
           
         let springTiming = UISpringTimingParameters(
           dampingRatio: snapAnimationConfig.springDampingRatio,
@@ -2438,7 +2511,7 @@ public class AdaptiveModalManager: NSObject {
       };
     
       animator.startAnimation();
-      self.startDisplayLink();
+      self.startDisplayLink(shouldAutoEndDisplayLink: true);
       
     } else {
       animationBlock();
@@ -2559,6 +2632,8 @@ public class AdaptiveModalManager: NSObject {
     
     self.isKeyboardVisible = true;
     self.layoutKeyboardValues = keyboardValues;
+    
+    self.updateCurrentModalConfig();
     self.computeSnapPoints();
 
     self.animateModal(
@@ -2573,6 +2648,8 @@ public class AdaptiveModalManager: NSObject {
     
     self.isKeyboardVisible = true;
     self.layoutKeyboardValues = keyboardValues;
+    
+    self.updateCurrentModalConfig();
     self.computeSnapPoints();
   };
 
@@ -2581,6 +2658,7 @@ public class AdaptiveModalManager: NSObject {
     else { return };
     
     self.clearLayoutKeyboardValues();
+    self.updateCurrentModalConfig();
     self.computeSnapPoints();
     
     self.animateModal(
@@ -2604,6 +2682,8 @@ public class AdaptiveModalManager: NSObject {
     else { return };
     
     self.layoutKeyboardValues = keyboardValues;
+    
+    self.updateCurrentModalConfig();
     self.computeSnapPoints();
     
     self.animateModal(
@@ -2618,6 +2698,8 @@ public class AdaptiveModalManager: NSObject {
     else { return };
     
     self.layoutKeyboardValues = keyboardValues;
+    
+    self.updateCurrentModalConfig();
     self.computeSnapPoints();
   };
   
@@ -2684,11 +2766,11 @@ public class AdaptiveModalManager: NSObject {
     guard prevModalFrame != nextModalFrame else { return };
     
     let inputCoord =
-      nextModalFrame[keyPath: self.modalConfig.inputValueKeyForRect];
+      nextModalFrame[keyPath: self.currentModalConfig.inputValueKeyForRect];
       
     let percent = inputCoord / interpolationRangeMaxInput;
     
-    let percentAdj = self.modalConfig.shouldInvertPercent
+    let percentAdj = self.currentModalConfig.shouldInvertPercent
       ? AdaptiveModalUtilities.invertPercent(percent)
       : percent;
     
@@ -2701,6 +2783,9 @@ public class AdaptiveModalManager: NSObject {
   
   // MARK: - Event Functions
   // -----------------------
+  
+  private func notifyOnCurrentModalConfigDidChange(){
+  };
   
   private func notifyOnModalWillSnap() {
     let interpolationSteps = self.interpolationSteps!;
@@ -2725,9 +2810,9 @@ public class AdaptiveModalManager: NSObject {
     
     self.eventDelegate?.notifyOnModalWillSnap(
       sender: self,
-      prevSnapPointIndex: interpolationSteps[prevIndex].snapPointIndex,
+      prevSnapPointIndex: interpolationSteps[safeIndex: prevIndex]?.snapPointIndex,
       nextSnapPointIndex: interpolationSteps[nextIndex].snapPointIndex,
-      snapPointConfig: self.modalConfig.snapPoints[nextPoint.snapPointIndex],
+      snapPointConfig: self.currentModalConfig.snapPoints[nextPoint.snapPointIndex],
       interpolationPoint: nextPoint
     );
     
@@ -2735,7 +2820,7 @@ public class AdaptiveModalManager: NSObject {
       nextIndex == 0 && self.shouldDismissModalOnSnapToUnderShootSnapPoint;
       
     let shouldDismissOnSnapToOverShootSnapPoint =
-      nextIndex == self.modalConfig.overshootSnapPointIndex &&
+      nextIndex == self.currentModalConfig.overshootSnapPointIndex &&
       self.shouldDismissModalOnSnapToOverShootSnapPoint;
     
     let shouldDismiss =
@@ -2778,7 +2863,7 @@ public class AdaptiveModalManager: NSObject {
       self.shouldDismissModalOnSnapToUnderShootSnapPoint;
       
     let shouldDismissOnSnapToOverShootSnapPoint =
-      self.currentInterpolationIndex == self.modalConfig.overshootSnapPointIndex &&
+      self.currentInterpolationIndex == self.currentModalConfig.overshootSnapPointIndex &&
       self.shouldDismissModalOnSnapToOverShootSnapPoint;
     
     let shouldDismiss =
@@ -2864,7 +2949,7 @@ public class AdaptiveModalManager: NSObject {
     forPoint point: CGPoint,
     completion: (() -> Void)? = nil
   ) {
-    let coord = point[keyPath: self.modalConfig.inputValueKeyForPoint];
+    let coord = point[keyPath: self.currentModalConfig.inputValueKeyForPoint];
     let closestSnapPoint = self.getClosestSnapPoint(forCoord: coord);
     
     let nextInterpolationIndex =
@@ -2892,7 +2977,7 @@ public class AdaptiveModalManager: NSObject {
     extraAnimation: (() -> Void)? = nil,
     completion: (() -> Void)? = nil
   ) {
-    let nextIndex = self.modalConfig.initialSnapPointIndex;
+    let nextIndex = self.currentModalConfig.initialSnapPointIndex;
     
     self.snapTo(
       interpolationIndex: nextIndex,
@@ -2920,18 +3005,19 @@ public class AdaptiveModalManager: NSObject {
       );
     
     } else {
+      self.updateCurrentModalConfig();
       self.computeSnapPoints();
       
       let currentSnapPointConfig = self.currentSnapPointConfig;
       let currentInterpolationStep = self.currentInterpolationStep;
   
       let undershootSnapPointConfig = AdaptiveModalSnapPointConfig(
-        fromSnapPointPreset: self.modalConfig.undershootSnapPoint,
+        fromSnapPointPreset: self.currentModalConfig.undershootSnapPoint,
         fromBaseLayoutConfig: currentSnapPointConfig.layoutConfig
       );
       
       var undershootInterpolationPoint = AdaptiveModalInterpolationPoint(
-        usingModalConfig: self.modalConfig,
+        usingModalConfig: self.currentModalConfig,
         snapPointIndex: nextIndex,
         layoutValueContext: self.layoutValueContext,
         snapPointConfig: undershootSnapPointConfig
@@ -2972,6 +3058,8 @@ public class AdaptiveModalManager: NSObject {
     };
     
     self.targetView = targetView;
+    
+    self.updateCurrentModalConfig();
     self.computeSnapPoints();
     
     if shouldReset {
@@ -3011,16 +3099,44 @@ public class AdaptiveModalManager: NSObject {
   };
   
   public func notifyDidLayoutSubviews() {
-    guard let targetView = self.targetView else { return };
+    guard let targetView = self.targetView,
+          let modalFrame = self.modalFrame
+    else { return };
     
     let prevTargetFrame = self.prevTargetFrame;
     let nextTargetFrame = targetView.frame;
     
     guard prevTargetFrame != nextTargetFrame else { return };
     self.prevTargetFrame = nextTargetFrame;
-  
-    self.computeSnapPoints();
-    self.updateModal();
+    
+    self.updateCurrentModalConfig();
+    
+    if self.pendingCurrentModalConfigUpdate {
+      self.computeSnapPoints();
+      
+      let closestSnapPoint = self.getClosestSnapPoint(forRect: modalFrame);
+      
+      self.currentConfigInterpolationIndex = closestSnapPoint.interpolationIndex;
+      
+      let shouldUpdateDragHandleConstraints: Bool = {
+        guard let prevConfig = self.prevModalConfig else {
+          return false;
+        };
+        
+        return self.currentModalConfig.dragHandlePosition != prevConfig.dragHandlePosition;
+      }();
+      
+      if shouldUpdateDragHandleConstraints {
+        self.setupDragHandleConstraints(shouldDeactivateOldConstraints: true);
+      };
+      
+      self.updateModal();
+      self.pendingCurrentModalConfigUpdate = false;
+      
+    } else {
+      self.computeSnapPoints();
+      self.updateModal();
+    };
   };
   
   public func clearSnapPointOverride(completion: (() -> Void)?){
@@ -3133,7 +3249,7 @@ public class AdaptiveModalManager: NSObject {
     
       let prevInterpolationPoints: [AdaptiveModalInterpolationPoint] = {
         let overrideInterpolationPoint = AdaptiveModalInterpolationPoint(
-          usingModalConfig: self.modalConfig,
+          usingModalConfig: self.currentModalConfig,
           snapPointIndex: 1,
           layoutValueContext: self.layoutValueContext,
           snapPointConfig: overrideSnapPointConfig
@@ -3155,7 +3271,7 @@ public class AdaptiveModalManager: NSObject {
       }();
     
       return prevInterpolationPoints.map {
-        self.modalConfig.snapPoints[$0.snapPointIndex];
+        self.currentModalConfig.snapPoints[$0.snapPointIndex];
       };
     }();
     
@@ -3166,7 +3282,7 @@ public class AdaptiveModalManager: NSObject {
       switch overshootSnapPointPreset.layoutPreset {
         case .automatic:
           return .getDefaultOvershootSnapPoint(
-            forDirection: self.modalConfig.snapDirection,
+            forDirection: self.currentModalConfig.snapDirection,
             keyframeConfig: overshootSnapPointPreset.keyframeConfig
           );
         
@@ -3287,7 +3403,7 @@ extension AdaptiveModalManager: UIGestureRecognizerDelegate {
     let velocity = panGesture.velocity(in: self.modalView);
     
     let primaryAxisVelocity =
-      velocity[keyPath: self.modalConfig.inputValueKeyForPoint];
+      velocity[keyPath: self.currentModalConfig.inputValueKeyForPoint];
     
     return isLockedToPrimaryAxis
       ? abs(primaryAxisVelocity) > 0
@@ -3320,19 +3436,19 @@ extension AdaptiveModalManager: UIGestureRecognizerDelegate {
     let gestureVelocity = panGesture.velocity(in: modalView);
     
     let gestureVelocityCoord = gestureVelocity[
-      keyPath: self.modalConfig.inputValueKeyForPoint
+      keyPath: self.currentModalConfig.inputValueKeyForPoint
     ];
       
     let modalContentScrollViewOffset = modalContentScrollView.contentOffset[
-      keyPath: self.modalConfig.inputValueKeyForPoint
+      keyPath: self.currentModalConfig.inputValueKeyForPoint
     ];
     
     let modalContentMinScrollViewOffset = modalContentScrollView.minContentOffset[
-      keyPath: self.modalConfig.inputValueKeyForPoint
+      keyPath: self.currentModalConfig.inputValueKeyForPoint
     ];
     
     let modalContentMaxScrollViewOffset = modalContentScrollView.maxContentOffset[
-      keyPath: self.modalConfig.inputValueKeyForPoint
+      keyPath: self.currentModalConfig.inputValueKeyForPoint
     ];
     
     if !modalContentScrollView.isScrollEnabled {
