@@ -522,7 +522,10 @@ class AdaptiveModalPresentationTestViewController : UIViewController {
     
     if let presentedVC = self.presentedViewController {
       let modalManager = AdaptiveModalManager(
-        staticConfig: self.currentModalConfigPreset.config
+        adaptiveConfig: .adaptiveConfig(
+          defaultConfig: self.currentModalConfigPreset.config,
+          constrainedConfigs: self.currentModalConfigPreset.constrainedConfigs
+        )
       );
       
       testVC.modalManager = modalManager;
@@ -538,8 +541,9 @@ class AdaptiveModalPresentationTestViewController : UIViewController {
       );
       
     } else {
-      self.adaptiveModalManager.modalConfig = .staticConfig(
-        self.currentModalConfigPreset.config
+      self.adaptiveModalManager.modalConfig = .adaptiveConfig(
+        defaultConfig: self.currentModalConfigPreset.config,
+        constrainedConfigs: self.currentModalConfigPreset.constrainedConfigs
       );
         
       testVC.modalManager = self.adaptiveModalManager;

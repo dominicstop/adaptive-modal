@@ -1040,4 +1040,41 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
       );
     };
   };
+  
+  var constrainedConfigs: [AdaptiveModalConstrainedConfig] {
+    switch self {
+      default: return [
+        .init(
+          constraints: [
+            .verticalSizeClass(is: .compact),
+          ],
+          config: .init(
+            snapPoints: [
+              AdaptiveModalSnapPointConfig(
+                layoutConfig: RNILayout(
+                  horizontalAlignment: .center,
+                  verticalAlignment: .bottom,
+                  width: .percent(percentValue: 0.8),
+                  height: .percent(percentValue: 0.5)
+                ),
+                keyframeConfig: AdaptiveModalKeyframeConfig(
+                  modalShadowOpacity: 0.2,
+                  modalShadowRadius: 15,
+                  modalCornerRadius: 10,
+                  modalMaskedCorners: .topCorners,
+                  modalBackgroundOpacity: 0.85,
+                  modalBackgroundVisualEffect: UIBlurEffect(style: .regular),
+                  modalBackgroundVisualEffectIntensity: 1
+                )
+              ),
+            ],
+            snapDirection: .bottomToTop,
+            overshootSnapPoint: .init(
+              layoutPreset: .fitScreenVertically
+            )
+          )
+        ),
+      ];
+    };
+  };
 };
