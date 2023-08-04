@@ -3186,7 +3186,9 @@ public class AdaptiveModalManager: NSObject {
     completion: (() -> Void)? = nil
   ) {
     
-    self.animationConfigOverride = animationConfig;
+    self.animationConfigOverride = animationConfig
+      ?? self.currentModalConfig.entranceAnimationConfig;
+      
     self.extraAnimationBlockPresent = extraAnimation;
     
     self.prepareForPresentation(
@@ -3212,7 +3214,9 @@ public class AdaptiveModalManager: NSObject {
   
     guard let modalVC = self.modalViewController else { return };
     
-    self.animationConfigOverride = animationConfig;
+    self.animationConfigOverride = animationConfig
+      ?? self.currentModalConfig.exitAnimationConfig;
+    
     self.extraAnimationBlockDismiss = extraAnimation;
     
     modalVC.dismiss(

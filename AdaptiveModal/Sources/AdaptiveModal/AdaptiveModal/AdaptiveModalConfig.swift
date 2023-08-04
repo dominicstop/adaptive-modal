@@ -58,6 +58,9 @@ public struct AdaptiveModalConfig: Equatable {
   public let snapPercentStrategy: SnapPercentStrategy;
   
   public let snapAnimationConfig: AdaptiveModalSnapAnimationConfig;
+  public let entranceAnimationConfig: AdaptiveModalSnapAnimationConfig;
+  public let exitAnimationConfig: AdaptiveModalSnapAnimationConfig;
+  
   public let interpolationClampingConfig: AdaptiveModalClampingConfig;
   
   public let undershootSnapPoint: AdaptiveModalSnapPointPreset;
@@ -75,7 +78,6 @@ public struct AdaptiveModalConfig: Equatable {
   public let shouldSetModalScrollViewVerticalScrollIndicatorInsets: Bool;
   public let shouldSetModalScrollViewHorizontalScrollIndicatorInsets: Bool;
   
-  // let entranceConfig: AdaptiveModalEntranceConfig;
   // let snapSwipeVelocityThreshold: CGFloat = 0;
 
   // MARK: - Computed Properties
@@ -178,6 +180,8 @@ public struct AdaptiveModalConfig: Equatable {
     snapDirection: SnapDirection,
     snapPercentStrategy: SnapPercentStrategy = .position,
     snapAnimationConfig: AdaptiveModalSnapAnimationConfig = .default,
+    entranceAnimationConfig: AdaptiveModalSnapAnimationConfig = .default,
+    exitAnimationConfig: AdaptiveModalSnapAnimationConfig = .default,
     interpolationClampingConfig: AdaptiveModalClampingConfig = .default,
     initialSnapPointIndex: Int = 1,
     undershootSnapPoint: AdaptiveModalSnapPointPreset = .automatic,
@@ -212,6 +216,9 @@ public struct AdaptiveModalConfig: Equatable {
     self.snapPercentStrategy = snapPercentStrategy;
     
     self.snapAnimationConfig = snapAnimationConfig;
+    self.entranceAnimationConfig = entranceAnimationConfig;
+    self.exitAnimationConfig = exitAnimationConfig;
+    
     self.interpolationClampingConfig = interpolationClampingConfig;
     
     self.initialSnapPointIndex = initialSnapPointIndex;
