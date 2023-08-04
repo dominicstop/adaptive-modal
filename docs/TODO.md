@@ -7,8 +7,7 @@
 ## Current
 
 - [ ] ` TODO:2023-06-23-18-16-28` - Impl: `AdaptiveModal` - Add support for "in-between" snap points.
-- [ ] `TODO:2023-08-05-03-22-37` - Snap Point Config - `shouldAllowSnapping`.
-- [ ] `TODO:2023-08-05-03-22-47` - Adaptive Modal Config - Custom animation config for entrance and exit. 
+- [ ] `TODO:2023-08-05-03-22-37` - Snap Point Config - allow snapping.
 - [ ] `TODO:2023-07-24-23-03-17` - Impl: Adaptive modal state.
 
 <br><br>
@@ -53,6 +52,8 @@
 <br><br>
 
 ## Completed
+
+- [x] `TODO:2023-08-05-03-22-47` - Adaptive Modal Config - Custom animation config for entrance and exit. 
 
 - [x] `TODO:2023-08-05-03-23-06` - `AdaptiveModalManager` - Custom animation config param. for modal present, dismiss and snapping.
 
