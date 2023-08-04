@@ -335,6 +335,8 @@ public class AdaptiveModalManager: NSObject {
   
   private var modalAnimator: UIViewPropertyAnimator?;
   
+  var animationConfigOverride: AdaptiveModalSnapAnimationConfig?;
+  
   var extraAnimationBlockPresent: (() -> Void)?;
   var extraAnimationBlockDismiss: (() -> Void)?;
 
@@ -2462,8 +2464,8 @@ public class AdaptiveModalManager: NSObject {
   
   private func animateModal(
     to interpolationPoint: AdaptiveModalInterpolationPoint,
-    animationConfigOverride: AdaptiveModalSnapAnimationConfig? = nil,
     isAnimated: Bool = true,
+    animationConfigOverride: AdaptiveModalSnapAnimationConfig? = nil,
     extraAnimation: (() -> Void)? = nil,
     completion: ((UIViewAnimatingPosition) -> Void)? = nil
   ) {
@@ -2481,7 +2483,9 @@ public class AdaptiveModalManager: NSObject {
     self.modalWrapperLayoutView?.layoutIfNeeded();
     
     if isAnimated {
-      let snapAnimationConfig = animationConfigOverride
+      let snapAnimationConfig =
+           animationConfigOverride
+        ?? self.animationConfigOverride
         ?? self.currentModalConfig.snapAnimationConfig;
       
       let animator = snapAnimationConfig.createAnimator(
@@ -2510,7 +2514,9 @@ public class AdaptiveModalManager: NSObject {
       
       animator.addCompletion { _ in
         self.endDisplayLink();
+        
         self.modalAnimator = nil;
+        self.animationConfigOverride = nil;
         
         #if DEBUG
         self.debugView?.notifyOnAnimateModalCompletion();
@@ -2929,6 +2935,7 @@ public class AdaptiveModalManager: NSObject {
     interpolationIndex nextIndex: Int,
     interpolationPoint: AdaptiveModalInterpolationPoint? = nil,
     isAnimated: Bool = true,
+    animationConfig: AdaptiveModalSnapAnimationConfig? = nil,
     extraAnimation: (() -> Void)? = nil,
     completion: (() -> Void)? = nil
   ) {
@@ -2942,6 +2949,7 @@ public class AdaptiveModalManager: NSObject {
     self.animateModal(
       to: nextInterpolationPoint,
       isAnimated: isAnimated,
+      animationConfigOverride: animationConfig,
       extraAnimation: extraAnimation
     ) { _ in
     
@@ -2955,6 +2963,7 @@ public class AdaptiveModalManager: NSObject {
   
   func snapToClosestSnapPoint(
     forPoint point: CGPoint,
+    animationConfig: AdaptiveModalSnapAnimationConfig? = nil,
     completion: (() -> Void)? = nil
   ) {
     let coord = point[keyPath: self.currentModalConfig.inputValueKeyForPoint];
@@ -2976,12 +2985,14 @@ public class AdaptiveModalManager: NSObject {
    
     self.snapTo(
       interpolationIndex: nextInterpolationIndex,
+      animationConfig: animationConfig,
       completion: completion
     );
   };
   
   func showModal(
     isAnimated: Bool = true,
+    animationConfig: AdaptiveModalSnapAnimationConfig? = nil,
     extraAnimation: (() -> Void)? = nil,
     completion: (() -> Void)? = nil
   ) {
@@ -2990,6 +3001,7 @@ public class AdaptiveModalManager: NSObject {
     self.snapTo(
       interpolationIndex: nextIndex,
       isAnimated: isAnimated,
+      animationConfig: animationConfig,
       extraAnimation: extraAnimation,
       completion: completion
     );
@@ -2998,6 +3010,7 @@ public class AdaptiveModalManager: NSObject {
   func hideModal(
     useInBetweenSnapPoints: Bool = false,
     isAnimated: Bool = true,
+    animationConfig: AdaptiveModalSnapAnimationConfig? = nil,
     extraAnimation: (() -> Void)? = nil,
     completion: (() -> Void)? = nil
   ){
@@ -3008,6 +3021,7 @@ public class AdaptiveModalManager: NSObject {
       self.snapTo(
         interpolationIndex: nextIndex,
         isAnimated: isAnimated,
+        animationConfig: animationConfig,
         extraAnimation: extraAnimation,
         completion: completion
       );
@@ -3038,6 +3052,7 @@ public class AdaptiveModalManager: NSObject {
         interpolationIndex: nextIndex,
         interpolationPoint: undershootInterpolationPoint,
         isAnimated: isAnimated,
+        animationConfig: animationConfig,
         extraAnimation: extraAnimation,
         completion: completion
       );
@@ -3165,13 +3180,15 @@ public class AdaptiveModalManager: NSObject {
   public func presentModal(
     viewControllerToPresent modalVC: UIViewController,
     presentingViewController targetVC: UIViewController,
+    animationConfig: AdaptiveModalSnapAnimationConfig? = nil,
     extraAnimation: (() -> Void)? = nil,
     animated: Bool = true,
     completion: (() -> Void)? = nil
   ) {
-  
+    
+    self.animationConfigOverride = animationConfig;
     self.extraAnimationBlockPresent = extraAnimation;
-  
+    
     self.prepareForPresentation(
       viewControllerToPresent: modalVC,
       presentingViewController: targetVC
@@ -3188,10 +3205,14 @@ public class AdaptiveModalManager: NSObject {
   
   public func dismissModal(
     animated: Bool = true,
+    animationConfig: AdaptiveModalSnapAnimationConfig? = nil,
     extraAnimation: (() -> Void)? = nil,
     completion: (() -> Void)? = nil
   ) {
+  
     guard let modalVC = self.modalViewController else { return };
+    
+    self.animationConfigOverride = animationConfig;
     self.extraAnimationBlockDismiss = extraAnimation;
     
     modalVC.dismiss(
@@ -3202,6 +3223,7 @@ public class AdaptiveModalManager: NSObject {
   
   public func snapToClosestSnapPoint(
     isAnimated: Bool = true,
+    animationConfig: AdaptiveModalSnapAnimationConfig? = nil,
     extraAnimation: (() -> Void)? = nil,
     completion: (() -> Void)? = nil
   ) {
@@ -3225,6 +3247,7 @@ public class AdaptiveModalManager: NSObject {
     self.snapTo(
       interpolationIndex: nextInterpolationIndex,
       isAnimated: isAnimated,
+      animationConfig: animationConfig,
       extraAnimation: extraAnimation
     ) {
       completion?();
@@ -3233,6 +3256,7 @@ public class AdaptiveModalManager: NSObject {
   
   public func snapToCurrentIndex(
     isAnimated: Bool = true,
+    animationConfig: AdaptiveModalSnapAnimationConfig? = nil,
     extraAnimation: (() -> Void)? = nil,
     completion: (() -> Void)? = nil
   ) {
@@ -3240,6 +3264,7 @@ public class AdaptiveModalManager: NSObject {
     self.snapTo(
       interpolationIndex: self.currentInterpolationIndex,
       isAnimated: isAnimated,
+      animationConfig: animationConfig,
       extraAnimation: extraAnimation,
       completion: completion
     );
@@ -3252,6 +3277,7 @@ public class AdaptiveModalManager: NSObject {
     fallbackSnapPointKey: AdaptiveModalSnapPointConfig.SnapPointKey? = nil,
     inBetweenSnapPointsMinPercentDiff: CGFloat = 0.1,
     isAnimated: Bool = true,
+    animationConfig: AdaptiveModalSnapAnimationConfig? = nil,
     extraAnimation: (() -> Void)? = nil,
     completion: (() -> Void)? = nil
   ) throws {
@@ -3344,6 +3370,7 @@ public class AdaptiveModalManager: NSObject {
     self.animateModal(
       to: nextInterpolationPoint,
       isAnimated: isAnimated,
+      animationConfigOverride: animationConfig,
       extraAnimation: extraAnimation
     ) { _ in
       completion?();
@@ -3353,6 +3380,7 @@ public class AdaptiveModalManager: NSObject {
   public func snapTo(
     key: AdaptiveModalSnapPointConfig.SnapPointKey,
     isAnimated: Bool = true,
+    animationConfig: AdaptiveModalSnapAnimationConfig? = nil,
     animationBlock: (() -> Void)? = nil,
     completion: (() -> Void)? = nil
   ) throws {
@@ -3390,8 +3418,11 @@ public class AdaptiveModalManager: NSObject {
     
     self.animateModal(
       to: matchingInterpolationPoint,
+      isAnimated: isAnimated,
+      animationConfigOverride: animationConfig,
       extraAnimation: animationBlock
     ) { _ in
+    
       self.notifyOnModalDidSnap();
       completion?();
     };
