@@ -12,6 +12,7 @@ public class AdaptiveModalManager: NSObject {
   public enum PresentationState {
     case presenting, dismissing, none;
   };
+  
 
   // MARK: -  Properties - Config-Related
   // ------------------------------------
@@ -422,14 +423,7 @@ public class AdaptiveModalManager: NSObject {
     if distance != 0 {
       velocity = gestureVelocityCoord / distance;
     };
-    
-    let snapAnimationConfig = self.currentModalConfig.snapAnimationConfig;
-    
-    velocity = velocity.clamped(
-      min: -snapAnimationConfig.maxGestureVelocity,
-      max:  snapAnimationConfig.maxGestureVelocity
-    );
-    
+
     return CGVector(dx: velocity, dy: velocity);
   };
   
@@ -2468,7 +2462,7 @@ public class AdaptiveModalManager: NSObject {
   
   private func animateModal(
     to interpolationPoint: AdaptiveModalInterpolationPoint,
-    animator: UIViewPropertyAnimator? = nil,
+    animationConfigOverride: AdaptiveModalSnapAnimationConfig? = nil,
     isAnimated: Bool = true,
     extraAnimation: (() -> Void)? = nil,
     completion: ((UIViewAnimatingPosition) -> Void)? = nil
@@ -2487,20 +2481,12 @@ public class AdaptiveModalManager: NSObject {
     self.modalWrapperLayoutView?.layoutIfNeeded();
     
     if isAnimated {
-      let animator: UIViewPropertyAnimator = animator ?? {
-        let gestureInitialVelocity = self.gestureInitialVelocity;
-        let snapAnimationConfig = self.currentModalConfig.snapAnimationConfig;
-          
-        let springTiming = UISpringTimingParameters(
-          dampingRatio: snapAnimationConfig.springDampingRatio,
-          initialVelocity: gestureInitialVelocity
-        );
-
-        return UIViewPropertyAnimator(
-          duration: snapAnimationConfig.springAnimationSettlingTime,
-          timingParameters: springTiming
-        );
-      }();
+      let snapAnimationConfig = animationConfigOverride
+        ?? self.currentModalConfig.snapAnimationConfig;
+      
+      let animator = snapAnimationConfig.createAnimator(
+        gestureInitialVelocity: self.gestureInitialVelocity
+      );
       
       self.stopModalAnimator();
       self.modalAnimator = animator;
@@ -2659,7 +2645,7 @@ public class AdaptiveModalManager: NSObject {
 
     self.animateModal(
       to: self.currentInterpolationStep,
-      animator: keyboardValues.keyboardAnimator
+      animationConfigOverride: .animator(keyboardValues.keyboardAnimator)
     );
   };
   
@@ -2684,7 +2670,7 @@ public class AdaptiveModalManager: NSObject {
     
     self.animateModal(
       to: self.currentInterpolationStep,
-      animator: keyboardValues.keyboardAnimator,
+      animationConfigOverride: .animator(keyboardValues.keyboardAnimator),
       extraAnimation: nil
     ) { _ in
     
@@ -2709,7 +2695,7 @@ public class AdaptiveModalManager: NSObject {
     
     self.animateModal(
       to: self.currentInterpolationStep,
-      animator: keyboardValues.keyboardAnimator
+      animationConfigOverride: .animator(keyboardValues.keyboardAnimator)
     );
   };
   
