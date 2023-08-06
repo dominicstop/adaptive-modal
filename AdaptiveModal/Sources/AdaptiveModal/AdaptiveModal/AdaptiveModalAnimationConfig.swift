@@ -15,11 +15,7 @@ public struct AdaptiveModalKeyframeConfig: Equatable {
 
   public static let defaultUndershootKeyframe: Self = .init(
     backgroundTapInteraction: .default,
-    modalRotation: 0,
-    modalScaleX: 1,
-    modalScaleY: 1,
-    modalTranslateX: 0,
-    modalTranslateY: 0,
+    modalTransform: .default,
     modalContentOpacity: 0.5,
     backgroundOpacity: 0,
     backgroundVisualEffectIntensity: 0
@@ -105,13 +101,7 @@ public struct AdaptiveModalKeyframeConfig: Equatable {
   // MARK: - Properties - Keyframes
   // ------------------------------
 
-  public var modalRotation: CGFloat?;
-  
-  public var modalScaleX: CGFloat?;
-  public var modalScaleY: CGFloat?;
-
-  public var modalTranslateX: CGFloat?;
-  public var modalTranslateY: CGFloat?;
+  public var modalTransform: Transform3D?;
   
   public var modalBorderWidth: CGFloat?;
   public var modalBorderColor: UIColor?;
@@ -153,11 +143,7 @@ public struct AdaptiveModalKeyframeConfig: Equatable {
     modalScrollViewVerticalScrollIndicatorInsets: LayoutValueEdgeInsets?  = nil,
     modalScrollViewHorizontalScrollIndicatorInsets: LayoutValueEdgeInsets?  = nil,
     
-    modalRotation: CGFloat? = nil,
-    modalScaleX: CGFloat? = nil,
-    modalScaleY: CGFloat? = nil,
-    modalTranslateX: CGFloat? = nil,
-    modalTranslateY: CGFloat? = nil,
+    modalTransform: Transform3D? = nil,
     modalBorderWidth: CGFloat? = nil,
     modalBorderColor: UIColor? = nil,
     modalShadowColor: UIColor? = nil,
@@ -192,13 +178,7 @@ public struct AdaptiveModalKeyframeConfig: Equatable {
     self.modalScrollViewVerticalScrollIndicatorInsets = modalScrollViewVerticalScrollIndicatorInsets;
     self.modalScrollViewHorizontalScrollIndicatorInsets = modalScrollViewHorizontalScrollIndicatorInsets;
     
-    self.modalRotation = modalRotation;
-    
-    self.modalScaleX = modalScaleX;
-    self.modalScaleY = modalScaleY;
-    
-    self.modalTranslateX = modalTranslateX;
-    self.modalTranslateY = modalTranslateY;
+    self.modalTransform = modalTransform;
     
     self.modalBorderWidth = modalBorderWidth;
     self.modalBorderColor = modalBorderColor;
@@ -255,24 +235,8 @@ public struct AdaptiveModalKeyframeConfig: Equatable {
       self.modalScrollViewHorizontalScrollIndicatorInsets = otherKeyframe.modalScrollViewHorizontalScrollIndicatorInsets;
     };
     
-    if self.modalRotation == nil {
-      self.modalRotation = otherKeyframe.modalRotation;
-    };
-    
-    if self.modalScaleX == nil {
-      self.modalScaleX = otherKeyframe.modalScaleX;
-    };
-    
-    if self.modalScaleY == nil {
-      self.modalScaleY = otherKeyframe.modalScaleY;
-    };
-    
-    if self.modalTranslateX == nil {
-      self.modalTranslateX = otherKeyframe.modalTranslateX;
-    };
-    
-    if self.modalTranslateY == nil {
-      self.modalTranslateY = otherKeyframe.modalTranslateY;
+    if let otherModalTransform = otherKeyframe.modalTransform {
+      self.modalTransform?.setNonNilValues(with: otherModalTransform);
     };
     
     if self.modalBorderWidth == nil {
@@ -372,3 +336,4 @@ public struct AdaptiveModalKeyframeConfig: Equatable {
     };
   };
 };
+

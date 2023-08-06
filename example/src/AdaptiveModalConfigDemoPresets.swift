@@ -228,8 +228,10 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
             ),
             keyframeConfig: AdaptiveModalKeyframeConfig(
               secondaryGestureAxisDampingPercent: 0.5,
-              modalScaleX: 1,
-              modalScaleY: 1,
+              modalTransform: .init(
+                scaleX: 1,
+                scaleY: 1
+              ),
               modalShadowOffset: .init(width: 1, height: 1),
               modalShadowOpacity: 0.3,
               modalShadowRadius: 8,
@@ -273,8 +275,10 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
         undershootSnapPoint: .init(
           layoutPreset: .offscreenLeft,
           keyframeConfig: .init(
-            modalScaleX: 0.5,
-            modalScaleY: 0.5,
+            modalTransform: .init(
+              scaleX: 0.5,
+              scaleY: 0.5
+            ),
             modalCornerRadius: 5,
             modalContentOpacity: 0.3,
             modalDragHandleOffset: -14,
@@ -304,8 +308,12 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
               ])
             ),
             keyframeConfig: .init(
-              modalScaleX: 1,
-              modalScaleY: 1,
+              modalTransform: .init(
+                translateX: 1,
+                translateY: 1,
+                scaleX: 1,
+                scaleY: 1
+              ),
               modalShadowOpacity: 0.3,
               modalShadowRadius: 10,
               modalCornerRadius: 10
@@ -335,15 +343,19 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
         undershootSnapPoint: .init(
           layoutPreset: .offscreenTop,
           keyframeConfig: .init(
-            modalScaleX: 0.75,
-            modalScaleY: 0.75
+            modalTransform: .init(
+              scaleX: 0.75,
+              scaleY: 0.75
+            )
           )
         ),
         overshootSnapPoint: .init(
           layoutPreset: .offscreenBottom,
           keyframeConfig: .init(
-            modalScaleX: 0.9,
-            modalScaleY: 0.9,
+            modalTransform: .init(
+              scaleX: 0.9,
+              scaleY: 0.9
+            ),
             modalOpacity: 0.8,
             backgroundOpacity: 0
           )
@@ -522,8 +534,10 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
             ),
             keyframeConfig: AdaptiveModalKeyframeConfig(
               secondaryGestureAxisDampingPercent: 0.8,
-              modalScaleX: 1,
-              modalScaleY: 1,
+              modalTransform: .init(
+                scaleX: 1,
+                scaleY: 1
+              ),
               modalShadowOffset: .init(width: 1, height: 1),
               modalShadowOpacity: 0.3,
               modalShadowRadius: 10,
@@ -563,8 +577,10 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
         undershootSnapPoint: .init(
           layoutPreset: .offscreenLeft,
           keyframeConfig: .init(
-            modalScaleX: 0.5,
-            modalScaleY: 0.5,
+            modalTransform: .init(
+              scaleX: 0.5,
+              scaleY: 0.5
+            ),
             modalCornerRadius: 10,
             modalBackgroundOpacity: 1,
             modalBackgroundVisualEffect: UIBlurEffect(style: .regular),
@@ -691,8 +707,10 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
               height: .percent(percentValue: 0.5)
             ),
             keyframeConfig: AdaptiveModalKeyframeConfig(
-              modalScaleX: 1,
-              modalScaleY: 1,
+              modalTransform: .init(
+                scaleX: 1,
+                scaleY: 1
+              ),
               modalShadowOffset: .init(width: 1, height: 1),
               modalShadowOpacity: 0.3,
               modalShadowRadius: 8,
@@ -755,8 +773,10 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
         undershootSnapPoint: .init(
           layoutPreset: .offscreenLeft,
           keyframeConfig: .init(
-            modalScaleX: 0.5,
-            modalScaleY: 0.5,
+            modalTransform: .init(
+              scaleX: 0.5,
+              scaleY: 0.5
+            ),
             modalCornerRadius: 5,
             modalContentOpacity: 0.25,
             modalDragHandleOffset: -14,
@@ -969,8 +989,10 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
             ),
             keyframeConfig: .init(
               secondaryGestureAxisDampingPercent: 0.5,
-              modalScaleX: 1,
-              modalScaleY: 1,
+              modalTransform: .init(
+                scaleX: 1,
+                scaleY: 1
+              ),
               modalShadowOffset: .init(width: 0, height: -2),
               modalShadowOpacity: 0.3,
               modalShadowRadius: 7,
@@ -1026,8 +1048,10 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
         undershootSnapPoint: .init(
           layoutPreset: .offscreenBottom,
           keyframeConfig: .init(
-            modalScaleX: 0.75,
-            modalScaleY: 0.75,
+            modalTransform: .init(
+              scaleX: 0.75,
+              scaleY: 0.75
+            ),
             modalCornerRadius: 15,
             modalMaskedCorners: .allCorners,
             modalContentOpacity: 0.25

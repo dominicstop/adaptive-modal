@@ -10,8 +10,8 @@ import UIKit
 public struct AdaptiveModalInterpolationPoint: Equatable {
 
   public typealias BackgroundInteractionMode =
-    AdaptiveModalKeyframeConfig.BackgroundInteractionMode
-
+    AdaptiveModalKeyframeConfig.BackgroundInteractionMode;
+    
   static let defaultModalBackground: UIColor = {
     if #available(iOS 13.0, *) {
       return .systemBackground
@@ -40,13 +40,7 @@ public struct AdaptiveModalInterpolationPoint: Equatable {
   // MARK: - Properties - Keyframes
   // ------------------------------
   
-  public var modalRotation: CGFloat;
-  
-  public var modalScaleX: CGFloat;
-  public var modalScaleY: CGFloat;
-
-  public var modalTranslateX: CGFloat;
-  public var modalTranslateY: CGFloat;
+  public var modalTransform: Transform3D;
   
   public var modalBorderWidth: CGFloat;
   public var modalBorderColor: UIColor;
@@ -83,30 +77,6 @@ public struct AdaptiveModalInterpolationPoint: Equatable {
   
   // MARK: - Computed Properties
   // ---------------------------
-  
-  public var modalTransforms: [CGAffineTransform] {
-    var transforms: [CGAffineTransform] = [];
-    
-    transforms.append(
-      .init(rotationAngle: self.modalRotation)
-    );
-    
-    transforms.append(
-      .init(scaleX: self.modalScaleX, y: self.modalScaleY)
-    );
-    
-    transforms.append(
-      .init(translationX: self.modalTranslateX, y: modalTranslateY)
-    );
-    
-    return transforms;
-  };
-  
-  public var modalTransform: CGAffineTransform {
-    self.modalTransforms.reduce(.identity){
-      $0.concatenating($1);
-    };
-  };
   
   public var modalPaddingAdjusted: UIEdgeInsets {
     .init(
@@ -147,47 +117,6 @@ public struct AdaptiveModalInterpolationPoint: Equatable {
   // MARK: - Functions
   // -----------------
   
-  func getModalTransform(
-    shouldApplyRotation: Bool = true,
-    shouldApplyScale: Bool = true,
-    shouldApplyTranslate: Bool = true
-  ) -> CGAffineTransform {
-  
-    var transforms: [CGAffineTransform] = [];
-    
-    if shouldApplyRotation,
-       self.modalRotation != 0 {
-       
-      transforms.append(
-        .init(rotationAngle: self.modalRotation)
-      );
-    };
-    
-    if shouldApplyScale,
-      self.modalScaleX != 1 && self.modalScaleY != 1 {
-      
-      transforms.append(
-        .init(scaleX: self.modalScaleX, y: self.modalScaleY)
-      );
-    };
-    
-    if shouldApplyTranslate,
-       self.modalTranslateX != 0 && self.modalTranslateY != 0 {
-       
-      transforms.append(
-        .init(translationX: self.modalTranslateX, y: self.modalTranslateY)
-      );
-    };
-    
-    if transforms.isEmpty {
-      return .identity;
-    };
-    
-    return transforms.reduce(.identity){
-      $0.concatenating($1);
-    };
-  };
-  
   func applyAnimation(
     toModalManager modalManager: AdaptiveModalManager
   ){
@@ -208,7 +137,7 @@ public struct AdaptiveModalInterpolationPoint: Equatable {
     };
     
     if let modalWrapperTransformView = modalManager.modalWrapperTransformView {
-      modalWrapperTransformView.transform = self.modalTransform;
+      modalWrapperTransformView.layer.transform = self.modalTransform.transform;
     };
     
     if let modalWrapperShadowView = modalManager.modalWrapperShadowView {
@@ -437,26 +366,17 @@ public extension AdaptiveModalInterpolationPoint {
     self.secondaryGestureAxisDampingPercent = keyframeCurrent?.secondaryGestureAxisDampingPercent
       ?? keyframePrev?.secondaryGestureAxisDampingPercent
       ?? 1;
-  
-    self.modalRotation = keyframeCurrent?.modalRotation
-      ?? keyframePrev?.modalRotation
-      ?? 0;
-    
-    self.modalScaleX = keyframeCurrent?.modalScaleX
-      ?? keyframePrev?.modalScaleX
-      ?? 1;
-    
-    self.modalScaleY = keyframeCurrent?.modalScaleY
-      ?? keyframePrev?.modalScaleY
-      ?? 1;
       
-    self.modalTranslateX = keyframeCurrent?.modalTranslateX
-      ?? keyframePrev?.modalTranslateX
-      ?? 0;
+    self.modalTransform = {
+      let prevTransform = keyframePrev?.modalTransform ?? .init();
+    
+      guard var nextTransform = keyframeCurrent?.modalTransform else {
+        return prevTransform;
+      };
       
-    self.modalTranslateY = keyframeCurrent?.modalTranslateY
-      ?? keyframePrev?.modalTranslateY
-      ?? 0;
+      nextTransform.setNonNilValues(with: prevTransform);
+      return nextTransform;
+    }();
       
     self.modalBorderWidth = keyframeCurrent?.modalBorderWidth
       ?? keyframePrev?.modalBorderWidth

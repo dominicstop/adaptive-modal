@@ -42,11 +42,13 @@ enum AdaptiveModalConfigTestPresets: CaseIterable {
               )
             ),
             keyframeConfig: AdaptiveModalKeyframeConfig(
-              modalRotation: 0.2,
-              modalScaleX: 0.5,
-              modalScaleY: 0.5,
-              modalTranslateX: -100,
-              modalTranslateY: 20
+              modalTransform: .init(
+                translateX: -100,
+                translateY: 20,
+                scaleX: 0.5,
+                scaleY: 0.5,
+                rotateZ: .radians(0.2)
+              )
             )
           ),
           
@@ -63,11 +65,13 @@ enum AdaptiveModalConfigTestPresets: CaseIterable {
               )
             ),
             keyframeConfig: AdaptiveModalKeyframeConfig(
-              modalRotation: -0.2,
-              modalScaleX: 0.5,
-              modalScaleY: 1,
-              modalTranslateX: 0,
-              modalTranslateY: 0
+              modalTransform: .init(
+                translateX: 0,
+                translateY: 0,
+                scaleX: 0.5,
+                scaleY: 1,
+                rotateZ: .radians(-0.2)
+              )
             )
           ),
           // snap point - 2
@@ -83,11 +87,10 @@ enum AdaptiveModalConfigTestPresets: CaseIterable {
               )
             ),
             keyframeConfig: AdaptiveModalKeyframeConfig(
-              //modalRotation: 1,
-              modalScaleX: 1,
-              modalScaleY: 1
-              //modalTranslateX: 0,
-              //modalTranslateY: 0
+              modalTransform: .init(
+                scaleX: 1,
+                scaleY: 1
+              )
             )
           ),
         ],
@@ -112,8 +115,10 @@ enum AdaptiveModalConfigTestPresets: CaseIterable {
               )
             ),
             keyframeConfig: AdaptiveModalKeyframeConfig(
-              modalScaleX: 1,
-              modalScaleY: 1
+              modalTransform: .init(
+                scaleX: 1,
+                scaleY: 1
+              )
             )
           ),
           
@@ -130,8 +135,10 @@ enum AdaptiveModalConfigTestPresets: CaseIterable {
               )
             ),
             keyframeConfig: AdaptiveModalKeyframeConfig(
-              modalScaleX: 0.5,
-              modalScaleY: 1
+              modalTransform: .init(
+                scaleX: 0.5,
+                scaleY: 1
+              )
             )
           ),
           // snap point - 2
@@ -147,8 +154,10 @@ enum AdaptiveModalConfigTestPresets: CaseIterable {
               )
             ),
             keyframeConfig: AdaptiveModalKeyframeConfig(
-              modalScaleX: 1.5,
-              modalScaleY: 1.5
+              modalTransform: .init(
+                scaleX: 1.5,
+                scaleY: 1.5
+              )
             )
           ),
         ],
@@ -156,8 +165,10 @@ enum AdaptiveModalConfigTestPresets: CaseIterable {
         undershootSnapPoint: .init(
           layoutPreset: .offscreenBottom,
           keyframeConfig: .init(
-            modalScaleX: 0.25,
-            modalScaleY: 0.25
+            modalTransform: .init(
+              scaleX: 0.25,
+              scaleY: 0.25
+            )
           )
         ),
         overshootSnapPoint: AdaptiveModalSnapPointPreset(

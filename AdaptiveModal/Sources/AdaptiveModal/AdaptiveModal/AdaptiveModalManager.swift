@@ -1293,6 +1293,37 @@ public class AdaptiveModalManager: NSObject {
     );
   };
   
+  private func UnwrapAndInterpolate(
+    inputValue: CGFloat,
+    rangeInput: [CGFloat]? = nil,
+    rangeOutput: [AdaptiveModalInterpolationPoint]? = nil,
+    rangeOutputKey: KeyPath<AdaptiveModalInterpolationPoint, CGFloat?>,
+    shouldClampMin: Bool = false,
+    shouldClampMax: Bool = false
+  ) -> CGFloat? {
+  
+    guard let interpolationSteps      = rangeOutput ?? self.interpolationSteps,
+          let interpolationRangeInput = rangeInput  ?? self.interpolationRangeInput
+    else { return nil };
+    
+    var interpolationRangeOutput: [CGFloat] = [];
+    
+    for interpolationStep in interpolationSteps {
+      guard let interpolationValue = interpolationStep[keyPath: rangeOutputKey]
+      else { return nil };
+      
+      interpolationRangeOutput.append(interpolationValue);
+    };
+  
+    return AdaptiveModalUtilities.interpolate(
+      inputValue: inputValue,
+      rangeInput: interpolationRangeInput,
+      rangeOutput: interpolationRangeOutput,
+      shouldClampMin: shouldClampMin,
+      shouldClampMax: shouldClampMax
+    );
+  };
+  
   private func interpolateColor(
     inputValue: CGFloat,
     rangeInput: [CGFloat]? = nil,
@@ -1489,76 +1520,86 @@ public class AdaptiveModalManager: NSObject {
   
   private func interpolateModalTransform(
     forInputPercentValue inputPercentValue: CGFloat
-  ) -> CGAffineTransform? {
-
+  ) -> Transform3D? {
+  
     let clampConfig = currentModalConfig.interpolationClampingConfig;
-
-    let nextModalRotation = self.interpolate(
-      inputValue: inputPercentValue,
-      rangeOutputKey: \.modalRotation,
-      shouldClampMin: clampConfig.shouldClampModalInitRotation,
-      shouldClampMax: clampConfig.shouldClampModalLastRotation
-    );
     
-    let nextScaleX = self.interpolate(
+    let nextTranslateX = self.UnwrapAndInterpolate(
       inputValue: inputPercentValue,
-      rangeOutputKey: \.modalScaleX,
-      shouldClampMin: clampConfig.shouldClampModalLastScaleX,
-      shouldClampMax: clampConfig.shouldClampModalLastScaleX
-    );
-    
-    let nextScaleY = self.interpolate(
-      inputValue: inputPercentValue,
-      rangeOutputKey: \.modalScaleY,
-      shouldClampMin: clampConfig.shouldClampModalLastScaleY,
-      shouldClampMax: clampConfig.shouldClampModalLastScaleY
-    );
-    
-    let nextTranslateX = self.interpolate(
-      inputValue: inputPercentValue,
-      rangeOutputKey: \.modalTranslateX,
+      rangeOutputKey: \.modalTransform.translateX,
       shouldClampMin: clampConfig.shouldClampModalInitTranslateX,
       shouldClampMax: clampConfig.shouldClampModalLastTranslateX
     );
     
-    let nextTranslateY = self.interpolate(
+    let nextTranslateY = self.UnwrapAndInterpolate(
       inputValue: inputPercentValue,
-      rangeOutputKey: \.modalTranslateY,
+      rangeOutputKey: \.modalTransform.translateY,
       shouldClampMin: clampConfig.shouldClampModalInitTranslateY,
       shouldClampMax: clampConfig.shouldClampModalLastTranslateY
     );
     
-    let nextTransform: CGAffineTransform = {
-      var transforms: [CGAffineTransform] = [];
-      
-      if let rotation = nextModalRotation {
-        transforms.append(
-          .init(rotationAngle: rotation)
-        );
-      };
-      
-      if let nextScaleX = nextScaleX,
-         let nextScaleY = nextScaleY {
-         
-        transforms.append(
-          .init(scaleX: nextScaleX, y: nextScaleY)
-        );
-      };
-      
-      if let nextTranslateX = nextTranslateX,
-         let nextTranslateY = nextTranslateY {
-         
-        transforms.append(
-          .init(translationX: nextTranslateX, y: nextTranslateY)
-        );
-      };
-      
-      return transforms.reduce(.identity) {
-        $0.concatenating($1);
-      };
-    }();
- 
-    return nextTransform;
+    let nextTranslateZ = self.UnwrapAndInterpolate(
+      inputValue: inputPercentValue,
+      rangeOutputKey: \.modalTransform.translateZ,
+      shouldClampMin: clampConfig.shouldClampModalInitTranslateY,
+      shouldClampMax: clampConfig.shouldClampModalLastTranslateY
+    );
+    
+    let nextScaleX = self.UnwrapAndInterpolate(
+      inputValue: inputPercentValue,
+      rangeOutputKey: \.modalTransform.scaleX,
+      shouldClampMin: clampConfig.shouldClampModalLastScaleX,
+      shouldClampMax: clampConfig.shouldClampModalLastScaleX
+    );
+    
+    let nextScaleY = self.UnwrapAndInterpolate(
+      inputValue: inputPercentValue,
+      rangeOutputKey: \.modalTransform.scaleY,
+      shouldClampMin: clampConfig.shouldClampModalLastScaleY,
+      shouldClampMax: clampConfig.shouldClampModalLastScaleY
+    );
+    
+    let nextModalRotationX = self.UnwrapAndInterpolate(
+      inputValue: inputPercentValue,
+      rangeOutputKey: \.modalTransform.rotateX?.radians,
+      shouldClampMin: clampConfig.shouldClampModalInitRotation,
+      shouldClampMax: clampConfig.shouldClampModalLastRotation
+    );
+    
+    let nextModalRotationY = self.UnwrapAndInterpolate(
+      inputValue: inputPercentValue,
+      rangeOutputKey: \.modalTransform.rotateY?.radians,
+      shouldClampMin: clampConfig.shouldClampModalInitRotation,
+      shouldClampMax: clampConfig.shouldClampModalLastRotation
+    );
+    
+    let nextModalRotationZ = self.UnwrapAndInterpolate(
+      inputValue: inputPercentValue,
+      rangeOutputKey: \.modalTransform.rotateZ?.radians,
+      shouldClampMin: clampConfig.shouldClampModalInitRotation,
+      shouldClampMax: clampConfig.shouldClampModalLastRotation
+    );
+    
+    guard let nextTranslateX = nextTranslateX,
+          let nextTranslateY = nextTranslateY,
+          let nextTranslateZ = nextTranslateZ,
+          let nextScaleX = nextScaleX,
+          let nextScaleY = nextScaleY,
+          let nextModalRotationX = nextModalRotationX,
+          let nextModalRotationY = nextModalRotationY,
+          let nextModalRotationZ = nextModalRotationZ
+    else { return nil };
+    
+    return Transform3D(
+      translateX: nextTranslateX,
+      translateY: nextTranslateY,
+      translateZ: nextTranslateZ,
+      scaleX: nextScaleX,
+      scaleY: nextScaleY,
+      rotateX: .radians(nextModalRotationX),
+      rotateY: .radians(nextModalRotationY),
+      rotateZ: .radians(nextModalRotationZ)
+    );
   };
   
   private func interpolateModalShadowOffset(
@@ -1980,10 +2021,14 @@ public class AdaptiveModalManager: NSObject {
     
     AdaptiveModalUtilities.unwrapAndSetProperty(
       forObject: self.modalWrapperTransformView,
-      forPropertyKey: \.transform,
-      withValue:  self.interpolateModalTransform(
-        forInputPercentValue: inputPercentValue
-      )
+      forPropertyKey: \.layer.transform,
+      withValue: {
+        let transform3D = self.interpolateModalTransform(
+          forInputPercentValue: inputPercentValue
+        );
+        
+        return transform3D?.transform;
+      }()
     );
     
     AdaptiveModalUtilities.unwrapAndSetProperty(
