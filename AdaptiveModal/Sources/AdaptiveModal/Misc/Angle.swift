@@ -8,12 +8,17 @@
 import Foundation
 
 
-public enum Angle<T: FloatingPoint> {
+public enum Angle<T: FloatingPoint>: Equatable {
+
+  case zero;
   case radians(T);
   case degrees(T);
   
   var radians: T {
     switch self {
+      case .zero:
+        return 0;
+      
       case let .degrees(value):
         let pi = type(of: value).pi;
         return value * (pi / 180);
@@ -25,6 +30,9 @@ public enum Angle<T: FloatingPoint> {
   
   var degrees: T {
     switch self {
+      case .zero:
+        return 0;
+    
       case let .degrees(value):
         return value;
         
