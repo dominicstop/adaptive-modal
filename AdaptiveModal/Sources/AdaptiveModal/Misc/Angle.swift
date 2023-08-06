@@ -1,0 +1,36 @@
+//
+//  File.swift
+//  
+//
+//  Created by Dominic Go on 8/7/23.
+//
+
+import Foundation
+
+
+public enum Angle<T: FloatingPoint> {
+  case radians(T);
+  case degrees(T);
+  
+  var radians: T {
+    switch self {
+      case let .degrees(value):
+        let pi = type(of: value).pi;
+        return value * (pi / 180);
+        
+      case let .radians(value):
+        return value;
+    };
+  };
+  
+  var degrees: T {
+    switch self {
+      case let .degrees(value):
+        return value;
+        
+      case let .radians(value):
+        let pi = type(of: value).pi;
+        return value * (180 / pi);
+    };
+  };
+};
