@@ -8,15 +8,16 @@
 import QuartzCore
 
 extension CATransform3D: Equatable {
-  public static func == (lhs: CATransform3D, rhs: CATransform3D) -> Bool {
-    let keys: [KeyPath<Self, CGFloat>] = [
+
+  fileprivate static let keys: [KeyPath<Self, CGFloat>] = [
       \.m11, \.m12, \.m13, \.m14,
       \.m21, \.m22, \.m23, \.m24,
       \.m31, \.m32, \.m33, \.m34,
       \.m41, \.m42, \.m43, \.m44,
     ];
-    
-    return keys.allSatisfy {
+
+  public static func == (lhs: CATransform3D, rhs: CATransform3D) -> Bool {
+    return Self.keys.allSatisfy {
       lhs[keyPath: $0] == rhs[keyPath: $0];
     };
   };
