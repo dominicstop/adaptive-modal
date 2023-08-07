@@ -91,6 +91,43 @@ public struct AdaptiveModalKeyframeConfig: Equatable {
     backgroundVisualEffectIntensity: 0
   );
   
+  static let nilKeys: [PartialKeyPath<Self>] = [
+    \.backgroundTapInteraction,
+    \.secondaryGestureAxisDampingPercent,
+    
+    \.modalScrollViewContentInsets,
+    \.modalScrollViewContentInsets,
+    \.modalScrollViewVerticalScrollIndicatorInsets,
+    \.modalScrollViewHorizontalScrollIndicatorInsets,
+    
+    // \.modalTransform,
+    \.modalBorderWidth,
+    \.modalBorderColor,
+    \.modalShadowColor,
+    \.modalShadowOffset,
+    \.modalShadowOpacity,
+    \.modalShadowRadius,
+    \.modalCornerRadius,
+    \.modalMaskedCorners,
+    \.modalOpacity,
+    \.modalContentOpacity,
+    \.modalBackgroundColor,
+    \.modalBackgroundOpacity,
+    \.modalBackgroundVisualEffect,
+    \.modalBackgroundVisualEffectOpacity,
+    \.modalBackgroundVisualEffectIntensity,
+    \.modalDragHandleSize,
+    \.modalDragHandleOffset,
+    \.modalDragHandleColor,
+    \.modalDragHandleOpacity,
+    \.modalDragHandleCornerRadius,
+    \.backgroundColor,
+    \.backgroundOpacity,
+    \.backgroundVisualEffect,
+    \.backgroundVisualEffectOpacity,
+    \.backgroundVisualEffectIntensity,
+  ];
+
   // MARK: - Properties
   // ------------------
 
@@ -218,124 +255,36 @@ public struct AdaptiveModalKeyframeConfig: Equatable {
   };
   
   public mutating func setNonNilValues(using otherKeyframe: Self) {
-    if self.backgroundTapInteraction == nil {
-      self.backgroundTapInteraction = otherKeyframe.backgroundTapInteraction;
-    };
-    
-    if self.secondaryGestureAxisDampingPercent == nil {
-      self.secondaryGestureAxisDampingPercent = otherKeyframe.secondaryGestureAxisDampingPercent;
-    };
-    
-    if self.modalScrollViewContentInsets == nil {
-      self.modalScrollViewContentInsets = otherKeyframe.modalScrollViewContentInsets;
-    };
-    
-    if self.modalScrollViewVerticalScrollIndicatorInsets == nil {
-      self.modalScrollViewVerticalScrollIndicatorInsets = otherKeyframe.modalScrollViewVerticalScrollIndicatorInsets;
-    };
-    
-    if self.modalScrollViewHorizontalScrollIndicatorInsets == nil {
-      self.modalScrollViewHorizontalScrollIndicatorInsets = otherKeyframe.modalScrollViewHorizontalScrollIndicatorInsets;
-    };
-    
-    if let otherModalTransform = otherKeyframe.modalTransform {
-      self.modalTransform?.setNonNilValues(with: otherModalTransform);
-    };
-    
-    if self.modalBorderWidth == nil {
-      self.modalBorderWidth = otherKeyframe.modalBorderWidth;
-    };
-    
-    if self.modalBorderColor == nil {
-      self.modalBorderColor = otherKeyframe.modalBorderColor;
-    };
-    
-    if self.modalShadowColor == nil {
-      self.modalShadowColor = otherKeyframe.modalShadowColor;
-    };
-    
-    if self.modalShadowOffset == nil {
-      self.modalShadowOffset = otherKeyframe.modalShadowOffset;
-    };
-    
-    if self.modalShadowOpacity == nil {
-      self.modalShadowOpacity = otherKeyframe.modalShadowOpacity;
-    };
-    
-    if self.modalShadowRadius == nil {
-      self.modalShadowRadius = otherKeyframe.modalShadowRadius;
-    };
-    
-    if self.modalCornerRadius == nil {
-      self.modalCornerRadius = otherKeyframe.modalCornerRadius;
-    };
-    
-    if self.modalMaskedCorners == nil {
-      self.modalMaskedCorners = otherKeyframe.modalMaskedCorners;
-    };
-    
-    if self.modalOpacity == nil {
-      self.modalOpacity = otherKeyframe.modalOpacity;
-    };
-    
-    if self.modalContentOpacity == nil {
-      self.modalContentOpacity = otherKeyframe.modalContentOpacity;
-    };
-    
-    if self.modalBackgroundColor == nil {
-      self.modalBackgroundColor = otherKeyframe.modalBackgroundColor;
-    };
-    
-    if self.modalBackgroundOpacity == nil {
-      self.modalBackgroundOpacity = otherKeyframe.modalBackgroundOpacity;
-    };
-    
-    if self.modalBackgroundVisualEffect == nil {
-      self.modalBackgroundVisualEffect = otherKeyframe.modalBackgroundVisualEffect;
-    };
-    
-    if self.modalBackgroundVisualEffectOpacity == nil {
-      self.modalBackgroundVisualEffectOpacity = otherKeyframe.modalBackgroundVisualEffectOpacity;
-    };
-    
-    if self.modalBackgroundVisualEffectIntensity == nil {
-      self.modalBackgroundVisualEffectIntensity = otherKeyframe.modalBackgroundVisualEffectIntensity;
-    };
-    
-    if self.modalDragHandleSize == nil {
-      self.modalDragHandleSize = otherKeyframe.modalDragHandleSize;
-    };
-    
-    if self.modalDragHandleOffset == nil {
-      self.modalDragHandleOffset = otherKeyframe.modalDragHandleOffset;
-    };
-    
-    if self.modalDragHandleColor == nil {
-      self.modalDragHandleColor = otherKeyframe.modalDragHandleColor;
-    };
-    
-    if self.modalDragHandleOpacity == nil {
-      self.modalDragHandleOpacity = otherKeyframe.modalDragHandleOpacity;
-    };
-    
-    if self.backgroundColor == nil {
-      self.backgroundColor = otherKeyframe.backgroundColor;
-    };
-    
-    if self.backgroundOpacity == nil {
-      self.backgroundOpacity = otherKeyframe.backgroundOpacity;
-    };
-    
-    if self.backgroundVisualEffect == nil {
-      self.backgroundVisualEffect = otherKeyframe.backgroundVisualEffect;
-    };
-    
-    if self.backgroundVisualEffectOpacity == nil {
-      self.backgroundVisualEffectOpacity = otherKeyframe.backgroundVisualEffectOpacity;
-    };
-    
-    if self.backgroundVisualEffectIntensity == nil {
-      self.backgroundVisualEffectIntensity = otherKeyframe.backgroundVisualEffectIntensity;
+    Self.nilKeys.forEach {
+      let value =  self[keyPath: $0];
+      
+      guard value is ExpressibleByNilLiteral,
+            let optionalValue = value as? OptionalUnwrappable,
+            !optionalValue.isSome()
+      else { return };
+      
+      switch $0 {
+        case let key as WritableKeyPath<Self, BackgroundInteractionMode?>:
+          self[keyPath: key] = otherKeyframe[keyPath: key];
+          
+        case let key as WritableKeyPath<Self, LayoutValueEdgeInsets?>:
+          self[keyPath: key] = otherKeyframe[keyPath: key];
+          
+        case let key as WritableKeyPath<Self, CGFloat?>:
+          self[keyPath: key] = otherKeyframe[keyPath: key];
+        
+        case let key as WritableKeyPath<Self, UIColor?>:
+          self[keyPath: key] = otherKeyframe[keyPath: key];
+          
+        case let key as WritableKeyPath<Self, CGSize?>:
+          self[keyPath: key] = otherKeyframe[keyPath: key];
+          
+        case let key as WritableKeyPath<Self, CACornerMask?>:
+          self[keyPath: key] = otherKeyframe[keyPath: key];
+          
+        default:
+          break;
+      };
     };
   };
 };
