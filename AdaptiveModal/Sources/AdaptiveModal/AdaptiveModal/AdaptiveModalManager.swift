@@ -2429,8 +2429,9 @@ public class AdaptiveModalManager: NSObject {
       inputRect[keyPath: self.currentModalConfig.inputValueKeyForRect];
     
     let delta = self.interpolationSteps.map {
-      let coord =
-        $0.computedRect[keyPath: self.currentModalConfig.inputValueKeyForRect];
+      let coord = $0.computedRect[
+        keyPath: self.currentModalConfig.inputValueKeyForRect
+      ];
       
       return abs(inputCoord - coord);
     };
@@ -2459,18 +2460,21 @@ public class AdaptiveModalManager: NSObject {
     interpolationPoint: AdaptiveModalInterpolationPoint,
     snapDistance: CGFloat
   ) {
-    let delta = interpolationSteps.map {[
-      abs($0.computedRect.minX - currentRect.minX),
-      abs($0.computedRect.midX - currentRect.midX),
-      abs($0.computedRect.maxX - currentRect.maxX),
-      abs($0.computedRect.minY - currentRect.minY),
-      abs($0.computedRect.midY - currentRect.midY),
-      abs($0.computedRect.maxY - currentRect.maxY)
-    ]};
+  
+    let keysToComputeDelta: [KeyPath<CGRect, CGFloat>] = [
+      \.minX, \.midX, \.maxX, \.width ,
+      \.minY, \.midY, \.maxY, \.height,
+    ];
+  
+    let delta = interpolationSteps.map { item in
+      keysToComputeDelta.map {
+        abs(item.computedRect[keyPath: $0] - currentRect[keyPath: $0]);
+      };
+    };
     
     let deltaAvg = delta.map {
       let sum = $0.reduce(0) { $0 + $1 };
-      return sum / CGFloat(delta.count);
+      return sum / CGFloat(keysToComputeDelta.count);
     };
     
     let deltaAvgFiltered = deltaAvg.enumerated().filter {
