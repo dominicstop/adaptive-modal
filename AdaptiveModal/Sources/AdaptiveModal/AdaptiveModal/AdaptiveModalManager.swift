@@ -247,12 +247,12 @@ public class AdaptiveModalManager: NSObject {
   
   public private(set) var prevInterpolationIndex: Int {
     get {
-      self.shouldSnapToOvershootSnapPoint
+      self.shouldUseOverrideSnapPoints
         ? self.prevOverrideInterpolationIndex
         : self.prevConfigInterpolationIndex;
     }
     set {
-      if self.shouldSnapToOvershootSnapPoint {
+      if self.shouldUseOverrideSnapPoints {
         self.prevOverrideInterpolationIndex = newValue;
         
       } else {
@@ -300,7 +300,7 @@ public class AdaptiveModalManager: NSObject {
         : self.configInterpolationSteps
     }
     set {
-      if self.shouldSnapToOvershootSnapPoint {
+      if self.shouldUseOverrideSnapPoints {
         self.overrideInterpolationPoints = newValue;
         
       } else {
