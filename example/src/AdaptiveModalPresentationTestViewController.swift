@@ -361,8 +361,8 @@ class AdaptiveModalPresentationTestViewController : UIViewController {
     let defaultBlock: (AdaptiveModalManager) -> Void = {
       $0.shouldEnableOverShooting = true;
     
-      $0.shouldSnapToUnderShootSnapPoint = true;
-      $0.shouldSnapToOvershootSnapPoint = false;
+      $0.overrideShouldSnapToUnderShootSnapPoint = true;
+      $0.overrideShouldSnapToOvershootSnapPoint = false;
       
       $0.shouldDismissModalOnSnapToUnderShootSnapPoint = true;
       $0.shouldDismissModalOnSnapToOverShootSnapPoint = false;
@@ -372,7 +372,7 @@ class AdaptiveModalPresentationTestViewController : UIViewController {
   
     switch self.currentModalConfigPreset {
       case .demo04: return {
-        $0.shouldSnapToOvershootSnapPoint = true;
+        $0.overrideShouldSnapToOvershootSnapPoint = true;
         $0.shouldDismissModalOnSnapToOverShootSnapPoint = true;
       };
       
@@ -385,7 +385,7 @@ class AdaptiveModalPresentationTestViewController : UIViewController {
       };
       
       case .demo12: return {
-        $0.shouldSnapToOvershootSnapPoint = true;
+        $0.overrideShouldSnapToOvershootSnapPoint = true;
         $0.shouldDismissModalOnSnapToOverShootSnapPoint = true;
       };
       

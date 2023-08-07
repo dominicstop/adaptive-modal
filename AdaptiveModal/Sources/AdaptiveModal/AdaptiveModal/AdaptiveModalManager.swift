@@ -41,8 +41,8 @@ public class AdaptiveModalManager: NSObject {
   
   public var shouldLockAxisToModalDirection = false;
   
-  public var shouldSnapToUnderShootSnapPoint = true;
-  public var shouldSnapToOvershootSnapPoint = false;
+  public var overrideShouldSnapToUnderShootSnapPoint = true;
+  public var overrideShouldSnapToOvershootSnapPoint = false;
   
   public var shouldDismissModalOnSnapToUnderShootSnapPoint = true;
   public var shouldDismissModalOnSnapToOverShootSnapPoint = false;
@@ -2271,7 +2271,7 @@ public class AdaptiveModalManager: NSObject {
   
   private func adjustInterpolationIndex(for nextIndex: Int) -> Int {
     if nextIndex == 0 {
-      return self.shouldSnapToUnderShootSnapPoint
+      return self.overrideShouldSnapToUnderShootSnapPoint
         ? nextIndex
         : 1;
     };
@@ -2279,7 +2279,7 @@ public class AdaptiveModalManager: NSObject {
     let lastIndex = self.interpolationSteps.count - 1;
     
     if nextIndex == self.currentModalConfig.overshootSnapPointIndex {
-      return self.shouldSnapToOvershootSnapPoint
+      return self.overrideShouldSnapToOvershootSnapPoint
         ? nextIndex
         : lastIndex - 1;
     };
