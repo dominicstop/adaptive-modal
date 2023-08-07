@@ -3325,6 +3325,27 @@ public class AdaptiveModalManager: NSObject {
     );
   };
   
+  /// Temporarily snap the modal to a custom snap point.
+  /// The override snap point can be manually cleared via
+  /// `clearSnapPointOverride`.
+  ///
+  /// Parameters
+  /// * `overrideSnapPointConfig`: The custom snap point you want to snap to.
+  ///
+  /// * `prevSnapPointConfigs`: The snap points that precede the
+  /// `overrideSnapPointConfig.
+  ///
+  ///   * Once you snap to any of these points, the
+  ///     override snap point will be cleared automatically.
+  ///
+  ///   * By default, this param. will be populated automatically with the
+  ///     existing snap points in your modal config that can potentially
+  ///     precede `overrideSnapPointConfig`. The undershoot snap point will
+  ///     always be added by default.
+  ///
+  ///  * `overshootSnapPointPreset`: The custom overshoot snap point for
+  ///     `overrideSnapPointConfig`.
+  ///
   public func snapTo(
     overrideSnapPointConfig: AdaptiveModalSnapPointConfig,
     prevSnapPointConfigs: [AdaptiveModalSnapPointConfig]? = nil,
