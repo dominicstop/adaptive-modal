@@ -1232,14 +1232,13 @@ public class AdaptiveModalManager: NSObject {
   
   private func cleanupSnapPointOverride(){
     self.isOverridingSnapPoints = false;
-    self.shouldResetRangePropertyAnimators = false;
-    
+
     self.overrideSnapPoints = nil;
     self.overrideInterpolationPoints = nil;
     
+    self.currentOverrideInterpolationIndex = 0;
     self.prevOverrideInterpolationIndex = 0;
     self.nextOverrideInterpolationIndex = nil;
-    self.currentOverrideInterpolationIndex = 0;
   };
  
   private func cleanup() {
@@ -1259,6 +1258,8 @@ public class AdaptiveModalManager: NSObject {
     
     self.currentInterpolationIndex = 0;
     self.modalSecondaryAxisValue = nil;
+    
+    self.shouldResetRangePropertyAnimators = false;
     self.pendingCurrentModalConfigUpdate = false;
     
     #if DEBUG
@@ -2634,6 +2635,7 @@ public class AdaptiveModalManager: NSObject {
         
         if self.isKeyboardVisible,
            self.shouldDismissKeyboardOnGestureSwipe,
+           self.currentOverrideInterpolationIndex <= 1,
            let modalView = self.modalView {
            
           modalView.endEditing(true);
