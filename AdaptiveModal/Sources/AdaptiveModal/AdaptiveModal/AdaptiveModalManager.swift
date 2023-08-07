@@ -232,9 +232,16 @@ public class AdaptiveModalManager: NSObject {
   };
   
   var shouldClearOverrideSnapPoints: Bool {
-       self.shouldUseOverrideSnapPoints
-    && self.currentOverrideInterpolationIndex < overrideInterpolationPoints!.count - 2
-    && self.presentationState != .dismissing
+    guard self.shouldUseOverrideSnapPoints,
+          self.presentationState != .dismissing,
+          let interpolationPoints = self.overrideInterpolationPoints
+    else { return false };
+    
+    // The "last index" N is the overshoot snap point
+    // N-1 index is the override snap point
+    let secondToLastIndex = interpolationPoints.count - 2;
+
+    return self.currentOverrideInterpolationIndex < secondToLastIndex;
   };
   
   // MARK: -  Properties - Interpolation Points
@@ -3350,7 +3357,6 @@ public class AdaptiveModalManager: NSObject {
     overrideSnapPointConfig: AdaptiveModalSnapPointConfig,
     prevSnapPointConfigs: [AdaptiveModalSnapPointConfig]? = nil,
     overshootSnapPointPreset: AdaptiveModalSnapPointPreset? = .automatic,
-    fallbackSnapPointKey: AdaptiveModalSnapPointConfig.SnapPointKey? = nil,
     inBetweenSnapPointsMinPercentDiff: CGFloat = 0.1,
     isAnimated: Bool = true,
     animationConfig: AdaptiveModalSnapAnimationConfig? = nil,
