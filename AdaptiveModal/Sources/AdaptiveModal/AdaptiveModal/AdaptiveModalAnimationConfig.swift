@@ -8,18 +8,6 @@
 import UIKit
 
 public struct AdaptiveModalKeyframeConfig: Equatable {
-
-  public static let defaultFirstKeyframe: Self = .init(
-    modalContentOpacity: 1
-  );
-
-  public static let defaultUndershootKeyframe: Self = .init(
-    backgroundTapInteraction: .default,
-    modalTransform: .default,
-    modalContentOpacity: 0.5,
-    backgroundOpacity: 0,
-    backgroundVisualEffectIntensity: 0
-  );
   
   // MARK: - Embedded Types
   // ----------------------
@@ -87,6 +75,21 @@ public struct AdaptiveModalKeyframeConfig: Equatable {
       };
     };
   };
+  
+  // MARK: - Static Properties
+  // -------------------------
+  
+  public static let defaultFirstKeyframe: Self = .init(
+    modalContentOpacity: 1
+  );
+
+  public static let defaultUndershootKeyframe: Self = .init(
+    backgroundTapInteraction: .default,
+    modalTransform: .default,
+    modalContentOpacity: 0.5,
+    backgroundOpacity: 0,
+    backgroundVisualEffectIntensity: 0
+  );
   
   // MARK: - Properties
   // ------------------
