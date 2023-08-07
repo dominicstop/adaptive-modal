@@ -209,8 +209,6 @@ public class AdaptiveModalManager: NSObject {
   
   private(set) var isOverridingSnapPoints = false;
   
-  private var shouldResetRangePropertyAnimators = false;
-  
   var prevOverrideInterpolationIndex = 0;
   var nextOverrideInterpolationIndex: Int?;
   
@@ -360,6 +358,8 @@ public class AdaptiveModalManager: NSObject {
     self.backgroundVisualEffectAnimator,
     self.modalBackgroundVisualEffectAnimator
   ]};
+  
+  private var shouldResetRangePropertyAnimators = false;
   
   // MARK: -  Properties - Gesture-Related
   // -------------------------------------
