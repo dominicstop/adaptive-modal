@@ -73,8 +73,6 @@ public struct Transform3D: Equatable {
       1
     );
     
-    print("rotateZ.radians:", self.rotateZ?.degrees);
-    
     return transform;
   };
   

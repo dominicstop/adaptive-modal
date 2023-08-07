@@ -2493,17 +2493,6 @@ public class AdaptiveModalManager: NSObject {
       $0.element < $1.element;
     };
     
-    print(
-      "getClosestSnapPoint",
-      "\n - currentRect", currentRect,
-      "\n - delta:", delta.enumerated(),
-      "\n - deltaAvg:", deltaAvg.enumerated(),
-      "\n - deltaAvgFiltered:", deltaAvgFiltered,
-      "\n - deltaAvgSorted:", deltaAvgSorted,
-      "\n - deltaAvgSorted.first", deltaAvgSorted.first!,
-      "\n"
-    );
-    
     let closestInterpolationPointIndex = self.adjustInterpolationIndex(
       for: deltaAvgSorted.first!.offset
     );
