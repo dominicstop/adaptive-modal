@@ -73,6 +73,7 @@ public struct RNILayoutValue: Equatable {
     usingLayoutValueContext context: RNILayoutValueContext,
     forValue value: CGFloat
   ) -> CGFloat? {
+  
     let computedMinValue = self.minValue?.compute(
       usingLayoutValueContext: context,
       preferredSizeKey: nil
@@ -92,6 +93,7 @@ public struct RNILayoutValue: Equatable {
     usingLayoutValueContext context: RNILayoutValueContext,
     preferredSizeKey: KeyPath<CGSize, CGFloat>?
   ) -> CGFloat? {
+  
     return self.mode.compute(
       usingLayoutValueContext: context,
       preferredSizeKey: preferredSizeKey

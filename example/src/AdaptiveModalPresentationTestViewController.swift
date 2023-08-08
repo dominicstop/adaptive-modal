@@ -358,6 +358,7 @@ class AdaptiveModalPresentationTestViewController : UIViewController {
   };
   
   var currentModalManagerAdjustmentBlock: (AdaptiveModalManager) -> Void {
+  
     let defaultBlock: (AdaptiveModalManager) -> Void = {
       $0.shouldEnableOverShooting = true;
     

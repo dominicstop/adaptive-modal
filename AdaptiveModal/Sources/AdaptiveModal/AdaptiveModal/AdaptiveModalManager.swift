@@ -34,7 +34,6 @@ public class AdaptiveModalManager: NSObject {
     }
   };
   
-  
   public var shouldEnableSnapping = true;
   public var shouldEnableOverShooting = true;
   public var shouldDismissKeyboardOnGestureSwipe = false;

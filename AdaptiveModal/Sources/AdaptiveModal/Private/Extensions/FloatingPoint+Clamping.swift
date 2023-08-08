@@ -12,6 +12,7 @@ extension FloatingPoint {
     min lowerBound: Self? = nil,
     max upperBound: Self? = nil
   ) -> Self {
+
     var clampedValue = self;
     
     if let lowerBound = lowerBound {
