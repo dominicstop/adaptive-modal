@@ -15,6 +15,8 @@ fileprivate class TestModalViewController:
   enum ContentMode {
     case buttons, scrollview;
   };
+  
+  static var enableLogging = false;
 
   weak var modalManager: AdaptiveModalManager?;
   
@@ -239,12 +241,14 @@ fileprivate class TestModalViewController:
   ) {
     self.floatingViewLabel.text = "\(nextSnapPointIndex)";
     
-    print(
-      "notifyOnModalWillSnap",
-      "\n - prevSnapPointIndex:", prevSnapPointIndex ?? -1,
-      "\n - nextSnapPointIndex:", nextSnapPointIndex,
-      "\n"
-    );
+    if Self.enableLogging {
+      print(
+        "notifyOnModalWillSnap",
+        "\n - prevSnapPointIndex:", prevSnapPointIndex ?? -1,
+        "\n - nextSnapPointIndex:", nextSnapPointIndex,
+        "\n"
+      );
+    };
   };
   
   func notifyOnModalDidSnap(
@@ -256,46 +260,60 @@ fileprivate class TestModalViewController:
   ) {
     self.floatingViewLabel.text = "\(currentSnapPointIndex)";
     
-    print(
-      "notifyOnModalDidSnap",
-      "\n - prevSnapPointIndex:", prevSnapPointIndex ?? -1,
-      "\n - currentSnapPointIndex:", currentSnapPointIndex,
-      "\n"
-    );
+    if Self.enableLogging {
+      print(
+        "notifyOnModalDidSnap",
+        "\n - prevSnapPointIndex:", prevSnapPointIndex ?? -1,
+        "\n - currentSnapPointIndex:", currentSnapPointIndex,
+        "\n"
+      );
+    };
   };
   
   func notifyOnAdaptiveModalWillShow(sender: AdaptiveModalManager) {
-    print("onAdaptiveModalWillShow");
+    if Self.enableLogging {
+      print("onAdaptiveModalWillShow");
+    };
   };
   
   func notifyOnAdaptiveModalDidShow(sender: AdaptiveModalManager) {
-    print("onAdaptiveModalDidShow");
+    if Self.enableLogging {
+      print("onAdaptiveModalDidShow");
+    };
   };
   
   func notifyOnAdaptiveModalWillHide(sender: AdaptiveModalManager) {
-    print("onAdaptiveModalWillHide");
+    if Self.enableLogging {
+      print("onAdaptiveModalWillHide");
+    };
   };
   
   func notifyOnAdaptiveModalDidHide(sender: AdaptiveModalManager) {
-    print("onAdaptiveModalDidHide");
+    if Self.enableLogging {
+      print("onAdaptiveModalDidHide");
+    };
   };
   
   func notifyOnAdaptiveModalDragGesture(
     sender: AdaptiveModalManager,
     gestureRecognizer: UIGestureRecognizer
   ) {
-    print(
-      "notifyOnAdaptiveModalDragGesture",
-      "\n - sender.gesturePoint:", sender.gesturePoint?.debugDescription ?? "N/A",
-      "\n - sender.gestureInitialPoint:", sender.gestureInitialPoint?.debugDescription ?? "N/A",
-      "\n - sender.gestureOffset:", sender.gestureOffset?.debugDescription ?? "N/A",
-      "\n - sender.gesturePointWithOffsets", sender.gesturePointWithOffsets?.debugDescription ?? "N/A",
-      "\n"
-    );
+    if Self.enableLogging {
+      print(
+        "notifyOnAdaptiveModalDragGesture",
+        "\n - sender.gesturePoint:", sender.gesturePoint?.debugDescription ?? "N/A",
+        "\n - sender.gestureInitialPoint:", sender.gestureInitialPoint?.debugDescription ?? "N/A",
+        "\n - sender.gestureOffset:", sender.gestureOffset?.debugDescription ?? "N/A",
+        "\n - sender.gesturePointWithOffsets", sender.gesturePointWithOffsets?.debugDescription ?? "N/A",
+        "\n"
+      );
+    };
   };
   
   func notifyOnBackgroundTapGesture(sender: UIGestureRecognizer) {
-    print("notifyOnBackgroundTapGesture");
+    if Self.enableLogging {
+      print("notifyOnBackgroundTapGesture");
+    };
   };
   
   func notifyOnModalAnimatorStart(
@@ -304,38 +322,46 @@ fileprivate class TestModalViewController:
     interpolationPoint: AdaptiveModalInterpolationPoint,
     isAnimated: Bool
   ) {
-    print(
-      "notifyOnModalAnimatorStart",
-      "\n - interpolationPoint.percent:", interpolationPoint.percent,
-      "\n - isAnimated:", isAnimated,
-      "\n"
-    );
+    if Self.enableLogging {
+      print(
+        "notifyOnModalAnimatorStart",
+        "\n - interpolationPoint.percent:", interpolationPoint.percent,
+        "\n - isAnimated:", isAnimated,
+        "\n"
+      );
+    };
   };
   
   func notifyOnModalAnimatorStop(sender: AdaptiveModalManager) {
-    print("notifyOnModalAnimatorStop");
+    if Self.enableLogging {
+      print("notifyOnModalAnimatorStop");
+    };
   };
   
   func notifyOnModalAnimatorPercentChanged(
     sender: AdaptiveModalManager,
     percent: CGFloat
   ) {
-    print(
-      "notifyOnModalAnimatorPercentChanged",
-      "\n - percent:", percent,
-      "\n"
-    );
+    if Self.enableLogging {
+      print(
+        "notifyOnModalAnimatorPercentChanged",
+        "\n - percent:", percent,
+        "\n"
+      );
+    };
   };
   
   func notifyOnModalAnimatorCompletion(
     sender: AdaptiveModalManager,
     position: UIViewAnimatingPosition
   ) {
-    print(
-      "notifyOnModalAnimatorCompletion",
-      "\n - position:", position,
-      "\n"
-    );
+    if Self.enableLogging {
+      print(
+        "notifyOnModalAnimatorCompletion",
+        "\n - position:", position,
+        "\n"
+      );
+    };
   }
 };
 
