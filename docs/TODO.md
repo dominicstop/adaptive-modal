@@ -7,6 +7,13 @@
 ## Current
 
 - [ ] ` TODO:2023-06-23-18-16-28` - Impl: `AdaptiveModal` - Add support for "in-between" snap points.
+  * Iteration 1: Keyframe (w/o "in-between") -> Interpolation Point (w/o "in-between")
+    * Ignore "in-between" snap points and fill in the gaps.
+  * Iteration 2: Keyframe (w/ "in-between") + Interpolation Point (w/o "in-between")
+    * Ignore none "in-between" interpolation point, and start interpolating the values based on the percent, and non-nil values: [before, ..."in-between", after]
+
+<br>
+
 - [ ] `TODO:2023-08-05-03-22-37` - Snap Point Config - allow snapping.
 - [ ] `TODO:2023-07-24-23-03-17` - Impl: Adaptive modal state.
 - [ ] `TODO:2023-08-07-19-49-08` - Refactor `AdaptiveModalClampingConfig` - Accept list of keys that will be clamped left/initial value, right/last value.
