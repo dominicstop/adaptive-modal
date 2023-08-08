@@ -16,11 +16,12 @@ public enum RNILayoutValuePercentTarget {
   
   public func getValue(
     layoutValueContext context: RNILayoutValueContext,
-    preferredSizeKey: KeyPath<CGSize, CGFloat>
+    preferredSizeKey: KeyPath<CGSize, CGFloat>?
   ) -> CGFloat? {
   
     switch self {
       case .screenSize:
+        guard let preferredSizeKey = preferredSizeKey else { return nil };
         return context.screenSize[keyPath: preferredSizeKey];
         
       case .screenWidth:
@@ -30,6 +31,7 @@ public enum RNILayoutValuePercentTarget {
         return context.screenSize.height;
         
       case .windowSize:
+        guard let preferredSizeKey = preferredSizeKey else { return nil };
         return context.windowSize?[keyPath: preferredSizeKey];
         
       case .windowWidth:
@@ -39,6 +41,7 @@ public enum RNILayoutValuePercentTarget {
         return context.windowSize?.height;
         
       case .targetSize:
+        guard let preferredSizeKey = preferredSizeKey else { return nil };
         return context.targetSize[keyPath: preferredSizeKey];
         
       case .targetWidth:
@@ -48,6 +51,7 @@ public enum RNILayoutValuePercentTarget {
         return context.targetSize.height;
         
       case .currentSize:
+        guard let preferredSizeKey = preferredSizeKey else { return nil };
         return context.currentSize?[keyPath: preferredSizeKey];
         
       case .currentWidth:

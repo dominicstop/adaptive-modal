@@ -14,12 +14,16 @@ extension FloatingPoint {
   ) -> Self {
     var clampedValue = self;
     
-    if let upperBound = upperBound {
-      clampedValue = min(clampedValue, upperBound);
+    if let lowerBound = lowerBound {
+      clampedValue = clampedValue < lowerBound
+        ? lowerBound
+        : clampedValue;
     };
     
-    if let lowerBound = lowerBound {
-      clampedValue = max(clampedValue, lowerBound);
+    if let upperBound = upperBound {
+      clampedValue = clampedValue > upperBound
+        ? upperBound
+        : clampedValue;
     };
     
     return clampedValue;

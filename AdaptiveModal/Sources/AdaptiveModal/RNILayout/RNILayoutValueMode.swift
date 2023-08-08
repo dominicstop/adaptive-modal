@@ -61,8 +61,6 @@ public indirect enum RNILayoutValueMode: Equatable {
         return constantValue;
         
       case let .percent(relativeToValue, percentValue):
-        guard let preferredSizeKey = preferredSizeKey else { return nil };
-      
         let targetValue = relativeToValue.getValue(
           layoutValueContext: context,
           preferredSizeKey: preferredSizeKey
