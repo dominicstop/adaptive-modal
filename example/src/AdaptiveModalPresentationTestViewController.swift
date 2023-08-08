@@ -373,19 +373,27 @@ class AdaptiveModalPresentationTestViewController : UIViewController {
   
     switch self.currentModalConfigPreset {
       case .demo04: return {
+        guard case .staticConfig = $0.modalConfig else { return };
+      
         $0.overrideShouldSnapToOvershootSnapPoint = true;
         $0.shouldDismissModalOnSnapToOverShootSnapPoint = true;
       };
       
       case .demo09: return {
+        guard case .staticConfig = $0.modalConfig else { return };
+        
         $0.shouldDismissKeyboardOnGestureSwipe = true;
       };
       
       case .demo07: return {
+        guard case .staticConfig = $0.modalConfig else { return };
+        
         $0.shouldEnableOverShooting = false;
       };
       
       case .demo12: return {
+        guard case .staticConfig = $0.modalConfig else { return };
+        
         $0.overrideShouldSnapToOvershootSnapPoint = true;
         $0.shouldDismissModalOnSnapToOverShootSnapPoint = true;
       };

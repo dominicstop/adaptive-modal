@@ -651,7 +651,7 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
         )
       );
       
-      // Index: 8
+      // Index: 8 - Keyboard
       case .demo09: return AdaptiveModalConfig(
         snapPoints: [
           // Snap Point 1
@@ -788,7 +788,7 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
         )
       );
       
-      // Index: 10
+      // Index: 10 - Keyboard
       case .demo11: return AdaptiveModalConfig(
         snapPoints: [
           // Snap Point 1
@@ -1079,7 +1079,26 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
                   horizontalAlignment: .center,
                   verticalAlignment: .bottom,
                   width: .percent(percentValue: 0.8),
-                  height: .percent(percentValue: 0.5)
+                  height: .multipleValues(
+                    [
+                      .conditionalLayoutValue(
+                        condition: .keyboardPresent,
+                        trueValue: .keyboardRelativeSize(sizeKey: \.height),
+                        falseValue: .safeAreaInsets(insetKey: \.bottom)
+                      ),
+                      .percent(percentValue: 0.5)
+                    ],
+                    maxValue: .percent(
+                      relativeTo: .screenHeight,
+                      percentValue: 1
+                    )
+                  ),
+                  marginTop: .constant(10),
+                  paddingBottom: .conditionalLayoutValue(
+                    condition: .keyboardPresent,
+                    trueValue: .keyboardRelativeSize(sizeKey: \.height),
+                    falseValue: .safeAreaInsets(insetKey: \.bottom)
+                  )
                 ),
                 keyframeConfig: AdaptiveModalKeyframeConfig(
                   modalShadowOpacity: 0.2,
