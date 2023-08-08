@@ -40,8 +40,8 @@ public class AdaptiveModalManager: NSObject {
   
   public var shouldLockAxisToModalDirection = false;
   
-  public var overrideShouldSnapToUnderShootSnapPoint = true;
-  public var overrideShouldSnapToOvershootSnapPoint = false;
+  public var overrideShouldSnapToUnderShootSnapPoint: Bool?;
+  public var overrideShouldSnapToOvershootSnapPoint: Bool?;
   
   public var shouldDismissModalOnSnapToUnderShootSnapPoint = true;
   public var shouldDismissModalOnSnapToOverShootSnapPoint = false;
@@ -522,6 +522,23 @@ public class AdaptiveModalManager: NSObject {
   public var gesturePointWithOffsets: CGPoint? {
     guard let gesturePoint = self.gesturePoint else { return nil };
     return self.applyGestureOffsets(forGesturePoint: gesturePoint)
+  };
+  
+  public var gestureDirection: AdaptiveModalConfig.SnapDirection? {
+    guard let gesturePointNext = self.gesturePoint,
+          let gesturePointPrev = self.gesturePointPrev
+    else { return nil };
+  
+    let gestureCoordNext =
+      gesturePointNext[keyPath: self.currentModalConfig.inputValueKeyForPoint];
+      
+    let gestureCoordPrev =
+      gesturePointPrev[keyPath: self.currentModalConfig.inputValueKeyForPoint];
+  
+    return self.currentModalConfig.snapDirection.getDirection(
+      next: gestureCoordNext,
+      prev: gestureCoordPrev
+    );
   };
   
   // MARK: -  Properties
@@ -2276,19 +2293,20 @@ public class AdaptiveModalManager: NSObject {
     self.animationEventDelegate?.notifyOnModalAnimatorStop(sender: self);
   };
   
+  // TODO-WIP
   private func adjustInterpolationIndex(for nextIndex: Int) -> Int {
-    if nextIndex == 0 {
-      return self.overrideShouldSnapToUnderShootSnapPoint
-        ? nextIndex
-        : 1;
+    if nextIndex == 0,
+       case let .some(flag) = self.overrideShouldSnapToUnderShootSnapPoint {
+       
+       return flag ? nextIndex : 1;
     };
     
     let lastIndex = self.interpolationSteps.count - 1;
     
-    if nextIndex == self.currentModalConfig.overshootSnapPointIndex {
-      return self.overrideShouldSnapToOvershootSnapPoint
-        ? nextIndex
-        : lastIndex - 1;
+    if nextIndex == lastIndex,
+       case let .some(flag) = self.overrideShouldSnapToOvershootSnapPoint {
+       
+       return flag ? nextIndex : lastIndex - 1;
     };
     
     return nextIndex;
@@ -2425,42 +2443,70 @@ public class AdaptiveModalManager: NSObject {
     #endif
   };
   
-  private func getClosestSnapPoint(forCoord coord: CGFloat? = nil) -> (
+  private func getClosestSnapPoint(
+    forCoord coord: CGFloat? = nil,
+    shouldIgnoreAllowSnapping: Bool = false
+  ) -> (
     interpolationIndex: Int,
     interpolationPoint: AdaptiveModalInterpolationPoint,
     snapDistance: CGFloat
   ) {
+  
     let inputRect = self.modalFrame!;
     
     let inputCoord = coord ??
       inputRect[keyPath: self.currentModalConfig.inputValueKeyForRect];
+      
+    let interpolationSteps: [AdaptiveModalInterpolationPoint] = {
+      guard !shouldIgnoreAllowSnapping else {
+        return self.interpolationSteps;
+      };
+      
+      return self.interpolationSteps.filter {
+        $0.allowSnapping
+      };
+    }();
     
-    let delta = self.interpolationSteps.map {
+    let delta = interpolationSteps.map {
       let coord = $0.computedRect[
         keyPath: self.currentModalConfig.inputValueKeyForRect
       ];
       
-      return abs(inputCoord - coord);
+      return (
+        index: $0.snapPointIndex,
+        delta: abs(inputCoord - coord)
+      );
     };
     
-    let deltaSorted = delta.enumerated().sorted {
-      $0.element < $1.element
+    let deltaSorted = delta.sorted {
+      $0.delta < $1.delta
     };
     
-    let closestSnapPoint = deltaSorted.first!;
-    let closestInterpolationIndex = closestSnapPoint.offset;
+    let closestInterpolationIndex: Int = {
+      let firstIndex = deltaSorted.first?.index
+        ?? self.currentInterpolationIndex;
     
-    let interpolationPoint = interpolationSteps[closestInterpolationIndex];
+      guard !shouldIgnoreAllowSnapping else {
+        return firstIndex;
+      };
+      
+      return self.adjustInterpolationIndex(for: firstIndex);
+    }();
+
+    let interpolationPoint =
+      self.interpolationSteps[closestInterpolationIndex];
     
     return (
       interpolationIndex: closestInterpolationIndex,
       interpolationPoint: interpolationPoint,
-      snapDistance: closestSnapPoint.element
+      snapDistance: delta[closestInterpolationIndex].delta
     );
   };
   
   private func getClosestSnapPoint(
-    forRect currentRect: CGRect
+    forRect currentRect: CGRect,
+    shouldIgnoreAllowSnapping: Bool = false,
+    shouldExcludeUndershootSnapPoint: Bool
   ) -> (
     interpolationIndex: Int,
     snapPointConfig: AdaptiveModalSnapPointConfig,
@@ -2468,33 +2514,63 @@ public class AdaptiveModalManager: NSObject {
     snapDistance: CGFloat
   ) {
   
+    let interpolationSteps: [AdaptiveModalInterpolationPoint] = {
+      guard !shouldIgnoreAllowSnapping else {
+        if shouldExcludeUndershootSnapPoint {
+          return self.interpolationSteps.filter {
+            $0.key != .undershootPoint;
+          };
+        };
+        
+        return self.interpolationSteps;
+      };
+      
+      return self.interpolationSteps.filter {
+        return shouldExcludeUndershootSnapPoint
+          ? $0.allowSnapping && $0.key != .undershootPoint
+          : $0.allowSnapping
+      };
+    }();
+  
     let keysToComputeDelta: [KeyPath<CGRect, CGFloat>] = [
       \.minX, \.midX, \.maxX, \.width ,
       \.minY, \.midY, \.maxY, \.height,
     ];
   
     let delta = interpolationSteps.map { item in
-      keysToComputeDelta.map {
+      let deltas = keysToComputeDelta.map {
         abs(item.computedRect[keyPath: $0] - currentRect[keyPath: $0]);
       };
+      
+      return (
+        snapPointIndex: item.snapPointIndex,
+        deltas: deltas
+      );
     };
     
     let deltaAvg = delta.map {
-      let sum = $0.reduce(0) { $0 + $1 };
-      return sum / CGFloat(keysToComputeDelta.count);
+      let sum = $0.deltas.reduce(0) { $0 + $1 };
+      
+      return (
+        snapPointIndex: $0.snapPointIndex,
+        delta: sum / CGFloat(keysToComputeDelta.count)
+      );
     };
     
-    let deltaAvgFiltered = deltaAvg.enumerated().filter {
-      $0.offset != 0;
+    let deltaAvgSorted = deltaAvg.sorted {
+      $0.delta < $1.delta;
     };
     
-    let deltaAvgSorted = deltaAvgFiltered.sorted {
-      $0.element < $1.element;
-    };
+    let closestInterpolationPointIndex: Int = {
+      let firstIndex = deltaAvgSorted.first?.snapPointIndex
+        ?? self.currentInterpolationIndex;
     
-    let closestInterpolationPointIndex = self.adjustInterpolationIndex(
-      for: deltaAvgSorted.first!.offset
-    );
+      guard !shouldIgnoreAllowSnapping else {
+        return firstIndex;
+      };
+      
+      return self.adjustInterpolationIndex(for: firstIndex);
+    }();
       
     let closestInterpolationPoint =
       interpolationSteps[closestInterpolationPointIndex];
@@ -2503,7 +2579,7 @@ public class AdaptiveModalManager: NSObject {
       interpolationIndex: closestInterpolationPointIndex,
       snapPointConfig: self.currentModalConfig.snapPoints[closestInterpolationPointIndex],
       interpolationPoint: closestInterpolationPoint,
-      snapDistance: deltaAvg[closestInterpolationPointIndex]
+      snapDistance: deltaAvg[closestInterpolationPointIndex].delta
     );
   };
   
@@ -2656,7 +2732,10 @@ public class AdaptiveModalManager: NSObject {
         let gestureFinalPoint =
           self.applyGestureOffsets(forGesturePoint: gestureFinalPointRaw);
         
-        self.snapToClosestSnapPoint(forPoint: gestureFinalPoint);
+        self.snapToClosestSnapPoint(
+          forPoint: gestureFinalPoint,
+          direction: self.gestureDirection
+        );
         
       default:
         break;
@@ -3009,9 +3088,11 @@ public class AdaptiveModalManager: NSObject {
   
   func snapToClosestSnapPoint(
     forPoint point: CGPoint,
+    direction: AdaptiveModalConfig.SnapDirection?,
     animationConfig: AdaptiveModalSnapAnimationConfig? = nil,
     completion: (() -> Void)? = nil
   ) {
+    
     let coord = point[keyPath: self.currentModalConfig.inputValueKeyForPoint];
     let closestSnapPoint = self.getClosestSnapPoint(forCoord: coord);
     
@@ -3183,14 +3264,9 @@ public class AdaptiveModalManager: NSObject {
     if self.pendingCurrentModalConfigUpdate {
       self.computeSnapPoints();
       
-      let closestSnapPoint = self.getClosestSnapPoint(forRect: modalFrame);
-      
-      print(
-        "notifyDidLayoutSubviews:",
-        "\n - self.currentConfigInterpolationIndex:", self.currentConfigInterpolationIndex,
-        "\n - closestSnapPoint.interpolationIndex:", closestSnapPoint.interpolationIndex,
-        "\n - closestSnapPoint.snapDistance:", closestSnapPoint.snapDistance,
-        "\n"
+      let closestSnapPoint = self.getClosestSnapPoint(
+        forRect: modalFrame,
+        shouldExcludeUndershootSnapPoint: true
       );
       
       self.currentConfigInterpolationIndex = closestSnapPoint.interpolationIndex;
@@ -3276,9 +3352,11 @@ public class AdaptiveModalManager: NSObject {
     animationConfig: AdaptiveModalSnapAnimationConfig? = nil,
     extraAnimation: (() -> Void)? = nil,
     completion: (() -> Void)? = nil
+    // TODO-WIP
   ) {
     let closestSnapPoint = self.getClosestSnapPoint(
-      forRect: self.modalFrame ?? .zero
+      forRect: self.modalFrame ?? .zero,
+      shouldExcludeUndershootSnapPoint: true
     );
     
     let nextInterpolationIndex =

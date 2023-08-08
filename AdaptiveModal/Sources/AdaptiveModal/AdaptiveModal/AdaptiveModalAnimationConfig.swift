@@ -92,6 +92,7 @@ public struct AdaptiveModalKeyframeConfig: Equatable {
   );
   
   static let nilKeys: [PartialKeyPath<Self>] = [
+    \.allowSnapping,
     \.backgroundTapInteraction,
     \.secondaryGestureAxisDampingPercent,
     
@@ -130,6 +131,8 @@ public struct AdaptiveModalKeyframeConfig: Equatable {
 
   // MARK: - Properties
   // ------------------
+  
+  public var allowSnapping: Bool?;
 
   public var backgroundTapInteraction: BackgroundInteractionMode?;
   public var secondaryGestureAxisDampingPercent: CGFloat?;
@@ -177,6 +180,7 @@ public struct AdaptiveModalKeyframeConfig: Equatable {
   public var backgroundVisualEffectIntensity: CGFloat?;
   
   public init(
+    allowSnapping: Bool? = nil,
     backgroundTapInteraction: BackgroundInteractionMode? = nil,
     secondaryGestureAxisDampingPercent: CGFloat? = nil,
     modalScrollViewContentInsets: LayoutValueEdgeInsets? = nil,
@@ -210,6 +214,8 @@ public struct AdaptiveModalKeyframeConfig: Equatable {
     backgroundVisualEffectOpacity: CGFloat? = nil,
     backgroundVisualEffectIntensity: CGFloat? = nil
   ) {
+  
+    self.allowSnapping = allowSnapping;
     
     self.backgroundTapInteraction = backgroundTapInteraction;
     self.secondaryGestureAxisDampingPercent = secondaryGestureAxisDampingPercent;
@@ -264,6 +270,9 @@ public struct AdaptiveModalKeyframeConfig: Equatable {
       else { return };
       
       switch $0 {
+        case let key as WritableKeyPath<Self, Bool?>:
+          self[keyPath: key] = otherKeyframe[keyPath: key];
+      
         case let key as WritableKeyPath<Self, BackgroundInteractionMode?>:
           self[keyPath: key] = otherKeyframe[keyPath: key];
           

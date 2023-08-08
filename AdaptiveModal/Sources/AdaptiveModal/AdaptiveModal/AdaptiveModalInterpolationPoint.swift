@@ -30,6 +30,8 @@ public struct AdaptiveModalInterpolationPoint: Equatable {
   public var computedRect: CGRect;
   public var modalPadding: UIEdgeInsets;
   
+  public var allowSnapping: Bool;
+  
   public var backgroundTapInteraction: BackgroundInteractionMode;
   public var secondaryGestureAxisDampingPercent: CGFloat;
   
@@ -358,6 +360,8 @@ public extension AdaptiveModalInterpolationPoint {
     
     let isFirstSnapPoint = snapPointIndex == 0;
     let keyframeCurrent = snapPointConfig.keyframeConfig;
+    
+    self.allowSnapping = keyframeCurrent?.allowSnapping ?? true;
     
     self.backgroundTapInteraction = keyframeCurrent?.backgroundTapInteraction
       ?? keyframePrev?.backgroundTapInteraction

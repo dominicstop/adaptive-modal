@@ -12,7 +12,7 @@ public struct AdaptiveModalConfig: Equatable {
   // MARK: - Types
   // -------------
   
-  public enum Direction: Equatable {
+  public enum Orientation: Equatable {
     case vertical;
     case horizontal;
   };
@@ -23,7 +23,7 @@ public struct AdaptiveModalConfig: Equatable {
     case leftToRight;
     case rightToLeft;
     
-    public var direction: Direction {
+    public var orientation: Orientation {
       switch self {
         case .bottomToTop, .topToBottom: return .vertical;
         case .leftToRight, .rightToLeft: return .horizontal;
@@ -31,11 +31,33 @@ public struct AdaptiveModalConfig: Equatable {
     };
     
     public var isVertical: Bool {
-      self.direction == .vertical;
+      self.orientation == .vertical;
     };
     
     public var isHorizontal: Bool {
       !self.isVertical;
+    };
+    
+    /// Where the top and right is increasing
+    public var isDirectionIncreasing: Bool {
+      switch self {
+        case .bottomToTop, .leftToRight: return true;
+        case .topToBottom, .rightToLeft: return false;
+      };
+    };
+    
+    public func getDirection<T: Numeric & Comparable>(next: T, prev: T) -> Self {
+      switch self.orientation {
+        case .horizontal:
+          return next > prev
+            ? .leftToRight
+            : .rightToLeft;
+          
+        case .vertical:
+          return next > prev
+            ? .topToBottom
+            : .bottomToTop;
+        };
     };
   };
   
