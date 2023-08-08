@@ -14,7 +14,6 @@
 
 <br>
 
-- [ ] `TODO:2023-08-05-03-22-37` - Snap Point Config - allow snapping.
 - [ ] `TODO:2023-07-24-23-03-17` - Impl: Adaptive modal state.
 - [ ] `TODO:2023-08-07-19-49-08` - Refactor `AdaptiveModalClampingConfig` - Accept list of keys that will be clamped left/initial value, right/last value.
 
@@ -60,6 +59,8 @@
 <br><br>
 
 ## Completed
+
+- [x] `TODO:2023-08-05-03-22-37` - Snap Point Config - allow snapping.
 
 - [x] `TODO:2023-08-07-06-39-15` - Impl: Keyframe - Add support for 3D transforms. 
 
