@@ -295,6 +295,12 @@ public struct AdaptiveModalKeyframeConfig: Equatable {
           break;
       };
     };
+    
+    if self.modalTransform != nil,
+       let otherModalTransform = otherKeyframe.modalTransform {
+       
+      self.modalTransform!.setNonNilValues(with: otherModalTransform);
+    };
   };
 };
 

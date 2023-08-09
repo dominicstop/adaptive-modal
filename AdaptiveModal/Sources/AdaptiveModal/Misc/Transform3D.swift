@@ -10,7 +10,7 @@ import QuartzCore
 
 public struct Transform3D: Equatable {
 
-  static let `default`: Self = .init(
+  public static let `default`: Self = .init(
     translateX: 0,
     translateY: 0,
     translateZ: 0,
