@@ -372,7 +372,7 @@ public extension AdaptiveModalInterpolationPoint {
       ?? 1;
       
     self.modalTransform = {
-      let prevTransform = keyframePrev?.modalTransform ?? .init();
+      let prevTransform = keyframePrev?.modalTransform ?? .default;
     
       guard var nextTransform = keyframeCurrent?.modalTransform else {
         return prevTransform;
