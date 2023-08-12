@@ -9,6 +9,13 @@ import UIKit
 
 public struct RNILayout: Equatable {
 
+  static let zero: Self = .init(
+    horizontalAlignment: .left,
+    verticalAlignment: .top,
+    width: .constant(0),
+    height: .constant(0)
+  );
+
   // MARK: - Public Types
   // --------------------
   
