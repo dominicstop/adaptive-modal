@@ -91,42 +91,109 @@ public struct AdaptiveModalKeyframeConfig: Equatable {
     backgroundVisualEffectIntensity: 0
   );
   
-  static let nilKeys: [PartialKeyPath<Self>] = [
-    \.allowSnapping,
-    \.backgroundTapInteraction,
-    \.secondaryGestureAxisDampingPercent,
-    
-    \.modalScrollViewContentInsets,
-    \.modalScrollViewContentInsets,
-    \.modalScrollViewVerticalScrollIndicatorInsets,
-    \.modalScrollViewHorizontalScrollIndicatorInsets,
-    
-    // \.modalTransform,
-    \.modalBorderWidth,
-    \.modalBorderColor,
-    \.modalShadowColor,
-    \.modalShadowOffset,
-    \.modalShadowOpacity,
-    \.modalShadowRadius,
-    \.modalCornerRadius,
-    \.modalMaskedCorners,
-    \.modalOpacity,
-    \.modalContentOpacity,
-    \.modalBackgroundColor,
-    \.modalBackgroundOpacity,
-    \.modalBackgroundVisualEffect,
-    \.modalBackgroundVisualEffectOpacity,
-    \.modalBackgroundVisualEffectIntensity,
-    \.modalDragHandleSize,
-    \.modalDragHandleOffset,
-    \.modalDragHandleColor,
-    \.modalDragHandleOpacity,
-    \.modalDragHandleCornerRadius,
-    \.backgroundColor,
-    \.backgroundOpacity,
-    \.backgroundVisualEffect,
-    \.backgroundVisualEffectOpacity,
-    \.backgroundVisualEffectIntensity,
+  static let keyMap: [(
+    keyframeKey: PartialKeyPath<Self>,
+    interpolationPointKey: PartialKeyPath<AdaptiveModalInterpolationPoint>
+  )] = [(
+      \.allowSnapping,
+      \.allowSnapping
+    ), (
+      \.backgroundTapInteraction,
+      \.backgroundTapInteraction
+    ), (
+      \.secondaryGestureAxisDampingPercent,
+      \.secondaryGestureAxisDampingPercent
+    ), (
+      \.modalScrollViewContentInsets,
+      \.modalScrollViewContentInsets
+    ), (
+      \.modalScrollViewContentInsets,
+      \.modalScrollViewContentInsets
+    ), (
+      \.modalScrollViewVerticalScrollIndicatorInsets,
+      \.modalScrollViewVerticalScrollIndicatorInsets
+    ), (
+      \.modalScrollViewHorizontalScrollIndicatorInsets,
+      \.modalScrollViewHorizontalScrollIndicatorInsets
+    ),(
+      \.modalTransform,
+      \.modalTransform
+    ), (
+      \.modalBorderWidth,
+      \.modalBorderWidth
+    ), (
+      \.modalBorderColor,
+      \.modalBorderColor
+    ), (
+      \.modalShadowColor,
+      \.modalShadowColor
+    ), (
+      \.modalShadowOffset,
+      \.modalShadowOffset
+    ), (
+      \.modalShadowOpacity,
+      \.modalShadowOpacity
+    ), (
+      \.modalShadowRadius,
+      \.modalShadowRadius
+    ), (
+      \.modalCornerRadius,
+      \.modalCornerRadius
+    ), (
+      \.modalMaskedCorners,
+      \.modalMaskedCorners
+    ), (
+      \.modalOpacity,
+      \.modalOpacity
+    ), (
+      \.modalContentOpacity,
+      \.modalContentOpacity
+    ), (
+      \.modalBackgroundColor,
+      \.modalBackgroundColor
+    ), (
+      \.modalBackgroundOpacity,
+      \.modalBackgroundOpacity
+    ), (
+      \.modalBackgroundVisualEffect,
+      \.modalBackgroundVisualEffect
+    ), (
+      \.modalBackgroundVisualEffectOpacity,
+      \.modalBackgroundVisualEffectOpacity
+    ), (
+      \.modalBackgroundVisualEffectIntensity,
+      \.modalBackgroundVisualEffectIntensity
+    ), (
+      \.modalDragHandleSize,
+      \.modalDragHandleSize
+    ), (
+      \.modalDragHandleOffset,
+      \.modalDragHandleOffset
+    ), (
+      \.modalDragHandleColor,
+      \.modalDragHandleColor
+    ), (
+      \.modalDragHandleOpacity,
+      \.modalDragHandleOpacity
+    ), (
+      \.modalDragHandleCornerRadius,
+      \.modalDragHandleCornerRadius
+    ), (
+      \.backgroundColor,
+      \.backgroundColor
+    ), (
+      \.backgroundOpacity,
+      \.backgroundOpacity
+    ), (
+      \.backgroundVisualEffect,
+      \.backgroundVisualEffect
+    ), (
+      \.backgroundVisualEffectOpacity,
+      \.backgroundVisualEffectOpacity
+    ), (
+      \.backgroundVisualEffectIntensity,
+      \.backgroundVisualEffectIntensity
+    ),
   ];
 
   // MARK: - Properties
@@ -260,16 +327,94 @@ public struct AdaptiveModalKeyframeConfig: Equatable {
     self.backgroundVisualEffectIntensity = backgroundVisualEffectIntensity;
   };
   
+  init(fromInterpolationPoint interpolationPoint: AdaptiveModalInterpolationPoint){
+    
+    typealias KeyframeKey<T> = WritableKeyPath<Self, T>;
+  
+    typealias InterpolationPointKey<T> =
+      WritableKeyPath<AdaptiveModalInterpolationPoint, T>;
+      
+    Self.keyMap.forEach {
+      switch ($0.keyframeKey, $0.interpolationPointKey) {
+        case (
+          let keyframeKey as KeyframeKey<Bool?>,
+          let interpolationPointKey as InterpolationPointKey<Bool>
+        ):
+          self[keyPath: keyframeKey] =
+            interpolationPoint[keyPath: interpolationPointKey];
+        
+        case (
+          let keyframeKey as KeyframeKey<BackgroundInteractionMode?>,
+          let interpolationPointKey as InterpolationPointKey<BackgroundInteractionMode>
+        ):
+          self[keyPath: keyframeKey] =
+            interpolationPoint[keyPath: interpolationPointKey];
+        
+        case (
+          let keyframeKey as KeyframeKey<LayoutValueEdgeInsets?>,
+          let interpolationPointKey as InterpolationPointKey<LayoutValueEdgeInsets>
+        ):
+          self[keyPath: keyframeKey] =
+            interpolationPoint[keyPath: interpolationPointKey];
+        
+        case (
+          let keyframeKey as KeyframeKey<CGFloat?>,
+          let interpolationPointKey as InterpolationPointKey<CGFloat>
+        ):
+          self[keyPath: keyframeKey] =
+            interpolationPoint[keyPath: interpolationPointKey];
+        
+        case (
+          let keyframeKey as KeyframeKey<UIColor?>,
+          let interpolationPointKey as InterpolationPointKey<UIColor>
+        ):
+          self[keyPath: keyframeKey] =
+            interpolationPoint[keyPath: interpolationPointKey];
+        
+        case (
+          let keyframeKey as KeyframeKey<CGSize?>,
+          let interpolationPointKey as InterpolationPointKey<CGSize>
+        ):
+          self[keyPath: keyframeKey] =
+            interpolationPoint[keyPath: interpolationPointKey];
+        
+        case (
+          let keyframeKey as KeyframeKey<CACornerMask?>,
+          let interpolationPointKey as InterpolationPointKey<CACornerMask>
+        ):
+          self[keyPath: keyframeKey] =
+            interpolationPoint[keyPath: interpolationPointKey];
+            
+        case (
+          let keyframeKey as KeyframeKey<UIVisualEffect?>,
+          let interpolationPointKey as InterpolationPointKey<UIVisualEffect>
+        ):
+          self[keyPath: keyframeKey] =
+            interpolationPoint[keyPath: interpolationPointKey];
+   
+        case (
+          let keyframeKey as KeyframeKey<Transform3D?>,
+          let interpolationPointKey as InterpolationPointKey<Transform3D>
+        ):
+          self[keyPath: keyframeKey] =
+            interpolationPoint[keyPath: interpolationPointKey];
+        
+        default:
+          break;
+      };
+    };
+  };
+  
   public mutating func setNonNilValues(using otherKeyframe: Self) {
-    Self.nilKeys.forEach {
-      let value =  self[keyPath: $0];
+    Self.keyMap.forEach {
+      let value =  self[keyPath: $0.0];
       
       guard value is ExpressibleByNilLiteral,
             let optionalValue = value as? OptionalUnwrappable,
             !optionalValue.isSome()
       else { return };
       
-      switch $0 {
+      switch $0.keyframeKey {
         case let key as WritableKeyPath<Self, Bool?>:
           self[keyPath: key] = otherKeyframe[keyPath: key];
       
@@ -291,15 +436,16 @@ public struct AdaptiveModalKeyframeConfig: Equatable {
         case let key as WritableKeyPath<Self, CACornerMask?>:
           self[keyPath: key] = otherKeyframe[keyPath: key];
           
+        case let key as WritableKeyPath<Self, UIVisualEffect?>:
+          self[keyPath: key] = otherKeyframe[keyPath: key];
+          
+        case let key as WritableKeyPath<Self, Transform3D?>:
+          guard let otherValue = otherKeyframe[keyPath: key] else { break };
+          self[keyPath: key]?.setNonNilValues(with: otherValue);
+
         default:
           break;
       };
-    };
-    
-    if self.modalTransform != nil,
-       let otherModalTransform = otherKeyframe.modalTransform {
-       
-      self.modalTransform!.setNonNilValues(with: otherModalTransform);
     };
   };
 };
