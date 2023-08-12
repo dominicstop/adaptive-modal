@@ -1459,172 +1459,6 @@ public class AdaptiveModalManager: NSObject {
     return (rangeStart, rangeEnd);
   };
   
-  // MARK: - Functions - Value Interpolators
-  // ---------------------------------------
-  
-  private func interpolateModalRect(
-    forInputPercentValue inputPercentValue: CGFloat
-  ) -> CGRect? {
-  
-    let clampConfig = currentModalConfig.interpolationClampingConfig;
-
-    let nextHeight = self.interpolate(
-      inputValue: inputPercentValue,
-      rangeOutputKey: \.computedRect.height,
-      shouldClampMin: clampConfig.shouldClampModalLastHeight,
-      shouldClampMax: clampConfig.shouldClampModalInitHeight
-    );
-    
-    let nextWidth = self.interpolate(
-      inputValue: inputPercentValue,
-      rangeOutputKey: \.computedRect.width,
-      shouldClampMin: clampConfig.shouldClampModalLastWidth,
-      shouldClampMax: clampConfig.shouldClampModalInitWidth
-    );
-    
-    let nextX = self.interpolate(
-      inputValue: inputPercentValue,
-      rangeOutputKey: \.computedRect.origin.x,
-      shouldClampMin: clampConfig.shouldClampModalLastX,
-      shouldClampMax: clampConfig.shouldClampModalInitX
-    );
-    
-    let nextY = self.interpolate(
-      inputValue: inputPercentValue,
-      rangeOutputKey: \.computedRect.origin.y,
-      shouldClampMin: clampConfig.shouldClampModalLastY,
-      shouldClampMax: clampConfig.shouldClampModalInitY
-    );
-    
-    guard let nextX = nextX,
-          let nextY = nextY,
-          let nextWidth  = nextWidth,
-          let nextHeight = nextHeight
-    else { return nil };
-          
-    return CGRect(
-      x: nextX,
-      y: nextY,
-      width: nextWidth,
-      height: nextHeight
-    );
-  };
-  
-  private func interpolateModalTransform(
-    forInputPercentValue inputPercentValue: CGFloat
-  ) -> Transform3D? {
-  
-    let clampConfig = currentModalConfig.interpolationClampingConfig;
-    
-    let nextTranslateX = self.interpolate(
-      inputValue: inputPercentValue,
-      rangeOutputKey: \.modalTransform.translateX,
-      shouldClampMin: clampConfig.shouldClampModalInitTranslateX,
-      shouldClampMax: clampConfig.shouldClampModalLastTranslateX
-    );
-    
-    let nextTranslateY = self.interpolate(
-      inputValue: inputPercentValue,
-      rangeOutputKey: \.modalTransform.translateY,
-      shouldClampMin: clampConfig.shouldClampModalInitTranslateY,
-      shouldClampMax: clampConfig.shouldClampModalLastTranslateY
-    );
-    
-    let nextTranslateZ = self.interpolate(
-      inputValue: inputPercentValue,
-      rangeOutputKey: \.modalTransform.translateZ,
-      shouldClampMin: clampConfig.shouldClampModalInitTranslateY,
-      shouldClampMax: clampConfig.shouldClampModalLastTranslateY
-    );
-    
-    let nextScaleX = self.interpolate(
-      inputValue: inputPercentValue,
-      rangeOutputKey: \.modalTransform.scaleX,
-      shouldClampMin: clampConfig.shouldClampModalLastScaleX,
-      shouldClampMax: clampConfig.shouldClampModalLastScaleX
-    );
-    
-    let nextScaleY = self.interpolate(
-      inputValue: inputPercentValue,
-      rangeOutputKey: \.modalTransform.scaleY,
-      shouldClampMin: clampConfig.shouldClampModalLastScaleY,
-      shouldClampMax: clampConfig.shouldClampModalLastScaleY
-    );
-    
-    let nextModalRotationX = self.interpolate(
-      inputValue: inputPercentValue,
-      rangeOutputKey: \.modalTransform.rotateX.radians,
-      shouldClampMin: clampConfig.shouldClampModalInitRotation,
-      shouldClampMax: clampConfig.shouldClampModalLastRotation
-    );
-    
-    let nextModalRotationY = self.interpolate(
-      inputValue: inputPercentValue,
-      rangeOutputKey: \.modalTransform.rotateY.radians,
-      shouldClampMin: clampConfig.shouldClampModalInitRotation,
-      shouldClampMax: clampConfig.shouldClampModalLastRotation
-    );
-    
-    let nextModalRotationZ = self.interpolate(
-      inputValue: inputPercentValue,
-      rangeOutputKey: \.modalTransform.rotateZ.radians,
-      shouldClampMin: clampConfig.shouldClampModalInitRotation,
-      shouldClampMax: clampConfig.shouldClampModalLastRotation
-    );
-    
-    guard let nextTranslateX = nextTranslateX,
-          let nextTranslateY = nextTranslateY,
-          let nextTranslateZ = nextTranslateZ,
-          let nextScaleX = nextScaleX,
-          let nextScaleY = nextScaleY,
-          let nextModalRotationX = nextModalRotationX,
-          let nextModalRotationY = nextModalRotationY,
-          let nextModalRotationZ = nextModalRotationZ
-    else { return nil };
-    
-    return Transform3D(
-      translateX: nextTranslateX,
-      translateY: nextTranslateY,
-      translateZ: nextTranslateZ,
-      scaleX: nextScaleX,
-      scaleY: nextScaleY,
-      rotateX: .radians(nextModalRotationX),
-      rotateY: .radians(nextModalRotationY),
-      rotateZ: .radians(nextModalRotationZ)
-    );
-  };
-  
-  private func interpolateModalShadowOffset(
-    forInputPercentValue inputPercentValue: CGFloat
-  ) -> CGSize? {
-
-    let nextWidth = self.interpolate(
-      inputValue: inputPercentValue,
-      rangeOutputKey: \.modalShadowOffset.width
-    );
-    
-    let nextHeight = self.interpolate(
-      inputValue: inputPercentValue,
-      rangeOutputKey: \.modalShadowOffset.height
-    );
-    
-    guard let nextWidth = nextWidth,
-          let nextHeight = nextHeight
-    else { return nil };
-
-    return CGSize(width: nextWidth, height: nextHeight);
-  };
-
-  private func interpolateModalBorderRadius(
-    forInputPercentValue inputPercentValue: CGFloat
-  ) -> CGFloat? {
-  
-    return self.interpolate(
-      inputValue: inputPercentValue,
-      rangeOutputKey: \.modalCornerRadius
-    );
-  };
-  
   // MARK: - Functions - Property Interpolators
   // ------------------------------------------
   
@@ -1886,9 +1720,18 @@ public class AdaptiveModalManager: NSObject {
   ) {
     guard let modalView = self.modalView else { return };
     
+    let rangeInput = self.interpolationSteps.map {
+      $0[keyPath: \.percent]
+    };
+    
     self.modalFrame = {
-      let nextRect = self.interpolateModalRect(
-        forInputPercentValue: inputPercentValue
+      let nextRect = AdaptiveModalUtilities.interpolateRect(
+        inputValue: inputPercentValue,
+        rangeInput: rangeInput,
+        rangeOutput: AdaptiveModalUtilities.extractValuesFromArray(
+          for: self.interpolationSteps,
+          key: \.computedRect
+        )
       );
       
       guard let nextRect = nextRect else {
@@ -2015,8 +1858,13 @@ public class AdaptiveModalManager: NSObject {
       forObject: self.modalWrapperTransformView,
       forPropertyKey: \.layer.transform,
       withValue: {
-        let transform3D = self.interpolateModalTransform(
-          forInputPercentValue: inputPercentValue
+        let transform3D = AdaptiveModalUtilities.interpolateTransform3D(
+          inputValue: inputPercentValue,
+          rangeInput: rangeInput,
+          rangeOutput: AdaptiveModalUtilities.extractValuesFromArray(
+            for: self.interpolationSteps,
+            key: \.modalTransform
+          )
         );
         
         return transform3D?.transform;
@@ -2079,9 +1927,16 @@ public class AdaptiveModalManager: NSObject {
     AdaptiveModalUtilities.unwrapAndSetProperty(
       forObject: self.modalWrapperShadowView,
       forPropertyKey: \.layer.shadowOffset,
-      withValue:  self.interpolateModalShadowOffset(
-        forInputPercentValue: inputPercentValue
-      )
+      withValue: {
+        AdaptiveModalUtilities.interpolateSize(
+          inputValue: inputPercentValue,
+          rangeInput: rangeInput,
+          rangeOutput: AdaptiveModalUtilities.extractValuesFromArray(
+            for: self.interpolationSteps,
+            key: \.modalShadowOffset
+          )
+        )
+      }()
     );
     
     AdaptiveModalUtilities.unwrapAndSetProperty(
@@ -2110,8 +1965,9 @@ public class AdaptiveModalManager: NSObject {
     AdaptiveModalUtilities.unwrapAndSetProperty(
       forObject: self.modalContentWrapperView,
       forPropertyKey: \.layer.cornerRadius,
-      withValue:  self.interpolateModalBorderRadius(
-        forInputPercentValue: inputPercentValue
+      withValue:  self.interpolate(
+        inputValue: inputPercentValue,
+        rangeOutputKey: \.modalCornerRadius
       )
     );
     

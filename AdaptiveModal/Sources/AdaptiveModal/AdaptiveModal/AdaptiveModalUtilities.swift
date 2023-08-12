@@ -9,6 +9,15 @@ import UIKit
 
 class AdaptiveModalUtilities {
 
+  static func extractValuesFromArray<T, U>(
+    for array: [T],
+    key: KeyPath<T, U>
+  ) -> [U] {
+    array.map {
+      $0[keyPath: key];
+    };
+  };
+
   static func interpolate(
     inputValue    : CGFloat,
     rangeInput    : [CGFloat],
@@ -113,7 +122,6 @@ class AdaptiveModalUtilities {
       rangeA.append(rgba.a);
     };
     
-  
     let nextR = Self.interpolate(
       inputValue: inputValue,
       rangeInput: rangeInput,
@@ -157,6 +165,230 @@ class AdaptiveModalUtilities {
       green: nextG,
       blue : nextB,
       alpha: nextA
+    );
+  };
+  
+  static func interpolateRect(
+    inputValue    : CGFloat,
+    rangeInput    : [CGFloat],
+    rangeOutput   : [CGRect],
+    shouldClampMin: Bool = false,
+    shouldClampMax: Bool = false
+  ) -> CGRect? {
+  
+    let nextHeight = Self.interpolate(
+      inputValue: inputValue,
+      rangeInput: rangeInput,
+      rangeOutput: extractValuesFromArray(
+        for: rangeOutput,
+        key: \.height
+      ),
+      shouldClampMin: shouldClampMin,
+      shouldClampMax: shouldClampMax
+    );
+    
+    let nextWidth = Self.interpolate(
+      inputValue: inputValue,
+      rangeInput: rangeInput,
+      rangeOutput: extractValuesFromArray(
+        for: rangeOutput,
+        key: \.width
+      ),
+      shouldClampMin: shouldClampMin,
+      shouldClampMax: shouldClampMax
+    );
+    
+    let nextX = Self.interpolate(
+      inputValue: inputValue,
+      rangeInput: rangeInput,
+      rangeOutput: extractValuesFromArray(
+        for: rangeOutput,
+        key: \.origin.x
+      ),
+      shouldClampMin: shouldClampMin,
+      shouldClampMax: shouldClampMax
+    );
+    
+    let nextY = Self.interpolate(
+      inputValue: inputValue,
+      rangeInput: rangeInput,
+      rangeOutput: extractValuesFromArray(
+        for: rangeOutput,
+        key: \.origin.y
+      ),
+      shouldClampMin: shouldClampMin,
+      shouldClampMax: shouldClampMax
+    );
+    
+    guard let nextX = nextX,
+          let nextY = nextY,
+          let nextWidth  = nextWidth,
+          let nextHeight = nextHeight
+    else { return nil };
+          
+    return CGRect(
+      x: nextX,
+      y: nextY,
+      width: nextWidth,
+      height: nextHeight
+    );
+  };
+  
+  static func interpolateTransform3D(
+    inputValue    : CGFloat,
+    rangeInput    : [CGFloat],
+    rangeOutput   : [Transform3D],
+    shouldClampMin: Bool = false,
+    shouldClampMax: Bool = false
+  ) -> Transform3D? {
+  
+    let nextTranslateX = Self.interpolate(
+      inputValue: inputValue,
+      rangeInput: rangeInput,
+      rangeOutput: extractValuesFromArray(
+        for: rangeOutput,
+        key: \.translateX
+      ),
+      shouldClampMin: shouldClampMin,
+      shouldClampMax: shouldClampMax
+    );
+    
+    let nextTranslateY = Self.interpolate(
+      inputValue: inputValue,
+      rangeInput: rangeInput,
+      rangeOutput: extractValuesFromArray(
+        for: rangeOutput,
+        key: \.translateY
+      ),
+      shouldClampMin: shouldClampMin,
+      shouldClampMax: shouldClampMax
+    );
+    
+    let nextTranslateZ = Self.interpolate(
+      inputValue: inputValue,
+      rangeInput: rangeInput,
+      rangeOutput: extractValuesFromArray(
+        for: rangeOutput,
+        key: \.translateX
+      ),
+      shouldClampMin: shouldClampMin,
+      shouldClampMax: shouldClampMax
+    );
+    
+    let nextScaleX = Self.interpolate(
+      inputValue: inputValue,
+      rangeInput: rangeInput,
+      rangeOutput: extractValuesFromArray(
+        for: rangeOutput,
+        key: \.scaleX
+      ),
+      shouldClampMin: shouldClampMin,
+      shouldClampMax: shouldClampMax
+    );
+    
+    let nextScaleY = Self.interpolate(
+      inputValue: inputValue,
+      rangeInput: rangeInput,
+      rangeOutput: extractValuesFromArray(
+        for: rangeOutput,
+        key: \.scaleY
+      ),
+      shouldClampMin: shouldClampMin,
+      shouldClampMax: shouldClampMax
+    );
+    
+    let nextRotationX = Self.interpolate(
+      inputValue: inputValue,
+      rangeInput: rangeInput,
+      rangeOutput: extractValuesFromArray(
+        for: rangeOutput,
+        key: \.rotateX.radians
+      ),
+      shouldClampMin: shouldClampMin,
+      shouldClampMax: shouldClampMax
+    );
+    
+    let nextRotationY = Self.interpolate(
+      inputValue: inputValue,
+      rangeInput: rangeInput,
+      rangeOutput: extractValuesFromArray(
+        for: rangeOutput,
+        key: \.rotateY.radians
+      ),
+      shouldClampMin: shouldClampMin,
+      shouldClampMax: shouldClampMax
+    );
+    
+    let nextRotationZ = Self.interpolate(
+      inputValue: inputValue,
+      rangeInput: rangeInput,
+      rangeOutput: extractValuesFromArray(
+        for: rangeOutput,
+        key: \.rotateZ.radians
+      ),
+      shouldClampMin: shouldClampMin,
+      shouldClampMax: shouldClampMax
+    );
+    
+    guard let nextTranslateX = nextTranslateX,
+          let nextTranslateY = nextTranslateY,
+          let nextTranslateZ = nextTranslateZ,
+          let nextScaleX = nextScaleX,
+          let nextScaleY = nextScaleY,
+          let nextRotationX = nextRotationX,
+          let nextRotationY = nextRotationY,
+          let nextRotationZ = nextRotationZ
+    else { return nil };
+    
+    return Transform3D(
+      translateX: nextTranslateX,
+      translateY: nextTranslateY,
+      translateZ: nextTranslateZ,
+      scaleX: nextScaleX,
+      scaleY: nextScaleY,
+      rotateX: .radians(nextRotationX),
+      rotateY: .radians(nextRotationY),
+      rotateZ: .radians(nextRotationZ)
+    );
+  };
+  
+  static func interpolateSize(
+    inputValue    : CGFloat,
+    rangeInput    : [CGFloat],
+    rangeOutput   : [CGSize],
+    shouldClampMin: Bool = false,
+    shouldClampMax: Bool = false
+  ) -> CGSize? {
+  
+    let nextWidth = Self.interpolate(
+      inputValue: inputValue,
+      rangeInput: rangeInput,
+      rangeOutput: extractValuesFromArray(
+        for: rangeOutput,
+        key: \.width
+      ),
+      shouldClampMin: shouldClampMin,
+      shouldClampMax: shouldClampMax
+    );
+    
+    let nextHeight = Self.interpolate(
+      inputValue: inputValue,
+      rangeInput: rangeInput,
+      rangeOutput: extractValuesFromArray(
+        for: rangeOutput,
+        key: \.height
+      ),
+      shouldClampMin: shouldClampMin,
+      shouldClampMax: shouldClampMax
+    );
+    
+    guard let nextWidth = nextWidth,
+          let nextHeight = nextHeight
+    else { return nil };
+
+    return CGSize(
+      width: nextWidth,
+      height: nextHeight
     );
   };
   
