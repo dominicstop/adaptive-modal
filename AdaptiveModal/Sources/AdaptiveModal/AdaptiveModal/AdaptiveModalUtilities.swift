@@ -392,6 +392,72 @@ class AdaptiveModalUtilities {
     );
   };
   
+  static func interpolateEdgeInsets(
+    inputValue    : CGFloat,
+    rangeInput    : [CGFloat],
+    rangeOutput   : [UIEdgeInsets],
+    shouldClampMin: Bool = false,
+    shouldClampMax: Bool = false
+  ) -> UIEdgeInsets? {
+  
+    let insetTop = Self.interpolate(
+      inputValue: inputValue,
+      rangeInput: rangeInput,
+      rangeOutput: extractValuesFromArray(
+        for: rangeOutput,
+        key: \.top
+      ),
+      shouldClampMin: shouldClampMin,
+      shouldClampMax: shouldClampMax
+    );
+    
+    let insetLeft = Self.interpolate(
+      inputValue: inputValue,
+      rangeInput: rangeInput,
+      rangeOutput: extractValuesFromArray(
+        for: rangeOutput,
+        key: \.left
+      ),
+      shouldClampMin: shouldClampMin,
+      shouldClampMax: shouldClampMax
+    );
+    
+    let insetBottom = Self.interpolate(
+      inputValue: inputValue,
+      rangeInput: rangeInput,
+      rangeOutput: extractValuesFromArray(
+        for: rangeOutput,
+        key: \.bottom
+      ),
+      shouldClampMin: shouldClampMin,
+      shouldClampMax: shouldClampMax
+    );
+    
+    let insetRight = Self.interpolate(
+      inputValue: inputValue,
+      rangeInput: rangeInput,
+      rangeOutput: extractValuesFromArray(
+        for: rangeOutput,
+        key: \.right
+      ),
+      shouldClampMin: shouldClampMin,
+      shouldClampMax: shouldClampMax
+    );
+    
+    guard let insetTop = insetTop,
+          let insetLeft = insetLeft,
+          let insetBottom  = insetBottom,
+          let insetRight = insetRight
+    else { return nil };
+          
+    return UIEdgeInsets(
+      top: insetTop,
+      left: insetLeft,
+      bottom: insetBottom,
+      right: insetRight
+    );
+  };
+  
   static func computeFinalPosition(
     position: CGFloat,
     initialVelocity: CGFloat,

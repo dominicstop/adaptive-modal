@@ -35,9 +35,9 @@ public struct AdaptiveModalInterpolationPoint: Equatable {
   public var backgroundTapInteraction: BackgroundInteractionMode;
   public var secondaryGestureAxisDampingPercent: CGFloat;
   
-  public var modalScrollViewContentInsets: UIEdgeInsets;
-  public var modalScrollViewVerticalScrollIndicatorInsets: UIEdgeInsets;
-  public var modalScrollViewHorizontalScrollIndicatorInsets: UIEdgeInsets;
+  public var computedModalScrollViewContentInsets: UIEdgeInsets;
+  public var computedModalScrollViewVerticalScrollIndicatorInsets: UIEdgeInsets;
+  public var computedModalScrollViewHorizontalScrollIndicatorInsets: UIEdgeInsets;
   
   // MARK: - Properties - Keyframes
   // ------------------------------
@@ -257,7 +257,9 @@ public struct AdaptiveModalInterpolationPoint: Equatable {
     block:
     if let modalContentScrollView = modalManager.modalContentScrollView {
       if modalConfig.shouldSetModalScrollViewContentInsets {
-        modalContentScrollView.contentInset = self.modalScrollViewContentInsets;
+        modalContentScrollView.contentInset =
+          self.computedModalScrollViewContentInsets;
+          
         modalContentScrollView.adjustedContentInsetDidChange();
       };
       
@@ -265,12 +267,12 @@ public struct AdaptiveModalInterpolationPoint: Equatable {
       
       if modalConfig.shouldSetModalScrollViewVerticalScrollIndicatorInsets {
         modalContentScrollView.verticalScrollIndicatorInsets =
-          self.modalScrollViewVerticalScrollIndicatorInsets;
+          self.computedModalScrollViewVerticalScrollIndicatorInsets;
       };
       
       if modalConfig.shouldSetModalScrollViewHorizontalScrollIndicatorInsets {
         modalContentScrollView.horizontalScrollIndicatorInsets =
-          self.modalScrollViewHorizontalScrollIndicatorInsets;
+          self.computedModalScrollViewHorizontalScrollIndicatorInsets;
       };
     };
     
@@ -320,9 +322,15 @@ public extension AdaptiveModalInterpolationPoint {
     self.key = snapPointConfig.key;
     self.snapPointIndex = snapPointIndex;
     
-    let computedRect = snapPointConfig.layoutConfig.computeRect(
-      usingLayoutValueContext: baseContext
-    );
+    let computedRect: CGRect = {
+      if let computedRect = snapPointConfig.keyframeConfig?.computedRect {
+        return computedRect;
+      };
+      
+      return snapPointConfig.layoutConfig.computeRect(
+        usingLayoutValueContext: baseContext
+      );
+    }();
     
     let context = RNILayoutValueContext(
       derivedFrom: baseContext,
@@ -522,12 +530,12 @@ public extension AdaptiveModalInterpolationPoint {
       ?? keyframePrev?.backgroundVisualEffectIntensity
       ?? (isFirstSnapPoint ? 0 : 1);
       
-    self.modalScrollViewContentInsets = {
+    self.computedModalScrollViewContentInsets = {
       if let insets = keyframeCurrent?.modalScrollViewContentInsets {
         return insets.compute(usingLayoutValueContext: context);
       };
       
-      if let insets = keyframePrev?.modalScrollViewContentInsets {
+      if let insets = keyframePrev?.computedModalScrollViewContentInsets {
         return insets;
       };
       
@@ -539,7 +547,7 @@ public extension AdaptiveModalInterpolationPoint {
       );
     }();
     
-    self.modalScrollViewVerticalScrollIndicatorInsets = {
+    self.computedModalScrollViewVerticalScrollIndicatorInsets = {
       let didSetModalScrollViewVerticalScrollIndicatorInsets =
         modalConfig.didSetModalScrollViewVerticalScrollIndicatorInsets;
       
@@ -550,7 +558,7 @@ public extension AdaptiveModalInterpolationPoint {
       };
       
       if didSetModalScrollViewVerticalScrollIndicatorInsets,
-         let insets = keyframePrev?.modalScrollViewVerticalScrollIndicatorInsets {
+         let insets = keyframePrev?.computedModalScrollViewVerticalScrollIndicatorInsets {
          
         return insets;
       };
@@ -567,7 +575,7 @@ public extension AdaptiveModalInterpolationPoint {
       return .zero;
     }();
     
-    self.modalScrollViewHorizontalScrollIndicatorInsets = {
+    self.computedModalScrollViewHorizontalScrollIndicatorInsets = {
       let didSetModalScrollViewHorizontalScrollIndicatorInsets =
         modalConfig.didSetModalScrollViewHorizontalScrollIndicatorInsets;
       
@@ -578,7 +586,7 @@ public extension AdaptiveModalInterpolationPoint {
       };
       
       if didSetModalScrollViewHorizontalScrollIndicatorInsets,
-         let insets = keyframePrev?.modalScrollViewVerticalScrollIndicatorInsets {
+         let insets = keyframePrev?.computedModalScrollViewVerticalScrollIndicatorInsets {
          
         return insets;
       };
@@ -596,69 +604,3 @@ public extension AdaptiveModalInterpolationPoint {
     }();
   };
 };
-
-// MARK: - Helpers
-// ---------------
-
-public extension AdaptiveModalInterpolationPoint {
-
-  static func itemsWithPercentCollision(interpolationPoints: [Self]) -> [Self] {
-    interpolationPoints.filter { interpolationPoint in
-      interpolationPoints.contains {
-        $0 != interpolationPoint && $0.percent == interpolationPoint.percent;
-      };
-    };
-  };
-
-  static func compute(
-    usingModalConfig modalConfig: AdaptiveModalConfig,
-    snapPoints: [AdaptiveModalSnapPointConfig]? = nil,
-    layoutValueContext context: RNILayoutValueContext
-  ) -> [Self] {
-  
-    let snapPoints = snapPoints ?? modalConfig.snapPoints;
-    var items: [AdaptiveModalInterpolationPoint] = [];
-    
-    for (index, snapConfig) in snapPoints.enumerated() {
-      items.append(
-        AdaptiveModalInterpolationPoint(
-          usingModalConfig: modalConfig,
-          snapPointIndex: index,
-          layoutValueContext: context,
-          snapPointConfig: snapConfig,
-          prevInterpolationPoint: items.last
-        )
-      );
-    };
-    
-    if let firstSnapPoint = snapPoints.first,
-       let secondInterpolationPoint = items[safeIndex: 1] {
-       
-      items[0] = AdaptiveModalInterpolationPoint(
-        usingModalConfig: modalConfig,
-        snapPointIndex: 0,
-        layoutValueContext: context,
-        snapPointConfig: firstSnapPoint,
-        prevInterpolationPoint: secondInterpolationPoint
-      );
-    };
-    
-    #if DEBUG
-    let collisions = Self.itemsWithPercentCollision(interpolationPoints: items);
-      
-    collisions.forEach {
-      print(
-        "Warning: Snap point collision",
-        "\n - snapPointIndex: \($0.snapPointIndex)",
-        "\n - key: \($0.key)",
-        "\n - percent: \($0.percent)",
-        "\n - computedRect: \($0.computedRect)",
-        "\n"
-      );
-    };
-    #endif
-    
-    return items;
-  };
-};
-

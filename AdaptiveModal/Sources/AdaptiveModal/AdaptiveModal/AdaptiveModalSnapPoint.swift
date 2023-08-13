@@ -7,7 +7,7 @@
 
 import UIKit
 
-public struct AdaptiveModalSnapPointConfig: Equatable {
+public enum AdaptiveModalSnapPointConfig: Equatable {
 
   // MARK: Types
   // -----------
@@ -19,13 +19,68 @@ public struct AdaptiveModalSnapPointConfig: Equatable {
     case index(_ indexKey: Int);
   };
   
-  // MARK: Properties
-  // ----------------
-
-  public let key: SnapPointKey;
+  enum SnapPointMode: Equatable {
+    case standard;
+    case inBetween;
+  };
   
-  public let layoutConfig: RNILayout;
-  public let keyframeConfig: AdaptiveModalKeyframeConfig?;
+  // MARK: - Enum Cases
+  // ------------------
+  
+  case snapPoint(
+    key: SnapPointKey = .unspecified,
+    layoutConfig: RNILayout,
+    keyframeConfig: AdaptiveModalKeyframeConfig? = nil
+  );
+  
+  case inBetweenSnapPoint(
+    key: SnapPointKey = .unspecified,
+    layoutConfig: RNILayout?,
+    keyframeConfig: AdaptiveModalKeyframeConfig? = nil
+  );
+  
+  // MARK: Computed Properties
+  // -------------------------
+  
+  var mode: SnapPointMode {
+    switch self {
+      case .snapPoint:
+        return .standard;
+        
+      case .inBetweenSnapPoint:
+        return .inBetween;
+    };
+  };
+
+  public var key: SnapPointKey {
+    switch self {
+      case let .snapPoint(key, _, _):
+        return key;
+        
+      case let .inBetweenSnapPoint(key, _, _):
+        return key;
+    };
+  };
+  
+  public var layoutConfig: RNILayout {
+    switch self {
+      case let .snapPoint(_, layoutConfig, _):
+        return layoutConfig;
+        
+      case let .inBetweenSnapPoint(_, layoutConfig, _):
+        return layoutConfig ?? .zero;
+    };
+  };
+  
+  public var keyframeConfig: AdaptiveModalKeyframeConfig? {
+    switch self {
+      case let .snapPoint(_, _, keyframeConfig):
+        return keyframeConfig;
+        
+      case let .inBetweenSnapPoint(_, _, keyframeConfig):
+        return keyframeConfig;
+    };
+  };
   
   // MARK: Init
   // ----------
@@ -35,9 +90,12 @@ public struct AdaptiveModalSnapPointConfig: Equatable {
     layoutConfig: RNILayout,
     keyframeConfig: AdaptiveModalKeyframeConfig? = nil
   ) {
-    self.key = key;
-    self.layoutConfig = layoutConfig;
-    self.keyframeConfig = keyframeConfig;
+  
+    self = .snapPoint(
+      key: key,
+      layoutConfig: layoutConfig,
+      keyframeConfig: keyframeConfig
+    );
   };
   
   public init(
@@ -51,9 +109,11 @@ public struct AdaptiveModalSnapPointConfig: Equatable {
       fromBaseLayoutConfig: baseLayoutConfig
     );
     
-    self.key = key;
-    self.layoutConfig = snapPointLayout;
-    self.keyframeConfig = snapPointPreset.keyframeConfig;
+    self = .snapPoint(
+      key: key,
+      layoutConfig: snapPointLayout,
+      keyframeConfig: snapPointPreset.keyframeConfig
+    );
   };
   
   public init(
@@ -61,13 +121,30 @@ public struct AdaptiveModalSnapPointConfig: Equatable {
     newKey: SnapPointKey? = nil,
     newSnapPoint: RNILayout? = nil,
     newAnimationKeyframe: AdaptiveModalKeyframeConfig? = nil
-  ){
-    self.layoutConfig = newSnapPoint ?? base.layoutConfig;
-    self.keyframeConfig = newAnimationKeyframe ?? base.keyframeConfig;
-    
-    self.key = base.key == .unspecified
+  ) {
+  
+    let key = base.key == .unspecified
       ? newKey ?? base.key
       : base.key;
+      
+    let layoutConfig = newSnapPoint ?? base.layoutConfig;
+    let keyframeConfig = newAnimationKeyframe ?? base.keyframeConfig;
+  
+    switch base.mode {
+      case .standard:
+        self = .snapPoint(
+          key: key,
+          layoutConfig: layoutConfig,
+          keyframeConfig: keyframeConfig
+        );
+        
+      case .inBetween:
+        self = .inBetweenSnapPoint(
+          key: key,
+          layoutConfig: layoutConfig,
+          keyframeConfig: keyframeConfig
+        );
+    };
   };
 };
 
@@ -105,8 +182,11 @@ extension AdaptiveModalSnapPointConfig {
       items.append(initialSnapPointConfig);
     };
     
-    items += inBetweenSnapPoints.map {
-      .init(fromBase: $0, newKey: .index(items.count));
+    items += inBetweenSnapPoints.enumerated().map {
+      .init(
+        fromBase: $0.element,
+        newKey: .index($0.offset + 1)
+      );
     };
     
     if let overshootSnapPoint = overshootSnapPoint,

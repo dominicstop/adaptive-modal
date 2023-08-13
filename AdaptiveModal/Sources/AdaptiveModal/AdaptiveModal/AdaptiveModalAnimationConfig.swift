@@ -95,6 +95,9 @@ public struct AdaptiveModalKeyframeConfig: Equatable {
     keyframeKey: PartialKeyPath<Self>,
     interpolationPointKey: PartialKeyPath<AdaptiveModalInterpolationPoint>
   )] = [(
+      \.computedRect,
+      \.computedRect
+    ), (
       \.allowSnapping,
       \.allowSnapping
     ), (
@@ -104,17 +107,17 @@ public struct AdaptiveModalKeyframeConfig: Equatable {
       \.secondaryGestureAxisDampingPercent,
       \.secondaryGestureAxisDampingPercent
     ), (
-      \.modalScrollViewContentInsets,
-      \.modalScrollViewContentInsets
+      \.computedModalScrollViewContentInsets,
+      \.computedModalScrollViewContentInsets
     ), (
-      \.modalScrollViewContentInsets,
-      \.modalScrollViewContentInsets
+      \.computedModalScrollViewContentInsets,
+      \.computedModalScrollViewContentInsets
     ), (
-      \.modalScrollViewVerticalScrollIndicatorInsets,
-      \.modalScrollViewVerticalScrollIndicatorInsets
+      \.computedModalScrollViewVerticalScrollIndicatorInsets,
+      \.computedModalScrollViewVerticalScrollIndicatorInsets
     ), (
-      \.modalScrollViewHorizontalScrollIndicatorInsets,
-      \.modalScrollViewHorizontalScrollIndicatorInsets
+      \.computedModalScrollViewHorizontalScrollIndicatorInsets,
+      \.computedModalScrollViewHorizontalScrollIndicatorInsets
     ),(
       \.modalTransform,
       \.modalTransform
@@ -208,8 +211,17 @@ public struct AdaptiveModalKeyframeConfig: Equatable {
   public var modalScrollViewVerticalScrollIndicatorInsets: LayoutValueEdgeInsets?;
   public var modalScrollViewHorizontalScrollIndicatorInsets: LayoutValueEdgeInsets?;
   
+  // MARK: - Properties - Internal Keyframes
+  // ---------------------------------------
+  
+  var computedRect: CGRect?;
+  
+  var computedModalScrollViewContentInsets: UIEdgeInsets?;
+  var computedModalScrollViewVerticalScrollIndicatorInsets: UIEdgeInsets?;
+  var computedModalScrollViewHorizontalScrollIndicatorInsets: UIEdgeInsets?;
+  
   // MARK: - Properties - Keyframes
-  // ------------------------------
+  // --------------------------------
 
   public var modalTransform: Transform3D?;
   
@@ -337,6 +349,13 @@ public struct AdaptiveModalKeyframeConfig: Equatable {
     Self.keyMap.forEach {
       switch ($0.keyframeKey, $0.interpolationPointKey) {
         case (
+          let keyframeKey as KeyframeKey<CGRect?>,
+          let interpolationPointKey as InterpolationPointKey<CGRect>
+        ):
+          self[keyPath: keyframeKey] =
+            interpolationPoint[keyPath: interpolationPointKey];
+            
+        case (
           let keyframeKey as KeyframeKey<Bool?>,
           let interpolationPointKey as InterpolationPointKey<Bool>
         ):
@@ -387,7 +406,7 @@ public struct AdaptiveModalKeyframeConfig: Equatable {
             
         case (
           let keyframeKey as KeyframeKey<UIVisualEffect?>,
-          let interpolationPointKey as InterpolationPointKey<UIVisualEffect>
+          let interpolationPointKey as InterpolationPointKey<UIVisualEffect?>
         ):
           self[keyPath: keyframeKey] =
             interpolationPoint[keyPath: interpolationPointKey];
@@ -447,6 +466,14 @@ public struct AdaptiveModalKeyframeConfig: Equatable {
           break;
       };
     };
+  };
+  
+  public mutating func setIfNilValue<T>(
+    forKey key: WritableKeyPath<Self, T?>,
+    value: T
+  ) {
+    guard self[keyPath: key] == nil else { return };
+    self[keyPath: key] = value;
   };
 };
 
