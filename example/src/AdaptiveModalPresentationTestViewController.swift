@@ -20,6 +20,9 @@ fileprivate class TestModalViewController:
 
   weak var modalManager: AdaptiveModalManager?;
   
+  var onCurrentModalConfigDidChangeBlock: (() -> Void)? = nil;
+  var onAdaptiveModalDidShow: (() -> Void)? = nil;
+  
   var contentMode: ContentMode = .buttons;
   
   var showDismissButton = true;
@@ -283,6 +286,8 @@ fileprivate class TestModalViewController:
   };
   
   func notifyOnAdaptiveModalDidShow(sender: AdaptiveModalManager) {
+    self.onAdaptiveModalDidShow?();
+    
     if Self.enableLogging {
       print("onAdaptiveModalDidShow");
     };
@@ -304,6 +309,8 @@ fileprivate class TestModalViewController:
     sender: AdaptiveModalManager,
     gestureRecognizer: UIGestureRecognizer
   ) {
+    self.onCurrentModalConfigDidChangeBlock?();
+    
     if Self.enableLogging {
       print(
         "notifyOnAdaptiveModalDragGesture",
@@ -420,32 +427,31 @@ class AdaptiveModalPresentationTestViewController : UIViewController {
   
     switch self.currentModalConfigPreset {
       case .demo04: return {
-        guard case .staticConfig = $0.modalConfig else { return };
+        guard !$0.isUsingAdaptiveModalConfig else { return };
       
         $0.overrideShouldSnapToOvershootSnapPoint = true;
         $0.shouldDismissModalOnSnapToOverShootSnapPoint = true;
       };
       
       case .demo09: return {
-        guard case .staticConfig = $0.modalConfig else { return };
-        
         $0.shouldDismissKeyboardOnGestureSwipe = true;
       };
       
       case .demo07: return {
-        guard case .staticConfig = $0.modalConfig else { return };
+        guard !$0.isUsingAdaptiveModalConfig else { return };
         
         $0.shouldEnableOverShooting = false;
       };
       
       case .demo12: return {
-        guard case .staticConfig = $0.modalConfig else { return };
+        guard !$0.isUsingAdaptiveModalConfig else { return };
         
         $0.overrideShouldSnapToOvershootSnapPoint = true;
         $0.shouldDismissModalOnSnapToOverShootSnapPoint = true;
       };
       
-      default: return defaultBlock;
+      default:
+        return defaultBlock;
     };
   };
   
@@ -576,44 +582,49 @@ class AdaptiveModalPresentationTestViewController : UIViewController {
       default: break;
     };
     
-    if let presentedVC = self.presentedViewController {
-      let modalManager = AdaptiveModalManager(
-        adaptiveConfig: .adaptiveConfig(
+    let (modalManager, topVC): (AdaptiveModalManager, UIViewController) = {
+      if let presentedVC = self.presentedViewController {
+        let modalManager = AdaptiveModalManager(
+          adaptiveConfig: .adaptiveConfig(
+            defaultConfig: self.currentModalConfigPreset.config,
+            constrainedConfigs: self.currentModalConfigPreset.constrainedConfigs
+          )
+        );
+        
+        return (modalManager, presentedVC);
+      
+      } else {
+        self.adaptiveModalManager.modalConfig = .adaptiveConfig(
           defaultConfig: self.currentModalConfigPreset.config,
           constrainedConfigs: self.currentModalConfigPreset.constrainedConfigs
-        )
-      );
-      
-      testVC.modalManager = modalManager;
-      modalManager.eventDelegate = testVC;
-      modalManager.backgroundTapDelegate = testVC;
-      modalManager.animationEventDelegate = testVC;
-      
-      self.currentModalManagerAdjustmentBlock(modalManager);
-      
-      modalManager.presentModal(
-        viewControllerToPresent: testVC,
-        presentingViewController: presentedVC
-      );
-      
-    } else {
-      self.adaptiveModalManager.modalConfig = .adaptiveConfig(
-        defaultConfig: self.currentModalConfigPreset.config,
-        constrainedConfigs: self.currentModalConfigPreset.constrainedConfigs
-      );
+        );
         
-      testVC.modalManager = self.adaptiveModalManager;
-      self.adaptiveModalManager.eventDelegate = testVC;
-      self.adaptiveModalManager.backgroundTapDelegate = testVC;
-      self.adaptiveModalManager.animationEventDelegate = testVC;
-      
-      self.currentModalManagerAdjustmentBlock(self.adaptiveModalManager);
-      
-      self.adaptiveModalManager.presentModal(
-        viewControllerToPresent: testVC,
-        presentingViewController: self
-      );
+        return (self.adaptiveModalManager, self);
+      };
+    }();
+    
+    testVC.modalManager = modalManager;
+    
+    modalManager.eventDelegate = testVC;
+    modalManager.backgroundTapDelegate = testVC;
+    modalManager.animationEventDelegate = testVC;
+    
+    self.currentModalManagerAdjustmentBlock(modalManager);
+    
+    testVC.onCurrentModalConfigDidChangeBlock = { [weak self] in
+      guard let self = self else { return };
+      self.currentModalManagerAdjustmentBlock(modalManager);
     };
+    
+    testVC.onAdaptiveModalDidShow = { [weak self] in
+      guard let self = self else { return };
+      self.currentModalManagerAdjustmentBlock(modalManager);
+    };
+    
+    modalManager.presentModal(
+      viewControllerToPresent: testVC,
+      presentingViewController: topVC
+    );
   };
   
   @objc func onPressButtonNextConfig(_ sender: UIButton) {
