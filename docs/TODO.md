@@ -7,6 +7,7 @@
 ## Current
 
 - [ ] `TODO:2023-07-24-23-03-17` - Impl: Adaptive modal state.
+- [ ] `TODO:2023-08-13-12-26-59` - Impl: Keyframe - Update transform to support `perspective`, `shearX`, `shearY`
 - [ ] `TODO:2023-08-07-19-49-08` - Refactor `AdaptiveModalClampingConfig` - Accept list of keys that will be clamped left/initial value, right/last value.
 
 <br><br>
