@@ -7,7 +7,6 @@
 ## Current
 
 - [ ] `TODO:2023-07-24-23-03-17` - Impl: Adaptive modal state.
-- [ ] `TODO:2023-08-13-19-26-53` - Events - `notifyOnCurrentModalConfigDidChange`.
 
 <br><br>
 
@@ -53,6 +52,8 @@
 <br><br>
 
 ## Completed
+
+- [x] `TODO:2023-08-13-19-26-53` - Events - `notifyOnCurrentModalConfigDidChange`.
 
 - [x] `TODO:2023-08-13-12-26-59` - Impl: Keyframe - Update transform to support `perspective`, `shearX`, `shearY`.
 
