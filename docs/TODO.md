@@ -7,12 +7,14 @@
 ## Current
 
 - [ ] `TODO:2023-07-24-23-03-17` - Impl: Adaptive modal state.
-- [ ] `TODO:2023-08-07-19-49-08` - Refactor `AdaptiveModalClampingConfig` - Accept list of keys that will be clamped left/initial value, right/last value.
+- [ ] `TODO:2023-08-13-19-26-53` - Events - `notifyOnCurrentModalConfigDidChange`.
 
 <br><br>
 
 ## WIP
 
+- [ ] `TODO:2023-08-07-19-49-08` - Refactor `AdaptiveModalClampingConfig` - Accept list of keys that will be clamped left/initial value, right/last value.
+- [ ] `TODO:2023-08-13-12-43-11` - Fix crash due to  `NaN` value during interpolation.
 - [ ] `TODO:2023-07-11-22-45-46` - Impl: Keyframe - Update `modalCornerRadius` to accept a constant or percentage, then compute based on the modal size.
 - [ ] `TODO:2023-06-23-18-13-58` -  Impl: `AdaptiveModal` - Add support for passing a user-created `UIScreenEdgePanGestureRecognizer` gesture handler.
 - [ ] `TODO:2023-06-28-04-16-09` - Impl: Update presentation-related delegates/subclass to integrate more with the modal transition + presentation/dismissal.
