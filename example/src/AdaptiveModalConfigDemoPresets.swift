@@ -217,7 +217,7 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
           layoutPreset: .automatic,
           keyframeConfig: AdaptiveModalKeyframeConfig(
             modalTransform: Transform3D(
-              rotateX: .degrees(-45),
+              rotateX: .degrees(-25),
               perspective: 1 / 500
             ),
             modalContentOpacity: 0.5
@@ -723,7 +723,8 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
             keyframeConfig: AdaptiveModalKeyframeConfig(
               modalTransform: .init(
                 scaleX: 1,
-                scaleY: 1
+                scaleY: 1,
+                rotateY: .degrees(0)
               ),
               modalShadowOffset: .init(width: 1, height: 1),
               modalShadowOpacity: 0.3,
@@ -789,7 +790,9 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
           keyframeConfig: .init(
             modalTransform: .init(
               scaleX: 0.5,
-              scaleY: 0.5
+              scaleY: 0.5,
+              rotateY: .degrees(-45),
+              perspective: 1 / 750
             ),
             modalCornerRadius: 5,
             modalContentOpacity: 0.25,
