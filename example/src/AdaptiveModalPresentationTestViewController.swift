@@ -187,7 +187,13 @@ fileprivate class TestModalViewController:
   };
   
   @objc func onPressButtonDismiss(_ sender: UIButton){
-    self.dismiss(animated: true);
+    self.modalManager?.dismissModal(
+      animated: true,
+      animationConfig: .presetCurve(
+        duration: 0.275,
+        curve: .easeOut
+      )
+    );
   };
   
   @objc func onPressButtonCustomSnapPoint(_ sender: UIButton){

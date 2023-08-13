@@ -160,11 +160,15 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
               height: .percent(percentValue: 0.2)
             ),
             keyframeConfig: AdaptiveModalKeyframeConfig(
+              modalTransform: Transform3D(
+                rotateX: .degrees(0)
+              ),
               modalShadowOffset: .init(width: 0, height: -2),
               modalShadowOpacity: 0.3,
               modalShadowRadius: 7,
               modalCornerRadius: 10,
               modalMaskedCorners: .topCorners,
+              modalContentOpacity: 1,
               backgroundOpacity: 0,
               backgroundVisualEffect: UIBlurEffect(style: .regular),
               backgroundVisualEffectIntensity: 0
@@ -209,6 +213,16 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
           ),
         ],
         snapDirection: .bottomToTop,
+        undershootSnapPoint: AdaptiveModalSnapPointPreset(
+          layoutPreset: .automatic,
+          keyframeConfig: AdaptiveModalKeyframeConfig(
+            modalTransform: Transform3D(
+              rotateX: .degrees(-45),
+              perspective: 1 / 500
+            ),
+            modalContentOpacity: 0.5
+          )
+        ),
         overshootSnapPoint: AdaptiveModalSnapPointPreset(
           layoutPreset: .fitScreenVertically
         )
