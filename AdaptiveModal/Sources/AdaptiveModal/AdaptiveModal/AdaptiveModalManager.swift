@@ -67,6 +67,16 @@ public class AdaptiveModalManager: NSObject {
     }
   };
   
+  public var isUsingAdaptiveModalConfig: Bool {
+    switch self.modalConfig {
+      case .staticConfig:
+        return false;
+        
+      case let .adaptiveConfig(defaultConfig, _):
+        return self.currentModalConfig != defaultConfig;
+    };
+  };
+  
   // MARK: -  Properties - Layout-Related
   // ------------------------------------
   
