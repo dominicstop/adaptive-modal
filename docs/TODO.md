@@ -7,6 +7,8 @@
 ## Current
 
 - [ ] `TODO:2023-07-24-23-03-17` - Impl: Adaptive modal state.
+- [ ] `TODO:2023-08-14-06-28-05` - Update `snapTo` to accept `AdaptiveModalSnapPointPreset`.
+- [ ] `TODO:2023-08-14-06-28-18` - Impl: `dismiss` with custom snap point. 
 
 <br><br>
 
