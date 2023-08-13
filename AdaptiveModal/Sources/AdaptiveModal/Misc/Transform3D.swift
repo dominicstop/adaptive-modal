@@ -45,8 +45,25 @@ public struct Transform3D: Equatable {
     scaleY: 1,
     rotateX: .zero,
     rotateY: .zero,
-    rotateZ: .zero
+    rotateZ: .zero,
+    perspective: 0,
+    skewX: 0,
+    skewY: 0
   );
+  
+  static let keys: [PartialKeyPath<Self>] = [
+    \._translateX,
+    \._translateY,
+    \._translateZ,
+    \._scaleX,
+    \._scaleY,
+    \._rotateX,
+    \._rotateY,
+    \._rotateZ,
+    \._perspective,
+    \._skewX,
+    \._skewY,
+  ];
   
   // MARK: - Properties
   // ------------------
@@ -61,6 +78,11 @@ public struct Transform3D: Equatable {
   private var _rotateX: Angle<CGFloat>?;
   private var _rotateY: Angle<CGFloat>?;
   private var _rotateZ: Angle<CGFloat>?;
+  
+  private var _perspective: CGFloat?;
+  
+  private var _skewX: CGFloat?;
+  private var _skewY: CGFloat?;
   
   // MARK: - Computed Properties - Setters/Getters
   // ---------------------------------------------
@@ -145,15 +167,46 @@ public struct Transform3D: Equatable {
     }
   };
   
+  public var perspective: CGFloat {
+    get {
+      self._perspective
+        ?? Self.default.perspective;
+    }
+    set {
+      self._perspective = newValue;
+    }
+  };
+  
+  public var skewX: CGFloat {
+    get {
+      self._skewX
+        ?? Self.default.skewX;
+    }
+    set {
+      self._skewX = newValue;
+    }
+  };
+  
+  public var skewY: CGFloat {
+    get {
+      self._skewY
+        ?? Self.default.skewY;
+    }
+    set {
+      self._skewY = newValue;
+    }
+  };
+  
+  
   // MARK: - Computed Properties
   // ---------------------------
   
   public var transform: CATransform3D {
     var transform = CATransform3DIdentity;
     
-    //transform.m34 =  1 / 500;
-    //transform.m12 = 0;
-    //transform.m21 = 0.1;
+    transform.m34 = self.perspective;
+    transform.m12 = self.skewY;
+    transform.m21 = self.skewY;
     
     transform = CATransform3DTranslate(
       transform,
@@ -197,14 +250,15 @@ public struct Transform3D: Equatable {
   };
   
   var isAllValueSet: Bool {
-       self._translateX != nil
-    || self._translateY != nil
-    || self._translateZ != nil
-    || self._scaleX     != nil
-    || self._scaleY     != nil
-    || self._rotateX    != nil
-    || self._rotateY    != nil
-    || self._rotateZ    != nil
+    Self.keys.allSatisfy {
+      let value = self[keyPath: $0];
+      
+      guard value is ExpressibleByNilLiteral,
+            let optionalValue = value as? OptionalUnwrappable
+      else { return false };
+      
+      return optionalValue.isSome();
+    };
   };
   
   // MARK: - Init
@@ -218,7 +272,10 @@ public struct Transform3D: Equatable {
     scaleY: CGFloat? = nil,
     rotateX: Angle<CGFloat>? = nil,
     rotateY: Angle<CGFloat>? = nil,
-    rotateZ: Angle<CGFloat>? = nil
+    rotateZ: Angle<CGFloat>? = nil,
+    perspective: CGFloat? = nil,
+    skewX: CGFloat? = nil,
+    skewY: CGFloat? = nil
   ) {
     
     self._translateX = translateX;
@@ -231,6 +288,10 @@ public struct Transform3D: Equatable {
     self._rotateX = rotateX;
     self._rotateY = rotateY;
     self._rotateZ = rotateZ;
+    
+    self._perspective = perspective;
+    self._skewX = skewX;
+    self._skewY = skewY;
   };
   
   public init(
@@ -241,7 +302,10 @@ public struct Transform3D: Equatable {
     scaleY: CGFloat,
     rotateX: Angle<CGFloat>,
     rotateY: Angle<CGFloat>,
-    rotateZ: Angle<CGFloat>
+    rotateZ: Angle<CGFloat>,
+    perspective: CGFloat,
+    skewX: CGFloat,
+    skewY: CGFloat
   ) {
     
     self._translateX = translateX;
@@ -254,42 +318,34 @@ public struct Transform3D: Equatable {
     self._rotateX = rotateX;
     self._rotateY = rotateY;
     self._rotateZ = rotateZ;
+    
+    self._perspective = perspective;
+    self._skewX = skewX;
+    self._skewY = skewY;
   };
   
   // MARK: - Functions
   // -----------------
   
-  mutating func setNonNilValues(with value: Self) {
-    if self._translateX == nil {
-      self._translateX = value.translateX;
-    };
+  mutating func setNonNilValues(with otherValue: Self) {
+    Self.keys.forEach {
+      let value = self[keyPath: $0];
+      
+      guard value is ExpressibleByNilLiteral,
+            let optionalValue = value as? OptionalUnwrappable,
+            !optionalValue.isSome()
+      else { return };
     
-    if self._translateY == nil {
-      self._translateY = value.translateY;
-    };
-    
-    if self._translateZ == nil {
-      self._translateZ = value.translateZ;
-    };
-    
-    if self._scaleX == nil {
-      self._scaleX = value.scaleX;
-    };
-    
-    if self._scaleY == nil {
-      self._scaleY = value.scaleY;
-    };
-    
-    if self._rotateX == nil {
-      self._rotateX = value.rotateX;
-    };
-    
-    if self._rotateY == nil {
-      self._rotateY = value.rotateY;
-    };
-    
-    if self._rotateZ == nil {
-      self._rotateZ = value.rotateZ;
+      switch $0 {
+        case let key as WritableKeyPath<Self, CGFloat>:
+          self[keyPath: key] = otherValue[keyPath: key];
+          
+        case let key as WritableKeyPath<Self, Angle<CGFloat>>:
+         self[keyPath: key] = otherValue[keyPath: key];
+          
+        default:
+          break;
+      };
     };
   };
 };

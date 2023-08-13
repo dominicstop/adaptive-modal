@@ -330,6 +330,39 @@ class AdaptiveModalUtilities {
       shouldClampMax: shouldClampMax
     );
     
+    let nextPerspective = Self.interpolate(
+      inputValue: inputValue,
+      rangeInput: rangeInput,
+      rangeOutput: extractValuesFromArray(
+        for: rangeOutput,
+        key: \.perspective
+      ),
+      shouldClampMin: shouldClampMin,
+      shouldClampMax: shouldClampMax
+    );
+    
+    let nextSkewX = Self.interpolate(
+      inputValue: inputValue,
+      rangeInput: rangeInput,
+      rangeOutput: extractValuesFromArray(
+        for: rangeOutput,
+        key: \.skewX
+      ),
+      shouldClampMin: shouldClampMin,
+      shouldClampMax: shouldClampMax
+    );
+    
+    let nextSkewY = Self.interpolate(
+      inputValue: inputValue,
+      rangeInput: rangeInput,
+      rangeOutput: extractValuesFromArray(
+        for: rangeOutput,
+        key: \.skewY
+      ),
+      shouldClampMin: shouldClampMin,
+      shouldClampMax: shouldClampMax
+    );
+    
     guard let nextTranslateX = nextTranslateX,
           let nextTranslateY = nextTranslateY,
           let nextTranslateZ = nextTranslateZ,
@@ -337,7 +370,10 @@ class AdaptiveModalUtilities {
           let nextScaleY = nextScaleY,
           let nextRotationX = nextRotationX,
           let nextRotationY = nextRotationY,
-          let nextRotationZ = nextRotationZ
+          let nextRotationZ = nextRotationZ,
+          let nextPerspective = nextPerspective,
+          let nextSkewX = nextSkewX,
+          let nextSkewY = nextSkewY
     else { return nil };
     
     return Transform3D(
@@ -348,7 +384,10 @@ class AdaptiveModalUtilities {
       scaleY: nextScaleY,
       rotateX: .radians(nextRotationX),
       rotateY: .radians(nextRotationY),
-      rotateZ: .radians(nextRotationZ)
+      rotateZ: .radians(nextRotationZ),
+      perspective: nextPerspective,
+      skewX: nextSkewX,
+      skewY: nextSkewY
     );
   };
   
