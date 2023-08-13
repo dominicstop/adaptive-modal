@@ -167,4 +167,12 @@ extension RNIDraggableTestViewController: AdaptiveModalEventNotifiable {
   ) {
     // no-op
   };
+  
+  func notifyOnCurrentModalConfigDidChange(
+    sender: AdaptiveModalManager,
+    currentModalConfig: AdaptiveModalConfig?,
+    prevModalConfig: AdaptiveModalConfig?
+  ) {
+    // no-p[
+  }
 };

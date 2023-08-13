@@ -46,4 +46,10 @@ public protocol AdaptiveModalEventNotifiable: AnyObject {
     sender: AdaptiveModalManager,
     gestureRecognizer: UIGestureRecognizer
   );
+  
+  func notifyOnCurrentModalConfigDidChange(
+    sender: AdaptiveModalManager,
+    currentModalConfig: AdaptiveModalConfig?,
+    prevModalConfig: AdaptiveModalConfig?
+  );
 };

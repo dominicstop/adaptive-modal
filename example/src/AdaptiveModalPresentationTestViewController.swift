@@ -368,6 +368,21 @@ fileprivate class TestModalViewController:
         "\n"
       );
     };
+  };
+  
+  func notifyOnCurrentModalConfigDidChange(
+    sender: AdaptiveModalManager,
+    currentModalConfig: AdaptiveModalConfig?,
+    prevModalConfig: AdaptiveModalConfig?
+  ) {
+    if Self.enableLogging {
+      print(
+        "notifyOnCurrentModalConfigDidChange",
+        "\n - currentModalConfig:", currentModalConfig.debugDescription,
+        "\n - prevModalConfig:", prevModalConfig.debugDescription,
+        "\n"
+      );
+    };
   }
 };
 

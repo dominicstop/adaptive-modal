@@ -18,7 +18,7 @@ public class AdaptiveModalManager: NSObject {
   
   public var modalConfig: AdaptiveModalConfigMode;
   
-  var prevModalConfig: AdaptiveModalConfig? = nil;
+  private(set) public var prevModalConfig: AdaptiveModalConfig? = nil;
   
   private var _currentModalConfig: AdaptiveModalConfig?;
   public var currentModalConfig: AdaptiveModalConfig {
@@ -2692,7 +2692,11 @@ public class AdaptiveModalManager: NSObject {
   // -----------------------
   
   private func notifyOnCurrentModalConfigDidChange(){
-    print("notifyOnCurrentModalConfigDidChange");
+    self.eventDelegate?.notifyOnCurrentModalConfigDidChange(
+      sender: self,
+      currentModalConfig: self.currentModalConfig,
+      prevModalConfig: self.prevModalConfig
+    );
   };
   
   private func notifyOnModalWillSnap() {
