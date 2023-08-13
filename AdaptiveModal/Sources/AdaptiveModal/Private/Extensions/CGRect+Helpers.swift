@@ -8,7 +8,17 @@
 import UIKit
 
 extension CGRect {
-    mutating func setPoint(
+  
+  var isNaN: Bool {
+    return (
+         self.origin.x.isNaN
+      || self.origin.y.isNaN
+      || self.size.width.isNaN
+      || self.size.height.isNaN
+    );
+  };
+
+  mutating func setPoint(
     minX: CGFloat? = nil,
     minY: CGFloat? = nil
   ){

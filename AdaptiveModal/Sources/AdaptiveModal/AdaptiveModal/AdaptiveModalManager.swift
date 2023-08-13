@@ -141,6 +141,8 @@ public class AdaptiveModalManager: NSObject {
         self.prevModalFrame = prevModalFrame;
       };
       
+      guard !newValue.isNaN else { return };
+      
       self.modalWrapperLayoutView?.frame = newValue;
       self.dummyModalView?.frame = newValue;
     }
