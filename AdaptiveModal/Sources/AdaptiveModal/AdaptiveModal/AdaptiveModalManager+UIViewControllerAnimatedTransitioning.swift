@@ -67,6 +67,7 @@ extension AdaptiveModalManager: UIViewControllerAnimatedTransitioning {
         ) {
           transitionContext.completeTransition(true);
           self.extraAnimationBlockPresent = nil;
+          self.presentationState = .none;
         };
       
       case .dismissing:
@@ -76,6 +77,7 @@ extension AdaptiveModalManager: UIViewControllerAnimatedTransitioning {
         ){
           transitionContext.completeTransition(true);
           self.extraAnimationBlockDismiss = nil;
+          self.presentationState = .none;
         };
         
       case .none:

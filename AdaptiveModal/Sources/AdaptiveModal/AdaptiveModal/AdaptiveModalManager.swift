@@ -80,8 +80,6 @@ public class AdaptiveModalManager: NSObject {
   // MARK: -  Properties - Layout-Related
   // ------------------------------------
   
-  var debugView: AdaptiveModalDebugOverlay?;
-  
   public var modalWrapperViewController: AdaptiveModalRootViewController?;
   
   public weak var modalViewController: UIViewController?;
@@ -552,21 +550,12 @@ public class AdaptiveModalManager: NSObject {
     );
   };
   
-  // MARK: -  Properties
-  // -------------------
+  // MARK: -  Properties - Debug Overlay
+  // -----------------------------------
+  
+  var debugView: AdaptiveModalDebugOverlay?;
   
   private var _showDebugOverlay = false;
-  
-  private(set) var didTriggerSetup = false;
-  internal(set) public var presentationState: PresentationState = .none;
-  
-  public weak var eventDelegate: AdaptiveModalEventNotifiable?;
-  public weak var backgroundTapDelegate: AdaptiveModalBackgroundTapDelegate?;
-  public weak var animationEventDelegate: AdaptiveModalAnimationEventsNotifiable?;
-
-  // MARK: - Computed Properties
-  // ---------------------------
-  
   public var showDebugOverlay: Bool {
     get {
       #if DEBUG
@@ -579,6 +568,23 @@ public class AdaptiveModalManager: NSObject {
       self._showDebugOverlay = newValue;
     }
   };
+  
+  // MARK: -  Properties - Modal State
+  // ---------------------------------
+  
+  internal(set) public var presentationState: PresentationState = .none;
+  
+  // MARK: -  Properties
+  // -------------------
+  
+  private(set) var didTriggerSetup = false;
+  
+  public weak var eventDelegate: AdaptiveModalEventNotifiable?;
+  public weak var backgroundTapDelegate: AdaptiveModalBackgroundTapDelegate?;
+  public weak var animationEventDelegate: AdaptiveModalAnimationEventsNotifiable?;
+
+  // MARK: - Computed Properties
+  // ---------------------------
   
   public var isSwiping: Bool {
     let isModalGestureActive =
