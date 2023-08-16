@@ -2566,7 +2566,7 @@ public class AdaptiveModalManager: NSObject {
   
   @objc private func onKeyboardWillShow(notification: NSNotification) {
     guard let keyboardValues = RNILayoutKeyboardValues(fromNotification: notification),
-          self.presentationState != .dismissing
+          !self.isAnimating
     else { return };
     
     self.isKeyboardVisible = true;
@@ -2593,7 +2593,8 @@ public class AdaptiveModalManager: NSObject {
   };
 
   @objc private func onKeyboardWillHide(notification: NSNotification) {
-    guard let keyboardValues = RNILayoutKeyboardValues(fromNotification: notification)
+    guard let keyboardValues = RNILayoutKeyboardValues(fromNotification: notification),
+          !self.isAnimating
     else { return };
     
     self.clearLayoutKeyboardValues();
@@ -2616,7 +2617,6 @@ public class AdaptiveModalManager: NSObject {
   
   @objc private func onKeyboardWillChange(notification: NSNotification) {
     guard let keyboardValues = RNILayoutKeyboardValues(fromNotification: notification),
-          self.presentationState == .none,
           !self.isAnimating
     else { return };
     
