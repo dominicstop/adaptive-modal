@@ -335,8 +335,18 @@ public class AdaptiveModalManager: NSObject {
     return targetView.frame[keyPath: self.currentModalConfig.maxInputRangeKeyForRect];
   };
   
+  public var currentSnapPoints: [AdaptiveModalSnapPointConfig] {
+    if self.shouldUseOverrideSnapPoints,
+       let overrideSnapPoints = self.overrideSnapPoints {
+      
+      return overrideSnapPoints;
+    };
+  
+    return self.currentModalConfig.snapPoints;
+  };
+  
   public var currentSnapPointConfig: AdaptiveModalSnapPointConfig {
-    self.currentModalConfig.snapPoints[
+    return self.currentSnapPoints[
       self.currentInterpolationStep.snapPointIndex
     ];
   };
@@ -347,11 +357,6 @@ public class AdaptiveModalManager: NSObject {
   weak var transitionContext: UIViewControllerContextTransitioning?;
   
   private var modalAnimator: UIViewPropertyAnimator?;
-  
-  var animationConfigOverride: AdaptiveModalSnapAnimationConfig?;
-  
-  var extraAnimationBlockPresent: (() -> Void)?;
-  var extraAnimationBlockDismiss: (() -> Void)?;
 
   var backgroundVisualEffectAnimator: AdaptiveModalRangePropertyAnimator?;
   var modalBackgroundVisualEffectAnimator: AdaptiveModalRangePropertyAnimator?;
@@ -576,6 +581,19 @@ public class AdaptiveModalManager: NSObject {
   
   // MARK: -  Properties
   // -------------------
+  
+  /// Args for indirect call to `showModal` via `UIViewController.show`
+  var showModalCommandArgs: (
+    animationConfig: AdaptiveModalSnapAnimationConfig,
+    extraAnimationBlock: (() -> Void)?
+  )?;
+  
+  /// Args for  indirect call to `hideModal` via `UIViewController.dismiss`
+  var hideModalCommandArgs: (
+    useInBetweenSnapPoints: Bool,
+    animationConfig: AdaptiveModalSnapAnimationConfig,
+    extraAnimationBlock: (() -> Void)?
+  )?;
   
   private(set) var didTriggerSetup = false;
   
@@ -2080,7 +2098,6 @@ public class AdaptiveModalManager: NSObject {
     self.animationEventDelegate?.notifyOnModalAnimatorStop(sender: self);
   };
   
-  // TODO-WIP
   private func adjustInterpolationIndex(for nextIndex: Int) -> Int {
     if nextIndex == 0,
        case let .some(flag) = self.overrideShouldSnapToUnderShootSnapPoint {
@@ -2178,15 +2195,16 @@ public class AdaptiveModalManager: NSObject {
     usingLayoutValueContext context: RNILayoutValueContext? = nil
   ) {
     let context = context ?? self.layoutValueContext;
+    let modalConfig = self.currentModalConfig;
     
     self.configInterpolationSteps = .Element.compute(
-      usingConfig: self.currentModalConfig,
+      usingConfig: modalConfig,
       usingContext: context
     );
     
     if let overrideSnapPoints = self.overrideSnapPoints {
       self.overrideInterpolationPoints = .Element.compute(
-        usingConfig: self.currentModalConfig,
+        usingConfig: modalConfig,
         usingContext: context,
         snapPoints: overrideSnapPoints
       );
@@ -2391,9 +2409,7 @@ public class AdaptiveModalManager: NSObject {
     self.modalWrapperLayoutView?.layoutIfNeeded();
     
     if isAnimated {
-      let snapAnimationConfig =
-           animationConfigOverride
-        ?? self.animationConfigOverride
+      let snapAnimationConfig = animationConfigOverride
         ?? self.currentModalConfig.snapAnimationConfig;
       
       let animator = snapAnimationConfig.createAnimator(
@@ -2422,9 +2438,7 @@ public class AdaptiveModalManager: NSObject {
       
       animator.addCompletion { _ in
         self.endDisplayLink();
-        
         self.modalAnimator = nil;
-        self.animationConfigOverride = nil;
         
         #if DEBUG
         self.debugView?.notifyOnAnimateModalCompletion();
@@ -3098,11 +3112,14 @@ public class AdaptiveModalManager: NSObject {
     animated: Bool = true,
     completion: (() -> Void)? = nil
   ) {
-    
-    self.animationConfigOverride = animationConfig
+  
+    let animationConfig = animationConfig
       ?? self.currentModalConfig.entranceAnimationConfig;
-      
-    self.extraAnimationBlockPresent = extraAnimation;
+    
+    self.showModalCommandArgs = (
+      animationConfig: animationConfig,
+      extraAnimationBlock: extraAnimation
+    );
     
     self.prepareForPresentation(
       viewControllerToPresent: modalVC,
@@ -3119,6 +3136,7 @@ public class AdaptiveModalManager: NSObject {
   };
   
   public func dismissModal(
+    useInBetweenSnapPoints: Bool = false,
     animated: Bool = true,
     animationConfig: AdaptiveModalSnapAnimationConfig? = nil,
     extraAnimation: (() -> Void)? = nil,
@@ -3127,10 +3145,14 @@ public class AdaptiveModalManager: NSObject {
   
     guard let modalVC = self.modalViewController else { return };
     
-    self.animationConfigOverride = animationConfig
+    let animationConfig = animationConfig
       ?? self.currentModalConfig.exitAnimationConfig;
     
-    self.extraAnimationBlockDismiss = extraAnimation;
+    self.hideModalCommandArgs = (
+      useInBetweenSnapPoints: useInBetweenSnapPoints,
+      animationConfig: animationConfig,
+      extraAnimationBlock: extraAnimation
+    );
     
     modalVC.dismiss(
       animated: animated,
@@ -3143,7 +3165,6 @@ public class AdaptiveModalManager: NSObject {
     animationConfig: AdaptiveModalSnapAnimationConfig? = nil,
     extraAnimation: (() -> Void)? = nil,
     completion: (() -> Void)? = nil
-    // TODO-WIP
   ) {
     let closestSnapPoint = self.getClosestSnapPoint(
       forRect: self.modalFrame ?? .zero,

@@ -61,22 +61,29 @@ extension AdaptiveModalManager: UIViewControllerAnimatedTransitioning {
           };
         };
         
+        let args = self.showModalCommandArgs;
+        
         self.showModal(
           isAnimated: transitionContext.isAnimated,
-          extraAnimation: self.extraAnimationBlockPresent
+          animationConfig: args?.animationConfig,
+          extraAnimation: args?.extraAnimationBlock
         ) {
           transitionContext.completeTransition(true);
-          self.extraAnimationBlockPresent = nil;
+          self.showModalCommandArgs = nil;
           self.presentationState = .none;
         };
       
       case .dismissing:
+        let args = self.hideModalCommandArgs;
+      
         self.hideModal(
+          useInBetweenSnapPoints: args?.useInBetweenSnapPoints ?? false,
           isAnimated: transitionContext.isAnimated,
-          extraAnimation: self.extraAnimationBlockDismiss
+          animationConfig: args?.animationConfig,
+          extraAnimation: args?.extraAnimationBlock
         ){
           transitionContext.completeTransition(true);
-          self.extraAnimationBlockDismiss = nil;
+          self.hideModalCommandArgs = nil;
           self.presentationState = .none;
         };
         
