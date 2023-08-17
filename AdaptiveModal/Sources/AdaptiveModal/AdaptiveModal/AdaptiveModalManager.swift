@@ -3101,7 +3101,7 @@ public class AdaptiveModalManager: NSObject {
     guard self.isOverridingSnapPoints else { return };
   
     self.cleanupSnapPointOverride();
-    self.snapToCurrentIndex(completion: completion);
+    self.snapToCurrentSnapPointIndex(completion: completion);
   };
   
   public func presentModal(
@@ -3194,15 +3194,81 @@ public class AdaptiveModalManager: NSObject {
     };
   };
   
-  public func snapToCurrentIndex(
+  public func snapTo(
+    snapPointIndex nextIndex: Int,
     isAnimated: Bool = true,
     animationConfig: AdaptiveModalSnapAnimationConfig? = nil,
     extraAnimation: (() -> Void)? = nil,
     completion: (() -> Void)? = nil
   ) {
   
+    let lastIndex = max(self.interpolationSteps.count - 1, 0);
+    let nextIndexAdj = self.adjustInterpolationIndex(for: nextIndex);
+    
+    guard nextIndexAdj >= 0 && nextIndexAdj <= lastIndex,
+          nextIndexAdj != self.currentInterpolationIndex
+    else { return };
+
     self.snapTo(
-      interpolationIndex: self.currentInterpolationIndex,
+      interpolationIndex: nextIndex,
+      isAnimated: isAnimated,
+      animationConfig: animationConfig,
+      extraAnimation: extraAnimation,
+      completion: {
+        
+        self.modalStateMachine.setState(.SNAPPED_PROGRAMMATIC);
+        completion?();
+      }
+    );
+  };
+  
+  public func snapToPrevSnapPointIndex(
+    isAnimated: Bool = true,
+    animationConfig: AdaptiveModalSnapAnimationConfig? = nil,
+    extraAnimation: (() -> Void)? = nil,
+    completion: (() -> Void)? = nil
+  ) {
+  
+    let nextIndex = self.currentInterpolationIndex - 1;
+    
+    self.snapTo(
+      snapPointIndex: nextIndex,
+      isAnimated: isAnimated,
+      animationConfig: animationConfig,
+      extraAnimation: extraAnimation,
+      completion: completion
+    );
+  };
+  
+  public func snapToCurrentSnapPointIndex(
+    isAnimated: Bool = true,
+    animationConfig: AdaptiveModalSnapAnimationConfig? = nil,
+    extraAnimation: (() -> Void)? = nil,
+    completion: (() -> Void)? = nil
+  ) {
+  
+    let nextIndex = self.currentInterpolationIndex;
+    
+    self.snapTo(
+      snapPointIndex: nextIndex,
+      isAnimated: isAnimated,
+      animationConfig: animationConfig,
+      extraAnimation: extraAnimation,
+      completion: completion
+    );
+  };
+  
+  public func snapToNextSnapPointIndex(
+    isAnimated: Bool = true,
+    animationConfig: AdaptiveModalSnapAnimationConfig? = nil,
+    extraAnimation: (() -> Void)? = nil,
+    completion: (() -> Void)? = nil
+  ) {
+    
+    let nextIndex = self.currentInterpolationIndex + 1;
+    
+    self.snapTo(
+      snapPointIndex: nextIndex,
       isAnimated: isAnimated,
       animationConfig: animationConfig,
       extraAnimation: extraAnimation,
