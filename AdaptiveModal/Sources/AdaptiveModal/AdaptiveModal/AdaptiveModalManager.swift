@@ -22,15 +22,13 @@ public class AdaptiveModalManager: NSObject {
   
   private var _currentModalConfig: AdaptiveModalConfig?;
   public var currentModalConfig: AdaptiveModalConfig {
-    get {
-      switch self.modalConfig {
-        case let .staticConfig(config):
-          return config;
-          
-        case let .adaptiveConfig(defaultConfig, _):
-          return self._currentModalConfig ?? defaultConfig;
-      };
-    }
+    switch self.modalConfig {
+      case let .staticConfig(config):
+        return config;
+        
+      case let .adaptiveConfig(defaultConfig, _):
+        return self._currentModalConfig ?? defaultConfig;
+    };
   };
   
   public var shouldEnableSnapping = true;
@@ -3100,6 +3098,16 @@ public class AdaptiveModalManager: NSObject {
   
   // MARK: - User-Invoked Functions
   // ------------------------------
+  
+  public func updateModalConfig(_ newConfig: AdaptiveModalConfigMode){
+    self.cancelModalGesture();
+    self.stopModalAnimator();
+    
+    self.modalConfig = newConfig;
+    
+    self.updateCurrentModalConfig();
+    self.computeSnapPoints();
+  };
   
   public func prepareForPresentation(
     targetView: UIView? = nil,
