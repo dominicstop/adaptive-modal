@@ -7,12 +7,8 @@
 
 import Foundation
 
-// Scenario: Calling `snapTo` while modal is dismissed
-// isDismissed  -> SNAPPING = PRESENTING
-// isPresenting -> SNAPPED  = PRESENTED
 
 // DISMISSING_GESTURE -> isSnapped = DISMISS_VIA_GESTURE_CANCELLED
-
 
 public enum AdaptiveModalState {
 
@@ -161,6 +157,27 @@ struct AdaptiveModalStateMachine {
       
         default:
           break;
+      };
+      
+      // Calling `snapTo` while modal is dismissed
+      // DISMISSED  -> SNAPPING = PRESENTING
+      if self.prevState.isDismissing,
+         self.currentState.isDismissed,
+         nextState.isSnapping {
+        
+        return nextState.isProgrammatic
+          ? .PRESENTING_PROGRAMMATIC
+          : .PRESENTING_GESTURE;
+      };
+      
+      // PRESENTING -> SNAPPED = PRESENTED
+      if self.prevState.isDismissed,
+         self.currentState.isPresenting,
+         nextState.isSnapped {
+        
+        return nextState.isProgrammatic
+          ? .PRESENTED_PROGRAMMATIC
+          : .PRESENTED_GESTURE;
       };
   
       return nextState;
