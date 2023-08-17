@@ -16,6 +16,8 @@ fileprivate class TestModalViewController:
     case buttons, scrollview;
   };
   
+  var shouldIncreaseModalIndexOnTap = true;
+  
   static var enableLogging = false;
 
   weak var modalManager: AdaptiveModalManager?;
@@ -37,6 +39,14 @@ fileprivate class TestModalViewController:
     label.text = "\(self.modalManager?.currentInterpolationIndex ?? -1)";
     label.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0.5);
     label.font = .boldSystemFont(ofSize: 22);
+    
+    let tapGesture = UITapGestureRecognizer(
+      target: self,
+      action: #selector(Self.onPressLabel(_:))
+    );
+    
+    label.addGestureRecognizer(tapGesture);
+    label.isUserInteractionEnabled = true;
 
     return label;
   }();
@@ -186,6 +196,27 @@ fileprivate class TestModalViewController:
           scrollView.leadingAnchor .constraint(equalTo: self.view.leadingAnchor ),
           scrollView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
         ]);
+    };
+  };
+  
+  @objc func onPressLabel(_ sender: UITapGestureRecognizer){
+    guard let modalManager = self.modalManager else { return };
+    
+    let currentIndex = modalManager.currentInterpolationIndex;
+    let lastIndex = max(modalManager.interpolationSteps.count - 1, 0);
+    
+    if currentIndex == lastIndex {
+      self.shouldIncreaseModalIndexOnTap = false;
+    
+    } else if currentIndex == 0 {
+      self.shouldIncreaseModalIndexOnTap = true;
+    };
+    
+    if self.shouldIncreaseModalIndexOnTap {
+      modalManager.snapToNextSnapPointIndex();
+    
+    } else {
+      modalManager.snapToPrevSnapPointIndex();
     };
   };
   
