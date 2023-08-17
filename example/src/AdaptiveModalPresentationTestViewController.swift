@@ -201,9 +201,17 @@ fileprivate class TestModalViewController:
   
   @objc func onPressLabel(_ sender: UITapGestureRecognizer){
     guard let modalManager = self.modalManager else { return };
+    let modalConfig = modalManager.currentModalConfig;
+
     
     let currentIndex = modalManager.currentInterpolationIndex;
-    let lastIndex = max(modalManager.interpolationSteps.count - 1, 0);
+    let lastIndex = {
+      guard let overshootIndex = modalConfig.overshootSnapPointIndex else {
+        return modalConfig.snapPointLastIndex;
+      };
+      
+      return overshootIndex - 1;
+    }();
     
     if currentIndex == lastIndex {
       self.shouldIncreaseModalIndexOnTap = false;
