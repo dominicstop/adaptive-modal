@@ -637,6 +637,22 @@ public class AdaptiveModalManager: NSObject {
   public var currentSnapPointIndex: Int {
     self.currentInterpolationStep.snapPointIndex
   };
+  
+  public var canSnapToUnderShootSnapPoint: Bool {
+    let underShootSnapPoint = self.currentModalConfig.undershootSnapPoint;
+ 
+    return self.overrideShouldSnapToOvershootSnapPoint
+      ?? underShootSnapPoint.keyframeConfig?.allowSnapping
+      ?? true;
+  };
+  
+  public var canSnapToOverShootSnapPoint: Bool {
+    let overshootSnapPoint = self.currentModalConfig.overshootSnapPoint;
+ 
+    return self.overrideShouldSnapToOvershootSnapPoint
+      ?? overshootSnapPoint?.keyframeConfig?.allowSnapping
+      ?? false;
+  };
 
   // MARK: - Init
   // ------------
@@ -2115,18 +2131,20 @@ public class AdaptiveModalManager: NSObject {
   };
   
   private func adjustInterpolationIndex(for nextIndex: Int) -> Int {
-    if nextIndex == 0,
-       case let .some(flag) = self.overrideShouldSnapToUnderShootSnapPoint {
-       
-       return flag ? nextIndex : 1;
+    if nextIndex == 0 {
+      return self.canSnapToUnderShootSnapPoint
+        ? nextIndex + 1
+        : 0;
     };
     
-    let lastIndex = self.interpolationSteps.count - 1;
+    let overshootIndex = self.currentModalConfig.overshootSnapPointIndex;
     
-    if nextIndex == lastIndex,
-       case let .some(flag) = self.overrideShouldSnapToOvershootSnapPoint {
+    if let overshootIndex = overshootIndex,
+       nextIndex == overshootIndex {
        
-       return flag ? nextIndex : lastIndex - 1;
+      return self.canSnapToOverShootSnapPoint
+        ? nextIndex
+        : overshootIndex - 1;
     };
     
     return nextIndex;
