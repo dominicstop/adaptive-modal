@@ -268,3 +268,8 @@
   
     * `AdaptiveModalCommandsExampleXX`
       * `snapTo`.
+  
+  <br>
+  
+    * `AdaptiveModalCommandsExampleXX`
+      * Dynamically updating/changing the modal config.
