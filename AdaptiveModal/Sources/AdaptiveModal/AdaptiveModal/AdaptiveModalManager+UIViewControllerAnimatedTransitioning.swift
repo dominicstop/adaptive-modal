@@ -61,6 +61,10 @@ extension AdaptiveModalManager: UIViewControllerAnimatedTransitioning {
           };
         };
         
+        if !self.modalState.isPresenting {
+          self.modalStateMachine.setState(.PRESENTING_PROGRAMMATIC);
+        };
+        
         let args = self.showModalCommandArgs;
         
         self.showModal(
@@ -69,12 +73,21 @@ extension AdaptiveModalManager: UIViewControllerAnimatedTransitioning {
           extraAnimation: args?.extraAnimationBlock
         ) {
           transitionContext.completeTransition(true);
+          
           self.showModalCommandArgs = nil;
           self.presentationState = .none;
+          
+          if !self.modalState.isPresented {
+            self.modalStateMachine.setState(.PRESENTED_PROGRAMMATIC);
+          };
         };
       
       case .dismissing:
         let args = self.hideModalCommandArgs;
+        
+        if !self.modalState.isDismissing {
+          self.modalStateMachine.setState(.DISMISSING_PROGRAMMATIC);
+        };
       
         self.hideModal(
           useInBetweenSnapPoints: args?.useInBetweenSnapPoints ?? false,
@@ -85,6 +98,10 @@ extension AdaptiveModalManager: UIViewControllerAnimatedTransitioning {
           transitionContext.completeTransition(true);
           self.hideModalCommandArgs = nil;
           self.presentationState = .none;
+          
+          if !self.modalStateMachine.currentState.isDismissed {
+            self.modalStateMachine.setState(.DISMISSED_PROGRAMMATIC);
+          };
         };
         
       case .none:

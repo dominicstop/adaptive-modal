@@ -555,7 +555,7 @@ public class AdaptiveModalManager: NSObject {
     );
   };
   
-  // MARK: -  Properties - Debug Overlay
+  // MARK: -  Properties - Debug-Related
   // -----------------------------------
   
   var debugView: AdaptiveModalDebugOverlay?;
@@ -574,10 +574,26 @@ public class AdaptiveModalManager: NSObject {
     }
   };
   
+  public var shouldLogModalStateChanges = false;
+  
   // MARK: -  Properties - Modal State
   // ---------------------------------
   
   internal(set) public var presentationState: PresentationState = .none;
+  
+  lazy var modalStateMachine = AdaptiveModalStateMachine(
+    onStateWillChangeBlock: { [unowned self] in
+      self.notifyOnModalStateWillChange($0, $1, $2);
+    }
+  );
+  
+  public var modalStatePrev: AdaptiveModalState {
+    self.modalStateMachine.prevState;
+  };
+  
+  public var modalState: AdaptiveModalState {
+    self.modalStateMachine.currentState;
+  };
   
   // MARK: -  Properties
   // -------------------
@@ -2520,6 +2536,11 @@ public class AdaptiveModalManager: NSObject {
         };
         
         self.applyInterpolationToModal(forGesturePoint: gesturePoint);
+  
+        if self.modalState != .DISMISSING_GESTURE {
+          self.modalStateMachine.setState(.GESTURE_DRAGGING);
+        };
+          
         self.notifyOnModalWillSnap();
         
       case .cancelled, .ended:
@@ -2530,12 +2551,21 @@ public class AdaptiveModalManager: NSObject {
         guard self.shouldEnableSnapping else { break };
         let gestureFinalPointRaw = self.gestureFinalPoint ?? gesturePoint;
         
+        if self.modalState != .DISMISSING_GESTURE {
+          self.modalStateMachine.setState(.SNAPPING_FROM_GESTURE_DRAGGING);
+        };
+        
         let gestureFinalPoint =
           self.applyGestureOffsets(forGesturePoint: gestureFinalPointRaw);
-        
+          
         self.snapToClosestSnapPoint(
           forPoint: gestureFinalPoint,
-          direction: self.gestureDirection
+          direction: self.gestureDirection,
+          completion: {
+            if self.modalState == .SNAPPING_FROM_GESTURE_DRAGGING {
+              self.modalStateMachine.setState(.SNAPPED_FROM_GESTURE_DRAGGING);
+            };
+          }
         );
         
       default:
@@ -2772,12 +2802,23 @@ public class AdaptiveModalManager: NSObject {
       shouldDismissOnSnapToOverShootSnapPoint;
       
     let isPresenting = self.currentInterpolationIndex == 0 && nextIndex == 1;
-      
+    
     if shouldDismiss {
-      self.notifyOnModalWillHide();
+      let nextState: AdaptiveModalState = self.modalState.isProgrammatic
+        ? .DISMISSING_PROGRAMMATIC
+        : .DISMISSING_GESTURE;
+      
+      self.modalStateMachine.setState(nextState);
       
     } else if isPresenting {
-      self.notifyOnModalWillShow();
+      let nextState: AdaptiveModalState = self.modalState.isProgrammatic
+        ? .PRESENTING_PROGRAMMATIC
+        : .PRESENTING_GESTURE;
+        
+      self.modalStateMachine.setState(nextState);
+      
+    } else if self.isSwiping {
+      self.modalStateMachine.setState(.GESTURE_DRAGGING);
     };
   };
   
@@ -2817,12 +2858,20 @@ public class AdaptiveModalManager: NSObject {
     let wasPresented =
       self.currentInterpolationIndex == 1 &&
       self.prevInterpolationIndex == 0;
-    
+      
     if shouldDismiss {
-      self.notifyOnModalDidHide();
+      let nextState: AdaptiveModalState = self.modalState.isProgrammatic
+        ? .DISMISSED_PROGRAMMATIC
+        : .DISMISSED_GESTURE;
+      
+      self.modalStateMachine.setState(nextState);
       
     } else if wasPresented {
-      self.notifyOnModalDidShow();
+      let nextState: AdaptiveModalState = self.modalState.isProgrammatic
+        ? .PRESENTED_PROGRAMMATIC
+        : .PRESENTED_GESTURE;
+      
+      self.modalStateMachine.setState(nextState);
     };
     
     if self.shouldClearOverrideSnapPoints {
@@ -2833,10 +2882,12 @@ public class AdaptiveModalManager: NSObject {
   };
   
   private func notifyOnModalWillShow(){
+    //self.modalState = .presenting;
     self.eventDelegate?.notifyOnAdaptiveModalWillShow(sender: self);
   };
   
   private func notifyOnModalDidShow(){
+    //self.modalState = .presented;
     self.eventDelegate?.notifyOnAdaptiveModalDidShow(sender: self);
   };
   
@@ -2851,11 +2902,42 @@ public class AdaptiveModalManager: NSObject {
   };
   
   private func notifyOnModalDidHide(){
+    //self.modalState = .dismissed;
+    
     self.cleanup();
     self.modalViewController?.dismiss(animated: false);
     self.cleanupViewControllers();
     
     self.eventDelegate?.notifyOnAdaptiveModalDidHide(sender: self);
+  };
+  
+  func notifyOnModalStateWillChange(
+    _ prevState   : AdaptiveModalState,
+    _ currentState: AdaptiveModalState,
+    _ nextState   : AdaptiveModalState
+  ) {
+  
+    if nextState.isPresenting {
+      self.notifyOnModalWillShow();
+      
+    } else if nextState.isPresented {
+      self.notifyOnModalDidShow();
+      
+    } else if nextState.isDismissing {
+      self.notifyOnModalWillHide();
+      
+    } else if nextState.isDismissed {
+      self.notifyOnModalDidHide();
+    };
+    
+    #if DEBUG
+    if self.shouldLogModalStateChanges {
+      print(
+        "onStateChangeBlock:",
+        prevState, "->", currentState, "->", nextState
+      );
+    };
+    #endif
   };
 
   // MARK: - Functions
@@ -3127,11 +3209,16 @@ public class AdaptiveModalManager: NSObject {
     );
     
     guard let presentedVC = self.presentedViewController else { return };
+    self.modalStateMachine.setState(.PRESENTING_PROGRAMMATIC);
     
     targetVC.present(
       presentedVC,
       animated: animated,
-      completion: completion
+      completion: {
+        
+        self.modalStateMachine.setState(.PRESENTED_PROGRAMMATIC);
+        completion?();
+      }
     );
   };
   
@@ -3154,9 +3241,15 @@ public class AdaptiveModalManager: NSObject {
       extraAnimationBlock: extraAnimation
     );
     
+    self.modalStateMachine.setState(.DISMISSING_PROGRAMMATIC);
+    
     modalVC.dismiss(
       animated: animated,
-      completion: completion
+      completion: {
+      
+        self.modalStateMachine.setState(.DISMISSED_PROGRAMMATIC);
+        completion?();
+      }
     );
   };
   
@@ -3184,12 +3277,16 @@ public class AdaptiveModalManager: NSObject {
           prevFrame != nextFrame
     else { return };
     
+    self.modalStateMachine.setState(.SNAPPING_PROGRAMMATIC);
+    
     self.snapTo(
       interpolationIndex: nextInterpolationIndex,
       isAnimated: isAnimated,
       animationConfig: animationConfig,
       extraAnimation: extraAnimation
     ) {
+      
+      self.modalStateMachine.setState(.SNAPPED_PROGRAMMATIC);
       completion?();
     };
   };
@@ -3208,6 +3305,8 @@ public class AdaptiveModalManager: NSObject {
     guard nextIndexAdj >= 0 && nextIndexAdj <= lastIndex,
           nextIndexAdj != self.currentInterpolationIndex
     else { return };
+    
+    self.modalStateMachine.setState(.SNAPPING_PROGRAMMATIC);
 
     self.snapTo(
       interpolationIndex: nextIndex,
@@ -3359,7 +3458,6 @@ public class AdaptiveModalManager: NSObject {
       };
     }();
     
-    
     let overshootSnapPointConfig: AdaptiveModalSnapPointConfig? = {
       guard let overshootSnapPointPreset = overshootSnapPointPreset
       else { return nil };
@@ -3393,12 +3491,16 @@ public class AdaptiveModalManager: NSObject {
     self.shouldResetRangePropertyAnimators = true;
     self.currentOverrideInterpolationIndex = nextInterpolationPointIndex;
     
+    self.modalStateMachine.setState(.SNAPPING_PROGRAMMATIC);
+    
     self.animateModal(
       to: nextInterpolationPoint,
       isAnimated: isAnimated,
       animationConfigOverride: animationConfig,
       extraAnimation: extraAnimation
     ) { _ in
+      
+      self.modalStateMachine.setState(.SNAPPING_PROGRAMMATIC);
       completion?();
     };
   };
@@ -3439,7 +3541,8 @@ public class AdaptiveModalManager: NSObject {
     
     self.nextConfigInterpolationIndex =
       matchingInterpolationPoint.snapPointIndex;
-      
+    
+    self.modalStateMachine.setState(.SNAPPING_PROGRAMMATIC);
     self.notifyOnModalWillSnap();
     
     self.animateModal(
@@ -3448,8 +3551,10 @@ public class AdaptiveModalManager: NSObject {
       animationConfigOverride: animationConfig,
       extraAnimation: animationBlock
     ) { _ in
-    
+      
+      self.modalStateMachine.setState(.SNAPPED_PROGRAMMATIC);
       self.notifyOnModalDidSnap();
+      
       completion?();
     };
   };
