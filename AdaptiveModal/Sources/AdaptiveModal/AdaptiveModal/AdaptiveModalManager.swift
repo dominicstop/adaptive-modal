@@ -2948,6 +2948,13 @@ public class AdaptiveModalManager: NSObject {
       self.notifyOnModalDidHide();
     };
     
+    self.eventDelegate?.notifyOnModalStateWillChange(
+      sender: self,
+      prevState: prevState,
+      currentState: currentState,
+      nextState: nextState
+    );
+    
     #if DEBUG
     if self.shouldLogModalStateChanges {
       print(

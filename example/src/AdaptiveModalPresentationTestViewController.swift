@@ -11,7 +11,7 @@ import AdaptiveModal
 fileprivate class TestModalViewController:
   UIViewController, AdaptiveModalEventNotifiable, AdaptiveModalBackgroundTapDelegate,
   AdaptiveModalAnimationEventsNotifiable {
-  
+
   enum ContentMode {
     case buttons, scrollview;
   };
@@ -429,7 +429,16 @@ fileprivate class TestModalViewController:
         "\n"
       );
     };
-  }
+  };
+  
+  func notifyOnModalStateWillChange(
+    sender: AdaptiveModalManager,
+    prevState: AdaptiveModalState,
+    currentState: AdaptiveModalState,
+    nextState: AdaptiveModalState
+  ) {
+    // no-op
+  };
 };
 
 class AdaptiveModalPresentationTestViewController : UIViewController {

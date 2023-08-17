@@ -52,4 +52,11 @@ public protocol AdaptiveModalEventNotifiable: AnyObject {
     currentModalConfig: AdaptiveModalConfig?,
     prevModalConfig: AdaptiveModalConfig?
   );
+  
+  func notifyOnModalStateWillChange(
+    sender: AdaptiveModalManager,
+    prevState: AdaptiveModalState,
+    currentState: AdaptiveModalState,
+    nextState: AdaptiveModalState
+  );
 };
