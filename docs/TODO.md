@@ -6,7 +6,8 @@
 
 ## Current
 
-- [ ] `TODO:2023-08-18-04-51-59` - Impl: `dismiss` with custom keyframe. 
+- [ ] `TODO:2023-08-18-04-51-59` - Impl: Modal Manager Commands - `dismissModal` with custom keyframe (i.e. animate in place, no layout changes; only keyframe animations, e.g. fade out, zoom out, etc).
+- [ ] `TODO:2023-08-19-02-57-15` - Impl: Modal Manager Commands - Update `presentModal` to accept an arg that specifies where the modal snap's to when it gets presented.
 - [ ] `TODO:2023-08-18-01-24-19` - Refactor: Publish `RNILayout` as a separate library and add it as a dependency to this package.
 
 <br><br>
