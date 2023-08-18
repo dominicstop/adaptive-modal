@@ -2364,7 +2364,7 @@ public class AdaptiveModalManager: NSObject {
     snapPointConfig: AdaptiveModalSnapPointConfig,
     interpolationPoint: AdaptiveModalInterpolationPoint,
     snapDistance: CGFloat
-  ) {
+  )? {
   
     let interpolationSteps: [AdaptiveModalInterpolationPoint] = {
       guard !shouldIgnoreAllowSnapping else {
@@ -2409,29 +2409,34 @@ public class AdaptiveModalManager: NSObject {
       );
     };
     
-    let deltaAvgSorted = deltaAvg.sorted {
+    let deltaAvgIndexed = deltaAvg.enumerated().map {(
+      offset: $0.offset,
+      snapPointIndex: $0.element.snapPointIndex,
+      delta: $0.element.delta
+    )};
+    
+    let deltaAvgSorted = deltaAvgIndexed.sorted {
       $0.delta < $1.delta;
     };
     
-    let closestInterpolationPointIndex: Int = {
-      let firstIndex = deltaAvgSorted.first?.snapPointIndex
-        ?? self.currentInterpolationIndex;
+    guard let firstMatch = deltaAvgSorted.first else {
+      return nil;
+    };
     
-      guard !shouldIgnoreAllowSnapping else {
-        return firstIndex;
-      };
-      
-      return self.adjustInterpolationIndex(for: firstIndex);
-    }();
-      
+    let closestInterpolationPointIndex = self.adjustInterpolationIndex(
+      for: firstMatch.snapPointIndex
+    );
+    
     let closestInterpolationPoint =
-      interpolationSteps[closestInterpolationPointIndex];
+      self.interpolationSteps[closestInterpolationPointIndex];
     
     return (
       interpolationIndex: closestInterpolationPointIndex,
-      snapPointConfig: self.currentModalConfig.snapPoints[closestInterpolationPointIndex],
+      snapPointConfig:
+        self.currentModalConfig.snapPoints[closestInterpolationPointIndex],
+        
       interpolationPoint: closestInterpolationPoint,
-      snapDistance: deltaAvg[closestInterpolationPointIndex].delta
+      snapDistance: deltaAvg[firstMatch.offset].delta
     );
   };
   
@@ -3263,6 +3268,9 @@ public class AdaptiveModalManager: NSObject {
     self.updateCurrentModalConfig();
     
     if self.pendingCurrentModalConfigUpdate {
+    
+      // config changes while a snap override is active is buggy...
+      self.cleanupSnapPointOverride();
       self.computeSnapPoints();
       
       let closestSnapPoint = self.getClosestSnapPoint(
@@ -3270,7 +3278,8 @@ public class AdaptiveModalManager: NSObject {
         shouldExcludeUndershootSnapPoint: true
       );
       
-      self.currentConfigInterpolationIndex = closestSnapPoint.interpolationIndex;
+      self.currentConfigInterpolationIndex = closestSnapPoint?.interpolationIndex
+        ?? self.currentConfigInterpolationIndex;
       
       let shouldUpdateDragHandleConstraints: Bool = {
         guard let prevConfig = self.prevModalConfig else {
@@ -3404,13 +3413,15 @@ public class AdaptiveModalManager: NSObject {
     extraAnimation: (() -> Void)? = nil,
     completion: (() -> Void)? = nil
   ) {
+  
     let closestSnapPoint = self.getClosestSnapPoint(
       forRect: self.modalFrame ?? .zero,
       shouldExcludeUndershootSnapPoint: true
     );
     
-    let nextInterpolationIndex =
-      self.adjustInterpolationIndex(for: closestSnapPoint.interpolationIndex);
+    let nextInterpolationIndex = self.adjustInterpolationIndex(
+      for: closestSnapPoint?.interpolationIndex ?? 1
+    );
     
     let nextInterpolationPoint =
       self.interpolationSteps[nextInterpolationIndex];
