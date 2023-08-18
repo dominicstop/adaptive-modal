@@ -8,6 +8,7 @@
 
 - [ ] `TODO:2023-08-14-06-28-05` - Update `snapTo` to accept `AdaptiveModalSnapPointPreset`.
 - [ ] `TODO:2023-08-14-06-28-18` - Impl: `dismiss` with custom snap point. 
+- [ ] `TODO:2023-08-18-04-51-59` - Impl: `dismiss` with custom keyframe. 
 - [ ] `TODO:2023-08-18-01-24-19` - Refactor: Publish `RNILayout` as a separate library and add it as a dependency to this package.
 
 <br><br>
