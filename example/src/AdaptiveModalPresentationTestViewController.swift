@@ -464,8 +464,8 @@ class AdaptiveModalPresentationTestViewController : UIViewController {
     let defaultBlock: (AdaptiveModalManager) -> Void = {
       $0.shouldEnableOverShooting = true;
     
-      $0.overrideShouldSnapToUnderShootSnapPoint = true;
-      $0.overrideShouldSnapToOvershootSnapPoint = false;
+      $0.overrideShouldSnapToUnderShootSnapPoint = nil;
+      $0.overrideShouldSnapToOvershootSnapPoint = nil;
       
       $0.shouldDismissModalOnSnapToUnderShootSnapPoint = true;
       $0.shouldDismissModalOnSnapToOverShootSnapPoint = false;
