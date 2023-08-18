@@ -74,31 +74,31 @@ public struct AdaptiveModalConfig: Equatable {
   // MARK: - Properties - Config
   // ---------------------------
   
-  public let baseSnapPoints: [AdaptiveModalSnapPointConfig];
-  public let snapDirection: SnapDirection;
+  public var baseSnapPoints: [AdaptiveModalSnapPointConfig];
+  public var snapDirection: SnapDirection;
   
-  public let snapPercentStrategy: SnapPercentStrategy;
+  public var snapPercentStrategy: SnapPercentStrategy;
   
-  public let snapAnimationConfig: AdaptiveModalSnapAnimationConfig;
-  public let entranceAnimationConfig: AdaptiveModalSnapAnimationConfig;
-  public let exitAnimationConfig: AdaptiveModalSnapAnimationConfig;
+  public var snapAnimationConfig: AdaptiveModalSnapAnimationConfig;
+  public var entranceAnimationConfig: AdaptiveModalSnapAnimationConfig;
+  public var exitAnimationConfig: AdaptiveModalSnapAnimationConfig;
   
-  public let interpolationClampingConfig: AdaptiveModalClampingConfig;
+  public var interpolationClampingConfig: AdaptiveModalClampingConfig;
   
-  public let undershootSnapPoint: AdaptiveModalSnapPointPreset;
-  public let overshootSnapPoint: AdaptiveModalSnapPointPreset?;
+  public var undershootSnapPoint: AdaptiveModalSnapPointPreset;
+  public var overshootSnapPoint: AdaptiveModalSnapPointPreset?;
   
   // the first snap point to snap to when the modal is first shown
-  public let initialSnapPointIndex: Int;
+  public var initialSnapPointIndex: Int;
   
-  public let dragHandlePosition: DragHandlePosition;
-  public let dragHandleHitSlop: CGPoint;
+  public var dragHandlePosition: DragHandlePosition;
+  public var dragHandleHitSlop: CGPoint;
   
-  public let modalSwipeGestureEdgeHeight: CGFloat;
+  public var modalSwipeGestureEdgeHeight: CGFloat;
   
-  public let shouldSetModalScrollViewContentInsets: Bool;
-  public let shouldSetModalScrollViewVerticalScrollIndicatorInsets: Bool;
-  public let shouldSetModalScrollViewHorizontalScrollIndicatorInsets: Bool;
+  public var shouldSetModalScrollViewContentInsets: Bool;
+  public var shouldSetModalScrollViewVerticalScrollIndicatorInsets: Bool;
+  public var shouldSetModalScrollViewHorizontalScrollIndicatorInsets: Bool;
   
   // let snapSwipeVelocityThreshold: CGFloat = 0;
 
