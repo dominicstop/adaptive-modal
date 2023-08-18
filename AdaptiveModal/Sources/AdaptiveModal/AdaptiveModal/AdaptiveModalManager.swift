@@ -1586,15 +1586,6 @@ public class AdaptiveModalManager: NSObject {
     animator.setFractionComplete(
       forInputPercentValue: inputPercentValue.clamped(min: 0, max: 1)
     );
-    
-    print(
-      "applyInterpolationToBackgroundVisualEffect",
-      "\n - inputPercentValue:", inputPercentValue,
-      "\n - rangeInput:", animator.rangeInput,
-      "\n - rangeOutput:", animator.rangeOutput,
-      "\n - effect:", self.backgroundVisualEffectView?.effect,
-      "\n"
-    );
   };
   
   private func applyInterpolationToModalPadding(
@@ -2796,14 +2787,7 @@ public class AdaptiveModalManager: NSObject {
     }();
     
     guard let percent = percent else { return };
-    
-    print(
-      "onDisplayLinkTick",
-      "\n - percent:", percent,
-      "\n - mode:", self.rangeAnimatorMode,
-      "\n"
-    );
-    
+
     self.applyInterpolationToRangeAnimators(
       forInputPercentValue: percent
     );
@@ -3160,16 +3144,6 @@ public class AdaptiveModalManager: NSObject {
         
         return points;
       }();
-      
-      self.overrideInterpolationPoints!.forEach {
-        print(
-          "overrideInterpolationPoints",
-          "\n - percent:", $0.percent,
-          "\n - snapPointIndex:", $0.snapPointIndex,
-          "\n - backgroundVisualEffectIntensity:", $0.backgroundVisualEffectIntensity,
-          "\n"
-        );
-      };
       
       let undershootInterpolationPoint =
         self.overrideInterpolationPoints![nextIndex];
