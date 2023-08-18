@@ -9,6 +9,16 @@ import UIKit
 
 class AdaptiveModalUtilities {
 
+  static func lerp(
+    valueStart: CGFloat,
+    valueEnd: CGFloat,
+    percent: CGFloat
+  ) -> CGFloat {
+    let valueDelta = valueEnd - valueStart;
+    let valueProgress = valueDelta * percent
+    return valueStart + valueProgress;
+  };
+
   static func extractValuesFromArray<T, U>(
     for array: [T],
     key: KeyPath<T, U>
@@ -50,7 +60,7 @@ class AdaptiveModalUtilities {
       // extrapolated "range output end"
       let rangeOutputEnd = rangeOutputStart - (rangeOutput[1] - rangeOutputStart);
       
-      let interpolatedValue = RNIAnimator.EasingFunctions.lerp(
+      let interpolatedValue = Self.lerp(
         valueStart: rangeOutputEnd,
         valueEnd  : rangeOutputStart,
         percent   : percent
@@ -94,7 +104,7 @@ class AdaptiveModalUtilities {
 
     let progress = inputValueAdj / rangeInputEndAdj;
           
-    return RNIAnimator.EasingFunctions.lerp(
+    return Self.lerp(
       valueStart: rangeOutputStart,
       valueEnd  : rangeOutputEnd,
       percent   : progress
