@@ -273,3 +273,13 @@
   
     * `AdaptiveModalCommandsExampleXX`
       * Dynamically updating/changing the modal config.
+  
+  <br>
+  
+    * `AdaptiveModalCommandsExampleXX`
+      * Dismissing the modal to a custom snap point.
+  
+  <br>
+  
+    * `AdaptiveModalCommandsExampleXX`
+      * Dismissing the modal in-place with a custom animation keyframe.
