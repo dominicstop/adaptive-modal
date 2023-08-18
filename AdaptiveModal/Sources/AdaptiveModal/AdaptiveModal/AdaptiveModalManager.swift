@@ -652,7 +652,7 @@ public class AdaptiveModalManager: NSObject {
   public var canSnapToUnderShootSnapPoint: Bool {
     let underShootSnapPoint = self.currentModalConfig.undershootSnapPoint;
  
-    return self.overrideShouldSnapToOvershootSnapPoint
+    return self.overrideShouldSnapToUnderShootSnapPoint
       ?? underShootSnapPoint.keyframeConfig?.allowSnapping
       ?? true;
   };
@@ -2146,8 +2146,8 @@ public class AdaptiveModalManager: NSObject {
   private func adjustInterpolationIndex(for nextIndex: Int) -> Int {
     if nextIndex == 0 {
       return self.canSnapToUnderShootSnapPoint
-        ? nextIndex + 1
-        : 0;
+        ? 0
+        : nextIndex + 1;
     };
     
     let overshootIndex = self.currentModalConfig.overshootSnapPointIndex;
