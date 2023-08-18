@@ -23,8 +23,8 @@ public struct AdaptiveModalRangePropertyAnimator {
   
   private weak var component: AnyObject?;
   
-  private var rangeInput : [CGFloat]!;
-  private var rangeOutput: [CGFloat]!;
+  private(set) var rangeInput : [CGFloat]!;
+  private(set) var rangeOutput: [CGFloat]!;
   
   // MARK: - Init
   // ------------
@@ -112,7 +112,6 @@ public struct AdaptiveModalRangePropertyAnimator {
   public func setFractionComplete(
     forInputPercentValue inputPercentValue: CGFloat
   ) {
-    
   
     let percent = AdaptiveModalUtilities.interpolate(
       inputValue: inputPercentValue,

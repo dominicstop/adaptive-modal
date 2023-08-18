@@ -13,6 +13,17 @@ public class AdaptiveModalManager: NSObject {
     case presenting, dismissing, none;
   };
   
+  /// `self.hideModal` param
+  enum HideModalMode: Equatable {
+    case direct, inBetween;
+    case custom(AdaptiveModalSnapPointPreset);
+  };
+  
+  enum ModalRangePropertyAnimatorMode: Equatable {
+    case modalPosition;
+    case animatorFractionComplete;
+  };
+  
   // MARK: -  Properties - Config-Related
   // ------------------------------------
   
@@ -377,6 +388,8 @@ public class AdaptiveModalManager: NSObject {
     self.modalBackgroundVisualEffectAnimator
   ]};
   
+  var rangeAnimatorMode: ModalRangePropertyAnimatorMode = .modalPosition;
+  
   private var shouldResetRangePropertyAnimators = false;
   
   // MARK: -  Properties - Gesture-Related
@@ -604,7 +617,7 @@ public class AdaptiveModalManager: NSObject {
   
   /// Args for  indirect call to `hideModal` via `UIViewController.dismiss`
   var hideModalCommandArgs: (
-    useInBetweenSnapPoints: Bool,
+    mode: HideModalMode,
     animationConfig: AdaptiveModalSnapAnimationConfig,
     extraAnimationBlock: (() -> Void)?
   )?;
@@ -1350,6 +1363,8 @@ public class AdaptiveModalManager: NSObject {
     self.shouldResetRangePropertyAnimators = false;
     self.pendingCurrentModalConfigUpdate = false;
     
+    self.rangeAnimatorMode = .modalPosition;
+    
     #if DEBUG
     self.debugView?.notifyDidCleanup();
     #endif
@@ -1570,6 +1585,15 @@ public class AdaptiveModalManager: NSObject {
     
     animator.setFractionComplete(
       forInputPercentValue: inputPercentValue.clamped(min: 0, max: 1)
+    );
+    
+    print(
+      "applyInterpolationToBackgroundVisualEffect",
+      "\n - inputPercentValue:", inputPercentValue,
+      "\n - rangeInput:", animator.rangeInput,
+      "\n - rangeOutput:", animator.rangeOutput,
+      "\n - effect:", self.backgroundVisualEffectView?.effect,
+      "\n"
     );
   };
   
@@ -2729,14 +2753,6 @@ public class AdaptiveModalManager: NSObject {
       };
     };
     
-    guard let dummyModalView = self.dummyModalView,
-          let dummyModalViewLayer = dummyModalView.layer.presentation(),
-          let interpolationRangeMaxInput = self.interpolationRangeMaxInput
-    else {
-      shouldEndDisplayLink = true;
-      return;
-    };
-    
     if self.isSwiping && !self.isKeyboardVisible {
       shouldEndDisplayLink = true;
     };
@@ -2745,25 +2761,52 @@ public class AdaptiveModalManager: NSObject {
       self.displayLinkStartTimestamp = displayLink.timestamp;
     };
     
-    let prevModalFrame = self.prevModalFrame;
-    let nextModalFrame = dummyModalViewLayer.frame;
-
-    guard prevModalFrame != nextModalFrame else { return };
+    let percent: CGFloat? = {
+      switch self.rangeAnimatorMode {
+        case .modalPosition:
+          guard let dummyModalView = self.dummyModalView,
+                let dummyModalViewLayer = dummyModalView.layer.presentation(),
+                let interpolationRangeMaxInput = self.interpolationRangeMaxInput
+          else {
+            shouldEndDisplayLink = true;
+            return nil;
+          };
+          
+          let prevModalFrame = self.prevModalFrame;
+          let nextModalFrame = dummyModalViewLayer.frame;
+          
+          guard prevModalFrame != nextModalFrame else { return nil };
+          self.prevModalFrame = nextModalFrame;
+          
+          let inputCoord =
+            nextModalFrame[keyPath: self.currentModalConfig.inputValueKeyForRect];
+            
+          let percent = inputCoord / interpolationRangeMaxInput;
+          
+          let percentAdj = self.currentModalConfig.shouldInvertPercent
+            ? AdaptiveModalUtilities.invertPercent(percent)
+            : percent;
+            
+          return percentAdj;
+          
+        case .animatorFractionComplete:
+          guard let modalAnimator = modalAnimator else { return nil };
+          return AdaptiveModalUtilities.invertPercent(modalAnimator.fractionComplete);
+      };
+    }();
     
-    let inputCoord =
-      nextModalFrame[keyPath: self.currentModalConfig.inputValueKeyForRect];
-      
-    let percent = inputCoord / interpolationRangeMaxInput;
+    guard let percent = percent else { return };
     
-    let percentAdj = self.currentModalConfig.shouldInvertPercent
-      ? AdaptiveModalUtilities.invertPercent(percent)
-      : percent;
-    
-    self.applyInterpolationToRangeAnimators(
-      forInputPercentValue: percentAdj
+    print(
+      "onDisplayLinkTick",
+      "\n - percent:", percent,
+      "\n - mode:", self.rangeAnimatorMode,
+      "\n"
     );
     
-    self.prevModalFrame = nextModalFrame;
+    self.applyInterpolationToRangeAnimators(
+      forInputPercentValue: percent
+    );
   };
   
   // MARK: - Event Functions
@@ -3045,7 +3088,7 @@ public class AdaptiveModalManager: NSObject {
   };
   
   func hideModal(
-    useInBetweenSnapPoints: Bool = false,
+    mode: HideModalMode,
     isAnimated: Bool = true,
     animationConfig: AdaptiveModalSnapAnimationConfig? = nil,
     extraAnimation: (() -> Void)? = nil,
@@ -3054,40 +3097,104 @@ public class AdaptiveModalManager: NSObject {
   
     let nextIndex = 0;
     
-    if useInBetweenSnapPoints {
-      self.snapTo(
-        interpolationIndex: nextIndex,
-        isAnimated: isAnimated,
-        animationConfig: animationConfig,
-        extraAnimation: extraAnimation,
-        completion: completion
-      );
+    self.stopModalAnimator();
+    self.updateCurrentModalConfig();
+    self.computeSnapPoints();
     
-    } else {
-      self.updateCurrentModalConfig();
-      self.computeSnapPoints();
+    let undershootSnapPoint: AdaptiveModalSnapPointPreset? = {
+      switch mode {
+        case .direct:
+          return self.currentModalConfig.undershootSnapPoint;
+        
+        case let .custom(snapPointPreset):
+          if snapPointPreset.keyframeConfig == nil {
+            return .init(
+              layoutPreset: snapPointPreset.layoutPreset,
+              keyframeConfig: .defaultUndershootKeyframe
+            );
+          };
+          
+          return snapPointPreset;
+          
+        case .inBetween:
+          return nil;
+      };
+    }();
+    
+    if let undershootSnapPoint = undershootSnapPoint {
+      self.clearAnimators();
+    
+      let currentSnapPoint: AdaptiveModalSnapPointConfig = {
+        var newKeyframe = AdaptiveModalKeyframeConfig(
+          fromInterpolationPoint: self.currentInterpolationStep
+        );
+        
+        newKeyframe.computedRect = nil;
+        return .snapPoint(
+          key: self.currentSnapPointConfig.key,
+          layoutConfig: self.currentSnapPointConfig.layoutConfig,
+          keyframeConfig: newKeyframe
+        );
+      }();
       
-      let currentSnapPointConfig = self.currentSnapPointConfig;
-      let currentInterpolationStep = self.currentInterpolationStep;
-  
-      let undershootSnapPointConfig = AdaptiveModalSnapPointConfig(
-        fromSnapPointPreset: self.currentModalConfig.undershootSnapPoint,
-        fromBaseLayoutConfig: currentSnapPointConfig.layoutConfig
+      let snapPoints = AdaptiveModalSnapPointConfig.deriveSnapPoints(
+        undershootSnapPoint: undershootSnapPoint,
+        inBetweenSnapPoints: [currentSnapPoint],
+        overshootSnapPoint: nil
       );
+
+      self.overrideSnapPoints = snapPoints;
       
-      var undershootInterpolationPoint = AdaptiveModalInterpolationPoint(
-        usingModalConfig: self.currentModalConfig,
-        snapPointIndex: nextIndex,
-        layoutValueContext: self.layoutValueContext,
-        snapPointConfig: undershootSnapPointConfig
-      );
+      self.overrideInterpolationPoints = {
+        var points = AdaptiveModalInterpolationPoint.compute(
+          usingConfig: self.currentModalConfig,
+          usingContext: self.layoutValueContext,
+          snapPoints: overrideSnapPoints
+        );
+        
+        let lastIndex = points.count - 1;
+        
+        for index in 0 ..< points.count {
+          points[index].percent =  CGFloat(index) / CGFloat(lastIndex);
+        };
+        
+        return points;
+      }();
       
-      undershootInterpolationPoint.modalCornerRadius =
-        currentInterpolationStep.modalCornerRadius;
+      self.overrideInterpolationPoints!.forEach {
+        print(
+          "overrideInterpolationPoints",
+          "\n - percent:", $0.percent,
+          "\n - snapPointIndex:", $0.snapPointIndex,
+          "\n - backgroundVisualEffectIntensity:", $0.backgroundVisualEffectIntensity,
+          "\n"
+        );
+      };
+      
+      let undershootInterpolationPoint =
+        self.overrideInterpolationPoints![nextIndex];
+      
+      self.isOverridingSnapPoints = true;
+      self.currentOverrideInterpolationIndex = 1;
+      
+      self.shouldResetRangePropertyAnimators = true;
+      self.rangeAnimatorMode = .animatorFractionComplete;
       
       self.snapTo(
         interpolationIndex: nextIndex,
         interpolationPoint: undershootInterpolationPoint,
+        isAnimated: isAnimated,
+        animationConfig: animationConfig,
+        extraAnimation: extraAnimation,
+        completion: {
+          self.rangeAnimatorMode = .modalPosition;
+          completion?();
+        }
+      );
+    
+    } else {
+      self.snapTo(
+        interpolationIndex: nextIndex,
         isAnimated: isAnimated,
         animationConfig: animationConfig,
         extraAnimation: extraAnimation,
@@ -3269,7 +3376,38 @@ public class AdaptiveModalManager: NSObject {
       ?? self.currentModalConfig.exitAnimationConfig;
     
     self.hideModalCommandArgs = (
-      useInBetweenSnapPoints: useInBetweenSnapPoints,
+      mode: useInBetweenSnapPoints ? .inBetween : .direct,
+      animationConfig: animationConfig,
+      extraAnimationBlock: extraAnimation
+    );
+    
+    self.modalStateMachine.setState(.DISMISSING_PROGRAMMATIC);
+    
+    modalVC.dismiss(
+      animated: animated,
+      completion: {
+      
+        self.modalStateMachine.setState(.DISMISSED_PROGRAMMATIC);
+        completion?();
+      }
+    );
+  };
+  
+  public func dismissModal(
+    snapPointPreset: AdaptiveModalSnapPointPreset,
+    animated: Bool = true,
+    animationConfig: AdaptiveModalSnapAnimationConfig? = nil,
+    extraAnimation: (() -> Void)? = nil,
+    completion: (() -> Void)? = nil
+  ) {
+  
+    guard let modalVC = self.modalViewController else { return };
+    
+    let animationConfig = animationConfig
+      ?? self.currentModalConfig.exitAnimationConfig;
+    
+    self.hideModalCommandArgs = (
+      mode: .custom(snapPointPreset),
       animationConfig: animationConfig,
       extraAnimationBlock: extraAnimation
     );

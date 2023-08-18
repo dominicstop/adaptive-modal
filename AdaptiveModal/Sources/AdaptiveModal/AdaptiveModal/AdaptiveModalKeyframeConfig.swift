@@ -87,6 +87,7 @@ public struct AdaptiveModalKeyframeConfig: Equatable {
     backgroundTapInteraction: .default,
     modalTransform: .default,
     modalContentOpacity: 0.5,
+    modalBackgroundVisualEffectIntensity: 0,
     backgroundOpacity: 0,
     backgroundVisualEffectIntensity: 0
   );

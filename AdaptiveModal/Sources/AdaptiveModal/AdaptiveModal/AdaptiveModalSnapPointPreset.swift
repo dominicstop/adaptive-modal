@@ -11,8 +11,8 @@ public struct AdaptiveModalSnapPointPreset: Equatable {
 
   public static let automatic: Self = .init(layoutPreset: .automatic);
 
-  public let layoutPreset: RNILayoutPreset;
-  public let keyframeConfig: AdaptiveModalKeyframeConfig?;
+  public var layoutPreset: RNILayoutPreset;
+  public var keyframeConfig: AdaptiveModalKeyframeConfig?;
   
   public init(
     layoutPreset: RNILayoutPreset,

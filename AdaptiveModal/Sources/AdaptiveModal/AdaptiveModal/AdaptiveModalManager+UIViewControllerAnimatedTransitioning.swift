@@ -90,7 +90,7 @@ extension AdaptiveModalManager: UIViewControllerAnimatedTransitioning {
         };
       
         self.hideModal(
-          useInBetweenSnapPoints: args?.useInBetweenSnapPoints ?? false,
+          mode: args?.mode ?? .direct,
           isAnimated: transitionContext.isAnimated,
           animationConfig: args?.animationConfig,
           extraAnimation: args?.extraAnimationBlock
