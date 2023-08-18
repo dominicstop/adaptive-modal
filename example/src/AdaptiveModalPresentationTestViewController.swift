@@ -233,7 +233,7 @@ fileprivate class TestModalViewController:
       animated: true,
       animationConfig: .presetCurve(
         duration: 0.275,
-        curve: .easeOut
+        curve: .easeInOut
       )
     );
   };
