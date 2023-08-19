@@ -16,7 +16,9 @@ public class AdaptiveModalManager: NSObject {
   /// `self.hideModal` param
   enum HideModalMode: Equatable {
     case direct, inBetween;
-    case custom(AdaptiveModalSnapPointPreset);
+    
+    case snapPointPreset(AdaptiveModalSnapPointPreset);
+    case keyframe(AdaptiveModalKeyframeConfig);
   };
   
   enum ModalRangePropertyAnimatorMode: Equatable {
@@ -3094,8 +3096,8 @@ public class AdaptiveModalManager: NSObject {
       switch mode {
         case .direct:
           return self.currentModalConfig.undershootSnapPoint;
-        
-        case let .custom(snapPointPreset):
+          
+        case let .snapPointPreset(snapPointPreset):
           if snapPointPreset.keyframeConfig == nil {
             return .init(
               layoutPreset: snapPointPreset.layoutPreset,
@@ -3105,7 +3107,15 @@ public class AdaptiveModalManager: NSObject {
           
           return snapPointPreset;
           
-        case .inBetween:
+        case let .keyframe(keyframe):
+          return .init(
+            layoutPreset: .layoutConfig(
+              self.currentSnapPointConfig.layoutConfig
+            ),
+            keyframeConfig: keyframe
+          );
+          
+        default:
           return nil;
       };
     }();
@@ -3138,7 +3148,8 @@ public class AdaptiveModalManager: NSObject {
         var points = AdaptiveModalInterpolationPoint.compute(
           usingConfig: self.currentModalConfig,
           usingContext: self.layoutValueContext,
-          snapPoints: overrideSnapPoints
+          snapPoints: overrideSnapPoints,
+          shouldCheckForPercentCollision: false
         );
         
         let lastIndex = points.count - 1;
@@ -3390,7 +3401,38 @@ public class AdaptiveModalManager: NSObject {
       ?? self.currentModalConfig.exitAnimationConfig;
     
     self.hideModalCommandArgs = (
-      mode: .custom(snapPointPreset),
+      mode: .snapPointPreset(snapPointPreset),
+      animationConfig: animationConfig,
+      extraAnimationBlock: extraAnimation
+    );
+    
+    self.modalStateMachine.setState(.DISMISSING_PROGRAMMATIC);
+    
+    modalVC.dismiss(
+      animated: animated,
+      completion: {
+      
+        self.modalStateMachine.setState(.DISMISSED_PROGRAMMATIC);
+        completion?();
+      }
+    );
+  };
+  
+  public func dismissModal(
+    keyframe: AdaptiveModalKeyframeConfig,
+    animated: Bool = true,
+    animationConfig: AdaptiveModalSnapAnimationConfig? = nil,
+    extraAnimation: (() -> Void)? = nil,
+    completion: (() -> Void)? = nil
+  ) {
+  
+    guard let modalVC = self.modalViewController else { return };
+    
+    let animationConfig = animationConfig
+      ?? self.currentModalConfig.exitAnimationConfig;
+    
+    self.hideModalCommandArgs = (
+      mode: .keyframe(keyframe),
       animationConfig: animationConfig,
       extraAnimationBlock: extraAnimation
     );

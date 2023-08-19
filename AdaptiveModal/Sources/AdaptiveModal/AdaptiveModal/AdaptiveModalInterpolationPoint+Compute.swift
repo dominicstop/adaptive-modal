@@ -306,7 +306,8 @@ extension AdaptiveModalInterpolationPoint {
   public static func compute(
     usingConfig modalConfig: AdaptiveModalConfig,
     usingContext context: RNILayoutValueContext,
-    snapPoints: [AdaptiveModalSnapPointConfig]? = nil
+    snapPoints: [AdaptiveModalSnapPointConfig]? = nil,
+    shouldCheckForPercentCollision: Bool = true
   ) -> [Self] {
   
     let snapPoints = snapPoints ?? modalConfig.snapPoints;
@@ -387,6 +388,8 @@ extension AdaptiveModalInterpolationPoint {
     func checkForCollisions(
       _ interpolationPoints: [AdaptiveModalInterpolationPoint]
     ) {
+      guard shouldCheckForPercentCollision else { return };
+      
       let collisions = Self.itemsWithPercentCollision(
         interpolationPoints: interpolationPoints
       );
