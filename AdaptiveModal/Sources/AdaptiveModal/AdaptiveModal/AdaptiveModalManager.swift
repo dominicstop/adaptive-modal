@@ -613,6 +613,7 @@ public class AdaptiveModalManager: NSObject {
   
   /// Args for indirect call to `showModal` via `UIViewController.show`
   var showModalCommandArgs: (
+    snapPointIndex: Int?,
     animationConfig: AdaptiveModalSnapAnimationConfig,
     extraAnimationBlock: (() -> Void)?
   )?;
@@ -3062,12 +3063,15 @@ public class AdaptiveModalManager: NSObject {
   };
   
   func showModal(
+    snapPointIndex: Int? = nil,
     isAnimated: Bool = true,
     animationConfig: AdaptiveModalSnapAnimationConfig? = nil,
     extraAnimation: (() -> Void)? = nil,
     completion: (() -> Void)? = nil
   ) {
-    let nextIndex = self.currentModalConfig.initialSnapPointIndex;
+  
+    let nextIndex = snapPointIndex ??
+      self.currentModalConfig.initialSnapPointIndex;
     
     self.snapTo(
       interpolationIndex: nextIndex,
@@ -3323,6 +3327,7 @@ public class AdaptiveModalManager: NSObject {
   public func presentModal(
     viewControllerToPresent modalVC: UIViewController,
     presentingViewController targetVC: UIViewController,
+    snapPointIndex: Int? = nil,
     animationConfig: AdaptiveModalSnapAnimationConfig? = nil,
     extraAnimation: (() -> Void)? = nil,
     animated: Bool = true,
@@ -3333,6 +3338,7 @@ public class AdaptiveModalManager: NSObject {
       ?? self.currentModalConfig.entranceAnimationConfig;
     
     self.showModalCommandArgs = (
+      snapPointIndex: snapPointIndex,
       animationConfig: animationConfig,
       extraAnimationBlock: extraAnimation
     );
@@ -3353,6 +3359,31 @@ public class AdaptiveModalManager: NSObject {
         self.modalStateMachine.setState(.PRESENTED_PROGRAMMATIC);
         completion?();
       }
+    );
+  };
+  
+  public func presentModal(
+    viewControllerToPresent modalVC: UIViewController,
+    presentingViewController targetVC: UIViewController,
+    snapPointKey: AdaptiveModalSnapPointConfig.SnapPointKey,
+    animationConfig: AdaptiveModalSnapAnimationConfig? = nil,
+    extraAnimation: (() -> Void)? = nil,
+    animated: Bool = true,
+    completion: (() -> Void)? = nil
+  ) {
+  
+    let snapPointMatch = self.interpolationSteps.first {
+      $0.key == snapPointKey;
+    };
+  
+    self.presentModal(
+      viewControllerToPresent: modalVC,
+      presentingViewController: targetVC,
+      snapPointIndex: snapPointMatch?.snapPointIndex,
+      animationConfig: animationConfig,
+      extraAnimation: extraAnimation,
+      animated: animated,
+      completion: completion
     );
   };
   
