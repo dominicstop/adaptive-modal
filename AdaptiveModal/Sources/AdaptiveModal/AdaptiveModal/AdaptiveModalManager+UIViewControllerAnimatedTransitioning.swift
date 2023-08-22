@@ -13,7 +13,21 @@ extension AdaptiveModalManager: UIViewControllerAnimatedTransitioning {
     using transitionContext: UIViewControllerContextTransitioning?
   ) -> TimeInterval {
   
-    return self.currentModalConfig.snapAnimationConfig.duration;
+    let isAnimated: Bool = {
+      if let args = self.showModalCommandArgs {
+        return args.isAnimated;
+      };
+      
+      if let args = self.hideModalCommandArgs {
+        return args.isAnimated;
+      };
+      
+      return transitionContext?.isAnimated ?? false;
+    }();
+    
+    return isAnimated
+      ? self.currentModalConfig.snapAnimationConfig.duration
+      : 0;
   };
   
   public func animateTransition(
@@ -68,7 +82,8 @@ extension AdaptiveModalManager: UIViewControllerAnimatedTransitioning {
         let args = self.showModalCommandArgs;
         
         self.showModal(
-          isAnimated: transitionContext.isAnimated,
+          snapPointIndex: args?.snapPointIndex,
+          isAnimated: args?.isAnimated ?? true,
           animationConfig: args?.animationConfig,
           extraAnimation: args?.extraAnimationBlock
         ) {
@@ -91,7 +106,7 @@ extension AdaptiveModalManager: UIViewControllerAnimatedTransitioning {
       
         self.hideModal(
           mode: args?.mode ?? .direct,
-          isAnimated: transitionContext.isAnimated,
+          isAnimated: args?.isAnimated ?? true,
           animationConfig: args?.animationConfig,
           extraAnimation: args?.extraAnimationBlock
         ){

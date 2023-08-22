@@ -613,6 +613,7 @@ public class AdaptiveModalManager: NSObject {
   
   /// Args for indirect call to `showModal` via `UIViewController.show`
   var showModalCommandArgs: (
+    isAnimated: Bool,
     snapPointIndex: Int?,
     animationConfig: AdaptiveModalSnapAnimationConfig,
     extraAnimationBlock: (() -> Void)?
@@ -620,6 +621,7 @@ public class AdaptiveModalManager: NSObject {
   
   /// Args for  indirect call to `hideModal` via `UIViewController.dismiss`
   var hideModalCommandArgs: (
+    isAnimated: Bool,
     mode: HideModalMode,
     animationConfig: AdaptiveModalSnapAnimationConfig,
     extraAnimationBlock: (() -> Void)?
@@ -3338,6 +3340,7 @@ public class AdaptiveModalManager: NSObject {
       ?? self.currentModalConfig.entranceAnimationConfig;
     
     self.showModalCommandArgs = (
+      isAnimated: animated,
       snapPointIndex: snapPointIndex,
       animationConfig: animationConfig,
       extraAnimationBlock: extraAnimation
@@ -3353,7 +3356,7 @@ public class AdaptiveModalManager: NSObject {
     
     targetVC.present(
       presentedVC,
-      animated: animated,
+      animated: true,
       completion: {
         
         self.modalStateMachine.setState(.PRESENTED_PROGRAMMATIC);
@@ -3401,6 +3404,7 @@ public class AdaptiveModalManager: NSObject {
       ?? self.currentModalConfig.exitAnimationConfig;
     
     self.hideModalCommandArgs = (
+      isAnimated: animated,
       mode: useInBetweenSnapPoints ? .inBetween : .direct,
       animationConfig: animationConfig,
       extraAnimationBlock: extraAnimation
@@ -3432,6 +3436,7 @@ public class AdaptiveModalManager: NSObject {
       ?? self.currentModalConfig.exitAnimationConfig;
     
     self.hideModalCommandArgs = (
+      isAnimated: animated,
       mode: .snapPointPreset(snapPointPreset),
       animationConfig: animationConfig,
       extraAnimationBlock: extraAnimation
@@ -3463,6 +3468,7 @@ public class AdaptiveModalManager: NSObject {
       ?? self.currentModalConfig.exitAnimationConfig;
     
     self.hideModalCommandArgs = (
+      isAnimated: animated,
       mode: .keyframe(keyframe),
       animationConfig: animationConfig,
       extraAnimationBlock: extraAnimation
