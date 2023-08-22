@@ -841,7 +841,7 @@ public class AdaptiveModalManager: NSObject {
     else { return };
     
     if let targetView = self.targetView,
-       let modalRootView = self.modalWrapperViewController?.view {
+       let modalRootView = self.modalRootView {
        
       targetView.addSubview(modalRootView);
     };
@@ -1282,6 +1282,12 @@ public class AdaptiveModalManager: NSObject {
   };
   
   private func cleanupViewControllers(){
+    defer {
+      self.modalWrapperViewController = nil;
+      self.modalViewController = nil;
+      self.presentingViewController = nil;
+    };
+  
     guard self.modalWrapperViewController != nil,
           let modalVC = self.modalViewController
     else { return };
@@ -1293,14 +1299,13 @@ public class AdaptiveModalManager: NSObject {
   
   private func cleanupViews() {
     let viewsToCleanup: [UIView?] = [
-      self.modalDragHandleView,
       self.dummyModalView,
       self.modalWrapperLayoutView,
       // self.modalWrapperTransformView,
+      self.modalDragHandleView,
       self.modalWrapperShadowView,
       // self.modalContentWrapperView,
       // self.modalView,
-      // self.modalContentWrapperView,
       self.modalBackgroundView,
       self.modalBackgroundVisualEffectView,
       self.backgroundDimmingView,
@@ -1332,6 +1337,12 @@ public class AdaptiveModalManager: NSObject {
     self.modalConstraintRight = nil;
     self.modalConstraintTop = nil;
     self.modalConstraintBottom = nil;
+    
+    self.modalDragHandleConstraintOffset = nil;
+    self.modalDragHandleConstraintCenter = nil;
+    self.modalDragHandleConstraintHeight = nil;
+    self.modalDragHandleConstraintWidth = nil;
+    
     
     self.didTriggerSetup = false;
   };
@@ -1369,6 +1380,7 @@ public class AdaptiveModalManager: NSObject {
     self.pendingCurrentModalConfigUpdate = false;
     
     self.rangeAnimatorMode = .modalPosition;
+    self._currentModalConfig = nil;
     
     #if DEBUG
     self.debugView?.notifyDidCleanup();
