@@ -137,9 +137,15 @@ struct AdaptiveModalStateMachine {
   private(set)var prevState: AdaptiveModalState = .INITIAL;
   private(set) var currentState: AdaptiveModalState = .INITIAL;
   
+  var stateOverride: AdaptiveModalState?;
+  
   mutating func setState(_ nextState: AdaptiveModalState){
     
     let nextStateAdj: AdaptiveModalState? = {
+       if let stateOverride = self.stateOverride {
+        return stateOverride;
+      };
+      
       switch (self.prevState, self.currentState, nextState){
         case (
           .DISMISSING_GESTURE,
@@ -169,16 +175,6 @@ struct AdaptiveModalStateMachine {
           ? .PRESENTING_PROGRAMMATIC
           : .PRESENTING_GESTURE;
       };
-      
-      // PRESENTING -> SNAPPED = PRESENTED
-      if self.prevState.isDismissed,
-         self.currentState.isPresenting,
-         nextState.isSnapped {
-        
-        return nextState.isProgrammatic
-          ? .PRESENTED_PROGRAMMATIC
-          : .PRESENTED_GESTURE;
-      };
   
       return nextState;
     }();
@@ -187,7 +183,7 @@ struct AdaptiveModalStateMachine {
           nextStateAdj != self.currentState
     else { return };
     
-    self.onStateWillChangeBlock(prevState, currentState, nextState);
+    self.onStateWillChangeBlock(prevState, currentState, nextStateAdj);
     
     self.prevState = currentState;
     self.currentState = nextStateAdj;

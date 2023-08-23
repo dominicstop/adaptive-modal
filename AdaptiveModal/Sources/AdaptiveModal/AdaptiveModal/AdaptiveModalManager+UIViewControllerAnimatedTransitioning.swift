@@ -75,8 +75,14 @@ extension AdaptiveModalManager: UIViewControllerAnimatedTransitioning {
           };
         };
         
-        if !self.modalState.isPresenting {
-          self.modalStateMachine.setState(.PRESENTING_PROGRAMMATIC);
+        let shouldSetState = !self.modalState.isPresenting;
+        
+        if shouldSetState {
+          let nextState: AdaptiveModalState = self.modalState.isProgrammatic
+            ? .PRESENTING_PROGRAMMATIC
+            : .PRESENTING_GESTURE;
+          
+          self.modalStateMachine.setState(nextState);
         };
         
         let args = self.showModalCommandArgs;
@@ -85,6 +91,9 @@ extension AdaptiveModalManager: UIViewControllerAnimatedTransitioning {
           snapPointIndex: args?.snapPointIndex,
           isAnimated: args?.isAnimated ?? true,
           animationConfig: args?.animationConfig,
+          shouldNotifySnap: args?.shouldNotifySnap ?? true,
+          stateSnapping: args?.stateSnapping,
+          stateSnapped: args?.stateSnapped,
           extraAnimation: args?.extraAnimationBlock
         ) {
           transitionContext.completeTransition(true);
@@ -92,8 +101,12 @@ extension AdaptiveModalManager: UIViewControllerAnimatedTransitioning {
           self.showModalCommandArgs = nil;
           self.presentationState = .none;
           
-          if !self.modalState.isPresented {
-            self.modalStateMachine.setState(.PRESENTED_PROGRAMMATIC);
+          if shouldSetState {
+            let nextState: AdaptiveModalState = self.modalState.isProgrammatic
+              ? .PRESENTED_PROGRAMMATIC
+              : .PRESENTED_GESTURE;
+          
+            self.modalStateMachine.setState(nextState);
           };
         };
       
@@ -108,9 +121,13 @@ extension AdaptiveModalManager: UIViewControllerAnimatedTransitioning {
           mode: args?.mode ?? .direct,
           isAnimated: args?.isAnimated ?? true,
           animationConfig: args?.animationConfig,
+          shouldNotifySnap: args?.shouldNotifySnap ?? true,
+          stateSnapping: args?.stateSnapping,
+          stateSnapped: args?.stateSnapped,
           extraAnimation: args?.extraAnimationBlock
         ){
           transitionContext.completeTransition(true);
+          
           self.hideModalCommandArgs = nil;
           self.presentationState = .none;
           
