@@ -5,8 +5,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/dominicstop/ComputableLayout",
       "state" : {
-        "revision" : "93fe3bde3f26c1d7443217623e971fa016655906",
-        "version" : "0.1.0"
+        "revision" : "22f54ecbdcc84b4347e7f20e436044ca88c47ad1",
+        "version" : "0.4.0"
       }
     }
   ],
