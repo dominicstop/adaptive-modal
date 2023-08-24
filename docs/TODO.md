@@ -6,8 +6,6 @@
 
 ## Current
 
-- [ ] `TODO:2023-08-18-01-24-19` - Refactor: Extract `RNILayout`, and publish as a separate library named `ComputableLayout`, and add it as a dependency to this package.
-
 <br><br>
 
 ## WIP
@@ -51,6 +49,8 @@
 <br><br>
 
 ## Completed
+
+- [x] `TODO:2023-08-18-01-24-19` - Refactor: Extract `RNILayout`, and publish as a separate library named `ComputableLayout`, and add it as a dependency to this package.
 
 - [x] `TODO:2023-06-23-18-13-58` -  Impl: `AdaptiveModal` - Add support for passing a user-created `UIScreenEdgePanGestureRecognizer` gesture handler.
 
