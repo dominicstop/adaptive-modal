@@ -6,7 +6,7 @@
 
 ## Current
 
-- [ ] `TODO:2023-08-18-01-24-19` - Refactor: Publish `RNILayout` as a separate library and add it as a dependency to this package.
+- [ ] `TODO:2023-08-18-01-24-19` - Refactor: Extract `RNILayout`, and publish as a separate library named `ComputableLayout`, and add it as a dependency to this package.
 
 <br><br>
 
