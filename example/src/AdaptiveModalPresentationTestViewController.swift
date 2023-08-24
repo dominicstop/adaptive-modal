@@ -32,6 +32,8 @@ fileprivate class TestModalViewController:
   var showTextInputField = false;
   
   var shouldSetOverrideOverShootSnapPoint = false;
+  
+  var edgePanRecognizer: UIScreenEdgePanGestureRecognizer?;
 
   lazy var floatingViewLabel: UILabel = {
     let label = UILabel();
@@ -606,7 +608,11 @@ class AdaptiveModalPresentationTestViewController : UIViewController {
 
   };
   
-  @objc func onPressButtonPresentViewController(_ sender: UIButton) {
+  func getViewControllerToPresent() -> (
+    modalManager: AdaptiveModalManager,
+    presentingVC: UIViewController,
+    presentedVC: UIViewController
+  ) {
     let testVC = TestModalViewController();
     
     switch self.currentModalConfigPreset {
@@ -681,6 +687,16 @@ class AdaptiveModalPresentationTestViewController : UIViewController {
       self.currentModalManagerAdjustmentBlock(modalManager);
     };
     
+    return (
+      modalManager: modalManager,
+      presentingVC: testVC,
+      presentedVC: topVC
+    );
+  };
+  
+  @objc func onPressButtonPresentViewController(_ sender: UIButton) {
+    let (modalManager, testVC, topVC) = self.getViewControllerToPresent();
+    
     modalManager.presentModal(
       viewControllerToPresent: testVC,
       presentingViewController: topVC
@@ -690,5 +706,32 @@ class AdaptiveModalPresentationTestViewController : UIViewController {
   @objc func onPressButtonNextConfig(_ sender: UIButton) {
     self.currentModalConfigPresetCounter += 1;
     self.counterLabel!.text = "\(self.currentModalConfigPresetIndex)";
+    
+    self.view.gestureRecognizers?.forEach {
+      self.view.removeGestureRecognizer($0);
+    };
+    
+    switch self.currentModalConfigPreset {
+      case .demo03:
+        let edgePan = UIScreenEdgePanGestureRecognizer();
+        edgePan.edges = .left;
+        
+        self.adaptiveModalManager.setScreenEdgePanGestureRecognizer(
+          edgePanGesture: edgePan,
+          viewControllerProvider: {
+            let (_, testVC, topVC) = self.getViewControllerToPresent();
+          
+            return (
+              viewControllerToPresent: testVC,
+              presentingViewController: topVC
+            );
+          }
+        );
+        
+        self.view.addGestureRecognizer(edgePan);
+        
+      default:
+        break;
+    };
   };
 };

@@ -101,6 +101,11 @@ public class AdaptiveModalManager: NSObject {
     ?? self.modalViewController;
   };
   
+  public var viewControllerProvider: (() -> (
+    viewControllerToPresent: UIViewController,
+    presentingViewController: UIViewController
+  ))?;
+  
   /// `transitionContext.containerView` or `UITransitionView`
   public weak var targetView: UIView?;
   
@@ -400,6 +405,7 @@ public class AdaptiveModalManager: NSObject {
   weak var modalGesture: UIPanGestureRecognizer?;
   weak var modalDragHandleGesture: UIPanGestureRecognizer?;
   weak var backgroundTapGesture: UITapGestureRecognizer?;
+  weak var edgePanGesture: UIScreenEdgePanGestureRecognizer?;
   
   internal(set) public var gestureOffset: CGPoint?;
   internal(set) public var gestureVelocity: CGPoint?;
@@ -2325,9 +2331,9 @@ public class AdaptiveModalManager: NSObject {
     interpolationIndex: Int,
     interpolationPoint: AdaptiveModalInterpolationPoint,
     snapDistance: CGFloat
-  ) {
+  )? {
   
-    let inputRect = self.modalFrame!;
+    guard let inputRect = self.modalFrame else { return nil };
     
     let inputCoord = coord ??
       inputRect[keyPath: self.currentModalConfig.inputValueKeyForRect];
@@ -2650,6 +2656,41 @@ public class AdaptiveModalManager: NSObject {
     };
   };
   
+  @objc private func onDragScreenEdge(_ sender: UIScreenEdgePanGestureRecognizer){
+    
+    switch sender.state {
+      case .began:
+      
+        guard let viewControllerProvider = self.viewControllerProvider
+        else { return };
+        
+        let (modalVC, presentingVC) = viewControllerProvider();
+        
+        self.modalStateMachine.stateOverride = .PRESENTING_GESTURE;
+        self.modalStateMachine.setState(.PRESENTING_GESTURE);
+
+        self.presentModal(
+          viewControllerToPresent: modalVC,
+          presentingViewController: presentingVC,
+          snapPointIndex: 1,
+          animated: false,
+          shouldSetStateOnSnap: false,
+          stateSnapping: .PRESENTING_GESTURE,
+          stateSnapped: nil
+        );
+        
+        self.currentInterpolationIndex = 0;
+        self.onDragPanGesture(sender);
+        
+      case .ended:
+        self.modalStateMachine.stateOverride = nil;
+        self.onDragPanGesture(sender);
+        
+      default:
+        self.onDragPanGesture(sender);
+    };
+  };
+  
   @objc private func onBackgroundTapGesture(_ sender: UITapGestureRecognizer) {
     self.backgroundTapDelegate?.notifyOnBackgroundTapGesture(sender: sender);
     
@@ -2853,7 +2894,9 @@ public class AdaptiveModalManager: NSObject {
       };
     
       let closestSnapPoint = self.getClosestSnapPoint();
-      return closestSnapPoint.interpolationPoint.snapPointIndex;
+      
+      return closestSnapPoint?.interpolationPoint.snapPointIndex
+        ?? self.currentInterpolationIndex;
     }();
     
     let nextIndex = self.adjustInterpolationIndex(for: nextIndexRaw);
@@ -3129,7 +3172,9 @@ public class AdaptiveModalManager: NSObject {
   ) {
     
     let coord = point[keyPath: self.currentModalConfig.inputValueKeyForPoint];
-    let closestSnapPoint = self.getClosestSnapPoint(forCoord: coord);
+    let closestSnapPoint = self.getClosestSnapPoint(forCoord: coord)
+      
+    guard let closestSnapPoint = closestSnapPoint else { return };
     
     let nextInterpolationIndex =
       self.adjustInterpolationIndex(for: closestSnapPoint.interpolationIndex);
@@ -3406,17 +3451,44 @@ public class AdaptiveModalManager: NSObject {
     viewControllerToPresent presentedVC: UIViewController,
     presentingViewController presentingVC: UIViewController
   ) {
+  
     self.modalViewController = presentedVC;
     self.presentingViewController = presentingVC;
     
     let modalWrapperVC = AdaptiveModalRootViewController();
     self.modalWrapperViewController = modalWrapperVC;
     
-    modalWrapperVC.view.addSubview(presentedVC.view);
     modalWrapperVC.addChild(presentedVC);
+    modalWrapperVC.view.addSubview(presentedVC.view);
     presentedVC.didMove(toParent: presentedVC);
     
     self.setupViewControllers();
+  };
+  
+  public func setScreenEdgePanGestureRecognizer(
+    edgePanGesture: UIScreenEdgePanGestureRecognizer,
+    viewControllerProvider: @escaping () -> (
+      viewControllerToPresent: UIViewController,
+      presentingViewController: UIViewController
+    )
+  ) {
+  
+    if let prevEdgePanGesture = self.edgePanGesture {
+      prevEdgePanGesture.removeTarget(
+        self,
+        action: #selector(self.onDragScreenEdge(_:))
+      );
+      
+      self.edgePanGesture = nil;
+    };
+    
+    edgePanGesture.addTarget(
+      self,
+      action: #selector(self.onDragScreenEdge(_:))
+    );
+    
+    self.edgePanGesture = edgePanGesture;
+    self.viewControllerProvider = viewControllerProvider;
   };
   
   public func notifyDidLayoutSubviews() {
