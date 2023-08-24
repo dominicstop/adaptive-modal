@@ -344,6 +344,18 @@ fileprivate class TestModalViewController:
     };
   };
   
+  func notifyOnModalPresentCancelled(sender: AdaptiveModalManager) {
+    if Self.enableLogging {
+      print("notifyOnModalPresentCancelled");
+    };
+  };
+  
+  func notifyOnModalDismissCancelled(sender: AdaptiveModalManager) {
+    if Self.enableLogging {
+      print("notifyOnModalDismissCancelled");
+    };
+  };
+  
   func notifyOnAdaptiveModalDragGesture(
     sender: AdaptiveModalManager,
     gestureRecognizer: UIGestureRecognizer

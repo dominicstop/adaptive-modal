@@ -8,8 +8,6 @@
 import Foundation
 
 
-// DISMISSING_GESTURE -> isSnapped = DISMISS_VIA_GESTURE_CANCELLED
-
 public enum AdaptiveModalState {
 
   case INITIAL;
@@ -33,8 +31,6 @@ public enum AdaptiveModalState {
   case SNAPPED_PROGRAMMATIC;
   
   case GESTURE_DRAGGING;
-  
-  case DISMISS_VIA_GESTURE_CANCELLED;
   
   // MARK: Computed Properties - Alias
   // ---------------------------------
@@ -85,8 +81,7 @@ public enum AdaptiveModalState {
        self.isPresentedProgrammaticOrGesture
     || self.isSnappingProgrammaticOrGesture
     || self.isSnappedProgrammaticOrGesture
-    || self == .GESTURE_DRAGGING
-    || self == .DISMISS_VIA_GESTURE_CANCELLED;
+    || self == .GESTURE_DRAGGING;
   };
   
   public var isSnapping: Bool {
@@ -147,13 +142,6 @@ struct AdaptiveModalStateMachine {
       };
       
       switch (self.prevState, self.currentState, nextState){
-        case (
-          .DISMISSING_GESTURE,
-          .GESTURE_DRAGGING,
-          .SNAPPING_FROM_GESTURE_DRAGGING
-        ):
-          return .DISMISS_VIA_GESTURE_CANCELLED;
-          
         case (
           .DISMISSING_PROGRAMMATIC,
           .DISMISSED_PROGRAMMATIC,

@@ -161,6 +161,14 @@ extension RNIDraggableTestViewController: AdaptiveModalEventNotifiable {
     // no-op
   };
   
+  func notifyOnModalPresentCancelled(sender: AdaptiveModal.AdaptiveModalManager) {
+    // no-op
+  }
+  
+  func notifyOnModalDismissCancelled(sender: AdaptiveModal.AdaptiveModalManager) {
+    // no-op
+  }
+  
   func notifyOnAdaptiveModalDragGesture(
     sender: AdaptiveModalManager,
     gestureRecognizer: UIGestureRecognizer

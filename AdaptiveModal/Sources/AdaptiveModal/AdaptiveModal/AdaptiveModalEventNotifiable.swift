@@ -42,6 +42,14 @@ public protocol AdaptiveModalEventNotifiable: AnyObject {
     sender: AdaptiveModalManager
   );
   
+  func notifyOnModalPresentCancelled(
+    sender: AdaptiveModalManager
+  );
+  
+  func notifyOnModalDismissCancelled(
+    sender: AdaptiveModalManager
+  );
+  
   func notifyOnAdaptiveModalDragGesture(
     sender: AdaptiveModalManager,
     gestureRecognizer: UIGestureRecognizer

@@ -91,7 +91,7 @@ extension AdaptiveModalManager: UIViewControllerAnimatedTransitioning {
           snapPointIndex: args?.snapPointIndex,
           isAnimated: args?.isAnimated ?? true,
           animationConfig: args?.animationConfig,
-          shouldNotifySnap: args?.shouldNotifySnap ?? true,
+          shouldSetStateOnSnap: args?.shouldSetStateOnSnap ?? true,
           stateSnapping: args?.stateSnapping,
           stateSnapped: args?.stateSnapped,
           extraAnimation: args?.extraAnimationBlock
@@ -121,7 +121,7 @@ extension AdaptiveModalManager: UIViewControllerAnimatedTransitioning {
           mode: args?.mode ?? .direct,
           isAnimated: args?.isAnimated ?? true,
           animationConfig: args?.animationConfig,
-          shouldNotifySnap: args?.shouldNotifySnap ?? true,
+          shouldSetStateOnSnap: args?.shouldSetStateOnSnap ?? true,
           stateSnapping: args?.stateSnapping,
           stateSnapped: args?.stateSnapped,
           extraAnimation: args?.extraAnimationBlock
