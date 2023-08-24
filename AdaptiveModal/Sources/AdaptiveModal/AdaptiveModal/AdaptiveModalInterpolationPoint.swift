@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import ComputableLayout
 
 public struct AdaptiveModalInterpolationPoint: Equatable {
 
@@ -315,7 +316,7 @@ public extension AdaptiveModalInterpolationPoint {
     usingModalConfig modalConfig: AdaptiveModalConfig,
     snapPointIndex: Int,
     percent: CGFloat? = nil,
-    layoutValueContext baseContext: RNILayoutValueContext,
+    layoutValueContext baseContext: ComputableLayoutValueContext,
     snapPointConfig: AdaptiveModalSnapPointConfig,
     prevInterpolationPoint keyframePrev: Self? = nil
   ) {
@@ -332,7 +333,7 @@ public extension AdaptiveModalInterpolationPoint {
       );
     }();
     
-    let context = RNILayoutValueContext(
+    let context = ComputableLayoutValueContext(
       derivedFrom: baseContext,
       currentSize: computedRect.size
     );

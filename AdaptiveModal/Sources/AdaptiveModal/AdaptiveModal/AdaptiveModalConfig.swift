@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import ComputableLayout
+
 
 public struct AdaptiveModalConfig: Equatable {
 

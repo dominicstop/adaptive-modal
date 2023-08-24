@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import ComputableLayout
+
 
 public class AdaptiveModalManager: NSObject {
 
@@ -177,10 +179,10 @@ public class AdaptiveModalManager: NSObject {
   weak var modalDragHandleConstraintHeight: NSLayoutConstraint?;
   weak var modalDragHandleConstraintWidth : NSLayoutConstraint?;
   
-  private var layoutKeyboardValues: RNILayoutKeyboardValues?;
+  private var layoutKeyboardValues: ComputableLayoutKeyboardValues?;
   
-  private var layoutValueContext: RNILayoutValueContext {
-    let context: RNILayoutValueContext? = {
+  private var layoutValueContext: ComputableLayoutValueContext {
+    let context: ComputableLayoutValueContext? = {
       if let targetVC = self.presentingViewController {
         return .init(
           fromTargetViewController: targetVC,
@@ -2268,7 +2270,7 @@ public class AdaptiveModalManager: NSObject {
   // -----------------
   
   private func computeSnapPoints(
-    usingLayoutValueContext context: RNILayoutValueContext? = nil
+    usingLayoutValueContext context: ComputableLayoutValueContext? = nil
   ) {
     let context = context ?? self.layoutValueContext;
     let modalConfig = self.currentModalConfig;
@@ -2704,7 +2706,7 @@ public class AdaptiveModalManager: NSObject {
   };
   
   @objc private func onKeyboardWillShow(notification: NSNotification) {
-    guard let keyboardValues = RNILayoutKeyboardValues(fromNotification: notification),
+    guard let keyboardValues = ComputableLayoutKeyboardValues(fromNotification: notification),
           !self.isAnimating
     else { return };
     
@@ -2721,7 +2723,7 @@ public class AdaptiveModalManager: NSObject {
   };
   
   @objc private func onKeyboardDidShow(notification: NSNotification) {
-    guard let keyboardValues = RNILayoutKeyboardValues(fromNotification: notification)
+    guard let keyboardValues = ComputableLayoutKeyboardValues(fromNotification: notification)
     else { return };
     
     self.isKeyboardVisible = true;
@@ -2732,7 +2734,7 @@ public class AdaptiveModalManager: NSObject {
   };
 
   @objc private func onKeyboardWillHide(notification: NSNotification) {
-    guard let keyboardValues = RNILayoutKeyboardValues(fromNotification: notification),
+    guard let keyboardValues = ComputableLayoutKeyboardValues(fromNotification: notification),
           !self.isAnimating
     else { return };
     
@@ -2755,7 +2757,7 @@ public class AdaptiveModalManager: NSObject {
   };
   
   @objc private func onKeyboardWillChange(notification: NSNotification) {
-    guard let keyboardValues = RNILayoutKeyboardValues(fromNotification: notification),
+    guard let keyboardValues = ComputableLayoutKeyboardValues(fromNotification: notification),
           !self.isAnimating
     else { return };
     
@@ -2771,7 +2773,7 @@ public class AdaptiveModalManager: NSObject {
   };
   
   @objc private func onKeyboardDidChange(notification: NSNotification) {
-    guard let keyboardValues = RNILayoutKeyboardValues(fromNotification: notification),
+    guard let keyboardValues = ComputableLayoutKeyboardValues(fromNotification: notification),
           self.presentationState == .none
     else { return };
     

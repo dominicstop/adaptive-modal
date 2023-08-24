@@ -6,16 +6,17 @@
 //
 
 import UIKit
+import ComputableLayout;
 
 
 public struct AdaptiveModalConstrainedConfig {
-  public var constraints: [RNILayoutEvaluableCondition];
+  public var constraints: [EvaluableCondition];
   public var config: AdaptiveModalConfig;
   
   public var identifier: String?;
   
   public init(
-    constraints: [RNILayoutEvaluableCondition],
+    constraints: [EvaluableCondition],
     config: AdaptiveModalConfig,
     identifier: String? = nil
   ) {
@@ -25,7 +26,7 @@ public struct AdaptiveModalConstrainedConfig {
   }
   
   public func evaluateConstraints(
-    usingContext context: RNILayoutEvaluableConditionContext
+    usingContext context: EvaluableConditionContext
   ) -> Bool {
   
     return self.constraints.allSatisfy {

@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import ComputableLayout
 
 public enum AdaptiveModalSnapPointConfig: Equatable {
 
@@ -29,13 +30,13 @@ public enum AdaptiveModalSnapPointConfig: Equatable {
   
   case snapPoint(
     key: SnapPointKey = .unspecified,
-    layoutConfig: RNILayout,
+    layoutConfig: ComputableLayout,
     keyframeConfig: AdaptiveModalKeyframeConfig? = nil
   );
   
   case inBetweenSnapPoint(
     key: SnapPointKey = .unspecified,
-    layoutConfig: RNILayout?,
+    layoutConfig: ComputableLayout?,
     keyframeConfig: AdaptiveModalKeyframeConfig? = nil
   );
   
@@ -62,7 +63,7 @@ public enum AdaptiveModalSnapPointConfig: Equatable {
     };
   };
   
-  public var layoutConfig: RNILayout {
+  public var layoutConfig: ComputableLayout {
     switch self {
       case let .snapPoint(_, layoutConfig, _):
         return layoutConfig;
@@ -87,7 +88,7 @@ public enum AdaptiveModalSnapPointConfig: Equatable {
   
   public init(
     key: SnapPointKey = .unspecified,
-    layoutConfig: RNILayout,
+    layoutConfig: ComputableLayout,
     keyframeConfig: AdaptiveModalKeyframeConfig? = nil
   ) {
   
@@ -101,7 +102,7 @@ public enum AdaptiveModalSnapPointConfig: Equatable {
   public init(
     key: SnapPointKey = .unspecified,
     fromSnapPointPreset snapPointPreset: AdaptiveModalSnapPointPreset,
-    fromBaseLayoutConfig baseLayoutConfig: RNILayout
+    fromBaseLayoutConfig baseLayoutConfig: ComputableLayout
   ) {
     let snapPointLayoutPreset = snapPointPreset.layoutPreset;
     
@@ -119,7 +120,7 @@ public enum AdaptiveModalSnapPointConfig: Equatable {
   public init(
     fromBase base: Self,
     newKey: SnapPointKey? = nil,
-    newSnapPoint: RNILayout? = nil,
+    newSnapPoint: ComputableLayout? = nil,
     newAnimationKeyframe: AdaptiveModalKeyframeConfig? = nil
   ) {
   

@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import ComputableLayout
 
 
 extension AdaptiveModalInterpolationPoint {
@@ -28,7 +29,7 @@ extension AdaptiveModalInterpolationPoint {
   /// `KeyframeMode.standard` snap points
   static private func computeStandard(
     usingConfig modalConfig: AdaptiveModalConfig,
-    usingContext context: RNILayoutValueContext,
+    usingContext context: ComputableLayoutValueContext,
     snapPointsIndexed snapPoints: [SnapPointsIndexed]
   ) -> [Self] {
 
@@ -78,7 +79,7 @@ extension AdaptiveModalInterpolationPoint {
   
   static private func computeInBetween(
     usingConfig modalConfig: AdaptiveModalConfig,
-    usingContext context: RNILayoutValueContext,
+    usingContext context: ComputableLayoutValueContext,
     snapPointsIndexed snapPoints: [SnapPointsIndexed],
     standardInterpolationPoints: [Self],
     startPoint: Self,
@@ -305,7 +306,7 @@ extension AdaptiveModalInterpolationPoint {
 
   public static func compute(
     usingConfig modalConfig: AdaptiveModalConfig,
-    usingContext context: RNILayoutValueContext,
+    usingContext context: ComputableLayoutValueContext,
     snapPoints: [AdaptiveModalSnapPointConfig]? = nil,
     shouldCheckForPercentCollision: Bool = true
   ) -> [Self] {

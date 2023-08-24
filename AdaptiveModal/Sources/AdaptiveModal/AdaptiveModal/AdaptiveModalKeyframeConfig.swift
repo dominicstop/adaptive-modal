@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import ComputableLayout
+
 
 public struct AdaptiveModalKeyframeConfig: Equatable {
   
@@ -30,14 +32,14 @@ public struct AdaptiveModalKeyframeConfig: Equatable {
     case edgeInsets(UIEdgeInsets);
     
     case layoutValue(
-      top   : RNILayoutValue,
-      left  : RNILayoutValue,
-      bottom: RNILayoutValue,
-      right : RNILayoutValue
+      top   : ComputableLayoutValue,
+      left  : ComputableLayoutValue,
+      bottom: ComputableLayoutValue,
+      right : ComputableLayoutValue
     );
     
     func compute(
-      usingLayoutValueContext context: RNILayoutValueContext
+      usingLayoutValueContext context: ComputableLayoutValueContext
     ) -> UIEdgeInsets {
       
       switch self {

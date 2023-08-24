@@ -6,16 +6,17 @@
 //
 
 import Foundation
+import ComputableLayout
 
 public struct AdaptiveModalSnapPointPreset: Equatable {
 
   public static let automatic: Self = .init(layoutPreset: .automatic);
 
-  public var layoutPreset: RNILayoutPreset;
+  public var layoutPreset: ComputableLayoutPreset;
   public var keyframeConfig: AdaptiveModalKeyframeConfig?;
   
   public init(
-    layoutPreset: RNILayoutPreset,
+    layoutPreset: ComputableLayoutPreset,
     keyframeConfig: AdaptiveModalKeyframeConfig? = nil
   ) {
     self.layoutPreset = layoutPreset;
@@ -29,7 +30,7 @@ extension AdaptiveModalSnapPointPreset {
     keyframeConfig: AdaptiveModalKeyframeConfig? = nil
   ) -> Self {
   
-    let layoutPreset: RNILayoutPreset = {
+    let layoutPreset: ComputableLayoutPreset = {
       switch direction {
         case .bottomToTop: return .edgeTop;
         case .topToBottom: return .edgeBottom;
@@ -49,7 +50,7 @@ extension AdaptiveModalSnapPointPreset {
     keyframeConfig: AdaptiveModalKeyframeConfig? = nil
   ) -> Self {
   
-    let layoutPreset: RNILayoutPreset = {
+    let layoutPreset: ComputableLayoutPreset = {
       switch direction {
         case .bottomToTop: return .offscreenBottom;
         case .topToBottom: return .offscreenTop;
