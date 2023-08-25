@@ -711,27 +711,40 @@ class AdaptiveModalPresentationTestViewController : UIViewController {
       self.view.removeGestureRecognizer($0);
     };
     
-    switch self.currentModalConfigPreset {
-      case .demo03:
-        let edgePan = UIScreenEdgePanGestureRecognizer();
-        edgePan.edges = .left;
-        
-        self.adaptiveModalManager.setScreenEdgePanGestureRecognizer(
-          edgePanGesture: edgePan,
-          viewControllerProvider: {
-            let (_, testVC, topVC) = self.getViewControllerToPresent();
+    let swipeEdge: UIRectEdge? = {
+      switch self.currentModalConfigPreset {
+        case .demo03,
+             .demo05,
+             .demo07,
+             .demo10:
+          return .left;
           
-            return (
-              viewControllerToPresent: testVC,
-              presentingViewController: topVC
-            );
-          }
-        );
+        case .demo12:
+          return .right;
+          
+        default:
+          return nil;
+      };
+    }();
+    
+    if let swipeEdge = swipeEdge {
+    
+      let edgePan = UIScreenEdgePanGestureRecognizer();
+      edgePan.edges = swipeEdge;
+      
+      self.adaptiveModalManager.setScreenEdgePanGestureRecognizer(
+        edgePanGesture: edgePan,
+        viewControllerProvider: {
+          let (_, testVC, topVC) = self.getViewControllerToPresent();
         
-        self.view.addGestureRecognizer(edgePan);
-        
-      default:
-        break;
+          return (
+            viewControllerToPresent: testVC,
+            presentingViewController: topVC
+          );
+        }
+      );
+      
+      self.view.addGestureRecognizer(edgePan);
     };
   };
 };
