@@ -3076,7 +3076,7 @@ public class AdaptiveModalManager: NSObject {
     self.presentationEventsDelegate?.notifyOnAdaptiveModalDidHide(sender: self);
   };
   
-  func notifyOnModalStateWillChange(
+  private func notifyOnModalStateWillChange(
     _ prevState   : AdaptiveModalState,
     _ currentState: AdaptiveModalState,
     _ nextState   : AdaptiveModalState
