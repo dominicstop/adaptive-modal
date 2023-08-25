@@ -6,6 +6,7 @@ Pod::Spec.new do |s|
 
   s.description      = <<-DESC
 A library for presenting modal view controllers via a config.
+An all-in-one UIKit component for making interactive modals, sheets, drawers, dialogs, and overlays.
 Support for gesture-driven animations, and modals that adapt to the current device.
                       DESC
 
