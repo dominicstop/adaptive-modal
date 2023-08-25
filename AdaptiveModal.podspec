@@ -19,7 +19,7 @@ TBA
   s.ios.deployment_target = '11.0'
   s.swift_version = '5.0'
 
-  s.source_files = 'Sources/AdaptiveModal/**/*.{h,m,mm,swift}'
+  s.source_files = 'AdaptiveModal/Sources/**/*'
   s.frameworks = 'UIKit'
   s.dependency 'ComputableLayout', '0.4.0'
 end
