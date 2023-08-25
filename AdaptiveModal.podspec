@@ -2,17 +2,18 @@
 Pod::Spec.new do |s|
   s.name             = 'AdaptiveModal'
   s.version          = '0.1.0'
-  s.summary          = 'TBA'
+  s.summary          = 'Config-based UIViewController modal presentation.'
 
   s.description      = <<-DESC
-TBA
+A library for presenting modal view controllers via a config.
+Support for gesture-driven animations, and modals that adapt to the current device.
                       DESC
 
-  s.homepage         = 'https://github.com/dominicstop/AdaptiveModal'
+  s.homepage         = 'https://github.com/dominicstop/adaptive-modal'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'Dominic Go' => 'dominic@dominicgo.dev' }
-  s.source           = { :git => 'https://github.com/dominicstop/AdaptiveModal.git', :tag => s.version.to_s }
-  s.social_media_url = 'https://twitter.com/@GoDominic'
+  s.source           = { :git => 'https://github.com/dominicstop/adaptive-modal.git', :tag => s.version.to_s }
+  s.social_media_url = 'https://twitter.com/GoDominic'
 
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
 
