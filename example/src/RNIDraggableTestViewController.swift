@@ -16,7 +16,10 @@ class RNIDraggableTestViewController : UIViewController {
       staticConfig: AdaptiveModalConfigTestPresets.default.config
     );
     
-    manager.eventDelegate = self;
+    manager.stateEventsDelegate = self;
+    manager.presentationEventsDelegate = self;
+    manager.gestureEventsDelegate = self;
+    
     return manager;
   }();
   
@@ -123,7 +126,10 @@ class RNIDraggableTestViewController : UIViewController {
   };
 };
 
-extension RNIDraggableTestViewController: AdaptiveModalEventNotifiable {
+extension RNIDraggableTestViewController:
+  AdaptiveModalStateEventsNotifiable,
+  AdaptiveModalPresentationEventsNotifiable,
+  AdaptiveModalGestureEventsNotifiable {
   
   func notifyOnModalWillSnap(
     sender: AdaptiveModalManager,

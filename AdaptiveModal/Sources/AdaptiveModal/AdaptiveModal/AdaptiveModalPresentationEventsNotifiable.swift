@@ -8,8 +8,11 @@
 import UIKit
 
 
-public protocol AdaptiveModalEventNotifiable: AnyObject {
-  
+/// Allows the type that conforms to this protocol to get notified of modal
+/// presentation-related events.
+/// 
+public protocol AdaptiveModalPresentationEventsNotifiable: AnyObject {
+
   func notifyOnModalWillSnap(
     sender: AdaptiveModalManager,
     prevSnapPointIndex: Int?,
@@ -50,21 +53,9 @@ public protocol AdaptiveModalEventNotifiable: AnyObject {
     sender: AdaptiveModalManager
   );
   
-  func notifyOnAdaptiveModalDragGesture(
-    sender: AdaptiveModalManager,
-    gestureRecognizer: UIGestureRecognizer
-  );
-  
   func notifyOnCurrentModalConfigDidChange(
     sender: AdaptiveModalManager,
     currentModalConfig: AdaptiveModalConfig?,
     prevModalConfig: AdaptiveModalConfig?
-  );
-  
-  func notifyOnModalStateWillChange(
-    sender: AdaptiveModalManager,
-    prevState: AdaptiveModalState,
-    currentState: AdaptiveModalState,
-    nextState: AdaptiveModalState
   );
 };

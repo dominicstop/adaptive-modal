@@ -9,8 +9,12 @@ import UIKit
 import AdaptiveModal
 
 fileprivate class TestModalViewController:
-  UIViewController, AdaptiveModalEventNotifiable, AdaptiveModalBackgroundTapDelegate,
-  AdaptiveModalAnimationEventsNotifiable {
+  UIViewController,
+  AdaptiveModalBackgroundTapDelegate,
+  AdaptiveModalAnimationEventsNotifiable,
+  AdaptiveModalStateEventsNotifiable,
+  AdaptiveModalPresentationEventsNotifiable,
+  AdaptiveModalGestureEventsNotifiable {
 
   enum ContentMode {
     case buttons, scrollview;
@@ -671,7 +675,10 @@ class AdaptiveModalPresentationTestViewController : UIViewController {
     
     testVC.modalManager = modalManager;
     
-    modalManager.eventDelegate = testVC;
+    modalManager.stateEventsDelegate = testVC;
+    modalManager.presentationEventsDelegate = testVC;
+    modalManager.gestureEventsDelegate = testVC;
+    
     modalManager.backgroundTapDelegate = testVC;
     modalManager.animationEventDelegate = testVC;
     

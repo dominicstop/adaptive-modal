@@ -7,6 +7,9 @@
 
 import UIKit
 
+/// Allows the type that conforms to this protocol to get notified of
+/// animation-related modal events.
+///
 public protocol AdaptiveModalAnimationEventsNotifiable: AnyObject {
 
   func notifyOnModalAnimatorStart(

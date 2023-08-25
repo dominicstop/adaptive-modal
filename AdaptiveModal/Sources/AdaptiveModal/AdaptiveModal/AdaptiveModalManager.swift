@@ -651,7 +651,10 @@ public class AdaptiveModalManager: NSObject {
   
   private(set) var didTriggerSetup = false;
   
-  public weak var eventDelegate: AdaptiveModalEventNotifiable?;
+  public weak var stateEventsDelegate: AdaptiveModalStateEventsNotifiable?;
+  public weak var presentationEventsDelegate: AdaptiveModalPresentationEventsNotifiable?;
+  public weak var gestureEventsDelegate: AdaptiveModalGestureEventsNotifiable?;
+  
   public weak var backgroundTapDelegate: AdaptiveModalBackgroundTapDelegate?;
   public weak var animationEventDelegate: AdaptiveModalAnimationEventsNotifiable?;
 
@@ -2661,7 +2664,7 @@ public class AdaptiveModalManager: NSObject {
         break;
     };
     
-    self.eventDelegate?.notifyOnAdaptiveModalDragGesture(
+    self.gestureEventsDelegate?.notifyOnAdaptiveModalDragGesture(
       sender: self,
       gestureRecognizer: sender
     );
@@ -2889,7 +2892,7 @@ public class AdaptiveModalManager: NSObject {
   // -----------------------
   
   private func notifyOnCurrentModalConfigDidChange(){
-    self.eventDelegate?.notifyOnCurrentModalConfigDidChange(
+    self.presentationEventsDelegate?.notifyOnCurrentModalConfigDidChange(
       sender: self,
       currentModalConfig: self.currentModalConfig,
       prevModalConfig: self.prevModalConfig
@@ -2919,7 +2922,7 @@ public class AdaptiveModalManager: NSObject {
     guard prevIndex != nextIndex else { return };
     self.onModalWillSnapPrevIndex = nextIndex;
     
-    self.eventDelegate?.notifyOnModalWillSnap(
+    self.presentationEventsDelegate?.notifyOnModalWillSnap(
       sender: self,
       prevSnapPointIndex: interpolationSteps[safeIndex: prevIndex]?.snapPointIndex,
       nextSnapPointIndex: interpolationSteps[nextIndex].snapPointIndex,
@@ -2983,7 +2986,7 @@ public class AdaptiveModalManager: NSObject {
     
     self.nextInterpolationIndex = nil;
   
-    self.eventDelegate?.notifyOnModalDidSnap(
+    self.presentationEventsDelegate?.notifyOnModalDidSnap(
       sender: self,
       prevSnapPointIndex:
         self.interpolationSteps[self.prevInterpolationIndex].snapPointIndex,
@@ -3045,12 +3048,12 @@ public class AdaptiveModalManager: NSObject {
   
   private func notifyOnModalWillShow(){
     //self.modalState = .presenting;
-    self.eventDelegate?.notifyOnAdaptiveModalWillShow(sender: self);
+    self.presentationEventsDelegate?.notifyOnAdaptiveModalWillShow(sender: self);
   };
   
   private func notifyOnModalDidShow(){
     //self.modalState = .presented;
-    self.eventDelegate?.notifyOnAdaptiveModalDidShow(sender: self);
+    self.presentationEventsDelegate?.notifyOnAdaptiveModalDidShow(sender: self);
   };
   
   private func notifyOnModalWillHide(){
@@ -3060,7 +3063,7 @@ public class AdaptiveModalManager: NSObject {
       modalView.endEditing(true);
     };
     
-    self.eventDelegate?.notifyOnAdaptiveModalWillHide(sender: self);
+    self.presentationEventsDelegate?.notifyOnAdaptiveModalWillHide(sender: self);
   };
   
   private func notifyOnModalDidHide(){
@@ -3070,7 +3073,7 @@ public class AdaptiveModalManager: NSObject {
     self.modalViewController?.dismiss(animated: false);
     self.cleanupViewControllers();
     
-    self.eventDelegate?.notifyOnAdaptiveModalDidHide(sender: self);
+    self.presentationEventsDelegate?.notifyOnAdaptiveModalDidHide(sender: self);
   };
   
   func notifyOnModalStateWillChange(
@@ -3099,7 +3102,7 @@ public class AdaptiveModalManager: NSObject {
       };
       #endif
     
-      self.eventDelegate?.notifyOnModalPresentCancelled(
+      self.presentationEventsDelegate?.notifyOnModalPresentCancelled(
         sender: self
       );
       
@@ -3110,12 +3113,12 @@ public class AdaptiveModalManager: NSObject {
       };
       #endif
       
-      self.eventDelegate?.notifyOnModalDismissCancelled(
+      self.presentationEventsDelegate?.notifyOnModalDismissCancelled(
         sender: self
       );
     };
     
-    self.eventDelegate?.notifyOnModalStateWillChange(
+    self.stateEventsDelegate?.notifyOnModalStateWillChange(
       sender: self,
       prevState: prevState,
       currentState: currentState,
