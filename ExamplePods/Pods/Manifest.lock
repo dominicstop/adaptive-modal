@@ -1,16 +1,23 @@
 PODS:
-  - AdaptiveModal (0.1.0)
+  - AdaptiveModal (0.1.0):
+    - ComputableLayout (= 0.4.0)
+  - ComputableLayout (0.4.0)
 
 DEPENDENCIES:
   - AdaptiveModal (from `../`)
+
+SPEC REPOS:
+  trunk:
+    - ComputableLayout
 
 EXTERNAL SOURCES:
   AdaptiveModal:
     :path: "../"
 
 SPEC CHECKSUMS:
-  AdaptiveModal: 171d65c40b95fb335b776986b8b35df567f4a505
+  AdaptiveModal: 461732fdfb51aea5fff827851c8d19cf22dae6ec
+  ComputableLayout: 6dd2d980bd76f918dc17bf41499b970c901f0824
 
-PODFILE CHECKSUM: be64260da57fa44b638136d6be50dedda486b88f
+PODFILE CHECKSUM: 60e8cc19e6f427d05264b63bece248ca59907f38
 
 COCOAPODS: 1.12.0

@@ -11,6 +11,6 @@
 #endif
 
 
-FOUNDATION_EXPORT double Pods_AdaptiveModal_TestsVersionNumber;
-FOUNDATION_EXPORT const unsigned char Pods_AdaptiveModal_TestsVersionString[];
+FOUNDATION_EXPORT double ComputableLayoutVersionNumber;
+FOUNDATION_EXPORT const unsigned char ComputableLayoutVersionString[];
 

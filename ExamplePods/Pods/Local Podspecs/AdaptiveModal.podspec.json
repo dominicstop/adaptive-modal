@@ -1,22 +1,31 @@
 {
   "name": "AdaptiveModal",
   "version": "0.1.0",
-  "summary": "A short description of AdaptiveModal.",
-  "description": "TODO: Add long description of the pod here.",
-  "homepage": "https://github.com/dominicstop@gmail.com/AdaptiveModal",
+  "summary": "TBA",
+  "description": "TBA",
+  "homepage": "https://github.com/dominicstop/AdaptiveModal",
   "license": {
     "type": "MIT",
     "file": "LICENSE"
   },
   "authors": {
-    "dominicstop@gmail.com": "18517029+dominicstop@users.noreply.github.com"
+    "Dominic Go": "dominic@dominicgo.dev"
   },
   "source": {
-    "git": "https://github.com/dominicstop@gmail.com/AdaptiveModal.git",
+    "git": "https://github.com/dominicstop/AdaptiveModal.git",
     "tag": "0.1.0"
   },
+  "social_media_url": "https://twitter.com/@GoDominic",
   "platforms": {
-    "ios": "10.0"
+    "ios": "11.0"
   },
-  "source_files": "AdaptiveModal/Classes/**/*"
+  "swift_versions": "5.0",
+  "source_files": "AdaptiveModal/Classes/**/*",
+  "frameworks": "UIKit",
+  "dependencies": {
+    "ComputableLayout": [
+      "0.4.0"
+    ]
+  },
+  "swift_version": "5.0"
 }
