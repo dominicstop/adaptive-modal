@@ -7,25 +7,25 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		5CEAB387F553BD370781EB41 /* Pods_AdaptiveModal_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB11E1CEA6B18142E0BE0F51 /* Pods_AdaptiveModal_Example.framework */; };
 		8865404C2A98AFFF006FA9A5 /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 886540442A98AFFF006FA9A5 /* RootViewController.swift */; };
 		8865404D2A98AFFF006FA9A5 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 886540452A98AFFF006FA9A5 /* LaunchScreen.xib */; };
 		8865404F2A98AFFF006FA9A5 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 886540492A98AFFF006FA9A5 /* Images.xcassets */; };
 		886540502A98AFFF006FA9A5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8865404A2A98AFFF006FA9A5 /* AppDelegate.swift */; };
 		886540532A98B096006FA9A5 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 886540522A98B096006FA9A5 /* SceneDelegate.swift */; };
+		E6CC5EBE7C31D642E179F02B /* Pods_AdaptiveModal_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF0BCE1FD219B0AD1749A742 /* Pods_AdaptiveModal_Example.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		08C19A40A608472E7DC9B00E /* Pods-AdaptiveModal_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AdaptiveModal_Example.release.xcconfig"; path = "Target Support Files/Pods-AdaptiveModal_Example/Pods-AdaptiveModal_Example.release.xcconfig"; sourceTree = "<group>"; };
-		1803542EA5C95F7592C4EF03 /* Pods-AdaptiveModal_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AdaptiveModal_Example.debug.xcconfig"; path = "Target Support Files/Pods-AdaptiveModal_Example/Pods-AdaptiveModal_Example.debug.xcconfig"; sourceTree = "<group>"; };
+		159495C32776C09FA66175D4 /* Pods-AdaptiveModal_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AdaptiveModal_Example.debug.xcconfig"; path = "Target Support Files/Pods-AdaptiveModal_Example/Pods-AdaptiveModal_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		607FACD01AFB9204008FA782 /* AdaptiveModal_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AdaptiveModal_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		67CC206EA06CBFB9D16338BA /* Pods-AdaptiveModal_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AdaptiveModal_Example.release.xcconfig"; path = "Target Support Files/Pods-AdaptiveModal_Example/Pods-AdaptiveModal_Example.release.xcconfig"; sourceTree = "<group>"; };
 		886540442A98AFFF006FA9A5 /* RootViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootViewController.swift; sourceTree = "<group>"; };
 		886540462A98AFFF006FA9A5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		886540492A98AFFF006FA9A5 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		8865404A2A98AFFF006FA9A5 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8865404B2A98AFFF006FA9A5 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		886540522A98B096006FA9A5 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		BB11E1CEA6B18142E0BE0F51 /* Pods_AdaptiveModal_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AdaptiveModal_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		DF0BCE1FD219B0AD1749A742 /* Pods_AdaptiveModal_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AdaptiveModal_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -33,7 +33,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5CEAB387F553BD370781EB41 /* Pods_AdaptiveModal_Example.framework in Frameworks */,
+				E6CC5EBE7C31D642E179F02B /* Pods_AdaptiveModal_Example.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -46,7 +46,7 @@
 				886540432A98AFFF006FA9A5 /* AdaptiveModal */,
 				607FACD11AFB9204008FA782 /* Products */,
 				A9B5F3DE9F410D842EAD8595 /* Pods */,
-				A4DC965DC6F7C5C11C708EDF /* Frameworks */,
+				774BFBA2C8595571B1AE3F54 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -56,6 +56,14 @@
 				607FACD01AFB9204008FA782 /* AdaptiveModal_Example.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		774BFBA2C8595571B1AE3F54 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				DF0BCE1FD219B0AD1749A742 /* Pods_AdaptiveModal_Example.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		886540432A98AFFF006FA9A5 /* AdaptiveModal */ = {
@@ -71,19 +79,11 @@
 			path = AdaptiveModal;
 			sourceTree = "<group>";
 		};
-		A4DC965DC6F7C5C11C708EDF /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				BB11E1CEA6B18142E0BE0F51 /* Pods_AdaptiveModal_Example.framework */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
 		A9B5F3DE9F410D842EAD8595 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				1803542EA5C95F7592C4EF03 /* Pods-AdaptiveModal_Example.debug.xcconfig */,
-				08C19A40A608472E7DC9B00E /* Pods-AdaptiveModal_Example.release.xcconfig */,
+				159495C32776C09FA66175D4 /* Pods-AdaptiveModal_Example.debug.xcconfig */,
+				67CC206EA06CBFB9D16338BA /* Pods-AdaptiveModal_Example.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -95,11 +95,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 607FACEF1AFB9204008FA782 /* Build configuration list for PBXNativeTarget "AdaptiveModal_Example" */;
 			buildPhases = (
-				C98E760C3E8B0704525C4B06 /* [CP] Check Pods Manifest.lock */,
+				9015439F9C5E1F0A75B94B80 /* [CP] Check Pods Manifest.lock */,
 				607FACCC1AFB9204008FA782 /* Sources */,
 				607FACCD1AFB9204008FA782 /* Frameworks */,
 				607FACCE1AFB9204008FA782 /* Resources */,
-				99B6ECF6BE82688C4BB05ADE /* [CP] Embed Pods Frameworks */,
+				2F7C07911F5657512CD5C9C6 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -159,17 +159,19 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		99B6ECF6BE82688C4BB05ADE /* [CP] Embed Pods Frameworks */ = {
+		2F7C07911F5657512CD5C9C6 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-AdaptiveModal_Example/Pods-AdaptiveModal_Example-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/AdaptiveModal/AdaptiveModal.framework",
 				"${BUILT_PRODUCTS_DIR}/ComputableLayout/ComputableLayout.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AdaptiveModal.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ComputableLayout.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -177,7 +179,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AdaptiveModal_Example/Pods-AdaptiveModal_Example-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		C98E760C3E8B0704525C4B06 /* [CP] Check Pods Manifest.lock */ = {
+		9015439F9C5E1F0A75B94B80 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -327,7 +329,7 @@
 		};
 		607FACF01AFB9204008FA782 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1803542EA5C95F7592C4EF03 /* Pods-AdaptiveModal_Example.debug.xcconfig */;
+			baseConfigurationReference = 159495C32776C09FA66175D4 /* Pods-AdaptiveModal_Example.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = ZC7A6XV8GR;
@@ -344,7 +346,7 @@
 		};
 		607FACF11AFB9204008FA782 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 08C19A40A608472E7DC9B00E /* Pods-AdaptiveModal_Example.release.xcconfig */;
+			baseConfigurationReference = 67CC206EA06CBFB9D16338BA /* Pods-AdaptiveModal_Example.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = ZC7A6XV8GR;

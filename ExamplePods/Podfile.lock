@@ -15,7 +15,7 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  AdaptiveModal: aca931017a6d298824770b86d92f95bd0d690b6a
+  AdaptiveModal: aedcf8fe25544ec0081e35b8dba46cedb7de9e80
   ComputableLayout: 6dd2d980bd76f918dc17bf41499b970c901f0824
 
 PODFILE CHECKSUM: 60e8cc19e6f427d05264b63bece248ca59907f38
