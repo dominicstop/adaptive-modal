@@ -108,6 +108,9 @@ public class AdaptiveModalManager: NSObject {
     presentingViewController: UIViewController
   ))?;
   
+  /// Provides a user-init custom "drag handle" view to use for the modal
+  public var dragHandleViewProvider: (() -> AdaptiveModalDragHandleView)?;
+  
   /// `transitionContext.containerView` or `UITransitionView`
   public weak var targetView: UIView?;
   
@@ -129,12 +132,12 @@ public class AdaptiveModalManager: NSObject {
     self.modalViewController?.view;
   };
   
-  public var dummyModalView: UIView?;
+  private(set) public var dummyModalView: UIView?;
   
-  public var modalWrapperLayoutView: AdaptiveModalWrapperView?;
-  public var modalWrapperTransformView: AdaptiveModalWrapperView?;
-  public var modalWrapperShadowView: AdaptiveModalWrapperView?;
-  public var modalContentWrapperView: UIView?;
+  private(set) public var modalWrapperLayoutView: AdaptiveModalWrapperView?;
+  private(set) public var modalWrapperTransformView: AdaptiveModalWrapperView?;
+  private(set) public var modalWrapperShadowView: AdaptiveModalWrapperView?;
+  private(set) public var modalContentWrapperView: UIView?;
   
   public var modalDragHandleView: AdaptiveModalDragHandleView?;
   
@@ -796,9 +799,15 @@ public class AdaptiveModalManager: NSObject {
     self.backgroundVisualEffectView = UIVisualEffectView();
     
     if self.currentModalConfig.dragHandlePosition != .none {
-      let dragHandle = AdaptiveModalDragHandleView();
-      dragHandle.pointInsideHitSlop = self.currentModalConfig.dragHandleHitSlop;
+      let dragHandle: AdaptiveModalDragHandleView = {
+        if let dragHandleViewProvider = self.dragHandleViewProvider {
+          return dragHandleViewProvider();
+        };
+        
+        return .init();
+      }();
       
+      dragHandle.pointInsideHitSlop = self.currentModalConfig.dragHandleHitSlop;
       self.modalDragHandleView = dragHandle;
     };
   };
