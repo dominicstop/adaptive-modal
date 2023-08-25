@@ -1,13 +1,7 @@
 use_frameworks!
 
-platform :ios, '10.0'
+platform :ios, '13.0'
 
 target 'AdaptiveModal_Example' do
   pod 'AdaptiveModal', :path => '../'
-
-  target 'AdaptiveModal_Tests' do
-    inherit! :search_paths
-
-    
-  end
 end
