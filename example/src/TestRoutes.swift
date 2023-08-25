@@ -10,7 +10,6 @@ import UIKit
 enum TestRoutes {
   static let rootRouteKey: Self = .AdaptiveModalPresentationTest;
 
-  case RNILayoutTest;
   case RNIDraggableTest;
   case BlurEffectTest;
   case RoundedViewTest;
@@ -18,9 +17,6 @@ enum TestRoutes {
   
   var viewController: UIViewController {
     switch self {
-      case .RNILayoutTest:
-        return RNILayoutTestViewController();
-        
       case .RNIDraggableTest:
         return RNIDraggableTestViewController();
         

@@ -9,6 +9,17 @@ import UIKit
 import AdaptiveModal
 import ComputableLayout
 
+enum ScreenSize {
+  case iPhone8;
+  
+  var size: CGSize {
+    switch self {
+      case .iPhone8:
+        return CGSize(width: 375, height: 667);
+    };
+  };
+};
+
 enum AdaptiveModalConfigTestPresets: CaseIterable {
   
   static let `default`: Self = .testTopToBottom;

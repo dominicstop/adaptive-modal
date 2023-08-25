@@ -14,7 +14,6 @@
 		887C3DB62A43EE710026B57C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 887C3DB52A43EE710026B57C /* Assets.xcassets */; };
 		887C3DB92A43EE710026B57C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 887C3DB72A43EE710026B57C /* LaunchScreen.storyboard */; };
 		887C3E1B2A43EEF60026B57C /* AdaptiveModalConfigTestPresets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887C3DED2A43EEF60026B57C /* AdaptiveModalConfigTestPresets.swift */; };
-		887C3E1C2A43EEF60026B57C /* RNILayoutTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887C3DEE2A43EEF60026B57C /* RNILayoutTestViewController.swift */; };
 		887C3E1D2A43EEF60026B57C /* BlurEffectTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887C3DEF2A43EEF60026B57C /* BlurEffectTestViewController.swift */; };
 		887C3E1E2A43EEF60026B57C /* RNIDraggableTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887C3DF02A43EEF60026B57C /* RNIDraggableTestViewController.swift */; };
 		887C3E1F2A43EEF60026B57C /* AdaptiveModalPresentationTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887C3DF12A43EEF60026B57C /* AdaptiveModalPresentationTestViewController.swift */; };
@@ -32,7 +31,6 @@
 		887C3DB82A43EE710026B57C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		887C3DBA2A43EE710026B57C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		887C3DED2A43EEF60026B57C /* AdaptiveModalConfigTestPresets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdaptiveModalConfigTestPresets.swift; sourceTree = "<group>"; };
-		887C3DEE2A43EEF60026B57C /* RNILayoutTestViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RNILayoutTestViewController.swift; sourceTree = "<group>"; };
 		887C3DEF2A43EEF60026B57C /* BlurEffectTestViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlurEffectTestViewController.swift; sourceTree = "<group>"; };
 		887C3DF02A43EEF60026B57C /* RNIDraggableTestViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RNIDraggableTestViewController.swift; sourceTree = "<group>"; };
 		887C3DF12A43EEF60026B57C /* AdaptiveModalPresentationTestViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdaptiveModalPresentationTestViewController.swift; sourceTree = "<group>"; };
@@ -104,7 +102,6 @@
 				881B68EE2A4494EA009EB533 /* AdaptiveModalConfigDemoPresets.swift */,
 				887C3DF12A43EEF60026B57C /* AdaptiveModalPresentationTestViewController.swift */,
 				887C3DED2A43EEF60026B57C /* AdaptiveModalConfigTestPresets.swift */,
-				887C3DEE2A43EEF60026B57C /* RNILayoutTestViewController.swift */,
 				887C3DEF2A43EEF60026B57C /* BlurEffectTestViewController.swift */,
 				887C3DF02A43EEF60026B57C /* RNIDraggableTestViewController.swift */,
 				887C3DF22A43EEF60026B57C /* RoundedViewTestViewController.swift */,
@@ -192,7 +189,6 @@
 				881B68EF2A4494EA009EB533 /* AdaptiveModalConfigDemoPresets.swift in Sources */,
 				887C3E1B2A43EEF60026B57C /* AdaptiveModalConfigTestPresets.swift in Sources */,
 				887C3E212A43EEF60026B57C /* TestRoutes.swift in Sources */,
-				887C3E1C2A43EEF60026B57C /* RNILayoutTestViewController.swift in Sources */,
 				887C3E1D2A43EEF60026B57C /* BlurEffectTestViewController.swift in Sources */,
 				887C3DAF2A43EE700026B57C /* SceneDelegate.swift in Sources */,
 				887C3E1E2A43EEF60026B57C /* RNIDraggableTestViewController.swift in Sources */,
