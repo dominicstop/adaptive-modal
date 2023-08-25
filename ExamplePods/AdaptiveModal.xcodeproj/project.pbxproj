@@ -8,27 +8,24 @@
 
 /* Begin PBXBuildFile section */
 		5CEAB387F553BD370781EB41 /* Pods_AdaptiveModal_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB11E1CEA6B18142E0BE0F51 /* Pods_AdaptiveModal_Example.framework */; };
-		607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD51AFB9204008FA782 /* AppDelegate.swift */; };
-		607FACD81AFB9204008FA782 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD71AFB9204008FA782 /* ViewController.swift */; };
-		607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 607FACD91AFB9204008FA782 /* Main.storyboard */; };
-		607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDC1AFB9204008FA782 /* Images.xcassets */; };
-		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
+		8865404C2A98AFFF006FA9A5 /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 886540442A98AFFF006FA9A5 /* RootViewController.swift */; };
+		8865404D2A98AFFF006FA9A5 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 886540452A98AFFF006FA9A5 /* LaunchScreen.xib */; };
+		8865404F2A98AFFF006FA9A5 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 886540492A98AFFF006FA9A5 /* Images.xcassets */; };
+		886540502A98AFFF006FA9A5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8865404A2A98AFFF006FA9A5 /* AppDelegate.swift */; };
+		886540532A98B096006FA9A5 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 886540522A98B096006FA9A5 /* SceneDelegate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		08C19A40A608472E7DC9B00E /* Pods-AdaptiveModal_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AdaptiveModal_Example.release.xcconfig"; path = "Target Support Files/Pods-AdaptiveModal_Example/Pods-AdaptiveModal_Example.release.xcconfig"; sourceTree = "<group>"; };
 		1803542EA5C95F7592C4EF03 /* Pods-AdaptiveModal_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AdaptiveModal_Example.debug.xcconfig"; path = "Target Support Files/Pods-AdaptiveModal_Example/Pods-AdaptiveModal_Example.debug.xcconfig"; sourceTree = "<group>"; };
-		555DA503F6E1EF16D800FD77 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
-		57D80F466F46CCF3E5638347 /* AdaptiveModal.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = AdaptiveModal.podspec; path = ../AdaptiveModal.podspec; sourceTree = "<group>"; };
 		607FACD01AFB9204008FA782 /* AdaptiveModal_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AdaptiveModal_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		607FACD41AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		607FACD51AFB9204008FA782 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		607FACD71AFB9204008FA782 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		607FACDA1AFB9204008FA782 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		607FACDC1AFB9204008FA782 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		607FACDF1AFB9204008FA782 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
+		886540442A98AFFF006FA9A5 /* RootViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootViewController.swift; sourceTree = "<group>"; };
+		886540462A98AFFF006FA9A5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
+		886540492A98AFFF006FA9A5 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		8865404A2A98AFFF006FA9A5 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		8865404B2A98AFFF006FA9A5 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		886540522A98B096006FA9A5 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		BB11E1CEA6B18142E0BE0F51 /* Pods_AdaptiveModal_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AdaptiveModal_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		DA3B7907F93A509FB0BB9E08 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -46,8 +43,7 @@
 		607FACC71AFB9204008FA782 = {
 			isa = PBXGroup;
 			children = (
-				607FACF51AFB993E008FA782 /* Podspec Metadata */,
-				607FACD21AFB9204008FA782 /* Example for AdaptiveModal */,
+				886540432A98AFFF006FA9A5 /* AdaptiveModal */,
 				607FACD11AFB9204008FA782 /* Products */,
 				A9B5F3DE9F410D842EAD8595 /* Pods */,
 				A4DC965DC6F7C5C11C708EDF /* Frameworks */,
@@ -62,36 +58,17 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		607FACD21AFB9204008FA782 /* Example for AdaptiveModal */ = {
+		886540432A98AFFF006FA9A5 /* AdaptiveModal */ = {
 			isa = PBXGroup;
 			children = (
-				607FACD51AFB9204008FA782 /* AppDelegate.swift */,
-				607FACD71AFB9204008FA782 /* ViewController.swift */,
-				607FACD91AFB9204008FA782 /* Main.storyboard */,
-				607FACDC1AFB9204008FA782 /* Images.xcassets */,
-				607FACDE1AFB9204008FA782 /* LaunchScreen.xib */,
-				607FACD31AFB9204008FA782 /* Supporting Files */,
+				886540442A98AFFF006FA9A5 /* RootViewController.swift */,
+				886540452A98AFFF006FA9A5 /* LaunchScreen.xib */,
+				886540492A98AFFF006FA9A5 /* Images.xcassets */,
+				8865404A2A98AFFF006FA9A5 /* AppDelegate.swift */,
+				8865404B2A98AFFF006FA9A5 /* Info.plist */,
+				886540522A98B096006FA9A5 /* SceneDelegate.swift */,
 			);
-			name = "Example for AdaptiveModal";
 			path = AdaptiveModal;
-			sourceTree = "<group>";
-		};
-		607FACD31AFB9204008FA782 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				607FACD41AFB9204008FA782 /* Info.plist */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		607FACF51AFB993E008FA782 /* Podspec Metadata */ = {
-			isa = PBXGroup;
-			children = (
-				57D80F466F46CCF3E5638347 /* AdaptiveModal.podspec */,
-				DA3B7907F93A509FB0BB9E08 /* README.md */,
-				555DA503F6E1EF16D800FD77 /* LICENSE */,
-			);
-			name = "Podspec Metadata";
 			sourceTree = "<group>";
 		};
 		A4DC965DC6F7C5C11C708EDF /* Frameworks */ = {
@@ -174,9 +151,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */,
-				607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */,
-				607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */,
+				8865404F2A98AFFF006FA9A5 /* Images.xcassets in Resources */,
+				8865404D2A98AFFF006FA9A5 /* LaunchScreen.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -230,26 +206,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				607FACD81AFB9204008FA782 /* ViewController.swift in Sources */,
-				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
+				886540502A98AFFF006FA9A5 /* AppDelegate.swift in Sources */,
+				8865404C2A98AFFF006FA9A5 /* RootViewController.swift in Sources */,
+				886540532A98B096006FA9A5 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		607FACD91AFB9204008FA782 /* Main.storyboard */ = {
+		886540452A98AFFF006FA9A5 /* LaunchScreen.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				607FACDA1AFB9204008FA782 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-		607FACDE1AFB9204008FA782 /* LaunchScreen.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				607FACDF1AFB9204008FA782 /* Base */,
+				886540462A98AFFF006FA9A5 /* Base */,
 			);
 			name = LaunchScreen.xib;
 			sourceTree = "<group>";
@@ -363,6 +332,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = ZC7A6XV8GR;
 				INFOPLIST_FILE = AdaptiveModal/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MODULE_NAME = ExampleApp;
 				PRODUCT_BUNDLE_IDENTIFIER = "dev.dominicgo.AdaptiveModal-Example";
@@ -379,6 +349,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = ZC7A6XV8GR;
 				INFOPLIST_FILE = AdaptiveModal/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MODULE_NAME = ExampleApp;
 				PRODUCT_BUNDLE_IDENTIFIER = "dev.dominicgo.AdaptiveModal-Example";
