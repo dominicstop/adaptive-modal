@@ -15,6 +15,8 @@ enum TestRoutes {
   case RoundedViewTest;
   case AdaptiveModalPresentationTest;
   
+  case BasicUsage01;
+  
   var viewController: UIViewController {
     switch self {
       case .RNIDraggableTest:
@@ -28,6 +30,9 @@ enum TestRoutes {
         
       case .AdaptiveModalPresentationTest:
         return AdaptiveModalPresentationTestViewController();
+        
+      case .BasicUsage01:
+        return AdaptiveModalBasicUsage01();
     };
   };
 };
