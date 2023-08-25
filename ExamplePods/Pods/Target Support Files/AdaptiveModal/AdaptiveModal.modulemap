@@ -1,0 +1,6 @@
+framework module AdaptiveModal {
+  umbrella header "AdaptiveModal-umbrella.h"
+
+  export *
+  module * { export * }
+}

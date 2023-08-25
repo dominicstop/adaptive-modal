@@ -1,0 +1,6 @@
+framework module Pods_AdaptiveModal_Tests {
+  umbrella header "Pods-AdaptiveModal_Tests-umbrella.h"
+
+  export *
+  module * { export * }
+}

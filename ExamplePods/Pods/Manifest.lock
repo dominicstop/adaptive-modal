@@ -1,0 +1,16 @@
+PODS:
+  - AdaptiveModal (0.1.0)
+
+DEPENDENCIES:
+  - AdaptiveModal (from `../`)
+
+EXTERNAL SOURCES:
+  AdaptiveModal:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  AdaptiveModal: 171d65c40b95fb335b776986b8b35df567f4a505
+
+PODFILE CHECKSUM: be64260da57fa44b638136d6be50dedda486b88f
+
+COCOAPODS: 1.12.0
