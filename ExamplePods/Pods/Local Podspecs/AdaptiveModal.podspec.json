@@ -20,7 +20,7 @@
     "ios": "11.0"
   },
   "swift_versions": "5.0",
-  "source_files": "AdaptiveModal/Classes/**/*",
+  "source_files": "Sources/AdaptiveModal/**/*",
   "frameworks": "UIKit",
   "dependencies": {
     "ComputableLayout": [
