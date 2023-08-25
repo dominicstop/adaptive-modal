@@ -501,7 +501,12 @@ public class AdaptiveModalManager: NSObject {
   
   var computedGestureOffset: CGPoint? {
     guard let gestureInitialPoint = self.gestureInitialPoint,
-          let modalRect = self.modalFrame
+          let modalRect = self.modalFrame,
+          
+          /// When modal is presented via gesture, wait for `presentModal` to
+          /// finish before computing offsets, so that the modal frame
+          /// is not nil/zero.
+          self.showModalCommandArgs == nil
     else { return nil };
     
     if let gestureOffset = self.gestureOffset {
@@ -1377,7 +1382,6 @@ public class AdaptiveModalManager: NSObject {
     self.prevModalFrame = .zero;
     self.prevTargetFrame = .zero;
     
-    self.clearGestureValues();
     self.clearAnimators();
     self.clearLayoutKeyboardValues();
     
@@ -2659,7 +2663,6 @@ public class AdaptiveModalManager: NSObject {
   };
   
   @objc private func onDragScreenEdge(_ sender: UIScreenEdgePanGestureRecognizer){
-    
     switch sender.state {
       case .began:
       
@@ -2674,7 +2677,7 @@ public class AdaptiveModalManager: NSObject {
         self.presentModal(
           viewControllerToPresent: modalVC,
           presentingViewController: presentingVC,
-          snapPointIndex: 1,
+          snapPointIndex: 0,
           animated: false,
           shouldSetStateOnSnap: false,
           stateSnapping: .PRESENTING_GESTURE,
@@ -3053,6 +3056,8 @@ public class AdaptiveModalManager: NSObject {
   
   private func notifyOnModalDidHide(){
     self.cleanup();
+    self.clearGestureValues();
+    
     self.modalViewController?.dismiss(animated: false);
     self.cleanupViewControllers();
     
