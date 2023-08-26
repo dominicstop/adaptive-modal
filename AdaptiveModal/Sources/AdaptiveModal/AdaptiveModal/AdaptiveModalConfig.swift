@@ -76,36 +76,102 @@ public struct AdaptiveModalConfig: Equatable {
   // MARK: - Properties - Config
   // ---------------------------
   
-  public var baseSnapPoints: [AdaptiveModalSnapPointConfig];
   public var snapDirection: SnapDirection;
   
-  public var snapPercentStrategy: SnapPercentStrategy;
+  public var snapPercentStrategy: SnapPercentStrategy = .position;
   
-  public var snapAnimationConfig: AdaptiveModalSnapAnimationConfig;
-  public var entranceAnimationConfig: AdaptiveModalSnapAnimationConfig;
-  public var exitAnimationConfig: AdaptiveModalSnapAnimationConfig;
+  public var snapAnimationConfig: AdaptiveModalSnapAnimationConfig = .default;
+  public var entranceAnimationConfig: AdaptiveModalSnapAnimationConfig = .default;
+  public var exitAnimationConfig: AdaptiveModalSnapAnimationConfig = .default;
   
-  public var interpolationClampingConfig: AdaptiveModalClampingConfig;
-  
-  public var undershootSnapPoint: AdaptiveModalSnapPointPreset;
-  public var overshootSnapPoint: AdaptiveModalSnapPointPreset?;
+  public var interpolationClampingConfig = AdaptiveModalClampingConfig();
   
   // the first snap point to snap to when the modal is first shown
-  public var initialSnapPointIndex: Int;
+  public var initialSnapPointIndex = 1;
   
-  public var dragHandlePosition: DragHandlePosition;
-  public var dragHandleHitSlop: CGPoint;
+  public var dragHandleHitSlop = CGPoint(x: 15, y: 15);
   
-  public var modalSwipeGestureEdgeHeight: CGFloat;
+  public var modalSwipeGestureEdgeHeight: CGFloat = 20;
   
-  public var shouldSetModalScrollViewContentInsets: Bool;
-  public var shouldSetModalScrollViewVerticalScrollIndicatorInsets: Bool;
-  public var shouldSetModalScrollViewHorizontalScrollIndicatorInsets: Bool;
+  public var shouldSetModalScrollViewContentInsets = false;
+  public var shouldSetModalScrollViewVerticalScrollIndicatorInsets = true;
+  public var shouldSetModalScrollViewHorizontalScrollIndicatorInsets = true;
   
-  // let snapSwipeVelocityThreshold: CGFloat = 0;
-
-  // MARK: - Computed Properties
-  // ---------------------------
+  // MARK: - Properties - Raw Config
+  // -------------------------------
+  
+  public var baseUndershootSnapPoint: AdaptiveModalSnapPointPreset = .automatic;
+  public var baseOvershootSnapPoint: AdaptiveModalSnapPointPreset?;
+  
+  public var baseSnapPoints: [AdaptiveModalSnapPointConfig];
+  
+  public var baseDragHandlePosition: DragHandlePosition = .automatic;
+  
+  // MARK: - Computed Properties - Derived Config
+  // --------------------------------------------
+  
+  public var undershootSnapPoint: AdaptiveModalSnapPointPreset {
+    let undershootSnapPoint = self.baseUndershootSnapPoint;
+    
+    switch undershootSnapPoint.layoutPreset {
+      case .automatic:
+        return .getDefaultUnderShootSnapPoint(
+          forDirection: snapDirection,
+          keyframeConfig: undershootSnapPoint.keyframeConfig
+        );
+        
+      default:
+        return undershootSnapPoint;
+    };
+  };
+  
+  public var overshootSnapPoint: AdaptiveModalSnapPointPreset? {
+    guard let overshootSnapPoint = self.baseOvershootSnapPoint
+    else { return nil };
+    
+    switch overshootSnapPoint.layoutPreset {
+      case .automatic:
+        return .getDefaultOvershootSnapPoint(
+          forDirection: snapDirection,
+          keyframeConfig: overshootSnapPoint.keyframeConfig
+        );
+      
+      default:
+        return overshootSnapPoint;
+    };
+  };
+  
+  public var snapPoints: [AdaptiveModalSnapPointConfig] {
+    .Element.deriveSnapPoints(
+      undershootSnapPoint: self.undershootSnapPoint,
+      inBetweenSnapPoints: self.baseSnapPoints,
+      overshootSnapPoint: self.overshootSnapPoint
+    );
+  };
+  
+  public var dragHandlePosition: DragHandlePosition {
+    let dragHandlePosition = self.baseDragHandlePosition;
+    
+    if dragHandlePosition != .automatic {
+      return dragHandlePosition;
+    };
+    
+    switch self.snapDirection {
+      case .bottomToTop: return .top;
+      case .topToBottom: return .bottom;
+      case .leftToRight: return .right;
+      case .rightToLeft: return .left;
+    };
+  };
+  
+  // MARK: - Computed Properties - Public
+  // ------------------------------------
+  
+  public var overshootSnapPointIndex: Int? {
+    self.overshootSnapPoint != nil
+      ? self.snapPoints.count - 1
+      : nil;
+  };
   
   public var snapPointLastIndex: Int {
     var count = 0;
@@ -124,13 +190,8 @@ public struct AdaptiveModalConfig: Equatable {
     return count;
   };
   
-  public var snapPoints: [AdaptiveModalSnapPointConfig] {
-    .Element.deriveSnapPoints(
-      undershootSnapPoint: self.undershootSnapPoint,
-      inBetweenSnapPoints: self.baseSnapPoints,
-      overshootSnapPoint: self.overshootSnapPoint
-    );
-  };
+  // MARK: - Computed Properties
+  // ---------------------------
   
   var didSetModalScrollViewContentInsets: Bool {
     self.snapPoints.allSatisfy {
@@ -150,23 +211,17 @@ public struct AdaptiveModalConfig: Equatable {
     };
   };
   
-  public var overshootSnapPointIndex: Int? {
-    self.overshootSnapPoint != nil
-      ? self.snapPoints.count - 1
-      : nil;
-  };
-  
   /// Defines which axis of the gesture point to use to drive the interpolation
   /// of the modal snap points
   ///
-  public var inputValueKeyForPoint: KeyPath<CGPoint, CGFloat> {
+  var inputValueKeyForPoint: KeyPath<CGPoint, CGFloat> {
     switch self.snapDirection {
       case .topToBottom, .bottomToTop: return \.y;
       case .leftToRight, .rightToLeft: return \.x;
     };
   };
   
-  public var inputValueKeyForRect: KeyPath<CGRect, CGFloat> {
+  var inputValueKeyForRect: KeyPath<CGRect, CGFloat> {
     switch self.snapDirection {
       case .bottomToTop: return \.minY;
       case .topToBottom: return \.maxY;
@@ -175,21 +230,21 @@ public struct AdaptiveModalConfig: Equatable {
     };
   };
   
-  public var maxInputRangeKeyForRect: KeyPath<CGRect, CGFloat> {
+  var maxInputRangeKeyForRect: KeyPath<CGRect, CGFloat> {
     switch self.snapDirection {
       case .bottomToTop, .topToBottom: return \.height;
       case .leftToRight, .rightToLeft: return \.width;
     };
   };
   
-  public var shouldInvertPercent: Bool {
+  var shouldInvertPercent: Bool {
     switch self.snapDirection {
       case .bottomToTop, .rightToLeft: return true;
       default: return false;
     };
   };
   
-  public var secondarySwipeAxis: KeyPath<CGPoint, CGFloat> {
+  var secondarySwipeAxis: KeyPath<CGPoint, CGFloat> {
     switch self.snapDirection {
       case .bottomToTop, .topToBottom: return \.x;
       case .leftToRight, .rightToLeft: return \.y;
@@ -202,21 +257,20 @@ public struct AdaptiveModalConfig: Equatable {
   public init(
     snapPoints: [AdaptiveModalSnapPointConfig],
     snapDirection: SnapDirection,
-    snapPercentStrategy: SnapPercentStrategy = .position,
-    snapAnimationConfig: AdaptiveModalSnapAnimationConfig = .default,
-    entranceAnimationConfig: AdaptiveModalSnapAnimationConfig = .default,
-    exitAnimationConfig: AdaptiveModalSnapAnimationConfig = .default,
-    interpolationClampingConfig: AdaptiveModalClampingConfig = .default,
-    initialSnapPointIndex: Int = 1,
-    undershootSnapPoint: AdaptiveModalSnapPointPreset = .automatic,
-    overshootSnapPoint: AdaptiveModalSnapPointPreset? = .automatic,
+    snapPercentStrategy: SnapPercentStrategy? = nil,
+    snapAnimationConfig: AdaptiveModalSnapAnimationConfig? = nil,
+    entranceAnimationConfig: AdaptiveModalSnapAnimationConfig? = nil,
+    exitAnimationConfig: AdaptiveModalSnapAnimationConfig? = nil,
+    interpolationClampingConfig: AdaptiveModalClampingConfig? = nil,
+    initialSnapPointIndex: Int? = nil,
+    undershootSnapPoint: AdaptiveModalSnapPointPreset? = nil,
+    overshootSnapPoint: AdaptiveModalSnapPointPreset? = nil,
     dragHandlePosition: DragHandlePosition = .automatic,
     dragHandleHitSlop: CGPoint? = nil,
-    dragHandleCornerRadius: CGFloat? = nil,
     modalSwipeGestureEdgeHeight: CGFloat? = nil,
-    shouldSetModalScrollViewContentInsets: Bool = false,
-    shouldSetModalScrollViewVerticalScrollIndicatorInsets: Bool = true,
-    shouldSetModalScrollViewHorizontalScrollIndicatorInsets: Bool = true
+    shouldSetModalScrollViewContentInsets: Bool? = nil,
+    shouldSetModalScrollViewVerticalScrollIndicatorInsets: Bool? = nil,
+    shouldSetModalScrollViewHorizontalScrollIndicatorInsets: Bool? = nil
   ) {
   
     self.baseSnapPoints = {
@@ -237,69 +291,60 @@ public struct AdaptiveModalConfig: Equatable {
     }();
     
     self.snapDirection = snapDirection;
-    self.snapPercentStrategy = snapPercentStrategy;
     
-    self.snapAnimationConfig = snapAnimationConfig;
-    self.entranceAnimationConfig = entranceAnimationConfig;
-    self.exitAnimationConfig = exitAnimationConfig;
+    if let snapPercentStrategy = snapPercentStrategy {
+      self.snapPercentStrategy = snapPercentStrategy;
+    };
     
-    self.interpolationClampingConfig = interpolationClampingConfig;
+    if let snapAnimationConfig = snapAnimationConfig {
+      self.snapAnimationConfig = snapAnimationConfig;
+    };
     
-    self.initialSnapPointIndex = initialSnapPointIndex;
+    if let entranceAnimationConfig = entranceAnimationConfig {
+      self.entranceAnimationConfig = entranceAnimationConfig;
+    };
     
-    self.undershootSnapPoint = {
-      switch undershootSnapPoint.layoutPreset {
-        case .automatic:
-          return .getDefaultUnderShootSnapPoint(
-            forDirection: snapDirection,
-            keyframeConfig: undershootSnapPoint.keyframeConfig
-          );
-          
-        default:
-          return undershootSnapPoint;
-      };
-    }();
+    if let exitAnimationConfig = exitAnimationConfig {
+      self.exitAnimationConfig = exitAnimationConfig;
+    };
     
-    self.overshootSnapPoint = {
-      guard let overshootSnapPoint = overshootSnapPoint else { return nil };
+    if let interpolationClampingConfig = interpolationClampingConfig {
+      self.interpolationClampingConfig = interpolationClampingConfig;
+    };
     
-      switch overshootSnapPoint.layoutPreset {
-        case .automatic:
-          return .getDefaultOvershootSnapPoint(
-            forDirection: snapDirection,
-            keyframeConfig: overshootSnapPoint.keyframeConfig
-          );
-        
-        default:
-          return overshootSnapPoint;
-      };
-    }();
+    if let initialSnapPointIndex = initialSnapPointIndex {
+      self.initialSnapPointIndex = initialSnapPointIndex;
+    };
+    
+    if let undershootSnapPoint = undershootSnapPoint {
+      self.baseUndershootSnapPoint = undershootSnapPoint;
+    };
+    
+    if let overshootSnapPoint = overshootSnapPoint {
+      self.baseOvershootSnapPoint = overshootSnapPoint;
+    };
+    
+    self.baseDragHandlePosition = dragHandlePosition
       
-    self.dragHandlePosition = {
-      if dragHandlePosition != .automatic {
-        return dragHandlePosition;
-      };
-      
-      switch snapDirection {
-        case .bottomToTop: return .top;
-        case .topToBottom: return .bottom;
-        case .leftToRight: return .right;
-        case .rightToLeft: return .left;
-      };
-    }();
+    if let dragHandleHitSlop = dragHandleHitSlop {
+      self.dragHandleHitSlop = dragHandleHitSlop;
+    };
     
-    self.dragHandleHitSlop = dragHandleHitSlop ?? .init(x: 15, y: 15);
+    if let modalSwipeGestureEdgeHeight = modalSwipeGestureEdgeHeight {
+      self.modalSwipeGestureEdgeHeight = modalSwipeGestureEdgeHeight;
+    };
     
-    self.modalSwipeGestureEdgeHeight = modalSwipeGestureEdgeHeight ?? 20;
+    if let flag = shouldSetModalScrollViewContentInsets {
+      self.shouldSetModalScrollViewContentInsets = flag;
+    };
     
-    self.shouldSetModalScrollViewContentInsets =
-      shouldSetModalScrollViewContentInsets;
+    if let flag = shouldSetModalScrollViewVerticalScrollIndicatorInsets {
+      self.shouldSetModalScrollViewVerticalScrollIndicatorInsets = flag;
+    };
     
-    self.shouldSetModalScrollViewVerticalScrollIndicatorInsets =
-      shouldSetModalScrollViewVerticalScrollIndicatorInsets;
-      
-    self.shouldSetModalScrollViewHorizontalScrollIndicatorInsets =
-      shouldSetModalScrollViewHorizontalScrollIndicatorInsets;
+    if let flag = shouldSetModalScrollViewHorizontalScrollIndicatorInsets {
+      self.shouldSetModalScrollViewHorizontalScrollIndicatorInsets = flag;
+    };
   };
   
   // MARK: - Functions
