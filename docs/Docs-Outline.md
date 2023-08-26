@@ -44,30 +44,15 @@
     <br>
   
     * Protocol - `AdaptiveModalAnimationEventsNotifiable`
+    * Protocol - `AdaptiveModalGestureEventsNotifiable`
+    * Protocol - `AdaptiveModalPresentationEventsNotifiable`
+    * Protocol - `AdaptiveModalStateEventsNotifiable`
     * Protocol - `AdaptiveModalBackgroundTapDelegate`
-    * Protocol - `AdaptiveModalEventNotifiable`
   
     <br>
   
     * Struct - `Angle`
     * Struct - `Transform3D`
-  
-    <br>
-  
-    * Struct - `NumericLogicalExpression`
-    * Struct - `RNILayout`
-    * Struct - `RNILayoutComputableOffset`
-    * Struct - `RNILayoutValueEvaluableCondition`
-    * Struct - `RNILayoutEvaluableCondition`
-    * Struct - `RNILayoutEvaluableConditionContext`
-    * Struct - `RNILayoutKeyboardValues`
-    * Struct - `RNILayoutMarginRects`
-    * Struct - `RNILayoutMargins`
-    * Struct - `RNILayoutPreset`
-    * Struct - `RNILayoutValue`
-    * Struct - `RNILayoutValue+StaticAlias`
-    * Struct - `RNILayoutValueContext`
-    * Enum - `RNILayoutValueMode` 
   
     <br>
   
