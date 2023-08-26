@@ -128,6 +128,61 @@ class AdaptiveModalBasicUsage01 : UIViewController {
 
 ## Documentation
 
+### Struct - `AdaptiveModalConfig`
+
+This struct is uses to configure the modal. 
+
+<br>
+
+**`AdaptiveModalConfig` Properties - Raw Config**
+
+| Property                                                     | Description |
+| ------------------------------------------------------------ | ----------- |
+| 🔤 `baseSnapPoints`<br/>⚛️ `[AdaptiveModalSnapPointConfig]`    | TBA         |
+| 🔤 `baseUndershootSnapPoint`<br/>⚛️ `AdaptiveModalSnapPointPreset`<br/>✳️  **Default**: `AdaptiveModalSnapPointPreset` | TBA         |
+| 🔤 `baseOvershootSnapPoint`<br/>⚛️ `AdaptiveModalSnapPointPreset?`<br/>✳️  **Default**: `nil` | TBA         |
+| 🔤 `baseDragHandlePosition`<br/>⚛️ `DragHandlePosition?`<br/>✳️  **Default**: `.automatic` | TBA         |
+
+<br>
+
+**`AdaptiveModalConfig` Properties**
+
+| Property                                                     | Description |
+| ------------------------------------------------------------ | ----------- |
+| 🔤 `snapDirection`<br/>⚛️ `SnapDirection`                      | TBA         |
+| 🔤 `snapPercentStrategy`<br/>⚛️ `SnapPercentStrategy`<br/>✳️  **Default**: `.position` | TBA         |
+| 🔤 `snapAnimationConfig`<br/>⚛️ `AdaptiveModalSnapAnimationConfig`<br/>✳️  **Default**: `.default` | TBA         |
+| 🔤 `entranceAnimationConfig`<br/>⚛️ `AdaptiveModalSnapAnimationConfig`<br/>✳️  **Default**: `.default` | TBA         |
+| 🔤 `exitAnimationConfig`<br/>⚛️ `AdaptiveModalSnapAnimationConfig`<br/>✳️  **Default**: `default` | TBA         |
+| 🔤 `interpolationClampingConfig`<br/>⚛️ `AdaptiveModalClampingConfig`<br/>✳️  **Default**: `.init()` | TBA         |
+| 🔤 `initialSnapPointIndex`<br/>⚛️ `Int`<br/>✳️  **Default**: `1` | TBA         |
+| 🔤 `dragHandleHitSlop`<br/>⚛️ `CGPoint`<br/>✳️  **Default**: `CGPoint(x: 15, y: 15)` | TBA         |
+| 🔤 `modalSwipeGestureEdgeHeight`<br/>⚛️ `CGFloat`<br/>✳️  **Default**: `20` | TBA         |
+| 🔤 `shouldSetModalScrollViewContentInsets`<br/>⚛️ `Bool`<br/>✳️  **Default**: `false` | TBA         |
+| 🔤 `shouldSetModalScrollViewVerticalScrollIndicatorInsets`<br/>⚛️ `Bool`<br/>✳️  **Default**: `true` | TBA         |
+| 🔤 `shouldSetModalScrollViewHorizontalScrollIndicatorInsets`<br/>⚛️ `Bool`<br/>✳️  **Default**: `true` | TBA         |
+
+<br>
+
+**`AdaptiveModalConfig` Computed Properties - Derived Config**
+
+| Property                                                     | Description |
+| ------------------------------------------------------------ | ----------- |
+| 🔤 `undershootSnapPoint`<br/>⚛️ `AdaptiveModalSnapPointPreset` | TBA         |
+| 🔤 `overshootSnapPoint`<br/>⚛️ `AdaptiveModalSnapPointPreset?` | TBA         |
+| 🔤 `snapPoints`<br/>⚛️ `[AdaptiveModalSnapPointConfig]`        | TBA         |
+| 🔤 `dragHandlePosition`<br/>⚛️ `DragHandlePosition`            | TBA         |
+
+<br>
+
+**`AdaptiveModalConfig` Functions**
+
+| Function                                                     | Description |
+| ------------------------------------------------------------ | ----------- |
+| 🔤  `init`<br><br>**Parameters**:<br>🔤  `snapPoints`<br>⚛️ `[AdaptiveModalSnapPointConfig]`<br><br>🔤  `snapDirection`<br/>⚛️  `SnapDirection`<br/><br/>🔤  `snapPercentStrategy`<br/>⚛️  `SnapPercentStrategy?`<br/>✳️  **Default**: `nil`<br><br/>🔤  `snapAnimationConfig`<br/>⚛️  `AdaptiveModalSnapAnimationConfig?`<br/>✳️  **Default**: `nil`<br/><br/>🔤  `entranceAnimationConfig`<br/>⚛️  `AdaptiveModalSnapAnimationConfig?`<br/>✳️  **Default**: `nil`<br/><br/>🔤  `exitAnimationConfig`<br/>⚛️  `AdaptiveModalSnapAnimationConfig?`<br/>✳️  **Default**: `nil`<br/><br/>🔤  `interpolationClampingConfig`<br/>⚛️  `AdaptiveModalClampingConfig?`<br/>✳️  **Default**: `nil`<br/><br/>🔤  `initialSnapPointIndex`<br/>⚛️  `Int?`<br/>✳️  **Default**: `nil`<br/><br/>🔤  `undershootSnapPoint`<br/>⚛️  `AdaptiveModalSnapPointPreset?`<br/>✳️  **Default**: `nil`<br/><br/>🔤  `overshootSnapPoint`<br/>⚛️  `AdaptiveModalSnapPointPreset?`<br/>✳️  **Default**: `nil`<br/><br/>🔤  `dragHandlePosition`<br/>⚛️  `DragHandlePosition?`<br/>✳️  **Default**: `nil`<br/><br/>🔤  `dragHandleHitSlop`<br/>⚛️  `CGPoint?`<br/>✳️  **Default**: `nil`<br/><br/>🔤  `modalSwipeGestureEdgeHeight`<br/>⚛️  `CGFloat?`<br/>✳️  **Default**: `nil`<br/><br/>🔤  `shouldSetModalScrollViewContentInsets`<br/>⚛️  `Bool?`<br/>✳️  **Default**: `nil`<br/><br/>🔤  `shouldSetModalScrollViewVerticalScrollIndicatorInsets`<br/>⚛️  `Bool?`<br/>✳️  **Default**: `nil`<br/><br/>🔤  `shouldSetModalScrollViewHorizontalScrollIndicatorInsets`<br/>⚛️  `Bool?`<br/>✳️  **Default**: `nil`<br/> | TBA         |
+
+<br><be>
+
 ### Struct - `AdaptiveModalClampingConfig`
 
 TBA
@@ -177,12 +232,6 @@ TBA
 <br><br>
 
 ### Enum - `AdaptiveModalSnapPointConfig`
-
-TBA
-
-<br><br>
-
-### Class - `AdaptiveModalConfig`
 
 TBA
 
