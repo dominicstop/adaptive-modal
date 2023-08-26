@@ -128,6 +128,140 @@ class AdaptiveModalBasicUsage01 : UIViewController {
 
 ## Documentation
 
+### Struct - `AdaptiveModalClampingConfig`
+
+TBA
+
+<br><br>
+
+### Struct - `AdaptiveModalConfigMode`
+
+TBA
+
+<br><br>
+
+### Struct - `AdaptiveModalConstrainedConfig`
+
+TBA
+
+<br><br>
+
+### Struct - `AdaptiveModalInterpolationPoint`
+
+TBA
+
+<br><br>
+
+### Struct - `AdaptiveModalKeyframeConfig`
+
+TBA
+
+<br><br>
+
+### Struct - `AdaptiveModalSnapPointPreset`
+
+TBA
+
+<br><br>
+
+### Enum - `AdaptiveModalState`
+
+TBA
+
+<br><br>
+
+### Enum - `AdaptiveModalSnapAnimationConfig`
+
+TBA
+
+<br><br>
+
+### Enum - `AdaptiveModalSnapPointConfig`
+
+TBA
+
+<br><br>
+
+### Class - `AdaptiveModalConfig`
+
+TBA
+
+<br><br>
+
+#### `AdaptiveModalManager` Properties
+
+**Config-Related**
+
+TBA
+
+<br>
+
+**Gesture-Related**
+
+TBA
+
+<br>
+
+**General**
+
+TBA
+
+#### `AdaptiveModalManager` Functions
+
+TBA
+
+<br><br>
+
+### Class - `AdaptiveModalDragHandleView`
+
+TBA
+
+<br><br>
+
+### Protocol - `AdaptiveModalAnimationEventsNotifiable`
+
+TBA
+
+<br><br>
+
+### Protocol - `AdaptiveModalGestureEventsNotifiable`
+
+TBA
+
+<br><br>
+
+### Protocol - `AdaptiveModalPresentationEventsNotifiable`
+
+TBA
+
+<br><br>
+
+### Protocol - `AdaptiveModalStateEventsNotifiable`
+
+TBA
+
+<br><br>
+
+### Protocol - `AdaptiveModalBackgroundTapDelegate`
+
+TBA
+
+<br><br>
+
+### Struct - `Angle`
+
+TBA
+
+<br><br>
+
+### Struct - `Transform3D`
+
+TBA
+
+<br><br>
+
+## Topics + Discussion
+
 TBA
 
 <br><br>
