@@ -6,6 +6,8 @@
 
 ## Current
 
+- [ ] `TODO:2023-08-27-13-54-16` - Default clamping config based on the snap direction. This is so that we can selectively extrapolate the width/height of the modal (e.g. only extrapolate the height).
+
 <br><br>
 
 ## WIP
