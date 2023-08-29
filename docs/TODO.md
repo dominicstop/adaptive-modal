@@ -6,13 +6,14 @@
 
 ## Current
 
-- [ ] `TODO:2023-08-27-13-54-16` - Default clamping config based on the snap direction. This is so that we can selectively extrapolate the width/height of the modal (e.g. only extrapolate the height).
+- [ ] `TODO:2023-08-07-19-49-08` - Refactor `AdaptiveModalClampingConfig` - Accept list of keys that will be clamped left/initial value, right/last value.
+- [ ] `TODO:2023-08-27-13-54-16` - Impl: Default clamping config based on the snap direction. This is so that we can selectively extrapolate the width/height of the modal (e.g. only extrapolate the height).
+- [ ] `TODO:2023-08-29-10-07-08` - Impl: Present a modal in place (e.g. fade in, scale in, etc) via a animation keyframe config + snap point index/key.
 
 <br><br>
 
 ## WIP
 
-- [ ] `TODO:2023-08-07-19-49-08` - Refactor `AdaptiveModalClampingConfig` - Accept list of keys that will be clamped left/initial value, right/last value.
 - [ ] `TODO:2023-08-13-12-43-11` - Fix crash due to  `NaN` value during interpolation.
 - [ ] `TODO:2023-07-11-22-45-46` - Impl: Keyframe - Update `modalCornerRadius` to accept a constant or percentage, then compute based on the modal size.
 - [ ] `TODO:2023-06-28-04-16-09` - Impl: Update presentation-related delegates/subclass to integrate more with the modal transition + presentation/dismissal.
