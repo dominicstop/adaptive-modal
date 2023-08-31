@@ -552,14 +552,59 @@ public class AdaptiveModalManager: NSObject {
   
   var modalSwipeGestureEdgeRect: CGRect? {
     guard let modalFrame = self.modalFrame else { return nil };
+    let modalConfig = self.currentModalConfig;
     
-    return CGRect(
-      origin: modalFrame.origin,
-      size: CGSize(
-        width: modalFrame.width,
-        height: self.currentModalConfig.modalSwipeGestureEdgeHeight
-      )
-    );
+    let modalSwipeGestureEdgeHeight = modalConfig.modalSwipeGestureEdgeHeight;
+    
+    switch modalConfig.snapDirection {
+      case .bottomToTop:
+        return CGRect(
+          origin: modalFrame.origin,
+          size: CGSize(
+            width: modalFrame.width,
+            height: modalSwipeGestureEdgeHeight
+          )
+        );
+        
+      case .topToBottom:
+        let offsetY = modalFrame.height - modalSwipeGestureEdgeHeight;
+        let newY = modalFrame.origin.y + offsetY;
+      
+        return CGRect(
+          origin: CGPoint(
+            x: modalFrame.origin.x,
+            y: newY
+          ),
+          size: CGSize(
+            width: modalFrame.width,
+            height: modalSwipeGestureEdgeHeight
+          )
+        );
+        
+      case .leftToRight:
+        return CGRect(
+          origin: modalFrame.origin,
+          size: CGSize(
+            width: modalFrame.width,
+            height: modalSwipeGestureEdgeHeight
+          )
+        );
+        
+      case .rightToLeft:
+        let offsetX = modalFrame.width - modalSwipeGestureEdgeHeight;
+        let newX = modalFrame.origin.x + offsetX;
+      
+        return CGRect(
+          origin: CGPoint(
+            x: newX,
+            y: modalFrame.origin.y
+          ),
+          size: CGSize(
+            width: modalFrame.width,
+            height: modalSwipeGestureEdgeHeight
+          )
+        );
+    };
   };
   
   public var gesturePointWithOffsets: CGPoint? {
