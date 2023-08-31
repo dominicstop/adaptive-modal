@@ -139,11 +139,6 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
           ),
         ],
         snapDirection: .bottomToTop,
-        interpolationClampingConfig: .init(
-          shouldClampModalLastHeight: true,
-          shouldClampModalLastWidth: true,
-          shouldClampModalLastX: true
-        ),
         overshootSnapPoint: AdaptiveModalSnapPointPreset(
           layoutPreset: .fitScreen
         )

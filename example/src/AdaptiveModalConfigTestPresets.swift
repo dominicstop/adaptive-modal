@@ -377,13 +377,17 @@ enum AdaptiveModalConfigTestPresets: CaseIterable {
         ],
         snapDirection: .bottomToTop,
         interpolationClampingConfig: .init(
-          shouldClampModalLastHeight: true,
-          shouldClampModalLastWidth: true,
-          shouldClampModalLastX: true
+          AdaptiveModalClampingConfig(
+            clampingKeysLeft: [],
+            clampingKeysRight: [
+              .modalSizeHeight,
+              .modalSizeWidth,
+              .modalOriginX
+            ]
+          )
         )
       );
       
     };
   };
 };
-

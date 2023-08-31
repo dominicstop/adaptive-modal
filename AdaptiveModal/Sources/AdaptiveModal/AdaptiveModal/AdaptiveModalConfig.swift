@@ -84,7 +84,7 @@ public struct AdaptiveModalConfig: Equatable {
   public var entranceAnimationConfig: AdaptiveModalSnapAnimationConfig = .default;
   public var exitAnimationConfig: AdaptiveModalSnapAnimationConfig = .default;
   
-  public var interpolationClampingConfig = AdaptiveModalClampingConfig();
+  public var interpolationClampingConfig: AdaptiveModalClampingConfig;
   
   // the first snap point to snap to when the modal is first shown
   public var initialSnapPointIndex = 1;
@@ -307,6 +307,18 @@ public struct AdaptiveModalConfig: Equatable {
     if let exitAnimationConfig = exitAnimationConfig {
       self.exitAnimationConfig = exitAnimationConfig;
     };
+    
+    self.interpolationClampingConfig = {
+      if let interpolationClampingConfig = interpolationClampingConfig {
+        return interpolationClampingConfig;
+      };
+      
+      switch snapDirection.orientation {
+        case .horizontal: return .defaultHorizontal;
+        case .vertical  : return .defaultVertical;
+      };
+    }();
+    
     
     if let interpolationClampingConfig = interpolationClampingConfig {
       self.interpolationClampingConfig = interpolationClampingConfig;

@@ -8,80 +8,82 @@
 import Foundation
 
 public struct AdaptiveModalClampingConfig: Equatable {
-  public static let `default`: Self = .init();
 
-  public let shouldClampModalInitHeight: Bool;
-  public let shouldClampModalLastHeight: Bool;
+  public enum ClampingKeys: Equatable, CaseIterable {
+    case modalSizeHeight;
+    case modalSizeWidth;
+    case modalOriginX;
+    case modalOriginY;
+    
+    case modalPaddingTop;
+    case modalPaddingLeft;
+    case modalPaddingBottom;
+    case modalPaddingRight;
+    
+    case modalTransformTranslateX;
+    case modalTransformTranslateY;
+    case modalTransformTranslateZ;
+    case modalTransformScaleX;
+    case modalTransformScaleY;
+    case modalTransformRotateX;
+    case modalTransformRotateY;
+    case modalTransformRotateZ;
+    case modalTransformPerspective;
+    case modalTransformSkewX;
+    case modalTransformSkewY;
+    
+    case modalBorderWidth;
+    case modalShadowOffset;
+    case modalShadowRadius;
+    case modalCornerRadius;
+    case modalDragHandleSizeHeight;
+    case modalDragHandleSizeWidth;
+    case modalDragHandleOffset;
+    case modalDragHandleCornerRadius;
+  };
   
-  public let shouldClampModalInitWidth: Bool;
-  public let shouldClampModalLastWidth: Bool;
+  static let defaultClampingKeys: Set<ClampingKeys> = [
+    .modalBorderWidth,
+    .modalShadowOffset,
+    .modalShadowRadius,
+    .modalCornerRadius,
+    .modalDragHandleSizeHeight,
+    .modalDragHandleSizeWidth,
+    .modalDragHandleOffset,
+    .modalDragHandleCornerRadius,
+  ];
   
-  public let shouldClampModalInitX: Bool;
-  public let shouldClampModalLastX: Bool;
+  public static let defaultHorizontal: Self = .init(
+    clampingKeys: Self.defaultClampingKeys.union([
+      .modalSizeHeight,
+      .modalOriginY,
+      .modalPaddingBottom,
+      .modalPaddingTop,
+    ])
+  );
   
-  public let shouldClampModalInitY: Bool;
-  public let shouldClampModalLastY: Bool;
+  public static let defaultVertical: Self = .init(
+    clampingKeys: Self.defaultClampingKeys.union([
+      .modalSizeWidth,
+      .modalOriginX,
+      .modalPaddingLeft,
+      .modalPaddingRight,
+    ])
+  );
   
-  public let shouldClampModalInitRotation: Bool;
-  public let shouldClampModalLastRotation: Bool;
-  
-  public let shouldClampModalInitScaleX: Bool;
-  public let shouldClampModalLastScaleX: Bool;
-  
-  public let shouldClampModalInitScaleY: Bool;
-  public let shouldClampModalLastScaleY: Bool;
-  
-  public let shouldClampModalInitTranslateX: Bool;
-  public let shouldClampModalLastTranslateX: Bool;
-  
-  public let shouldClampModalInitTranslateY: Bool;
-  public let shouldClampModalLastTranslateY: Bool;
+  public var clampingKeysLeft: Set<ClampingKeys>;
+  public var clampingKeysRight: Set<ClampingKeys>;
   
   public init(
-    shouldClampModalInitHeight: Bool = false,
-    shouldClampModalLastHeight: Bool = false,
-    shouldClampModalInitWidth: Bool = false,
-    shouldClampModalLastWidth: Bool = false,
-    shouldClampModalInitX: Bool = false,
-    shouldClampModalLastX: Bool = false,
-    shouldClampModalInitY: Bool = false,
-    shouldClampModalLastY: Bool = false,
-    shouldClampModalInitRotation: Bool = true,
-    shouldClampModalLastRotation: Bool = true,
-    shouldClampModalInitScaleX: Bool = true,
-    shouldClampModalLastScaleX: Bool = true,
-    shouldClampModalInitScaleY: Bool = true,
-    shouldClampModalLastScaleY: Bool = true,
-    shouldClampModalInitTranslateX: Bool = true,
-    shouldClampModalLastTranslateX: Bool = true,
-    shouldClampModalInitTranslateY: Bool = true,
-    shouldClampModalLastTranslateY: Bool = true
+    clampingKeysLeft: Set<ClampingKeys>,
+    clampingKeysRight: Set<ClampingKeys>
   ) {
-    self.shouldClampModalInitHeight = shouldClampModalInitHeight;
-    self.shouldClampModalLastHeight = shouldClampModalLastHeight;
-    
-    self.shouldClampModalInitWidth = shouldClampModalInitWidth;
-    self.shouldClampModalLastWidth = shouldClampModalLastWidth;
-    
-    self.shouldClampModalInitX = shouldClampModalInitX;
-    self.shouldClampModalLastX = shouldClampModalLastX;
-    
-    self.shouldClampModalInitY = shouldClampModalInitY;
-    self.shouldClampModalLastY = shouldClampModalLastY;
-    
-    self.shouldClampModalInitRotation = shouldClampModalInitRotation;
-    self.shouldClampModalLastRotation = shouldClampModalLastRotation;
-    
-    self.shouldClampModalInitScaleX = shouldClampModalInitScaleX;
-    self.shouldClampModalLastScaleX = shouldClampModalLastScaleX;
-    
-    self.shouldClampModalInitScaleY = shouldClampModalInitScaleY;
-    self.shouldClampModalLastScaleY = shouldClampModalLastScaleY;
-    
-    self.shouldClampModalInitTranslateX = shouldClampModalInitTranslateX;
-    self.shouldClampModalLastTranslateX = shouldClampModalLastTranslateX;
-    
-    self.shouldClampModalInitTranslateY = shouldClampModalInitTranslateY;
-    self.shouldClampModalLastTranslateY = shouldClampModalLastTranslateY;
-  }
+    self.clampingKeysLeft = clampingKeysLeft
+    self.clampingKeysRight = clampingKeysRight
+  };
+  
+  public init(clampingKeys: Set<ClampingKeys>) {
+    self.clampingKeysLeft = clampingKeys;
+    self.clampingKeysRight = clampingKeys;
+  };
 };

@@ -207,7 +207,21 @@ extension AdaptiveModalInterpolationPoint {
           setKeyframeValue(
             keyframeKey: keyframeKey,
             interpolationPointKey: interpolationPointKey,
-            interpolator: AdaptiveModalUtilities.interpolateRect
+            interpolator: {
+              AdaptiveModalUtilities.interpolateRect(
+                inputValue: $0,
+                rangeInput: $1,
+                rangeOutput: $2,
+                shouldClampMinHeight: $3,
+                shouldClampMaxHeight: $4,
+                shouldClampMinWidth: $3,
+                shouldClampMaxWidth: $4,
+                shouldClampMinX: $3,
+                shouldClampMaxX: $4,
+                shouldClampMinY: $3,
+                shouldClampMaxY: $4
+              );
+            }
           );
           
         case (
@@ -237,7 +251,35 @@ extension AdaptiveModalInterpolationPoint {
           setKeyframeValue(
             keyframeKey: keyframeKey,
             interpolationPointKey: interpolationPointKey,
-            interpolator: AdaptiveModalUtilities.interpolateTransform3D
+            interpolator: {
+              AdaptiveModalUtilities.interpolateTransform3D(
+                inputValue: $0,
+                rangeInput: $1,
+                rangeOutput: $2,
+                shouldClampMinTranslateX: $3,
+                shouldClampMaxTranslateX: $4,
+                shouldClampMinTranslateY: $3,
+                shouldClampMaxTranslateY: $4,
+                shouldClampMinTranslateZ: $3,
+                shouldClampMaxTranslateZ: $4,
+                shouldClampMinScaleX: $3,
+                shouldClampMaxScaleX: $4,
+                shouldClampMinScaleY: $3,
+                shouldClampMaxScaleY: $4,
+                shouldClampMinRotationX: $3,
+                shouldClampMaxRotationX: $4,
+                shouldClampMinRotationY: $3,
+                shouldClampMaxRotationY: $4,
+                shouldClampMinRotationZ: $3,
+                shouldClampMaxRotationZ: $4,
+                shouldClampMinPerspective: $3,
+                shouldClampMaxPerspective: $4,
+                shouldClampMinSkewX: $3,
+                shouldClampMaxSkewX: $4,
+                shouldClampMinSkewY: $3,
+                shouldClampMaxSkewY: $4
+              );
+            }
           );
           
         case (

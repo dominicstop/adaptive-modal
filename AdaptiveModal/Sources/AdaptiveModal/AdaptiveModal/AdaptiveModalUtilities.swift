@@ -179,11 +179,19 @@ class AdaptiveModalUtilities {
   };
   
   static func interpolateRect(
-    inputValue    : CGFloat,
-    rangeInput    : [CGFloat],
-    rangeOutput   : [CGRect],
-    shouldClampMin: Bool = false,
-    shouldClampMax: Bool = false
+    inputValue : CGFloat,
+    rangeInput : [CGFloat],
+    rangeOutput: [CGRect],
+    
+    shouldClampMinHeight: Bool,
+    shouldClampMaxHeight: Bool,
+    shouldClampMinWidth : Bool,
+    shouldClampMaxWidth : Bool,
+    
+    shouldClampMinX: Bool,
+    shouldClampMaxX: Bool,
+    shouldClampMinY: Bool,
+    shouldClampMaxY: Bool
   ) -> CGRect? {
   
     let nextHeight = Self.interpolate(
@@ -193,8 +201,8 @@ class AdaptiveModalUtilities {
         for: rangeOutput,
         key: \.height
       ),
-      shouldClampMin: shouldClampMin,
-      shouldClampMax: shouldClampMax
+      shouldClampMin: shouldClampMinHeight,
+      shouldClampMax: shouldClampMaxHeight
     );
     
     let nextWidth = Self.interpolate(
@@ -204,8 +212,8 @@ class AdaptiveModalUtilities {
         for: rangeOutput,
         key: \.width
       ),
-      shouldClampMin: shouldClampMin,
-      shouldClampMax: shouldClampMax
+      shouldClampMin: shouldClampMinWidth,
+      shouldClampMax: shouldClampMaxWidth
     );
     
     let nextX = Self.interpolate(
@@ -215,8 +223,8 @@ class AdaptiveModalUtilities {
         for: rangeOutput,
         key: \.origin.x
       ),
-      shouldClampMin: shouldClampMin,
-      shouldClampMax: shouldClampMax
+      shouldClampMin: shouldClampMinX,
+      shouldClampMax: shouldClampMaxX
     );
     
     let nextY = Self.interpolate(
@@ -226,8 +234,8 @@ class AdaptiveModalUtilities {
         for: rangeOutput,
         key: \.origin.y
       ),
-      shouldClampMin: shouldClampMin,
-      shouldClampMax: shouldClampMax
+      shouldClampMin: shouldClampMinY,
+      shouldClampMax: shouldClampMaxY
     );
     
     guard let nextX = nextX,
@@ -245,11 +253,36 @@ class AdaptiveModalUtilities {
   };
   
   static func interpolateTransform3D(
-    inputValue    : CGFloat,
-    rangeInput    : [CGFloat],
-    rangeOutput   : [Transform3D],
-    shouldClampMin: Bool = false,
-    shouldClampMax: Bool = false
+    inputValue : CGFloat,
+    rangeInput : [CGFloat],
+    rangeOutput: [Transform3D],
+    
+    shouldClampMinTranslateX: Bool,
+    shouldClampMaxTranslateX: Bool,
+    shouldClampMinTranslateY: Bool,
+    shouldClampMaxTranslateY: Bool,
+    shouldClampMinTranslateZ: Bool,
+    shouldClampMaxTranslateZ: Bool,
+    
+    shouldClampMinScaleX: Bool,
+    shouldClampMaxScaleX: Bool,
+    shouldClampMinScaleY: Bool,
+    shouldClampMaxScaleY: Bool,
+    
+    shouldClampMinRotationX: Bool,
+    shouldClampMaxRotationX: Bool,
+    shouldClampMinRotationY: Bool,
+    shouldClampMaxRotationY: Bool,
+    shouldClampMinRotationZ: Bool,
+    shouldClampMaxRotationZ: Bool,
+    
+    shouldClampMinPerspective: Bool,
+    shouldClampMaxPerspective: Bool,
+    
+    shouldClampMinSkewX: Bool,
+    shouldClampMaxSkewX: Bool,
+    shouldClampMinSkewY: Bool,
+    shouldClampMaxSkewY: Bool
   ) -> Transform3D? {
   
     let nextTranslateX = Self.interpolate(
@@ -259,8 +292,8 @@ class AdaptiveModalUtilities {
         for: rangeOutput,
         key: \.translateX
       ),
-      shouldClampMin: shouldClampMin,
-      shouldClampMax: shouldClampMax
+      shouldClampMin: shouldClampMinTranslateX,
+      shouldClampMax: shouldClampMaxTranslateX
     );
     
     let nextTranslateY = Self.interpolate(
@@ -270,8 +303,8 @@ class AdaptiveModalUtilities {
         for: rangeOutput,
         key: \.translateY
       ),
-      shouldClampMin: shouldClampMin,
-      shouldClampMax: shouldClampMax
+      shouldClampMin: shouldClampMinTranslateY,
+      shouldClampMax: shouldClampMaxTranslateY
     );
     
     let nextTranslateZ = Self.interpolate(
@@ -281,8 +314,8 @@ class AdaptiveModalUtilities {
         for: rangeOutput,
         key: \.translateX
       ),
-      shouldClampMin: shouldClampMin,
-      shouldClampMax: shouldClampMax
+      shouldClampMin: shouldClampMinTranslateZ,
+      shouldClampMax: shouldClampMaxTranslateZ
     );
     
     let nextScaleX = Self.interpolate(
@@ -292,8 +325,8 @@ class AdaptiveModalUtilities {
         for: rangeOutput,
         key: \.scaleX
       ),
-      shouldClampMin: shouldClampMin,
-      shouldClampMax: shouldClampMax
+      shouldClampMin: shouldClampMinScaleX,
+      shouldClampMax: shouldClampMaxScaleX
     );
     
     let nextScaleY = Self.interpolate(
@@ -303,8 +336,8 @@ class AdaptiveModalUtilities {
         for: rangeOutput,
         key: \.scaleY
       ),
-      shouldClampMin: shouldClampMin,
-      shouldClampMax: shouldClampMax
+      shouldClampMin: shouldClampMinScaleY,
+      shouldClampMax: shouldClampMaxScaleY
     );
     
     let nextRotationX = Self.interpolate(
@@ -314,8 +347,8 @@ class AdaptiveModalUtilities {
         for: rangeOutput,
         key: \.rotateX.radians
       ),
-      shouldClampMin: shouldClampMin,
-      shouldClampMax: shouldClampMax
+      shouldClampMin: shouldClampMinRotationX,
+      shouldClampMax: shouldClampMaxRotationX
     );
     
     let nextRotationY = Self.interpolate(
@@ -325,8 +358,8 @@ class AdaptiveModalUtilities {
         for: rangeOutput,
         key: \.rotateY.radians
       ),
-      shouldClampMin: shouldClampMin,
-      shouldClampMax: shouldClampMax
+      shouldClampMin: shouldClampMinRotationY,
+      shouldClampMax: shouldClampMaxRotationY
     );
     
     let nextRotationZ = Self.interpolate(
@@ -336,8 +369,8 @@ class AdaptiveModalUtilities {
         for: rangeOutput,
         key: \.rotateZ.radians
       ),
-      shouldClampMin: shouldClampMin,
-      shouldClampMax: shouldClampMax
+      shouldClampMin: shouldClampMinRotationZ,
+      shouldClampMax: shouldClampMaxRotationZ
     );
     
     let nextPerspective = Self.interpolate(
@@ -347,8 +380,8 @@ class AdaptiveModalUtilities {
         for: rangeOutput,
         key: \.perspective
       ),
-      shouldClampMin: shouldClampMin,
-      shouldClampMax: shouldClampMax
+      shouldClampMin: shouldClampMinPerspective,
+      shouldClampMax: shouldClampMaxPerspective
     );
     
     let nextSkewX = Self.interpolate(
@@ -358,8 +391,8 @@ class AdaptiveModalUtilities {
         for: rangeOutput,
         key: \.skewX
       ),
-      shouldClampMin: shouldClampMin,
-      shouldClampMax: shouldClampMax
+      shouldClampMin: shouldClampMinSkewX,
+      shouldClampMax: shouldClampMaxSkewX
     );
     
     let nextSkewY = Self.interpolate(
@@ -369,8 +402,8 @@ class AdaptiveModalUtilities {
         for: rangeOutput,
         key: \.skewY
       ),
-      shouldClampMin: shouldClampMin,
-      shouldClampMax: shouldClampMax
+      shouldClampMin: shouldClampMinSkewY,
+      shouldClampMax: shouldClampMaxSkewY
     );
     
     guard let nextTranslateX = nextTranslateX,

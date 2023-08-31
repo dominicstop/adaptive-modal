@@ -1639,33 +1639,37 @@ public class AdaptiveModalManager: NSObject {
     forInputPercentValue inputPercentValue: CGFloat
   ) {
     guard let modalView = self.modalView else { return };
+    let clampingConfig = self.currentModalConfig.interpolationClampingConfig;
+    
+    let clampingKeysMin = clampingConfig.clampingKeysLeft;
+    let clampingKeysMax = clampingConfig.clampingKeysRight;
   
     let nextPaddingLeft = self.interpolate(
       inputValue: inputPercentValue,
       rangeOutputKey: \.modalPaddingAdjusted.left,
-      shouldClampMin: true,
-      shouldClampMax: true
+      shouldClampMin: clampingKeysMin.contains(.modalPaddingLeft),
+      shouldClampMax: clampingKeysMax.contains(.modalPaddingLeft)
     );
     
     let nextPaddingRight = self.interpolate(
       inputValue: inputPercentValue,
       rangeOutputKey: \.modalPaddingAdjusted.right,
-      shouldClampMin: true,
-      shouldClampMax: true
+      shouldClampMin: clampingKeysMin.contains(.modalPaddingRight),
+      shouldClampMax: clampingKeysMax.contains(.modalPaddingRight)
     );
     
     let nextPaddingTop = self.interpolate(
       inputValue: inputPercentValue,
       rangeOutputKey: \.modalPaddingAdjusted.top,
-      shouldClampMin: true,
-      shouldClampMax: true
+      shouldClampMin: clampingKeysMin.contains(.modalPaddingTop),
+      shouldClampMax: clampingKeysMax.contains(.modalPaddingTop)
     );
     
     let nextPaddingBottom = self.interpolate(
       inputValue: inputPercentValue,
       rangeOutputKey: \.modalPaddingAdjusted.bottom,
-      shouldClampMin: true,
-      shouldClampMax: true
+      shouldClampMin: clampingKeysMin.contains(.modalPaddingBottom),
+      shouldClampMax: clampingKeysMax.contains(.modalPaddingBottom)
     );
     
     guard let nextPaddingLeft   = nextPaddingLeft  ,
@@ -1700,12 +1704,16 @@ public class AdaptiveModalManager: NSObject {
     forInputPercentValue inputPercentValue: CGFloat
   ) {
     guard let modalDragHandleView = self.modalDragHandleView else { return };
+    let clampingConfig = self.currentModalConfig.interpolationClampingConfig;
+    
+    let clampingKeysMin = clampingConfig.clampingKeysLeft;
+    let clampingKeysMax = clampingConfig.clampingKeysRight;
   
     let nextDragHandleOffset = self.interpolate(
       inputValue: inputPercentValue,
       rangeOutputKey: \.modalDragHandleOffset,
-      shouldClampMin: true,
-      shouldClampMax: true
+      shouldClampMin: clampingKeysMin.contains(.modalDragHandleOffset),
+      shouldClampMax: clampingKeysMax.contains(.modalDragHandleOffset)
     );
 
     guard let nextDragHandleOffset = nextDragHandleOffset,
@@ -1724,19 +1732,23 @@ public class AdaptiveModalManager: NSObject {
     forInputPercentValue inputPercentValue: CGFloat
   ) {
     guard let modalDragHandleView = self.modalDragHandleView else { return };
+    let clampingConfig = self.currentModalConfig.interpolationClampingConfig;
+    
+    let clampingKeysMin = clampingConfig.clampingKeysLeft;
+    let clampingKeysMax = clampingConfig.clampingKeysRight;
   
     let nextWidth = self.interpolate(
       inputValue: inputPercentValue,
       rangeOutputKey: \.modalDragHandleSize.width,
-      shouldClampMin: true,
-      shouldClampMax: true
+      shouldClampMin: clampingKeysMin.contains(.modalDragHandleSizeWidth),
+      shouldClampMax: clampingKeysMax.contains(.modalDragHandleSizeWidth)
     );
     
     let nextHeight = self.interpolate(
       inputValue: inputPercentValue,
       rangeOutputKey: \.modalDragHandleSize.height,
-      shouldClampMin: true,
-      shouldClampMax: true
+      shouldClampMin: clampingKeysMin.contains(.modalDragHandleSizeHeight),
+      shouldClampMax: clampingKeysMax.contains(.modalDragHandleSizeHeight)
     );
 
     guard let nextWidth = nextWidth,
@@ -1780,6 +1792,10 @@ public class AdaptiveModalManager: NSObject {
     forInputPercentValue inputPercentValue: CGFloat
   ) {
     guard let modalView = self.modalView else { return };
+    let clampingConfig = self.currentModalConfig.interpolationClampingConfig;
+    
+    let clampingKeysMin = clampingConfig.clampingKeysLeft;
+    let clampingKeysMax = clampingConfig.clampingKeysRight;
     
     let rangeInput = self.interpolationSteps.map {
       $0[keyPath: \.percent]
@@ -1792,7 +1808,15 @@ public class AdaptiveModalManager: NSObject {
         rangeOutput: AdaptiveModalUtilities.extractValuesFromArray(
           for: self.interpolationSteps,
           key: \.computedRect
-        )
+        ),
+        shouldClampMinHeight: clampingKeysMin.contains(.modalSizeHeight),
+        shouldClampMaxHeight: clampingKeysMax.contains(.modalSizeHeight),
+        shouldClampMinWidth: clampingKeysMin.contains(.modalSizeWidth),
+        shouldClampMaxWidth: clampingKeysMax.contains(.modalSizeWidth),
+        shouldClampMinX: clampingKeysMin.contains(.modalOriginX),
+        shouldClampMaxX: clampingKeysMax.contains(.modalOriginX),
+        shouldClampMinY: clampingKeysMin.contains(.modalOriginY),
+        shouldClampMaxY: clampingKeysMax.contains(.modalOriginY)
       );
       
       guard let nextRect = nextRect else {
@@ -1937,7 +1961,29 @@ public class AdaptiveModalManager: NSObject {
           rangeOutput: AdaptiveModalUtilities.extractValuesFromArray(
             for: self.interpolationSteps,
             key: \.modalTransform
-          )
+          ),
+          shouldClampMinTranslateX: clampingKeysMin.contains(.modalTransformTranslateX),
+          shouldClampMaxTranslateX: clampingKeysMax.contains(.modalTransformTranslateX),
+          shouldClampMinTranslateY: clampingKeysMin.contains(.modalTransformTranslateY),
+          shouldClampMaxTranslateY: clampingKeysMax.contains(.modalTransformTranslateY),
+          shouldClampMinTranslateZ: clampingKeysMin.contains(.modalTransformTranslateZ),
+          shouldClampMaxTranslateZ: clampingKeysMax.contains(.modalTransformTranslateZ),
+          shouldClampMinScaleX: clampingKeysMin.contains(.modalTransformTranslateX),
+          shouldClampMaxScaleX: clampingKeysMax.contains(.modalTransformTranslateX),
+          shouldClampMinScaleY: clampingKeysMin.contains(.modalTransformScaleY),
+          shouldClampMaxScaleY: clampingKeysMax.contains(.modalTransformScaleY),
+          shouldClampMinRotationX: clampingKeysMin.contains(.modalTransformRotateX),
+          shouldClampMaxRotationX: clampingKeysMax.contains(.modalTransformRotateX),
+          shouldClampMinRotationY: clampingKeysMin.contains(.modalTransformRotateY),
+          shouldClampMaxRotationY: clampingKeysMax.contains(.modalTransformRotateY),
+          shouldClampMinRotationZ: clampingKeysMin.contains(.modalTransformRotateZ),
+          shouldClampMaxRotationZ: clampingKeysMax.contains(.modalTransformRotateZ),
+          shouldClampMinPerspective: clampingKeysMin.contains(.modalTransformPerspective),
+          shouldClampMaxPerspective: clampingKeysMax.contains(.modalTransformPerspective),
+          shouldClampMinSkewX: clampingKeysMin.contains(.modalTransformSkewX),
+          shouldClampMaxSkewX: clampingKeysMax.contains(.modalTransformSkewX),
+          shouldClampMinSkewY: clampingKeysMin.contains(.modalTransformSkewY),
+          shouldClampMaxSkewY: clampingKeysMax.contains(.modalTransformSkewY)
         );
         
         return transform3D?.transform;
