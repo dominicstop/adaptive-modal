@@ -6,8 +6,6 @@
 
 ## Current
 
-- [ ] `TODO:2023-08-07-19-49-08` - Refactor `AdaptiveModalClampingConfig` - Accept list of keys that will be clamped left/initial value, right/last value.
-- [ ] `TODO:2023-08-27-13-54-16` - Impl: Default clamping config based on the snap direction. This is so that we can selectively extrapolate the width/height of the modal (e.g. only extrapolate the height).
 - [ ] `TODO:2023-08-29-10-07-08` - Impl: Present a modal in place (e.g. fade in, scale in, etc) via a animation keyframe config + snap point index/key.
 
 <br><br>
@@ -53,6 +51,9 @@
 
 ## Completed
 
+- [x] `TODO:2023-08-07-19-49-08` - Refactor `AdaptiveModalClampingConfig` - Accept list of keys that will be clamped left/initial value, right/last value.
+
+- [x] `TODO:2023-08-27-13-54-16` - Impl: Default clamping config based on the snap direction. This is so that we can selectively extrapolate the width/height of the modal (e.g. only extrapolate the height).
 - [x] `TODO:2023-08-18-01-24-19` - Refactor: Extract `RNILayout`, and publish as a separate library named `ComputableLayout`, and add it as a dependency to this package.
 
 - [x] `TODO:2023-06-23-18-13-58` -  Impl: `AdaptiveModal` - Add support for passing a user-created `UIScreenEdgePanGestureRecognizer` gesture handler.
