@@ -9,7 +9,7 @@
 import UIKit
 import AdaptiveModal
 
-class RNIDraggableTestViewController : UIViewController {
+class AdaptiveModalConfigTestViewController : UIViewController {
   
   lazy var modalManager: AdaptiveModalManager = {
     let manager = AdaptiveModalManager(
@@ -126,7 +126,7 @@ class RNIDraggableTestViewController : UIViewController {
   };
 };
 
-extension RNIDraggableTestViewController:
+extension AdaptiveModalConfigTestViewController:
   AdaptiveModalStateEventsNotifiable,
   AdaptiveModalPresentationEventsNotifiable,
   AdaptiveModalGestureEventsNotifiable {

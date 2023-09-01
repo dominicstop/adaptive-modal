@@ -459,7 +459,7 @@ fileprivate class TestModalViewController:
   };
 };
 
-class AdaptiveModalPresentationTestViewController : UIViewController {
+class AdaptiveModalConfigDemoViewController : UIViewController {
 
   lazy var adaptiveModalManager = AdaptiveModalManager(
     staticConfig: self.currentModalConfigPreset.config

@@ -101,54 +101,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     let window = UIWindow(windowScene: windowScene);
     self.window = window;
     
-    let rootVC = TestRoutes.rootRouteKey.viewController;
+    let rootVC = Routes.rootRoute.viewController;
     window.rootViewController = rootVC;
     window.makeKeyAndVisible();
-    
-    return;
-    
-    var delay = 1.0;
-    
-    DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + delay){
-      let modalVC = UIViewController();
-      modalVC.view = {
-        let view = UIView();
-        view.backgroundColor = .blue;
-        
-        return view;
-      }();
-      
-      rootVC.present(modalVC, animated: true);
-    };
-    
-    delay += 1;
-    
-    DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + delay){
-      guard let topmostVC = Helpers.getTopmostPresentedViewController()
-      else { return };
-      
-      let modalVC = UIViewController();
-      modalVC.view = {
-        let view = UIView();
-        view.backgroundColor = .green;
-        
-        return view;
-      }();
-      
-      // * once a modal has presented a vc
-      topmostVC.present(modalVC, animated: true);
-    };
-    
-    delay += 1;
-    
-    DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + delay){
-      let listPresentedVC = Helpers.getPresentedViewControllers();
-      
-      // * 3 modals have been dismissed
-      // * dismiss the first modal
-      // * all the modals have been dismissed
-      listPresentedVC[0].dismiss(animated: true);
-    };
   };
   
   func sceneDidDisconnect(_ scene: UIScene) {
