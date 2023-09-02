@@ -7,6 +7,7 @@
 ## Current
 
 - [ ] `TODO:2023-08-29-10-07-08` - Impl: Present a modal in place (e.g. fade in, scale in, etc) via a animation keyframe config + snap point index/key.
+- [ ] `TODO:2023-09-02-16-35-02` - Impl: Paginated Modal Content - Each snap point can have an associated "page" (i.e. a view controller), and the modal content changes based on the current snap point.
 
 <br><br>
 
