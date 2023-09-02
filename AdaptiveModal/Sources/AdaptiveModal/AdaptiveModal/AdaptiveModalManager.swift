@@ -669,6 +669,24 @@ public class AdaptiveModalManager: NSObject {
     self.modalStateMachine.currentState;
   };
   
+  // MARK: -  Properties - Delegates
+  // -------------------------------
+  
+  public var stateEventsDelegate =
+    MulticastDelegate<AdaptiveModalStateEventsNotifiable>();
+    
+  public var presentationEventsDelegate =
+    MulticastDelegate<AdaptiveModalPresentationEventsNotifiable>();
+    
+  public var gestureEventsDelegate =
+    MulticastDelegate<AdaptiveModalGestureEventsNotifiable>();
+  
+  public var backgroundTapDelegate =
+    MulticastDelegate<AdaptiveModalBackgroundTapDelegate>();
+    
+  public var animationEventDelegate =
+    MulticastDelegate<AdaptiveModalAnimationEventsNotifiable>();
+    
   // MARK: -  Properties
   // -------------------
   
@@ -696,13 +714,6 @@ public class AdaptiveModalManager: NSObject {
   
   private(set) var didTriggerSetup = false;
   
-  public weak var stateEventsDelegate: AdaptiveModalStateEventsNotifiable?;
-  public weak var presentationEventsDelegate: AdaptiveModalPresentationEventsNotifiable?;
-  public weak var gestureEventsDelegate: AdaptiveModalGestureEventsNotifiable?;
-  
-  public weak var backgroundTapDelegate: AdaptiveModalBackgroundTapDelegate?;
-  public weak var animationEventDelegate: AdaptiveModalAnimationEventsNotifiable?;
-
   // MARK: - Computed Properties
   // ---------------------------
   
@@ -2220,10 +2231,12 @@ public class AdaptiveModalManager: NSObject {
       forInputPercentValue: inputPercentValue
     );
     
-    self.animationEventDelegate?.notifyOnModalAnimatorPercentChanged(
-      sender: self,
-      percent: inputPercentValue
-    );
+    self.animationEventDelegate.invoke {
+      $0.notifyOnModalAnimatorPercentChanged(
+        sender: self,
+        percent: inputPercentValue
+      );
+    };
     
     #if DEBUG
     self.debugView?.notifyOnApplyInterpolationToModal();
@@ -2278,7 +2291,10 @@ public class AdaptiveModalManager: NSObject {
   
   private func stopModalAnimator(){
     self.modalAnimator?.stopAnimation(true);
-    self.animationEventDelegate?.notifyOnModalAnimatorStop(sender: self);
+    
+    self.animationEventDelegate.invoke {
+      $0.notifyOnModalAnimatorStop(sender: self);
+    };
   };
   
   private func adjustInterpolationIndex(for nextIndex: Int) -> Int {
@@ -2617,13 +2633,13 @@ public class AdaptiveModalManager: NSObject {
         animator.addCompletion(completion);
       };
       
-      if let delegate = self.animationEventDelegate {
-        animator.addCompletion {
-          delegate.notifyOnModalAnimatorCompletion(
+      animator.addCompletion { position in
+        self.animationEventDelegate.invoke {
+          $0.notifyOnModalAnimatorCompletion(
             sender: self,
-            position: $0
+            position: position
           );
-        }
+        };
       };
       
       animator.addCompletion { _ in
@@ -2654,12 +2670,14 @@ public class AdaptiveModalManager: NSObject {
       #endif
     };
     
-    self.animationEventDelegate?.notifyOnModalAnimatorStart(
-      sender: self,
-      animator: self.modalAnimator,
-      interpolationPoint: interpolationPoint,
-      isAnimated: isAnimated
-    );
+    self.animationEventDelegate.invoke {
+      $0.notifyOnModalAnimatorStart(
+        sender: self,
+        animator: self.modalAnimator,
+        interpolationPoint: interpolationPoint,
+        isAnimated: isAnimated
+      );
+    };
   };
   
   private func cancelModalGesture(){
@@ -2755,10 +2773,12 @@ public class AdaptiveModalManager: NSObject {
         break;
     };
     
-    self.gestureEventsDelegate?.notifyOnAdaptiveModalDragGesture(
-      sender: self,
-      gestureRecognizer: sender
-    );
+    self.gestureEventsDelegate.invoke {
+      $0.notifyOnAdaptiveModalDragGesture(
+        sender: self,
+        gestureRecognizer: sender
+      );
+    };
     
     if shouldClearGestureValues {
       self.clearGestureValues();
@@ -2800,7 +2820,9 @@ public class AdaptiveModalManager: NSObject {
   };
   
   @objc private func onBackgroundTapGesture(_ sender: UITapGestureRecognizer) {
-    self.backgroundTapDelegate?.notifyOnBackgroundTapGesture(sender: sender);
+    self.backgroundTapDelegate.invoke {
+      $0.notifyOnBackgroundTapGesture(sender: sender);
+    };
     
     switch self.currentInterpolationStep.backgroundTapInteraction {
       case .dismiss:
@@ -2983,11 +3005,13 @@ public class AdaptiveModalManager: NSObject {
   // -----------------------
   
   private func notifyOnCurrentModalConfigDidChange(){
-    self.presentationEventsDelegate?.notifyOnCurrentModalConfigDidChange(
-      sender: self,
-      currentModalConfig: self.currentModalConfig,
-      prevModalConfig: self.prevModalConfig
-    );
+    self.presentationEventsDelegate.invoke {
+      $0.notifyOnCurrentModalConfigDidChange(
+        sender: self,
+        currentModalConfig: self.currentModalConfig,
+        prevModalConfig: self.prevModalConfig
+      );
+    };
   };
   
   private func notifyOnModalWillSnap(shouldSetState: Bool) {
@@ -3013,13 +3037,15 @@ public class AdaptiveModalManager: NSObject {
     guard prevIndex != nextIndex else { return };
     self.onModalWillSnapPrevIndex = nextIndex;
     
-    self.presentationEventsDelegate?.notifyOnModalWillSnap(
-      sender: self,
-      prevSnapPointIndex: interpolationSteps[safeIndex: prevIndex]?.snapPointIndex,
-      nextSnapPointIndex: interpolationSteps[nextIndex].snapPointIndex,
-      snapPointConfig: self.currentModalConfig.snapPoints[nextPoint.snapPointIndex],
-      interpolationPoint: nextPoint
-    );
+    self.presentationEventsDelegate.invoke {
+      $0.notifyOnModalWillSnap(
+        sender: self,
+        prevSnapPointIndex: interpolationSteps[safeIndex: prevIndex]?.snapPointIndex,
+        nextSnapPointIndex: interpolationSteps[nextIndex].snapPointIndex,
+        snapPointConfig: self.currentModalConfig.snapPoints[nextPoint.snapPointIndex],
+        interpolationPoint: nextPoint
+      );
+    };
     
     let isDismissingToUnderShootSnapPoint =
          self.shouldDismissModalOnSnapToUnderShootSnapPoint
@@ -3077,17 +3103,19 @@ public class AdaptiveModalManager: NSObject {
     
     self.nextInterpolationIndex = nil;
   
-    self.presentationEventsDelegate?.notifyOnModalDidSnap(
-      sender: self,
-      prevSnapPointIndex:
-        self.interpolationSteps[self.prevInterpolationIndex].snapPointIndex,
-        
-      currentSnapPointIndex:
-        self.interpolationSteps[self.currentInterpolationIndex].snapPointIndex,
-        
-      snapPointConfig: self.currentSnapPointConfig,
-      interpolationPoint: self.currentInterpolationStep
-    );
+    self.presentationEventsDelegate.invoke {
+      $0.notifyOnModalDidSnap(
+        sender: self,
+        prevSnapPointIndex:
+          self.interpolationSteps[self.prevInterpolationIndex].snapPointIndex,
+          
+        currentSnapPointIndex:
+          self.interpolationSteps[self.currentInterpolationIndex].snapPointIndex,
+          
+        snapPointConfig: self.currentSnapPointConfig,
+        interpolationPoint: self.currentInterpolationStep
+      );
+    };
     
     self.currentInterpolationStep.applyConfig(toModalManager: self);
     
@@ -3138,13 +3166,16 @@ public class AdaptiveModalManager: NSObject {
   };
   
   private func notifyOnModalWillShow(){
-    //self.modalState = .presenting;
-    self.presentationEventsDelegate?.notifyOnAdaptiveModalWillShow(sender: self);
+    self.presentationEventsDelegate.invoke {
+      $0.notifyOnAdaptiveModalWillShow(sender: self);
+    };
   };
   
   private func notifyOnModalDidShow(){
     //self.modalState = .presented;
-    self.presentationEventsDelegate?.notifyOnAdaptiveModalDidShow(sender: self);
+    self.presentationEventsDelegate.invoke {
+      $0.notifyOnAdaptiveModalDidShow(sender: self);
+    };
   };
   
   private func notifyOnModalWillHide(){
@@ -3154,7 +3185,9 @@ public class AdaptiveModalManager: NSObject {
       modalView.endEditing(true);
     };
     
-    self.presentationEventsDelegate?.notifyOnAdaptiveModalWillHide(sender: self);
+    self.presentationEventsDelegate.invoke {
+      $0.notifyOnAdaptiveModalWillHide(sender: self);
+    };
   };
   
   private func notifyOnModalDidHide(){
@@ -3164,7 +3197,9 @@ public class AdaptiveModalManager: NSObject {
     self.modalViewController?.dismiss(animated: false);
     self.cleanupViewControllers();
     
-    self.presentationEventsDelegate?.notifyOnAdaptiveModalDidHide(sender: self);
+    self.presentationEventsDelegate.invoke {
+      $0.notifyOnAdaptiveModalDidHide(sender: self);
+    };
   };
   
   private func notifyOnModalStateWillChange(
@@ -3193,9 +3228,11 @@ public class AdaptiveModalManager: NSObject {
       };
       #endif
     
-      self.presentationEventsDelegate?.notifyOnModalPresentCancelled(
-        sender: self
-      );
+      self.presentationEventsDelegate.invoke {
+        $0.notifyOnModalPresentCancelled(
+          sender: self
+        );
+      };
       
     } else if currentState.isDismissing && !nextState.isDismissed {
       #if DEBUG
@@ -3204,17 +3241,21 @@ public class AdaptiveModalManager: NSObject {
       };
       #endif
       
-      self.presentationEventsDelegate?.notifyOnModalDismissCancelled(
-        sender: self
-      );
+      self.presentationEventsDelegate.invoke {
+        $0.notifyOnModalDismissCancelled(
+          sender: self
+        );
+      };
     };
     
-    self.stateEventsDelegate?.notifyOnModalStateWillChange(
-      sender: self,
-      prevState: prevState,
-      currentState: currentState,
-      nextState: nextState
-    );
+    self.stateEventsDelegate.invoke {
+      $0.notifyOnModalStateWillChange(
+        sender: self,
+        prevState: prevState,
+        currentState: currentState,
+        nextState: nextState
+      );
+    };
     
     #if DEBUG
     if self.shouldLogModalStateChanges {

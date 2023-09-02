@@ -675,12 +675,12 @@ class AdaptiveModalConfigDemoViewController : UIViewController {
     
     testVC.modalManager = modalManager;
     
-    modalManager.stateEventsDelegate = testVC;
-    modalManager.presentationEventsDelegate = testVC;
-    modalManager.gestureEventsDelegate = testVC;
+    modalManager.stateEventsDelegate.add(testVC);
+    modalManager.presentationEventsDelegate.add(testVC);
+    modalManager.gestureEventsDelegate.add(testVC);
     
-    modalManager.backgroundTapDelegate = testVC;
-    modalManager.animationEventDelegate = testVC;
+    modalManager.backgroundTapDelegate.add(testVC);
+    modalManager.animationEventDelegate.add(testVC);
     
     self.currentModalManagerAdjustmentBlock(modalManager);
     

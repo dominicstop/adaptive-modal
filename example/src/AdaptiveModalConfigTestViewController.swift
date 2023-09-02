@@ -16,9 +16,9 @@ class AdaptiveModalConfigTestViewController : UIViewController {
       staticConfig: AdaptiveModalConfigTestPresets.default.config
     );
     
-    manager.stateEventsDelegate = self;
-    manager.presentationEventsDelegate = self;
-    manager.gestureEventsDelegate = self;
+    manager.stateEventsDelegate.add(self);
+    manager.presentationEventsDelegate.add(self);
+    manager.gestureEventsDelegate.add(self);
     
     return manager;
   }();
