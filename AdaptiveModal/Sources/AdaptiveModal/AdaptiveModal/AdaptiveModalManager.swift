@@ -98,6 +98,8 @@ public class AdaptiveModalManager: NSObject {
   public weak var modalViewController: UIViewController?;
   public weak var presentingViewController: UIViewController?;
   
+  public weak var paginatedViewController: AdaptiveModalPageViewController?;
+  
   public weak var presentedViewController: UIViewController? {
        self.modalWrapperViewController
     ?? self.modalViewController;
@@ -3602,6 +3604,11 @@ public class AdaptiveModalManager: NSObject {
     viewControllerToPresent presentedVC: UIViewController,
     presentingViewController presentingVC: UIViewController
   ) {
+  
+    if let paginatedVC = presentedVC as? AdaptiveModalPageViewController {
+      paginatedVC.setup(modalManager: self);
+      self.paginatedViewController = paginatedVC;
+    };
   
     self.modalViewController = presentedVC;
     self.presentingViewController = presentingVC;
