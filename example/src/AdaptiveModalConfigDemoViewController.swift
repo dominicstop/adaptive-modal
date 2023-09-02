@@ -583,17 +583,33 @@ class AdaptiveModalConfigDemoViewController : UIViewController {
       return button;
     }();
     
+    let nextRouteButton: UIButton = {
+      let button = UIButton();
+      button.setTitle("Next Route", for: .normal);
+      
+      button.addTarget(
+        self,
+        action: #selector(self.onPressButtonNextRoute(_:)),
+        for: .touchUpInside
+      );
+      
+      return button;
+    }();
+    
     let stackView: UIStackView = {
       let stack = UIStackView();
       
       stack.axis = .vertical;
-      stack.distribution = .equalSpacing;
+      stack.distribution = .fill;
       stack.alignment = .center;
-      stack.spacing = 7;
+      stack.spacing = 0;
       
       stack.addArrangedSubview(counterLabel);
+      stack.setCustomSpacing(15, after: counterLabel);
+      
       stack.addArrangedSubview(presentButton);
       stack.addArrangedSubview(nextConfigButton);
+      stack.addArrangedSubview(nextRouteButton);
       
       return stack;
     }();
@@ -752,5 +768,11 @@ class AdaptiveModalConfigDemoViewController : UIViewController {
       
       self.view.addGestureRecognizer(edgePan);
     };
+  };
+  
+  @objc func onPressButtonNextRoute(_ sender: UIButton) {
+    let routeManager = RouteManager.sharedInstance;
+    routeManager.routeCounter += 1;
+    routeManager.applyCurrentRoute();
   };
 };

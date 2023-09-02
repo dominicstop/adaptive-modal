@@ -101,7 +101,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     let window = UIWindow(windowScene: windowScene);
     self.window = window;
     
-    let rootVC = Routes.rootRoute.viewController;
+    let routeManager = RouteManager.sharedInstance;
+    routeManager.window = window;
+    
+    let rootVC = routeManager.currentRoute.viewController;
+    
     window.rootViewController = rootVC;
     window.makeKeyAndVisible();
   };

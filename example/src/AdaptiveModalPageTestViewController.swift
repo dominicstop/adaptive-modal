@@ -153,8 +153,8 @@ fileprivate class ModalViewController: UIViewController {
     self.modalManager?.dismissModal(
       animated: true,
       animationConfig: .presetCurve(
-        duration: 0.275,
-        curve: .easeInOut
+        duration: 0.3,
+        curve: .easeIn
       )
     );
   };
@@ -220,11 +220,11 @@ class AdaptiveModalPageTestViewController: UIViewController {
   let modalConfigs: [AdaptiveModalConfigDemoPresets] = [
     .demo01,
     .demo03,
-    .demo05,
     .demo07,
     .demo08,
     .demo10,
-    .demo12
+    .demo12,
+    .demo15
   ];
   
   var currentModalConfigPresetCounter = 0;
@@ -317,17 +317,34 @@ class AdaptiveModalPageTestViewController: UIViewController {
       return button;
     }();
     
+    let nextRouteButton: UIButton = {
+      let button = UIButton();
+      button.setTitle("Next Route", for: .normal);
+      button.configuration = .filled();
+      
+      button.addTarget(
+        self,
+        action: #selector(self.onPressButtonNextRoute(_:)),
+        for: .touchUpInside
+      );
+      
+      return button;
+    }();
+    
     let stackView: UIStackView = {
       let stack = UIStackView();
       
       stack.axis = .vertical;
       stack.distribution = .fill;
       stack.alignment = .center;
-      stack.spacing = 15;
+      stack.spacing = 12;
       
       stack.addArrangedSubview(counterLabel);
+      stack.setCustomSpacing(24, after: counterLabel);
+      
       stack.addArrangedSubview(presentButton);
       stack.addArrangedSubview(nextConfigButton);
+      stack.addArrangedSubview(nextRouteButton);
       
       return stack;
     }();
@@ -376,5 +393,11 @@ class AdaptiveModalPageTestViewController: UIViewController {
   @objc func onPressButtonNextConfig(_ sender: UIButton) {
     self.currentModalConfigPresetCounter += 1;
     self.counterLabel!.text = "\(self.currentModalConfigPresetIndex)";
+  };
+  
+  @objc func onPressButtonNextRoute(_ sender: UIButton) {
+    let routeManager = RouteManager.sharedInstance;
+    routeManager.routeCounter += 1;
+    routeManager.applyCurrentRoute();
   };
 };

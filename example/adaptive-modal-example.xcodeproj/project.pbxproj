@@ -18,7 +18,7 @@
 		887C3E1B2A43EEF60026B57C /* AdaptiveModalConfigTestPresets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887C3DED2A43EEF60026B57C /* AdaptiveModalConfigTestPresets.swift */; };
 		887C3E1E2A43EEF60026B57C /* AdaptiveModalConfigTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887C3DF02A43EEF60026B57C /* AdaptiveModalConfigTestViewController.swift */; };
 		887C3E1F2A43EEF60026B57C /* AdaptiveModalConfigDemoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887C3DF12A43EEF60026B57C /* AdaptiveModalConfigDemoViewController.swift */; };
-		887C3E212A43EEF60026B57C /* Routes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887C3DF32A43EEF60026B57C /* Routes.swift */; };
+		887C3E212A43EEF60026B57C /* Route.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887C3DF32A43EEF60026B57C /* Route.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,7 +35,7 @@
 		887C3DED2A43EEF60026B57C /* AdaptiveModalConfigTestPresets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdaptiveModalConfigTestPresets.swift; sourceTree = "<group>"; };
 		887C3DF02A43EEF60026B57C /* AdaptiveModalConfigTestViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdaptiveModalConfigTestViewController.swift; sourceTree = "<group>"; };
 		887C3DF12A43EEF60026B57C /* AdaptiveModalConfigDemoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdaptiveModalConfigDemoViewController.swift; sourceTree = "<group>"; };
-		887C3DF32A43EEF60026B57C /* Routes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Routes.swift; sourceTree = "<group>"; };
+		887C3DF32A43EEF60026B57C /* Route.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Route.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,7 +96,7 @@
 		887C3DAB2A43EE700026B57C /* adaptive-modal-example */ = {
 			isa = PBXGroup;
 			children = (
-				887C3DF32A43EEF60026B57C /* Routes.swift */,
+				887C3DF32A43EEF60026B57C /* Route.swift */,
 				887C3DAC2A43EE700026B57C /* AppDelegate.swift */,
 				887C3DAE2A43EE700026B57C /* SceneDelegate.swift */,
 				887C3DB52A43EE710026B57C /* Assets.xcassets */,
@@ -195,7 +195,7 @@
 				887C3DAD2A43EE700026B57C /* AppDelegate.swift in Sources */,
 				881B68EF2A4494EA009EB533 /* AdaptiveModalConfigDemoPresets.swift in Sources */,
 				887C3E1B2A43EEF60026B57C /* AdaptiveModalConfigTestPresets.swift in Sources */,
-				887C3E212A43EEF60026B57C /* Routes.swift in Sources */,
+				887C3E212A43EEF60026B57C /* Route.swift in Sources */,
 				887C3DAF2A43EE700026B57C /* SceneDelegate.swift in Sources */,
 				887C3E1E2A43EEF60026B57C /* AdaptiveModalConfigTestViewController.swift in Sources */,
 				886540722A996316006FA9A5 /* AdaptiveModalBasicUsage01.swift in Sources */,
