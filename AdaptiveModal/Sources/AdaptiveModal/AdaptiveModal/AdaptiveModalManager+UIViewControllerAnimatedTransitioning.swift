@@ -78,11 +78,7 @@ extension AdaptiveModalManager: UIViewControllerAnimatedTransitioning {
         let shouldSetState = !self.modalState.isPresenting;
         
         if shouldSetState {
-          let nextState: AdaptiveModalState = self.modalState.isProgrammatic
-            ? .PRESENTING_PROGRAMMATIC
-            : .PRESENTING_GESTURE;
-          
-          self.modalStateMachine.setState(nextState);
+          self.modalStateMachine.setState(.PRESENTING_PROGRAMMATIC);
         };
         
         let args = self.showModalCommandArgs;
