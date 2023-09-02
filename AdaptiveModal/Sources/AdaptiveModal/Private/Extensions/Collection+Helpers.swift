@@ -22,6 +22,66 @@ extension Collection {
   subscript(safeIndex index: Index) -> Element? {
     return self.isOutOfBounds(forIndex: index) ? nil : self[index];
   };
+  
+  func seekForward(
+    startIndex: Int,
+    where condition: (Element) -> Bool
+  ) -> Element? {
+    
+    for index in startIndex ..< self.count {
+      let element = self[
+        self.index(self.indices.startIndex, offsetBy: index)
+      ];
+      
+      if condition(element) {
+        return element;
+      };
+    };
+    
+    return nil;
+  };
+  
+  func seekBackwards(
+    startIndex: Int,
+    where condition: (Element) -> Bool
+  ) -> Element? {
+    
+    for index in (0...startIndex).reversed() {
+      let element = self[
+        self.index(self.indices.startIndex, offsetBy: index)
+      ];
+      
+      if condition(element) {
+        return element;
+      };
+    };
+    
+    return nil;
+  };
+  
+  func seekForwardAndBackwards(
+    startIndex: Int,
+    where condition: (Element, _ isReversing: Bool) -> Bool
+  ) -> Element? {
+    
+    let matchInitial = self.seekForward(
+      startIndex: startIndex,
+      where: {
+        condition($0, false);
+      }
+    );
+    
+    if let matchInitial = matchInitial {
+      return matchInitial;
+    };
+    
+    return self.seekBackwards(
+      startIndex: startIndex,
+      where: {
+        condition($0, true);
+      }
+    );
+  };
 };
 
 extension MutableCollection {
