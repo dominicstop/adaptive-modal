@@ -216,6 +216,28 @@ extension ModalViewController: AdaptiveModalPresentationEventsNotifiable {
 };
 
 class AdaptiveModalPageTestViewController: UIViewController {
+
+  let modalConfigs: [AdaptiveModalConfigDemoPresets] = [
+    .demo01,
+    .demo03,
+    .demo05,
+    .demo07,
+    .demo08,
+    .demo10,
+    .demo12
+  ];
+  
+  var currentModalConfigPresetCounter = 0;
+  
+  var currentModalConfigPresetIndex: Int {
+    self.currentModalConfigPresetCounter % self.modalConfigs.count
+  };
+  
+  var currentModalConfigPreset: AdaptiveModalConfigDemoPresets {
+    self.modalConfigs[self.currentModalConfigPresetIndex];
+  };
+  
+  var counterLabel: UILabel?;
   
   override func viewDidLoad() {
     self.view.backgroundColor = .white;
@@ -239,6 +261,34 @@ class AdaptiveModalPageTestViewController: UIViewController {
       dummyBackgroundView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
     ]);
     
+    let counterLabel: UIView = {
+      let label = UILabel();
+      
+      label.text = "\(self.currentModalConfigPresetIndex)";
+      label.font = .systemFont(ofSize: 26, weight: .bold);
+      label.textColor = .black;
+      
+      self.counterLabel = label;
+      
+      let labelContainer = UIView();
+      labelContainer.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.4);
+      labelContainer.layer.cornerRadius = 10;
+      
+      labelContainer.addSubview(label);
+      
+      label.translatesAutoresizingMaskIntoConstraints = false;
+      labelContainer.translatesAutoresizingMaskIntoConstraints = false;
+      
+      NSLayoutConstraint.activate([
+        labelContainer.widthAnchor.constraint(equalToConstant: 45),
+        labelContainer.heightAnchor.constraint(equalToConstant: 45),
+        label.centerXAnchor.constraint(equalTo: labelContainer.centerXAnchor),
+        label.centerYAnchor.constraint(equalTo: labelContainer.centerYAnchor),
+      ]);
+
+      return labelContainer;
+    }();
+    
     let presentButton: UIButton = {
       let button = UIButton();
       button.setTitle("Present View Controller", for: .normal);
@@ -253,15 +303,32 @@ class AdaptiveModalPageTestViewController: UIViewController {
       return button;
     }();
     
+    let nextConfigButton: UIButton = {
+      let button = UIButton();
+      button.setTitle("Next Modal Config", for: .normal);
+      button.configuration = .filled();
+      
+      button.addTarget(
+        self,
+        action: #selector(self.onPressButtonNextConfig(_:)),
+        for: .touchUpInside
+      );
+      
+      return button;
+    }();
+    
     let stackView: UIStackView = {
       let stack = UIStackView();
       
       stack.axis = .vertical;
-      stack.distribution = .equalSpacing;
+      stack.distribution = .fill;
       stack.alignment = .center;
-      stack.spacing = 7;
+      stack.spacing = 15;
       
+      stack.addArrangedSubview(counterLabel);
       stack.addArrangedSubview(presentButton);
+      stack.addArrangedSubview(nextConfigButton);
+      
       return stack;
     }();
     
@@ -275,128 +342,39 @@ class AdaptiveModalPageTestViewController: UIViewController {
   };
   
   @objc func onPressButtonPresentViewController(_ sender: UIButton) {
-    let modalConfig = AdaptiveModalConfig(
-      snapPoints: [
-        // snap point - 1
-        AdaptiveModalSnapPointConfig(
-          layoutConfig: ComputableLayout(
-            horizontalAlignment: .center,
-            verticalAlignment: .bottom,
-            width: .stretch,
-            height: .percent(percentValue: 0.3)
-          ),
-          keyframeConfig: AdaptiveModalKeyframeConfig(
-            modalShadowColor: .black,
-            modalShadowOpacity: 0.1,
-            modalShadowRadius: 10,
-            modalCornerRadius: 15,
-            modalMaskedCorners: .topCorners,
-            backgroundColor: .black,
-            backgroundOpacity: 0.2
-          )
-        ),
-        
-        // snap point - 2
-        AdaptiveModalSnapPointConfig(
-          layoutConfig: ComputableLayout(
-            horizontalAlignment: .center,
-            verticalAlignment: .bottom,
-            width: .stretch,
-            height: .percent(percentValue: 0.5)
-          )
-        ),
-        
-        // snap point - 3
-        AdaptiveModalSnapPointConfig(
-          layoutConfig: ComputableLayout(
-            horizontalAlignment: .center,
-            verticalAlignment: .bottom,
-            width: .stretch,
-            height: .percent(percentValue: 0.7)
-          )
-        ),
-        
-        // snap point - 4
-        AdaptiveModalSnapPointConfig(
-          layoutConfig: ComputableLayout(
-            horizontalAlignment: .center,
-            verticalAlignment: .bottom,
-            width: .stretch,
-            height: .stretch,
-            marginTop: .safeAreaInsets(insetKey: \.top)
-          )
-        )
-      ],
-      snapDirection: .bottomToTop,
-      undershootSnapPoint: .automatic,
-      overshootSnapPoint: AdaptiveModalSnapPointPreset(
-        layoutPreset: .fitScreenVertically
-      )
-    );
+    let currentModalConfig = self.currentModalConfigPreset.config;
+    let snapPoints = currentModalConfig.snapPoints;
   
-    let modalManager = AdaptiveModalManager(staticConfig: modalConfig);
+    let modalManager = AdaptiveModalManager(staticConfig: currentModalConfig);
     
-    let pageVC = AdaptiveModalPageViewController(pages: [
-      AdaptiveModalPageItemConfig(
-        associatedSnapPoints: [
-          .index(1)
-        ],
-        viewController: {
-          let modalVC = ModalViewController();
-          modalVC.modalManager = modalManager;
-          modalVC.instanceID = 0;
-          
-          modalManager.presentationEventsDelegate.add(modalVC);
-          return modalVC;
-        }()
-      ),
+    func makePageVC(instanceID: Int) -> ModalViewController {
+      let modalVC = ModalViewController();
+      modalVC.modalManager = modalManager;
+      modalVC.instanceID = instanceID;
       
+      modalManager.presentationEventsDelegate.add(modalVC);
+      return modalVC;
+    };
+    
+    let pageConfigItems = snapPoints.enumerated().map {
       AdaptiveModalPageItemConfig(
         associatedSnapPoints: [
-          .index(2)
+          .index($0.offset + 1)
         ],
-        viewController: {
-          let modalVC = ModalViewController();
-          modalVC.modalManager = modalManager;
-          modalVC.instanceID = 1;
-          
-          modalManager.presentationEventsDelegate.add(modalVC);
-          return modalVC;
-        }()
-      ),
-      
-      AdaptiveModalPageItemConfig(
-        associatedSnapPoints: [
-          .index(3)
-        ],
-        viewController: {
-          let modalVC = ModalViewController();
-          modalVC.modalManager = modalManager;
-          modalVC.instanceID = 2;
-          
-          modalManager.presentationEventsDelegate.add(modalVC);
-          return modalVC;
-        }()
-      ),
-      
-      AdaptiveModalPageItemConfig(
-        associatedSnapPoints: [
-          .index(4)
-        ],
-        viewController: {
-          let modalVC = ModalViewController();
-          modalVC.modalManager = modalManager;
-          modalVC.instanceID = 3;
-          
-          modalManager.presentationEventsDelegate.add(modalVC);
-          return modalVC;
-        }()
-      ),
-    ]);
+        viewController: makePageVC(instanceID: $0.offset)
+      );
+    };
+    
+    let pageVC = AdaptiveModalPageViewController(pages: pageConfigItems);
     
     modalManager.presentModal(
       viewControllerToPresent: pageVC,
       presentingViewController: self
     );
+  };
+  
+  @objc func onPressButtonNextConfig(_ sender: UIButton) {
+    self.currentModalConfigPresetCounter += 1;
+    self.counterLabel!.text = "\(self.currentModalConfigPresetIndex)";
   };
 };
