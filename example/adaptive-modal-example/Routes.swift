@@ -8,10 +8,11 @@
 import UIKit
 
 enum Routes {
-  static let rootRoute: Self = .AdaptiveModalConfigTest;
+  static let rootRoute: Self = .AdaptiveModalPageTest;
 
   case AdaptiveModalConfigTest;
   case AdaptiveModalConfigDemo;
+  case AdaptiveModalPageTest;
   
   case BasicUsage01;
   
@@ -25,6 +26,9 @@ enum Routes {
         
       case .BasicUsage01:
         return AdaptiveModalBasicUsage01();
+        
+      case .AdaptiveModalPageTest:
+        return AdaptiveModalPageTestViewController();
     };
   };
 };

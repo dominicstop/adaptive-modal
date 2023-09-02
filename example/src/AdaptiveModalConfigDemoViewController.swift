@@ -583,7 +583,6 @@ class AdaptiveModalConfigDemoViewController : UIViewController {
       return button;
     }();
     
-    
     let stackView: UIStackView = {
       let stack = UIStackView();
       

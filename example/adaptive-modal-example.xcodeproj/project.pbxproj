@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		881B68ED2A43FE20009EB533 /* AdaptiveModal in Frameworks */ = {isa = PBXBuildFile; productRef = 881B68EC2A43FE20009EB533 /* AdaptiveModal */; };
 		881B68EF2A4494EA009EB533 /* AdaptiveModalConfigDemoPresets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881B68EE2A4494EA009EB533 /* AdaptiveModalConfigDemoPresets.swift */; };
+		8864F4732AA1CCDC006DC3B0 /* AdaptiveModalPageTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8864F4722AA1CCDC006DC3B0 /* AdaptiveModalPageTestViewController.swift */; };
 		886540722A996316006FA9A5 /* AdaptiveModalBasicUsage01.swift in Sources */ = {isa = PBXBuildFile; fileRef = 886540712A996316006FA9A5 /* AdaptiveModalBasicUsage01.swift */; };
 		887C3DAD2A43EE700026B57C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887C3DAC2A43EE700026B57C /* AppDelegate.swift */; };
 		887C3DAF2A43EE700026B57C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887C3DAE2A43EE700026B57C /* SceneDelegate.swift */; };
@@ -23,6 +24,7 @@
 /* Begin PBXFileReference section */
 		88130B1A2A43FD9700219B27 /* AdaptiveModal */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = AdaptiveModal; path = ../AdaptiveModal; sourceTree = "<group>"; };
 		881B68EE2A4494EA009EB533 /* AdaptiveModalConfigDemoPresets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdaptiveModalConfigDemoPresets.swift; sourceTree = "<group>"; };
+		8864F4722AA1CCDC006DC3B0 /* AdaptiveModalPageTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdaptiveModalPageTestViewController.swift; sourceTree = "<group>"; };
 		886540712A996316006FA9A5 /* AdaptiveModalBasicUsage01.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdaptiveModalBasicUsage01.swift; sourceTree = "<group>"; };
 		887C3DA92A43EE700026B57C /* adaptive-modal-example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "adaptive-modal-example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		887C3DAC2A43EE700026B57C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -111,6 +113,7 @@
 				887C3DF12A43EEF60026B57C /* AdaptiveModalConfigDemoViewController.swift */,
 				887C3DED2A43EEF60026B57C /* AdaptiveModalConfigTestPresets.swift */,
 				887C3DF02A43EEF60026B57C /* AdaptiveModalConfigTestViewController.swift */,
+				8864F4722AA1CCDC006DC3B0 /* AdaptiveModalPageTestViewController.swift */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -196,6 +199,7 @@
 				887C3DAF2A43EE700026B57C /* SceneDelegate.swift in Sources */,
 				887C3E1E2A43EEF60026B57C /* AdaptiveModalConfigTestViewController.swift in Sources */,
 				886540722A996316006FA9A5 /* AdaptiveModalBasicUsage01.swift in Sources */,
+				8864F4732AA1CCDC006DC3B0 /* AdaptiveModalPageTestViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
