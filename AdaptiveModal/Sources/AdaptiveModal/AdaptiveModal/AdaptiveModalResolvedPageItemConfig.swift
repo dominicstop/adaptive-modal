@@ -8,16 +8,16 @@
 import UIKit
 
 
-struct AdaptiveModalResolvedPageItemConfig {
+public struct AdaptiveModalResolvedPageItemConfig {
 
-  var associatedSnapPoints: [(
+  public var associatedSnapPoints: [(
     snapPointKey: AdaptiveModalSnapPointConfig.SnapPointKey,
     snapPointIndex: Int
   )];
   
-  weak var viewController: UIViewController?;
+  public weak var viewController: UIViewController?;
   
-  init?(
+  public init?(
     pageConfig: AdaptiveModalPageItemConfig,
     interpolationPoints: [AdaptiveModalInterpolationPoint]
   ) {
@@ -43,13 +43,13 @@ struct AdaptiveModalResolvedPageItemConfig {
     )};
   };
   
-  func contains(key: AdaptiveModalSnapPointConfig.SnapPointKey) -> Bool {
+  public func contains(key: AdaptiveModalSnapPointConfig.SnapPointKey) -> Bool {
     self.associatedSnapPoints.contains {
       $0.snapPointKey == key;
     };
   };
   
-  func contains(index: Int) -> Bool {
+  public func contains(index: Int) -> Bool {
     self.associatedSnapPoints.contains {
       $0.snapPointIndex == index;
     };

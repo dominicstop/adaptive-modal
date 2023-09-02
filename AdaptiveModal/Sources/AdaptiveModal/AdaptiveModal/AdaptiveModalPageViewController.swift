@@ -10,16 +10,50 @@ import UIKit
 
 public class AdaptiveModalPageViewController: UIViewController {
 
-  weak var modalManager: AdaptiveModalManager?;
+  public weak var modalManager: AdaptiveModalManager?;
   
-  var pages: [AdaptiveModalPageItemConfig];
-  var resolvedPages: [AdaptiveModalResolvedPageItemConfig]?;
+  public var pages: [AdaptiveModalPageItemConfig] {
+    didSet {
+      let newValue = self.pages;
+      
+      let didValueChange: Bool = {
+        if oldValue.count != newValue.count {
+          return true;
+        };
+        
+        return newValue.enumerated().contains {
+          let newPage = $0.element;
+          let oldPage = oldValue[$0.offset];
+          
+          return newPage != oldPage;
+        };
+      }();
+      
+      if didValueChange {
+        self.notifyOnPagesDidChange();
+      };
+    }
+  };
   
-  var viewControllers: [UIViewController] {
+  public var resolvedPages: [AdaptiveModalResolvedPageItemConfig]?;
+  
+  // MARK: - Computed Properties
+  // ---------------------------
+  
+  public var pageViewControllers: [UIViewController] {
     self.pages.map {
       $0.viewController;
     };
   };
+  
+  public var isAnyPageAttached: Bool {
+    self.pages.contains {
+      $0.viewController.parent === self;
+    };
+  };
+  
+  // MARK: - Init
+  // ------------
   
   public init(pages: [AdaptiveModalPageItemConfig]){
     self.pages = pages;
@@ -29,6 +63,9 @@ public class AdaptiveModalPageViewController: UIViewController {
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   };
+  
+  // MARK: - Functions
+  // -----------------
   
   func setup(modalManager: AdaptiveModalManager){
     self.modalManager = modalManager;
@@ -83,7 +120,32 @@ public class AdaptiveModalPageViewController: UIViewController {
     self.resolvedPages = pages;
   };
   
-  func setupAttachPages(){
+  func notifyOnPagesDidChange(){
+    self.refreshPages();
+  };
+  
+  // MARK: - Public Functions
+  // ------------------------
+  
+  public func resolvePages(){
+    guard let modalManager = self.modalManager else { return };
+    self.resolvePages(interpolationPoints: modalManager.interpolationSteps);
+  };
+  
+  public func refreshPages(){
+    self.resolvePages();
+    
+    let nextVC = self.pageViewControllers;
+    let prevVC = self.children;
+    
+    let didPageControllersChange = !nextVC.elementsEqual(prevVC) { $0 !== $1 };
+    guard didPageControllersChange else { return };
+    
+    self.detachPages();
+    self.attachPages();
+  };
+  
+  public func attachPages(){
     guard let modalManager = self.modalManager,
           let resolvedPages = self.resolvedPages
     else { return };
@@ -122,6 +184,14 @@ public class AdaptiveModalPageViewController: UIViewController {
       };
     };
   };
+  
+  public func detachPages(){
+    self.children.forEach {
+      $0.willMove(toParent: nil);
+      $0.removeFromParent();
+      $0.view.removeFromSuperview();
+    };
+  };
 };
 
 extension AdaptiveModalPageViewController: AdaptiveModalPresentationEventsNotifiable {
@@ -148,7 +218,7 @@ extension AdaptiveModalPageViewController: AdaptiveModalPresentationEventsNotifi
   
   public func notifyOnAdaptiveModalWillShow(sender: AdaptiveModalManager) {
     self.resolvePages(interpolationPoints: sender.interpolationSteps);
-    self.setupAttachPages();
+    self.attachPages();
   };
   
   public func notifyOnAdaptiveModalDidShow(sender: AdaptiveModalManager) {
@@ -176,7 +246,7 @@ extension AdaptiveModalPageViewController: AdaptiveModalPresentationEventsNotifi
     currentModalConfig: AdaptiveModalConfig?,
     prevModalConfig: AdaptiveModalConfig?
   ) {
-    // no-op
+    self.refreshPages();
   };
 };
 
