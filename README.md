@@ -7,8 +7,8 @@ An all-in-one, "config-based" `UIViewController` modal presentation `UIKit` comp
 * 🧡 "Adaptive" modal config (i.e. modal config that changes based on the current: device attributes/capabilities, size class, rotation, accessibility, etc).
 * 💛 ["Adaptive" layout](https://github.com/dominicstop/ComputableLayout) (i.e. composable layout values, e.g. percentages, constants, safe area insets, keyboard rects, conditional layout values, etc).
 * 💚 Consolidated modal events, and unified/simplified modal state.
-* 💙 Custom/override snapping points, keyboard avoidance, adaptive layout config, custom present/dismiss animations, custom drag handle...
-* 💜 Etc.
+* 💙 Paginated modal content (i.e. each snap point can have an associated "page" view, and the modal content changes based on the current snap point).
+* 💜 Custom/override snapping points, keyboard avoidance, adaptive layout config, custom present/dismiss animations, custom drag handle, etc..
 
 <br><br>
 
