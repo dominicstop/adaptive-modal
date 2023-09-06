@@ -9,16 +9,19 @@ import UIKit
 
 
 public struct AdaptiveModalPageItemConfig {
-  public enum Identifier: Equatable {
+  public enum AssociatedSnapPoint: Equatable {
+  
     case key(AdaptiveModalSnapPointConfig.SnapPointKey);
     case index(Int);
   };
-
-  public var associatedSnapPoints: [Identifier];
+  
+  public var pageKey: String?;
+  public var associatedSnapPoints: [AssociatedSnapPoint];
   public var viewController: UIViewController;
   
   public init(
-    associatedSnapPoints: [Identifier],
+    pageKey: String?,
+    associatedSnapPoints: [AssociatedSnapPoint],
     viewController: UIViewController
   ) {
     

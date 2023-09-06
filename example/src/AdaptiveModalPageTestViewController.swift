@@ -379,6 +379,7 @@ class AdaptiveModalPageTestViewController: UIViewController {
     
     let pageConfigItems = snapPoints.enumerated().map {
       AdaptiveModalPageItemConfig(
+        pageKey: "\($0.offset)",
         associatedSnapPoints: [
           .index($0.offset + 1)
         ],

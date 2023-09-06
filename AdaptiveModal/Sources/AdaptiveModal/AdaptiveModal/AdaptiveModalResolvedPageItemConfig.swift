@@ -9,6 +9,8 @@ import UIKit
 
 
 public struct AdaptiveModalResolvedPageItemConfig {
+  
+  public var pageKey: String?;
 
   public var associatedSnapPoints: [(
     snapPointKey: AdaptiveModalSnapPointConfig.SnapPointKey,
@@ -21,6 +23,8 @@ public struct AdaptiveModalResolvedPageItemConfig {
     pageConfig: AdaptiveModalPageItemConfig,
     interpolationPoints: [AdaptiveModalInterpolationPoint]
   ) {
+  
+    self.pageKey = pageConfig.pageKey;
   
     let matches = pageConfig.associatedSnapPoints.compactMap { id in
       interpolationPoints.first {
