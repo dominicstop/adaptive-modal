@@ -278,8 +278,8 @@ public class AdaptiveModalManager: NSObject {
   // MARK: -  Properties - Interpolation Points
   // ------------------------------------------
   
-  private var onModalWillSnapPrevIndex: Int?;
-  private var onModalWillSnapNextIndex: Int?;
+  public private(set) var onModalWillSnapPrevIndex: Int?;
+  public private(set) var onModalWillSnapNextIndex: Int?;
   
   public private(set) var prevInterpolationIndex: Int {
     get {
@@ -326,6 +326,32 @@ public class AdaptiveModalManager: NSObject {
       } else {
         self.currentConfigInterpolationIndex = newValue;
       };
+      
+      self.prevInterpolationStep = {
+        if self.isOverridingSnapPoints,
+           let overrideInterpolationPoints = self.overrideInterpolationPoints {
+          
+          let prevIndex = self.currentOverrideInterpolationIndex;
+          return overrideInterpolationPoints[safeIndex: prevIndex];
+          
+        } else {
+          let prevIndex = self.currentInterpolationIndex;
+          return self.configInterpolationSteps[safeIndex: prevIndex];
+        };
+      }();
+      
+      self.prevSnapPointConfig = {
+        if self.isOverridingSnapPoints,
+           let overrideSnapPoints = self.overrideSnapPoints {
+          
+          let prevIndex = self.currentOverrideInterpolationIndex;
+          return overrideSnapPoints[safeIndex: prevIndex];
+          
+        } else {
+          let prevIndex = self.currentInterpolationIndex;
+          return self.currentModalConfig.snapPoints[safeIndex: prevIndex];
+        };
+      }();
     }
   };
   
@@ -344,6 +370,9 @@ public class AdaptiveModalManager: NSObject {
       };
     }
   };
+  
+  
+  public private(set) var prevInterpolationStep: AdaptiveModalInterpolationPoint?;
   
   public var currentInterpolationStep: AdaptiveModalInterpolationPoint {
     self.interpolationSteps[self.currentInterpolationIndex];
@@ -367,6 +396,8 @@ public class AdaptiveModalManager: NSObject {
   
     return self.currentModalConfig.snapPoints;
   };
+  
+  public private(set) var prevSnapPointConfig: AdaptiveModalSnapPointConfig?;
   
   public var currentSnapPointConfig: AdaptiveModalSnapPointConfig {
     return self.currentSnapPoints[
@@ -3034,20 +3065,11 @@ public class AdaptiveModalManager: NSObject {
     }();
     
     let nextIndex = self.adjustInterpolationIndex(for: nextIndexRaw);
-    let nextPoint = self.interpolationSteps[nextIndex];
+    let nextInterpolationPoint = self.interpolationSteps[nextIndex];
+    let nextSnapPointConfig = self.currentSnapPoints[nextIndex];
     
     guard prevIndex != nextIndex else { return };
     self.onModalWillSnapPrevIndex = nextIndex;
-    
-    self.presentationEventsDelegate.invoke {
-      $0.notifyOnModalWillSnap(
-        sender: self,
-        prevSnapPointIndex: interpolationSteps[safeIndex: prevIndex]?.snapPointIndex,
-        nextSnapPointIndex: interpolationSteps[nextIndex].snapPointIndex,
-        snapPointConfig: self.currentModalConfig.snapPoints[nextPoint.snapPointIndex],
-        interpolationPoint: nextPoint
-      );
-    };
     
     let isDismissingToUnderShootSnapPoint =
          self.shouldDismissModalOnSnapToUnderShootSnapPoint
@@ -3096,6 +3118,18 @@ public class AdaptiveModalManager: NSObject {
        
       self.modalStateMachine.setState(nextState);
     };
+    
+    self.presentationEventsDelegate.invoke {
+      $0.notifyOnModalWillSnap(
+        sender: self,
+        prevSnapPointIndex: prevIndex,
+        nextSnapPointIndex: nextIndex,
+        prevSnapPointConfig: self.prevSnapPointConfig,
+        nextSnapPointConfig: nextSnapPointConfig,
+        prevInterpolationPoint: self.prevInterpolationStep,
+        nextInterpolationPoint: nextInterpolationPoint
+      );
+    };
   };
   
   private func notifyOnModalDidSnap(shouldSetState: Bool) {
@@ -3104,21 +3138,7 @@ public class AdaptiveModalManager: NSObject {
     #endif
     
     self.nextInterpolationIndex = nil;
-  
-    self.presentationEventsDelegate.invoke {
-      $0.notifyOnModalDidSnap(
-        sender: self,
-        prevSnapPointIndex:
-          self.interpolationSteps[self.prevInterpolationIndex].snapPointIndex,
-          
-        currentSnapPointIndex:
-          self.interpolationSteps[self.currentInterpolationIndex].snapPointIndex,
-          
-        snapPointConfig: self.currentSnapPointConfig,
-        interpolationPoint: self.currentInterpolationStep
-      );
-    };
-    
+      
     self.currentInterpolationStep.applyConfig(toModalManager: self);
     
     let shouldDismissOnSnapToUnderShootSnapPoint =
@@ -3158,6 +3178,18 @@ public class AdaptiveModalManager: NSObject {
        let nextState = nextState {
        
       self.modalStateMachine.setState(nextState);
+    };
+    
+    self.presentationEventsDelegate.invoke {
+      $0.notifyOnModalDidSnap(
+        sender: self,
+        prevSnapPointIndex: self.prevInterpolationIndex,
+        currentSnapPointIndex: self.currentSnapPointIndex,
+        prevSnapPointConfig: self.prevSnapPointConfig,
+        currentSnapPointConfig: self.currentSnapPointConfig,
+        prevInterpolationPoint: self.prevInterpolationStep,
+        currentInterpolationPoint: self.currentInterpolationStep
+      );
     };
     
     if self.shouldClearOverrideSnapPoints {

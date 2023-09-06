@@ -135,8 +135,10 @@ extension AdaptiveModalConfigTestViewController:
     sender: AdaptiveModalManager,
     prevSnapPointIndex: Int?,
     nextSnapPointIndex: Int,
-    snapPointConfig: AdaptiveModalSnapPointConfig,
-    interpolationPoint: AdaptiveModalInterpolationPoint
+    prevSnapPointConfig: AdaptiveModalSnapPointConfig?,
+    nextSnapPointConfig: AdaptiveModalSnapPointConfig,
+    prevInterpolationPoint: AdaptiveModalInterpolationPoint?,
+    nextInterpolationPoint: AdaptiveModalInterpolationPoint
   ) {
     self.floatingViewLabel.text = "\(nextSnapPointIndex)";
   }
@@ -145,8 +147,10 @@ extension AdaptiveModalConfigTestViewController:
     sender: AdaptiveModalManager,
     prevSnapPointIndex: Int?,
     currentSnapPointIndex: Int,
-    snapPointConfig: AdaptiveModalSnapPointConfig,
-    interpolationPoint: AdaptiveModalInterpolationPoint
+    prevSnapPointConfig: AdaptiveModalSnapPointConfig?,
+    currentSnapPointConfig: AdaptiveModalSnapPointConfig,
+    prevInterpolationPoint: AdaptiveModalInterpolationPoint?,
+    currentInterpolationPoint: AdaptiveModalInterpolationPoint
   ) {
     self.floatingViewLabel.text = "\(currentSnapPointIndex)";
   };

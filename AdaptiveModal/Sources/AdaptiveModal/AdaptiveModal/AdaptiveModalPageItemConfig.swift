@@ -21,7 +21,8 @@ public struct AdaptiveModalPageItemConfig {
     associatedSnapPoints: [Identifier],
     viewController: UIViewController
   ) {
-  
+    
+    self.pageKey = pageKey;
     self.associatedSnapPoints = associatedSnapPoints;
     self.viewController = viewController;
   };

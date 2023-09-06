@@ -200,8 +200,10 @@ extension AdaptiveModalPageViewController: AdaptiveModalPresentationEventsNotifi
     sender: AdaptiveModalManager,
     prevSnapPointIndex: Int?,
     nextSnapPointIndex: Int,
-    snapPointConfig: AdaptiveModalSnapPointConfig,
-    interpolationPoint: AdaptiveModalInterpolationPoint
+    prevSnapPointConfig: AdaptiveModalSnapPointConfig?,
+    nextSnapPointConfig: AdaptiveModalSnapPointConfig,
+    prevInterpolationPoint: AdaptiveModalInterpolationPoint?,
+    nextInterpolationPoint: AdaptiveModalInterpolationPoint
   ) {
     // no-op
   };
@@ -210,8 +212,10 @@ extension AdaptiveModalPageViewController: AdaptiveModalPresentationEventsNotifi
     sender: AdaptiveModalManager,
     prevSnapPointIndex: Int?,
     currentSnapPointIndex: Int,
-    snapPointConfig: AdaptiveModalSnapPointConfig,
-    interpolationPoint: AdaptiveModalInterpolationPoint
+    prevSnapPointConfig: AdaptiveModalSnapPointConfig?,
+    currentSnapPointConfig: AdaptiveModalSnapPointConfig,
+    prevInterpolationPoint: AdaptiveModalInterpolationPoint?,
+    currentInterpolationPoint: AdaptiveModalInterpolationPoint
   ) {
     // no-op
   };

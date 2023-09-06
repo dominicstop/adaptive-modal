@@ -166,8 +166,10 @@ extension ModalViewController: AdaptiveModalPresentationEventsNotifiable {
     sender: AdaptiveModalManager,
     prevSnapPointIndex: Int?,
     nextSnapPointIndex: Int,
-    snapPointConfig: AdaptiveModalSnapPointConfig,
-    interpolationPoint: AdaptiveModalInterpolationPoint
+    prevSnapPointConfig: AdaptiveModalSnapPointConfig?,
+    nextSnapPointConfig: AdaptiveModalSnapPointConfig,
+    prevInterpolationPoint: AdaptiveModalInterpolationPoint?,
+    nextInterpolationPoint: AdaptiveModalInterpolationPoint
   ) {
     self.snapPointIndex = nextSnapPointIndex;
   };
@@ -176,8 +178,10 @@ extension ModalViewController: AdaptiveModalPresentationEventsNotifiable {
     sender: AdaptiveModalManager,
     prevSnapPointIndex: Int?,
     currentSnapPointIndex: Int,
-    snapPointConfig: AdaptiveModalSnapPointConfig,
-    interpolationPoint: AdaptiveModalInterpolationPoint
+    prevSnapPointConfig: AdaptiveModalSnapPointConfig?,
+    currentSnapPointConfig: AdaptiveModalSnapPointConfig,
+    prevInterpolationPoint: AdaptiveModalInterpolationPoint?,
+    currentInterpolationPoint: AdaptiveModalInterpolationPoint
   ) {
     self.snapPointIndex = currentSnapPointIndex;
   };
