@@ -225,6 +225,24 @@ extension AdaptiveModalPageViewController: AdaptiveModalPresentationEventsNotifi
         nextPage: nextPage
       );
     };
+    
+    if prevPage?.viewController !== nextPage.viewController,
+       let delegate = prevPage?.viewController as? AdaptiveModalPageFocusEventsNotifiable {
+    
+      delegate.notifyOnModalPageWillBlur(
+        sender: self,
+        pageToBlur: prevPage,
+        pageToFocus: nextPage
+      );
+    };
+    
+    if let delegate = nextPage.viewController as? AdaptiveModalPageFocusEventsNotifiable {
+      delegate.notifyOnModalPageWillFocus(
+        sender: self,
+        pageToBlur: prevPage,
+        pageToFocus: nextPage
+      );
+    };
   };
   
   public func notifyOnModalDidSnap(
@@ -251,6 +269,24 @@ extension AdaptiveModalPageViewController: AdaptiveModalPresentationEventsNotifi
         sender: self,
         prevPage: prevPage,
         currentPage: currentPage
+      );
+    };
+    
+    if prevPage?.viewController !== currentPage.viewController,
+       let delegate = prevPage?.viewController as? AdaptiveModalPageFocusEventsNotifiable {
+       
+      delegate.notifyOnModalPageDidBlur(
+        sender: self,
+        blurredPage: prevPage,
+        focusedPage: currentPage
+      );
+    };
+    
+    if let delegate = currentPage.viewController as? AdaptiveModalPageFocusEventsNotifiable {
+      delegate.notifyOnModalPageDidFocus(
+        sender: self,
+        blurredPage: prevPage,
+        focusedPage: currentPage
       );
     };
   };

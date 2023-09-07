@@ -11,6 +11,8 @@ import ComputableLayout
 
 fileprivate class ModalViewController: UIViewController {
 
+  static var shouldLogFocusEvents = false;
+
   weak var modalManager: AdaptiveModalManager?;
   
   var instanceID = -1;
@@ -216,6 +218,81 @@ extension ModalViewController: AdaptiveModalPresentationEventsNotifiable {
     prevModalConfig: AdaptiveModalConfig?
   ) {
     // no-op
+  };
+};
+
+extension ModalViewController: AdaptiveModalPageFocusEventsNotifiable {
+  
+  func notifyOnModalPageWillFocus(
+    sender: AdaptiveModalPageViewController,
+    pageToBlur: AdaptiveModalResolvedPageItemConfig?,
+    pageToFocus: AdaptiveModalResolvedPageItemConfig
+  ) {
+  
+    if Self.shouldLogFocusEvents {
+      print(
+        "ModalViewController",
+        "\n - AdaptiveModalPageFocusEventsNotifiable",
+        "\n - notifyOnModalPageWillFocus",
+        "\n - pageToBlur?.pageKey", pageToBlur?.pageKey ?? "N/A",
+        "\n - pageToFocus?.pageKey", pageToFocus.pageKey ?? "N/A",
+        "\n"
+      );
+    };
+  };
+  
+  func notifyOnModalPageDidFocus(
+    sender: AdaptiveModalPageViewController,
+    blurredPage: AdaptiveModalResolvedPageItemConfig?,
+    focusedPage: AdaptiveModalResolvedPageItemConfig
+  ) {
+  
+    if Self.shouldLogFocusEvents {
+      print(
+        "ModalViewController",
+        "\n - AdaptiveModalPageFocusEventsNotifiable",
+        "\n - notifyOnModalPageDidFocus",
+        "\n - blurredPage?.pageKey", blurredPage?.pageKey ?? "N/A",
+        "\n - focusedPage?.pageKey", focusedPage.pageKey ?? "N/A",
+        "\n"
+      );
+    };
+  };
+  
+  func notifyOnModalPageWillBlur(
+    sender: AdaptiveModalPageViewController,
+    pageToBlur: AdaptiveModalResolvedPageItemConfig?,
+    pageToFocus: AdaptiveModalResolvedPageItemConfig
+  ) {
+  
+    if Self.shouldLogFocusEvents {
+      print(
+        "ModalViewController",
+        "\n - AdaptiveModalPageFocusEventsNotifiable",
+        "\n - notifyOnModalPageWillBlur",
+        "\n - pageToBlur?.pageKey", pageToBlur?.pageKey ?? "N/A",
+        "\n - pageToFocus?.pageKey", pageToFocus.pageKey ?? "N/A",
+        "\n"
+      );
+    };
+  };
+  
+  func notifyOnModalPageDidBlur(
+    sender: AdaptiveModalPageViewController,
+    blurredPage: AdaptiveModalResolvedPageItemConfig?,
+    focusedPage: AdaptiveModalResolvedPageItemConfig
+  ) {
+  
+    if Self.shouldLogFocusEvents {
+      print(
+        "ModalViewController",
+        "\n - AdaptiveModalPageFocusEventsNotifiable",
+        "\n - notifyOnModalPageDidBlur",
+        "\n - blurredPage?.pageKey", blurredPage?.pageKey ?? "N/A",
+        "\n - focusedPage?.pageKey", focusedPage.pageKey ?? "N/A",
+        "\n"
+      );
+    };
   };
 };
 
