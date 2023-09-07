@@ -65,7 +65,7 @@ Method: #2: Via `Package.swift`:
 ```swift
 dependencies: [
   .package(url: "https://github.com/dominicstop/AdaptiveModal.git",
-  .upToNextMajor(from: "0.1.0"))
+  .upToNextMajor(from: "1.0.0"))
 ]
 ```
 
