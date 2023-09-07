@@ -220,6 +220,8 @@ extension ModalViewController: AdaptiveModalPresentationEventsNotifiable {
 };
 
 class AdaptiveModalPageTestViewController: UIViewController {
+  
+  static var shouldLogPageChangeEvents = false;
 
   let modalConfigs: [AdaptiveModalConfigDemoPresets] = [
     .demo01,
@@ -388,6 +390,7 @@ class AdaptiveModalPageTestViewController: UIViewController {
     };
     
     let pageVC = AdaptiveModalPageViewController(pages: pageConfigItems);
+    pageVC.pageChangeEventDelegate.add(self);
     
     modalManager.presentModal(
       viewControllerToPresent: pageVC,
@@ -404,5 +407,44 @@ class AdaptiveModalPageTestViewController: UIViewController {
     let routeManager = RouteManager.sharedInstance;
     routeManager.routeCounter += 1;
     routeManager.applyCurrentRoute();
+  };
+};
+
+
+extension AdaptiveModalPageTestViewController: AdaptiveModalPageChangeEventsNotifiable {
+  func notifyOnModalPageWillChange(
+    sender: AdaptiveModal.AdaptiveModalPageViewController,
+    prevPage: AdaptiveModal.AdaptiveModalResolvedPageItemConfig?,
+    nextPage: AdaptiveModal.AdaptiveModalResolvedPageItemConfig
+  ) {
+    
+    if Self.shouldLogPageChangeEvents {
+      print(
+        "AdaptiveModalPageTestViewController",
+        "\n - AdaptiveModalPageChangeEventsNotifiable",
+        "\n - notifyOnPageWillChange",
+        "\n - prevPage?.pageKey", prevPage?.pageKey ?? "N/A",
+        "\n - nextPage?.pageKey", nextPage.pageKey ?? "N/A",
+        "\n"
+      );
+    };
+  };
+  
+  func notifyOnModalPageDidChange(
+    sender: AdaptiveModal.AdaptiveModalPageViewController,
+    prevPage: AdaptiveModal.AdaptiveModalResolvedPageItemConfig?,
+    currentPage: AdaptiveModal.AdaptiveModalResolvedPageItemConfig
+  ) {
+  
+    if Self.shouldLogPageChangeEvents {
+      print(
+        "AdaptiveModalPageTestViewController",
+        "\n - AdaptiveModalPageChangeEventsNotifiable",
+        "\n - notifyOnPageDidChange",
+        "\n - prevPage?.pageKey", prevPage?.pageKey ?? "N/A",
+        "\n - nextPage?.pageKey", currentPage.pageKey ?? "N/A",
+        "\n"
+      );
+    };
   };
 };

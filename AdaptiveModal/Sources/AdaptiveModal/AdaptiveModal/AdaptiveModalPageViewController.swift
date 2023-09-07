@@ -37,6 +37,9 @@ public class AdaptiveModalPageViewController: UIViewController {
   
   public var resolvedPages: [AdaptiveModalResolvedPageItemConfig]?;
   
+  public var pageChangeEventDelegate =
+    MulticastDelegate<AdaptiveModalPageChangeEventsNotifiable>();
+  
   // MARK: - Computed Properties
   // ---------------------------
   
@@ -205,7 +208,23 @@ extension AdaptiveModalPageViewController: AdaptiveModalPresentationEventsNotifi
     prevInterpolationPoint: AdaptiveModalInterpolationPoint?,
     nextInterpolationPoint: AdaptiveModalInterpolationPoint
   ) {
-    // no-op
+  
+    guard let resolvedPages = self.resolvedPages,
+          let nextPage = resolvedPages[safeIndex: nextSnapPointIndex]
+    else { return };
+    
+    let prevPage: AdaptiveModalResolvedPageItemConfig? = {
+      guard let prevSnapPointIndex = prevSnapPointIndex else { return nil };
+      return resolvedPages[safeIndex: prevSnapPointIndex]
+    }();
+  
+    self.pageChangeEventDelegate.invoke {
+      $0.notifyOnModalPageWillChange(
+        sender: self,
+        prevPage: prevPage,
+        nextPage: nextPage
+      );
+    };
   };
   
   public func notifyOnModalDidSnap(
@@ -217,7 +236,23 @@ extension AdaptiveModalPageViewController: AdaptiveModalPresentationEventsNotifi
     prevInterpolationPoint: AdaptiveModalInterpolationPoint?,
     currentInterpolationPoint: AdaptiveModalInterpolationPoint
   ) {
-    // no-op
+    
+    guard let resolvedPages = self.resolvedPages,
+          let currentPage = resolvedPages[safeIndex: currentSnapPointIndex]
+    else { return };
+    
+    let prevPage: AdaptiveModalResolvedPageItemConfig? = {
+      guard let prevSnapPointIndex = prevSnapPointIndex else { return nil };
+      return resolvedPages[safeIndex: prevSnapPointIndex]
+    }();
+    
+    self.pageChangeEventDelegate.invoke {
+      $0.notifyOnModalPageDidChange(
+        sender: self,
+        prevPage: prevPage,
+        currentPage: currentPage
+      );
+    };
   };
   
   public func notifyOnAdaptiveModalWillShow(sender: AdaptiveModalManager) {
