@@ -2324,6 +2324,7 @@ public class AdaptiveModalManager: NSObject {
   
   private func stopModalAnimator(){
     self.modalAnimator?.stopAnimation(true);
+    self.endDisplayLink();
     
     self.animationEventDelegate.invoke {
       $0.notifyOnModalAnimatorStop(sender: self);
@@ -3048,8 +3049,6 @@ public class AdaptiveModalManager: NSObject {
   };
   
   private func notifyOnModalWillSnap(shouldSetState: Bool) {
-    let interpolationSteps = self.interpolationSteps!;
-    
     let prevIndex = self.onModalWillSnapPrevIndex
       ?? self.currentInterpolationIndex;
       
