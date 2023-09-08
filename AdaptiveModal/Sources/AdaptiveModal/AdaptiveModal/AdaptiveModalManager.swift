@@ -272,7 +272,7 @@ public class AdaptiveModalManager: NSObject {
     // N-1 index is the override snap point
     let secondToLastIndex = interpolationPoints.count - 2;
 
-    return self.currentOverrideInterpolationIndex < secondToLastIndex;
+    return self.currentOverrideInterpolationIndex <= secondToLastIndex;
   };
   
   // MARK: -  Properties - Interpolation Points
