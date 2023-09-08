@@ -1302,11 +1302,11 @@ public class AdaptiveModalManager: NSObject {
         ),
         
         modalBGVisualEffectView.widthAnchor.constraint(
-          equalTo: modalContentWrapperView.widthAnchor
+          equalTo: modalRootView.widthAnchor
         ),
         
         modalBGVisualEffectView.heightAnchor.constraint(
-          equalTo: modalContentWrapperView.heightAnchor
+          equalTo: modalRootView.heightAnchor
         ),
       ]);
     };
