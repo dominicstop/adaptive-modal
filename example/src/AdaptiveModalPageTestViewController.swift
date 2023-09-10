@@ -22,7 +22,9 @@ fileprivate class ModalViewController: UIViewController {
     }
   };
   
-  private var shouldIncreaseModalIndexOnTap = true;
+  var didToggleShouldIncreaseModalIndexOnTap: ((Bool) -> Void)?;
+  
+  var shouldIncreaseModalIndexOnTap = true;
   
   lazy var labelEmoji: UILabel = {
     let label = UILabel();
@@ -138,9 +140,11 @@ fileprivate class ModalViewController: UIViewController {
     
     if currentIndex == lastIndex {
       self.shouldIncreaseModalIndexOnTap = false;
+      self.didToggleShouldIncreaseModalIndexOnTap?(false);
     
     } else if currentIndex == 0 {
       self.shouldIncreaseModalIndexOnTap = true;
+      self.didToggleShouldIncreaseModalIndexOnTap?(true);
     };
     
     if self.shouldIncreaseModalIndexOnTap {
@@ -464,6 +468,20 @@ class AdaptiveModalPageTestViewController: UIViewController {
         ],
         viewController: makePageVC(instanceID: $0.offset)
       );
+    };
+    
+    let pageVcItems = pageConfigItems.map {
+      $0.viewController as! ModalViewController;
+    };
+    
+    let didToggleShouldIncreaseModalIndexOnTapBlock = { (flag: Bool) in
+      pageVcItems.forEach {
+        $0.shouldIncreaseModalIndexOnTap = flag;
+      };
+    };
+    
+    pageVcItems.forEach {
+      $0.didToggleShouldIncreaseModalIndexOnTap = didToggleShouldIncreaseModalIndexOnTapBlock;
     };
     
     let pageVC = AdaptiveModalPageViewController(pages: pageConfigItems);
