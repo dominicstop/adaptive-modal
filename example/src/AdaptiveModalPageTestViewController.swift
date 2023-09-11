@@ -307,7 +307,6 @@ class AdaptiveModalPageTestViewController: UIViewController {
   let modalConfigs: [AdaptiveModalConfigDemoPresets] = [
     .demo01,
     .demo03,
-    .demo07,
     .demo08,
     .demo10,
     .demo12,
