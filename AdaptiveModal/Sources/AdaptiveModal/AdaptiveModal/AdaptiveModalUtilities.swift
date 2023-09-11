@@ -7,9 +7,9 @@
 
 import UIKit
 
-class AdaptiveModalUtilities {
+public class AdaptiveModalUtilities {
 
-  static func lerp(
+  public static func lerp(
     valueStart: CGFloat,
     valueEnd: CGFloat,
     percent: CGFloat
@@ -19,7 +19,7 @@ class AdaptiveModalUtilities {
     return valueStart + valueProgress;
   };
 
-  static func extractValuesFromArray<T, U>(
+  public static func extractValuesFromArray<T, U>(
     for array: [T],
     key: KeyPath<T, U>
   ) -> [U] {
@@ -28,7 +28,7 @@ class AdaptiveModalUtilities {
     };
   };
 
-  static func interpolate(
+  public static func interpolate(
     inputValue    : CGFloat,
     rangeInput    : [CGFloat],
     rangeOutput   : [CGFloat],
@@ -111,7 +111,7 @@ class AdaptiveModalUtilities {
     );
   };
   
-  static func interpolateColor(
+  public static func interpolateColor(
     inputValue    : CGFloat,
     rangeInput    : [CGFloat],
     rangeOutput   : [UIColor],
@@ -178,7 +178,7 @@ class AdaptiveModalUtilities {
     );
   };
   
-  static func interpolateRect(
+  public static func interpolateRect(
     inputValue : CGFloat,
     rangeInput : [CGFloat],
     rangeOutput: [CGRect],
@@ -252,7 +252,7 @@ class AdaptiveModalUtilities {
     );
   };
   
-  static func interpolateTransform3D(
+  public static func interpolateTransform3D(
     inputValue : CGFloat,
     rangeInput : [CGFloat],
     rangeOutput: [Transform3D],
@@ -434,7 +434,7 @@ class AdaptiveModalUtilities {
     );
   };
   
-  static func interpolateSize(
+  public static func interpolateSize(
     inputValue    : CGFloat,
     rangeInput    : [CGFloat],
     rangeOutput   : [CGSize],
@@ -474,7 +474,7 @@ class AdaptiveModalUtilities {
     );
   };
   
-  static func interpolateEdgeInsets(
+  public static func interpolateEdgeInsets(
     inputValue    : CGFloat,
     rangeInput    : [CGFloat],
     rangeOutput   : [UIEdgeInsets],
@@ -540,7 +540,7 @@ class AdaptiveModalUtilities {
     );
   };
   
-  static func computeFinalPosition(
+  public static func computeFinalPosition(
     position: CGFloat,
     initialVelocity: CGFloat,
     decelerationRate: CGFloat = UIScrollView.DecelerationRate.normal.rawValue
@@ -555,7 +555,7 @@ class AdaptiveModalUtilities {
       : position - displacement;
   };
   
-  static func invertPercent(_ percent: CGFloat) -> CGFloat {
+  public static func invertPercent(_ percent: CGFloat) -> CGFloat {
     if percent >= 0 && percent <= 1 {
       return 1 - percent;
     };
@@ -568,7 +568,7 @@ class AdaptiveModalUtilities {
     return -(percent - 1);
   };
   
-  static func unwrapAndSetProperty<O: AnyObject, T>(
+  public static func unwrapAndSetProperty<O: AnyObject, T>(
     forObject object: O?,
     forPropertyKey propertyKey: WritableKeyPath<O, T>,
     withValue value: T?
@@ -580,20 +580,20 @@ class AdaptiveModalUtilities {
     object[keyPath: propertyKey] = value;
   };
   
-  static func unwrapAndSetProperty<O, T>(
-    for valueType: inout O?,
+  public static func unwrapAndSetProperty<O, T>(
+    forValue value: inout O?,
     forPropertyKey propertyKey: WritableKeyPath<O, T>,
     withValue newValue: T?
   ) {
-    guard var valueType = valueType,
+    guard var value = value,
           let newValue = newValue
     else { return };
     
-    valueType[keyPath: propertyKey] = newValue;
+    value[keyPath: propertyKey] = newValue;
   };
 
   @discardableResult
-  static func swizzleWithBlock<T>(
+  public static func swizzleWithBlock<T>(
     impMethodType: T.Type,
     forObject object: AnyObject,
     withSelector selector: Selector,
