@@ -14,7 +14,7 @@ public enum Angle<T: FloatingPoint>: Equatable {
   case radians(T);
   case degrees(T);
   
-  var radians: T {
+  public var radians: T {
     switch self {
       case .zero:
         return 0;
@@ -28,7 +28,7 @@ public enum Angle<T: FloatingPoint>: Equatable {
     };
   };
   
-  var degrees: T {
+  public var degrees: T {
     switch self {
       case .zero:
         return 0;
