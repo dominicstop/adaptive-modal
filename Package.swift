@@ -29,8 +29,9 @@ let package = Package(
     .target(
       name: "AdaptiveModal",
       dependencies: [
-        "ComputableLayout"
+        "ComputableLayout",
       ],
+      path: "AdaptiveModal",
       linkerSettings: [
 				.linkedFramework("UIKit"),
 			]
