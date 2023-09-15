@@ -883,7 +883,7 @@ public class AdaptiveModalManager: NSObject {
     }();
     
     self.modalContentWrapperView = UIView();
-  
+    
     self.modalBackgroundView = UIView();
     self.modalBackgroundVisualEffectView = UIVisualEffectView();
     
@@ -986,6 +986,7 @@ public class AdaptiveModalManager: NSObject {
       let views = [
         self.modalWrapperLayoutView,
         self.modalWrapperTransformView,
+        self.modalWrapperShadowView,
         self.modalContentWrapperView,
         modalView,
       ];
@@ -1011,20 +1012,6 @@ public class AdaptiveModalManager: NSObject {
     modalContentContainerView.clipsToBounds = true;
     modalView.backgroundColor = .clear;
     
-    if let modalWrapperTransformView = self.modalWrapperTransformView,
-       let modalWrapperShadowView = self.modalWrapperShadowView {
-      
-      modalWrapperTransformView.addSubview(modalWrapperShadowView);
-      modalWrapperTransformView.sendSubviewToBack(modalWrapperShadowView);
-      
-      modalWrapperShadowView.backgroundColor = UIColor(
-        red: 1,
-        green: 1,
-        blue: 1,
-        alpha: 0.01
-      );
-    };
-    
     if let modalBackgroundView = self.modalBackgroundView {
       modalContentContainerView.addSubview(modalBackgroundView);
       modalContentContainerView.sendSubviewToBack(modalBackgroundView);
@@ -1035,18 +1022,20 @@ public class AdaptiveModalManager: NSObject {
       modalBackgroundView.isUserInteractionEnabled = false;
     };
     
-    if let modalBGVisualEffectView = self.modalBackgroundVisualEffectView {
-      modalContentContainerView.addSubview(modalBGVisualEffectView);
-      modalContentContainerView.sendSubviewToBack(modalBGVisualEffectView);
+    if let modalBGVisualEffectView = self.modalBackgroundVisualEffectView,
+       let modalWrapperTransformView = self.modalWrapperTransformView {
+       
+      modalWrapperTransformView.addSubview(modalBGVisualEffectView);
+      modalWrapperTransformView.sendSubviewToBack(modalBGVisualEffectView);
       
       modalBGVisualEffectView.clipsToBounds = true;
       modalBGVisualEffectView.backgroundColor = .clear;
     };
     
     if let modalDragHandleView = self.modalDragHandleView,
-       let modalWrapperTransformView = self.modalWrapperTransformView {
+       let modalWrapperShadowView = self.modalWrapperShadowView {
        
-      modalWrapperTransformView.addSubview(modalDragHandleView);
+      modalWrapperShadowView.addSubview(modalDragHandleView);
     };
     
     #if DEBUG
@@ -1061,7 +1050,7 @@ public class AdaptiveModalManager: NSObject {
   
   func setupDragHandleConstraints(shouldDeactivateOldConstraints: Bool){
     guard let modalDragHandleView = self.modalDragHandleView,
-          let modalWrapperTransformView = self.modalWrapperTransformView
+          let modalWrapperShadowView = self.modalWrapperShadowView
     else { return };
   
     modalDragHandleView.translatesAutoresizingMaskIntoConstraints = false;
@@ -1097,25 +1086,25 @@ public class AdaptiveModalManager: NSObject {
       switch self.currentModalConfig.dragHandlePosition {
         case .top:
           return modalDragHandleView.topAnchor.constraint(
-            equalTo: modalWrapperTransformView.topAnchor,
+            equalTo: modalWrapperShadowView.topAnchor,
             constant: dragHandleOffset
           );
           
         case .bottom:
           return modalDragHandleView.bottomAnchor.constraint(
-            equalTo: modalWrapperTransformView.bottomAnchor,
+            equalTo: modalWrapperShadowView.bottomAnchor,
             constant: dragHandleOffset
           );
           
         case .left:
           return modalDragHandleView.leftAnchor.constraint(
-            equalTo: modalWrapperTransformView.leftAnchor,
+            equalTo: modalWrapperShadowView.leftAnchor,
             constant: dragHandleOffset
           );
           
         case .right:
           return modalDragHandleView.rightAnchor.constraint(
-            equalTo: modalWrapperTransformView.rightAnchor,
+            equalTo: modalWrapperShadowView.rightAnchor,
             constant: dragHandleOffset
           );
           
@@ -1135,12 +1124,12 @@ public class AdaptiveModalManager: NSObject {
       switch self.currentModalConfig.dragHandlePosition {
         case .top, .bottom:
           return modalDragHandleView.centerXAnchor.constraint(
-            equalTo: modalWrapperTransformView.centerXAnchor
+            equalTo: modalWrapperShadowView.centerXAnchor
           );
           
         case .left, .right:
           return modalDragHandleView.centerYAnchor.constraint(
-            equalTo: modalWrapperTransformView.centerYAnchor
+            equalTo: modalWrapperShadowView.centerYAnchor
           );
           
         default:
@@ -1207,6 +1196,7 @@ public class AdaptiveModalManager: NSObject {
     let wrapperViews: [UIView] = {
       let views = [
         self.modalWrapperTransformView,
+        self.modalWrapperShadowView,
         self.modalContentWrapperView,
       ];
       
@@ -1222,27 +1212,6 @@ public class AdaptiveModalManager: NSObject {
         $0.centerYAnchor.constraint(equalTo: parentView.centerYAnchor),
         $0.widthAnchor  .constraint(equalTo: parentView.widthAnchor  ),
         $0.heightAnchor .constraint(equalTo: parentView.heightAnchor ),
-      ]);
-    };
-    
-    if let modalWrapperTransformView = self.modalWrapperTransformView,
-       let modalWrapperShadowView = self.modalWrapperShadowView {
-       
-      modalWrapperShadowView.translatesAutoresizingMaskIntoConstraints = false;
-      
-      NSLayoutConstraint.activate([
-        modalWrapperShadowView.centerXAnchor.constraint(
-          equalTo: modalWrapperTransformView.centerXAnchor
-        ),
-        modalWrapperShadowView.centerYAnchor.constraint(
-          equalTo: modalWrapperTransformView.centerYAnchor
-        ),
-        modalWrapperShadowView.widthAnchor.constraint(
-          equalTo: modalWrapperTransformView.widthAnchor
-        ),
-        modalWrapperShadowView.heightAnchor.constraint(
-          equalTo: modalWrapperTransformView.heightAnchor
-        ),
       ]);
     };
     
@@ -1322,26 +1291,28 @@ public class AdaptiveModalManager: NSObject {
       ]);
     };
     
-    if let modalBGVisualEffectView = self.modalBackgroundVisualEffectView {
+    if let modalBGVisualEffectView = self.modalBackgroundVisualEffectView,
+       let modalWrapperTransformView = self.modalWrapperTransformView {
+       
       modalBGVisualEffectView.translatesAutoresizingMaskIntoConstraints = false;
       
       NSLayoutConstraint.activate([
         modalBGVisualEffectView.centerXAnchor.constraint(
-          equalTo: modalContentWrapperView.centerXAnchor
+          equalTo: modalWrapperTransformView.centerXAnchor
         ),
         
         modalBGVisualEffectView.centerYAnchor.constraint(
-          equalTo: modalContentWrapperView.centerYAnchor
+          equalTo: modalWrapperTransformView.centerYAnchor
         ),
         
         modalBGVisualEffectView.widthAnchor.constraint(
-          equalTo: modalContentWrapperView.widthAnchor,
-          constant: modalRootView.frame.width
+          equalTo: modalWrapperTransformView.widthAnchor//,
+          //constant: modalRootView.frame.width
         ),
         
         modalBGVisualEffectView.heightAnchor.constraint(
-          equalTo: modalContentWrapperView.heightAnchor,
-          constant: modalRootView.frame.height
+          equalTo: modalContentWrapperView.heightAnchor//,
+          //constant: modalRootView.frame.height
         ),
       ]);
     };
@@ -1458,7 +1429,7 @@ public class AdaptiveModalManager: NSObject {
       self.modalWrapperLayoutView,
       // self.modalWrapperTransformView,
       self.modalDragHandleView,
-      // self.modalWrapperShadowView,
+      self.modalWrapperShadowView,
       // self.modalContentWrapperView,
       // self.modalView,
       self.modalBackgroundView,
@@ -2238,6 +2209,15 @@ public class AdaptiveModalManager: NSObject {
       withValue:  self.interpolate(
         inputValue: inputPercentValue,
         rangeOutputKey: \.modalBackgroundVisualEffectOpacity
+      )
+    );
+    
+    AdaptiveModalUtilities.unwrapAndSetProperty(
+      forObject: self.modalBackgroundVisualEffectView,
+      forPropertyKey: \.layer.cornerRadius,
+      withValue:  self.interpolate(
+        inputValue: inputPercentValue,
+        rangeOutputKey: \.modalCornerRadius
       )
     );
     

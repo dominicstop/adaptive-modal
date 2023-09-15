@@ -176,6 +176,9 @@ public struct AdaptiveModalInterpolationPoint: Equatable {
     
     if let modalBgEffectView = modalManager.modalBackgroundVisualEffectView {
       modalBgEffectView.alpha = self.modalBackgroundVisualEffectOpacity;
+      
+      modalBgEffectView.layer.cornerRadius = self.modalCornerRadius;
+      modalBgEffectView.layer.maskedCorners = self.modalMaskedCorners;
     };
     
     if let bgVisualEffectView = modalManager.backgroundVisualEffectView {
