@@ -7,6 +7,7 @@
 ## Current
 
 - [ ] `TODO:2023-09-15-21-58-53` - Fix: Drag handle layout bug - On a horizontal modal, the drag handle animates to the wrong position when dismissing via animator. 
+- [ ] `TODO:2023-09-16-06-33-40` - Fix: Modal corner radius layout bug - Modal corner radius mask not applying immediately during modal dragging.
 
 - [ ] `TODO:2023-08-29-10-07-08` - Impl: Present a modal in place (e.g. fade in, scale in, etc) via a animation keyframe config + snap point index/key.
 
