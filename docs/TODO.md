@@ -6,6 +6,20 @@
 
 ## Current
 
+- [ ] `TODO:2023-09-15-21-58-53` - Fix: Drag handle layout bug - On a horizontal modal, the drag handle animates to the wrong position when dismissing via animator. 
+- [ ] `TODO:2023-09-15-22-06-28` - Fix: Modal blur layout bug - When a modal has a 3D transform, the modal's background blur disappears.
+  * The layout bug is caused by the modal shadow view (`modalWrapperShadowView`.
+  * For this bug to occur there must be: a 3d modal transform, a blur view, and modal shadows.
+    * It does not matter whether the modal's BG blur is animated or not, the bug still occurs (i.e. disabling the modal blur animator does nothing).
+    * The bug is not caused by autolayout (i.e. changing the layout constraints, or removing the layout constraints does nothing).
+  * The bug happens when there is a shadow view in the modal's view hierarchy, e.g.:
+    * The blur view is a child of a parent view that has shadows, (e.g. adding the shadows to `modalWrapperShadowView`). 
+    * The blur view has a child that has shadows (e.g. adding the shadows to `modalContentWrapperView`).
+    * The blur view itself has shadows (e.g. adding the shadows to `modalBackgroundVisualEffectView`).
+  * A possible fix could be to add the shadow view as sibling to the blur view.
+
+<br>
+
 - [ ] `TODO:2023-08-29-10-07-08` - Impl: Present a modal in place (e.g. fade in, scale in, etc) via a animation keyframe config + snap point index/key.
 
 <br><br>
