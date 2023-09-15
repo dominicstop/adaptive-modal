@@ -986,7 +986,6 @@ public class AdaptiveModalManager: NSObject {
       let views = [
         self.modalWrapperLayoutView,
         self.modalWrapperTransformView,
-        self.modalWrapperShadowView,
         self.modalContentWrapperView,
         modalView,
       ];
@@ -1012,6 +1011,20 @@ public class AdaptiveModalManager: NSObject {
     modalContentContainerView.clipsToBounds = true;
     modalView.backgroundColor = .clear;
     
+    if let modalWrapperTransformView = self.modalWrapperTransformView,
+       let modalWrapperShadowView = self.modalWrapperShadowView {
+      
+      modalWrapperTransformView.addSubview(modalWrapperShadowView);
+      modalWrapperTransformView.sendSubviewToBack(modalWrapperShadowView);
+      
+      modalWrapperShadowView.backgroundColor = UIColor(
+        red: 1,
+        green: 1,
+        blue: 1,
+        alpha: 0.01
+      );
+    };
+    
     if let modalBackgroundView = self.modalBackgroundView {
       modalContentContainerView.addSubview(modalBackgroundView);
       modalContentContainerView.sendSubviewToBack(modalBackgroundView);
@@ -1031,9 +1044,9 @@ public class AdaptiveModalManager: NSObject {
     };
     
     if let modalDragHandleView = self.modalDragHandleView,
-       let modalWrapperShadowView = self.modalWrapperShadowView {
+       let modalWrapperTransformView = self.modalWrapperTransformView {
        
-      modalWrapperShadowView.addSubview(modalDragHandleView);
+      modalWrapperTransformView.addSubview(modalDragHandleView);
     };
     
     #if DEBUG
@@ -1048,7 +1061,7 @@ public class AdaptiveModalManager: NSObject {
   
   func setupDragHandleConstraints(shouldDeactivateOldConstraints: Bool){
     guard let modalDragHandleView = self.modalDragHandleView,
-          let modalWrapperShadowView = self.modalWrapperShadowView
+          let modalWrapperTransformView = self.modalWrapperTransformView
     else { return };
   
     modalDragHandleView.translatesAutoresizingMaskIntoConstraints = false;
@@ -1084,25 +1097,25 @@ public class AdaptiveModalManager: NSObject {
       switch self.currentModalConfig.dragHandlePosition {
         case .top:
           return modalDragHandleView.topAnchor.constraint(
-            equalTo: modalWrapperShadowView.topAnchor,
+            equalTo: modalWrapperTransformView.topAnchor,
             constant: dragHandleOffset
           );
           
         case .bottom:
           return modalDragHandleView.bottomAnchor.constraint(
-            equalTo: modalWrapperShadowView.bottomAnchor,
+            equalTo: modalWrapperTransformView.bottomAnchor,
             constant: dragHandleOffset
           );
           
         case .left:
           return modalDragHandleView.leftAnchor.constraint(
-            equalTo: modalWrapperShadowView.leftAnchor,
+            equalTo: modalWrapperTransformView.leftAnchor,
             constant: dragHandleOffset
           );
           
         case .right:
           return modalDragHandleView.rightAnchor.constraint(
-            equalTo: modalWrapperShadowView.rightAnchor,
+            equalTo: modalWrapperTransformView.rightAnchor,
             constant: dragHandleOffset
           );
           
@@ -1122,12 +1135,12 @@ public class AdaptiveModalManager: NSObject {
       switch self.currentModalConfig.dragHandlePosition {
         case .top, .bottom:
           return modalDragHandleView.centerXAnchor.constraint(
-            equalTo: modalWrapperShadowView.centerXAnchor
+            equalTo: modalWrapperTransformView.centerXAnchor
           );
           
         case .left, .right:
           return modalDragHandleView.centerYAnchor.constraint(
-            equalTo: modalWrapperShadowView.centerYAnchor
+            equalTo: modalWrapperTransformView.centerYAnchor
           );
           
         default:
@@ -1194,7 +1207,6 @@ public class AdaptiveModalManager: NSObject {
     let wrapperViews: [UIView] = {
       let views = [
         self.modalWrapperTransformView,
-        self.modalWrapperShadowView,
         self.modalContentWrapperView,
       ];
       
@@ -1210,6 +1222,27 @@ public class AdaptiveModalManager: NSObject {
         $0.centerYAnchor.constraint(equalTo: parentView.centerYAnchor),
         $0.widthAnchor  .constraint(equalTo: parentView.widthAnchor  ),
         $0.heightAnchor .constraint(equalTo: parentView.heightAnchor ),
+      ]);
+    };
+    
+    if let modalWrapperTransformView = self.modalWrapperTransformView,
+       let modalWrapperShadowView = self.modalWrapperShadowView {
+       
+      modalWrapperShadowView.translatesAutoresizingMaskIntoConstraints = false;
+      
+      NSLayoutConstraint.activate([
+        modalWrapperShadowView.centerXAnchor.constraint(
+          equalTo: modalWrapperTransformView.centerXAnchor
+        ),
+        modalWrapperShadowView.centerYAnchor.constraint(
+          equalTo: modalWrapperTransformView.centerYAnchor
+        ),
+        modalWrapperShadowView.widthAnchor.constraint(
+          equalTo: modalWrapperTransformView.widthAnchor
+        ),
+        modalWrapperShadowView.heightAnchor.constraint(
+          equalTo: modalWrapperTransformView.heightAnchor
+        ),
       ]);
     };
     
@@ -1425,7 +1458,7 @@ public class AdaptiveModalManager: NSObject {
       self.modalWrapperLayoutView,
       // self.modalWrapperTransformView,
       self.modalDragHandleView,
-      self.modalWrapperShadowView,
+      // self.modalWrapperShadowView,
       // self.modalContentWrapperView,
       // self.modalView,
       self.modalBackgroundView,
