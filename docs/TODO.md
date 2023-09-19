@@ -11,6 +11,8 @@
 
 - [ ] `TODO:2023-08-29-10-07-08` - Impl: Present a modal in place (e.g. fade in, scale in, etc) via a animation keyframe config + snap point index/key.
 
+- [ ] `TODO:2023-09-19-14-25-06` - Refactor: Replace `UIVisualEffectView` usage w/ `VisualEffectBlurView`.
+
 <br><br>
 
 ## WIP
@@ -62,7 +64,7 @@
   * The bug happens when there is a shadow view in the modal's view hierarchy, e.g.:
     * The blur view is a child of a parent view that has shadows, (e.g. adding the shadows to `modalWrapperShadowView`). 
     * The blur view has a child that has shadows (e.g. adding the shadows to `modalContentWrapperView`).
-    * The blur view itself has shadows (e.g. adding the shadows to `modalBackgroundVisualEffectView`).
+    * The blur view itself has shadows (e.g. adding the shadows to `modalBackgroundBlurEffectStyleView`).
   * A possible fix could be to add the shadow view as sibling to the blur view. 
 
 <br>
