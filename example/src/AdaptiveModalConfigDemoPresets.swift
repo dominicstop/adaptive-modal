@@ -48,11 +48,11 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
               modalCornerRadius: 25,
               modalMaskedCorners: .topCorners,
               modalBackgroundOpacity: 0.9,
-              modalBackgroundBlurEffectStyle: .systemUltraThinMaterial,
-              modalBackgroundBlurEffectIntensity: 1,
+              modalBackgroundVisualEffect: UIBlurEffect(style: .systemUltraThinMaterial),
+              modalBackgroundVisualEffectIntensity: 1,
               backgroundOpacity: 0,
-              backgroundBlurEffectStyle: .systemUltraThinMaterialDark,
-              backgroundBlurEffectIntensity: 0
+              backgroundVisualEffect: UIBlurEffect(style: .systemUltraThinMaterialDark),
+              backgroundVisualEffectIntensity: 0
             )
           ),
           
@@ -78,9 +78,9 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
               modalCornerRadius: 10,
               modalMaskedCorners: .allCorners,
               modalBackgroundOpacity: 0.85,
-              modalBackgroundBlurEffectIntensity: 0.6,
+              modalBackgroundVisualEffectIntensity: 0.6,
               backgroundOpacity: 0.1,
-              backgroundBlurEffectIntensity: 0.075
+              backgroundVisualEffectIntensity: 0.075
             )
           ),
           
@@ -106,9 +106,9 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
               modalCornerRadius: 20,
               modalMaskedCorners: .allCorners,
               modalBackgroundOpacity: 0.8,
-              modalBackgroundBlurEffectIntensity: 1,
+              modalBackgroundVisualEffectIntensity: 1,
               backgroundOpacity: 0,
-              backgroundBlurEffectIntensity: 0.5
+              backgroundVisualEffectIntensity: 0.5
             )
           ),
           
@@ -133,8 +133,8 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
               modalCornerRadius: 25,
               modalMaskedCorners: .topCorners,
               modalBackgroundOpacity: 0.83,
-              modalBackgroundBlurEffectIntensity: 1,
-              backgroundBlurEffectIntensity: 1
+              modalBackgroundVisualEffectIntensity: 1,
+              backgroundVisualEffectIntensity: 1
             )
           ),
         ],
@@ -166,8 +166,8 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
               modalMaskedCorners: .topCorners,
               modalContentOpacity: 1,
               backgroundOpacity: 0,
-              backgroundBlurEffectStyle: .regular,
-              backgroundBlurEffectIntensity: 0
+              backgroundVisualEffect: UIBlurEffect(style: .regular),
+              backgroundVisualEffectIntensity: 0
             )
           ),
           
@@ -203,8 +203,8 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
               modalShadowOpacity: 0.3,
               modalShadowRadius: 8,
               backgroundOpacity: 0.3,
-              backgroundBlurEffectStyle: .regular,
-              backgroundBlurEffectIntensity: 0.3
+              backgroundVisualEffect: UIBlurEffect(style: .regular),
+              backgroundVisualEffectIntensity: 0.3
             )
           ),
         ],
@@ -248,12 +248,12 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
               modalCornerRadius: 10,
               modalContentOpacity: 1,
               modalBackgroundOpacity: 0.87,
-              modalBackgroundBlurEffectStyle: .regular,
-              modalBackgroundBlurEffectIntensity: 1,
+              modalBackgroundVisualEffect: UIBlurEffect(style: .regular),
+              modalBackgroundVisualEffectIntensity: 1,
               modalDragHandleOffset: -14,
               modalDragHandleColor: .systemBackground,
-              backgroundBlurEffectStyle: .regular,
-              backgroundBlurEffectIntensity: 0.04
+              backgroundVisualEffect: UIBlurEffect(style: .regular),
+              backgroundVisualEffectIntensity: 0.04
             )
           ),
           
@@ -274,10 +274,10 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
               modalShadowRadius: 15,
               modalCornerRadius: 15,
               modalBackgroundOpacity: 0.9,
-              modalBackgroundBlurEffectIntensity: 0.5,
+              modalBackgroundVisualEffectIntensity: 0.5,
               modalDragHandleOffset: 6,
               modalDragHandleColor: .systemGray,
-              backgroundBlurEffectIntensity: 0.5
+              backgroundVisualEffectIntensity: 0.5
             )
           ),
         ],
@@ -292,7 +292,7 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
             modalCornerRadius: 5,
             modalContentOpacity: 0.3,
             modalDragHandleOffset: -14,
-            backgroundBlurEffectIntensity: 0
+            backgroundVisualEffectIntensity: 0
           )
         ),
         overshootSnapPoint: .init(
@@ -388,10 +388,10 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
               modalShadowOpacity: 0.3,
               modalShadowRadius: 8,
               modalBackgroundOpacity: 0.87,
-              modalBackgroundBlurEffectStyle: .regular,
-              modalBackgroundBlurEffectIntensity: 1,
-              backgroundBlurEffectStyle: .regular,
-              backgroundBlurEffectIntensity: 0.04
+              modalBackgroundVisualEffect: UIBlurEffect(style: .regular),
+              modalBackgroundVisualEffectIntensity: 1,
+              backgroundVisualEffect: UIBlurEffect(style: .regular),
+              backgroundVisualEffectIntensity: 0.04
             )
           ),
           
@@ -419,8 +419,8 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
               modalShadowRadius: 15,
               modalCornerRadius: 15,
               modalBackgroundOpacity: 0.9,
-              modalBackgroundBlurEffectIntensity: 0.5,
-              backgroundBlurEffectIntensity: 0.5
+              modalBackgroundVisualEffectIntensity: 0.5,
+              backgroundVisualEffectIntensity: 0.5
             )
           ),
         ],
@@ -428,7 +428,7 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
         undershootSnapPoint: .init(
           layoutPreset: .offscreenLeft,
           keyframeConfig: .init(
-            backgroundBlurEffectIntensity: 0
+            backgroundVisualEffectIntensity: 0
           )
         ),
         overshootSnapPoint: AdaptiveModalSnapPointPreset(
@@ -457,8 +457,8 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
               modalShadowRadius: 7,
               modalCornerRadius: 10,
               backgroundOpacity: 0,
-              backgroundBlurEffectStyle: .regular,
-              backgroundBlurEffectIntensity: 0
+              backgroundVisualEffect: UIBlurEffect(style: .regular),
+              backgroundVisualEffectIntensity: 0
             )
           ),
           
@@ -500,7 +500,7 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
               modalShadowOpacity: 0.3,
               modalShadowRadius: 8,
               backgroundOpacity: 0.3,
-              backgroundBlurEffectIntensity: 0.3
+              backgroundVisualEffectIntensity: 0.3
             )
           ),
         ],
@@ -553,10 +553,10 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
               modalShadowRadius: 10,
               modalCornerRadius: 15,
               modalBackgroundOpacity: 0.85,
-              modalBackgroundBlurEffectIntensity: 0.9,
+              modalBackgroundVisualEffectIntensity: 0.9,
               backgroundColor: .white,
               backgroundOpacity: 0.15,
-              backgroundBlurEffectIntensity: 0.05
+              backgroundVisualEffectIntensity: 0.05
             )
           ),
           
@@ -574,12 +574,12 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
               modalShadowOpacity: 0,
               modalShadowRadius: 0,
               modalBackgroundOpacity: 0,
-              modalBackgroundBlurEffectOpacity: 0,
-              modalBackgroundBlurEffectIntensity: 0,
+              modalBackgroundVisualEffectOpacity: 0,
+              modalBackgroundVisualEffectIntensity: 0,
               modalDragHandleOpacity: 0,
               backgroundColor: .white,
               backgroundOpacity: 0.75,
-              backgroundBlurEffectIntensity: 1
+              backgroundVisualEffectIntensity: 1
             )
           ),
         ],
@@ -593,10 +593,10 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
             ),
             modalCornerRadius: 10,
             modalBackgroundOpacity: 1,
-            modalBackgroundBlurEffectStyle: .regular,
-            modalBackgroundBlurEffectIntensity: 0,
-            backgroundBlurEffectStyle: .regular,
-            backgroundBlurEffectIntensity: 0
+            modalBackgroundVisualEffect: UIBlurEffect(style: .regular),
+            modalBackgroundVisualEffectIntensity: 0,
+            backgroundVisualEffect: UIBlurEffect(style: .regular),
+            backgroundVisualEffectIntensity: 0
           )
         ),
         overshootSnapPoint: AdaptiveModalSnapPointPreset(
@@ -625,10 +625,10 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
                 .layerMaxXMinYCorner
               ],
               modalBackgroundOpacity: 0.9,
-              modalBackgroundBlurEffectStyle: .systemUltraThinMaterial,
-              modalBackgroundBlurEffectIntensity: 1,
-              backgroundBlurEffectStyle: .regular,
-              backgroundBlurEffectIntensity: 0
+              modalBackgroundVisualEffect: UIBlurEffect(style: .systemUltraThinMaterial),
+              modalBackgroundVisualEffectIntensity: 1,
+              backgroundVisualEffect: UIBlurEffect(style: .regular),
+              backgroundVisualEffectIntensity: 0
             )
           ),
           
@@ -650,8 +650,8 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
                 .layerMaxXMinYCorner
               ],
               modalBackgroundOpacity: 0.85,
-              modalBackgroundBlurEffectIntensity: 0.25,
-              backgroundBlurEffectIntensity: 0.75
+              modalBackgroundVisualEffectIntensity: 0.25,
+              backgroundVisualEffectIntensity: 0.75
             )
           )
         ],
@@ -692,10 +692,10 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
               modalCornerRadius: 12,
               modalMaskedCorners: .allCorners,
               modalBackgroundOpacity: 0.9,
-              modalBackgroundBlurEffectStyle: .systemUltraThinMaterial,
-              modalBackgroundBlurEffectIntensity: 1,
-              backgroundBlurEffectStyle: .regular,
-              backgroundBlurEffectIntensity: 0
+              modalBackgroundVisualEffect: UIBlurEffect(style: .systemUltraThinMaterial),
+              modalBackgroundVisualEffectIntensity: 1,
+              backgroundVisualEffect: UIBlurEffect(style: .regular),
+              backgroundVisualEffectIntensity: 0
             )
           ),
         ],
@@ -729,12 +729,12 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
               modalMaskedCorners: .rightCorners,
               modalContentOpacity: 1,
               modalBackgroundOpacity: 0.8,
-              modalBackgroundBlurEffectStyle: .regular,
-              modalBackgroundBlurEffectIntensity: 1,
+              modalBackgroundVisualEffect: UIBlurEffect(style: .regular),
+              modalBackgroundVisualEffectIntensity: 1,
               modalDragHandleOffset: -14,
               modalDragHandleColor: .systemBackground,
-              backgroundBlurEffectStyle: .regular,
-              backgroundBlurEffectIntensity: 0.04
+              backgroundVisualEffect: UIBlurEffect(style: .regular),
+              backgroundVisualEffectIntensity: 0.04
             )
           ),
           
@@ -752,10 +752,10 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
               modalShadowRadius: 12,
               modalCornerRadius: 15,
               modalBackgroundOpacity: 0.9,
-              modalBackgroundBlurEffectIntensity: 0.6,
+              modalBackgroundVisualEffectIntensity: 0.6,
               modalDragHandleOffset: 6,
               modalDragHandleColor: .systemGray,
-              backgroundBlurEffectIntensity: 0.4
+              backgroundVisualEffectIntensity: 0.4
             )
           ),
           
@@ -773,10 +773,10 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
               modalShadowRadius: 10,
               modalCornerRadius: 20,
               modalBackgroundOpacity: 0.87,
-              modalBackgroundBlurEffectIntensity: 0.4,
+              modalBackgroundVisualEffectIntensity: 0.4,
               modalDragHandleOffset: 6,
               modalDragHandleColor: .systemGray,
-              backgroundBlurEffectIntensity: 0.9
+              backgroundVisualEffectIntensity: 0.9
             )
           ),
         ],
@@ -792,9 +792,9 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
             ),
             modalCornerRadius: 5,
             modalContentOpacity: 0.25,
-            modalBackgroundBlurEffectIntensity: 1,
+            modalBackgroundVisualEffectIntensity: 1,
             modalDragHandleOffset: -14,
-            backgroundBlurEffectIntensity: 0
+            backgroundVisualEffectIntensity: 0
           )
         ),
         overshootSnapPoint: AdaptiveModalSnapPointPreset(
@@ -840,10 +840,10 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
               modalCornerRadius: 12,
               modalMaskedCorners: .topCorners,
               modalBackgroundOpacity: 0.9,
-              modalBackgroundBlurEffectStyle: .systemUltraThinMaterial,
-              modalBackgroundBlurEffectIntensity: 1,
-              backgroundBlurEffectStyle: .regular,
-              backgroundBlurEffectIntensity: 0
+              modalBackgroundVisualEffect: UIBlurEffect(style: .systemUltraThinMaterial),
+              modalBackgroundVisualEffectIntensity: 1,
+              backgroundVisualEffect: UIBlurEffect(style: .regular),
+              backgroundVisualEffectIntensity: 0
             )
           ),
         ],
@@ -913,11 +913,11 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
               modalCornerRadius: 10,
               modalMaskedCorners: .topCorners,
               modalBackgroundOpacity: 0.9,
-              modalBackgroundBlurEffectStyle: .regular,
-              modalBackgroundBlurEffectIntensity: 1,
+              modalBackgroundVisualEffect: UIBlurEffect(style: .regular),
+              modalBackgroundVisualEffectIntensity: 1,
               backgroundOpacity: 0,
-              backgroundBlurEffectStyle: .regular,
-              backgroundBlurEffectIntensity: 0
+              backgroundVisualEffect: UIBlurEffect(style: .regular),
+              backgroundVisualEffectIntensity: 0
             )
           ),
           
@@ -934,9 +934,9 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
               modalShadowOpacity: 0.3,
               modalShadowRadius: 8,
               modalBackgroundOpacity: 0.8,
-              modalBackgroundBlurEffectIntensity: 0.8,
+              modalBackgroundVisualEffectIntensity: 0.8,
               backgroundOpacity: 0.2,
-              backgroundBlurEffectIntensity: 0.1
+              backgroundVisualEffectIntensity: 0.1
             )
           ),
         ],
@@ -960,7 +960,7 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
             keyframeConfig: .init(
               modalContentOpacity: 1,
               backgroundOpacity: 0.2,
-              backgroundBlurEffectIntensity: 1
+              backgroundVisualEffectIntensity: 1
             )
           ),
         ],
@@ -972,8 +972,8 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
             modalBackgroundOpacity: 0,
             backgroundColor: .white,
             backgroundOpacity: 0,
-            backgroundBlurEffectStyle: .regular,
-            backgroundBlurEffectIntensity: 0
+            backgroundVisualEffect: UIBlurEffect(style: .regular),
+            backgroundVisualEffectIntensity: 0
           )
         ),
         overshootSnapPoint: AdaptiveModalSnapPointPreset(
@@ -1014,15 +1014,15 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
               modalMaskedCorners: .allCorners,
               modalContentOpacity: 1,
               modalBackgroundOpacity: 0.9,
-              modalBackgroundBlurEffectStyle: .regular,
-              modalBackgroundBlurEffectIntensity: 1,
+              modalBackgroundVisualEffect: UIBlurEffect(style: .regular),
+              modalBackgroundVisualEffectIntensity: 1,
               modalDragHandleSize: CGSize(width: 50, height: 6.5),
               modalDragHandleOffset: -16.5,
               modalDragHandleColor: .white,
               modalDragHandleOpacity: 0.8,
               backgroundOpacity: 0,
-              backgroundBlurEffectStyle: .regular,
-              backgroundBlurEffectIntensity: 0
+              backgroundVisualEffect: UIBlurEffect(style: .regular),
+              backgroundVisualEffectIntensity: 0
             )
           ),
           
@@ -1048,13 +1048,13 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
               modalCornerRadius: 10,
               modalMaskedCorners: .topCorners,
               modalBackgroundOpacity: 0.8,
-              modalBackgroundBlurEffectIntensity: 0.8,
+              modalBackgroundVisualEffectIntensity: 0.8,
               modalDragHandleSize: CGSize(width: 40, height: 6),
               modalDragHandleOffset: 8,
               modalDragHandleColor: .gray,
               modalDragHandleOpacity: 0.9,
               backgroundOpacity: 0.2,
-              backgroundBlurEffectIntensity: 0.1
+              backgroundVisualEffectIntensity: 0.1
             )
           ),
         ],
@@ -1120,8 +1120,8 @@ enum AdaptiveModalConfigDemoPresets: CaseIterable {
                   modalCornerRadius: 10,
                   modalMaskedCorners: .topCorners,
                   modalBackgroundOpacity: 0.85,
-                  modalBackgroundBlurEffectStyle: .regular,
-                  modalBackgroundBlurEffectIntensity: 1
+                  modalBackgroundVisualEffect: UIBlurEffect(style: .regular),
+                  modalBackgroundVisualEffectIntensity: 1
                 )
               ),
             ],

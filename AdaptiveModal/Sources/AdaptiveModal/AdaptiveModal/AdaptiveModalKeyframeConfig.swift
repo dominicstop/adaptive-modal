@@ -89,9 +89,9 @@ public struct AdaptiveModalKeyframeConfig: Equatable {
     backgroundTapInteraction: .default,
     modalTransform: .default,
     modalContentOpacity: 0.5,
-    modalBackgroundBlurEffectIntensity: 0,
+    modalBackgroundVisualEffectIntensity: 0,
     backgroundOpacity: 0,
-    backgroundBlurEffectIntensity: 0
+    backgroundVisualEffectIntensity: 0
   );
   
   static let keyMap: [(
@@ -161,14 +161,14 @@ public struct AdaptiveModalKeyframeConfig: Equatable {
       \.modalBackgroundOpacity,
       \.modalBackgroundOpacity
     ), (
-      \.modalBackgroundBlurEffectStyle,
-      \.modalBackgroundBlurEffectStyle
+      \.modalBackgroundVisualEffect,
+      \.modalBackgroundVisualEffect
     ), (
-      \.modalBackgroundBlurEffectOpacity,
-      \.modalBackgroundBlurEffectOpacity
+      \.modalBackgroundVisualEffectOpacity,
+      \.modalBackgroundVisualEffectOpacity
     ), (
-      \.modalBackgroundBlurEffectIntensity,
-      \.modalBackgroundBlurEffectIntensity
+      \.modalBackgroundVisualEffectIntensity,
+      \.modalBackgroundVisualEffectIntensity
     ), (
       \.modalDragHandleSize,
       \.modalDragHandleSize
@@ -191,14 +191,14 @@ public struct AdaptiveModalKeyframeConfig: Equatable {
       \.backgroundOpacity,
       \.backgroundOpacity
     ), (
-      \.backgroundBlurEffectStyle,
-      \.backgroundBlurEffectStyle
+      \.backgroundVisualEffect,
+      \.backgroundVisualEffect
     ), (
-      \.backgroundBlurEffectOpacity,
-      \.backgroundBlurEffectOpacity
+      \.backgroundVisualEffectOpacity,
+      \.backgroundVisualEffectOpacity
     ), (
-      \.backgroundBlurEffectIntensity,
-      \.backgroundBlurEffectIntensity
+      \.backgroundVisualEffectIntensity,
+      \.backgroundVisualEffectIntensity
     ),
   ];
 
@@ -244,9 +244,9 @@ public struct AdaptiveModalKeyframeConfig: Equatable {
   public var modalBackgroundColor: UIColor?;
   public var modalBackgroundOpacity: CGFloat?;
   
-  public var modalBackgroundBlurEffectStyle: UIBlurEffect.Style?;
-  public var modalBackgroundBlurEffectOpacity: CGFloat?;
-  public var modalBackgroundBlurEffectIntensity: CGFloat?;
+  public var modalBackgroundVisualEffect: UIVisualEffect?;
+  public var modalBackgroundVisualEffectOpacity: CGFloat?;
+  public var modalBackgroundVisualEffectIntensity: CGFloat?;
   
   public var modalDragHandleSize: CGSize?;
   public var modalDragHandleOffset: CGFloat?;
@@ -257,9 +257,9 @@ public struct AdaptiveModalKeyframeConfig: Equatable {
   public var backgroundColor: UIColor?;
   public var backgroundOpacity: CGFloat?;
   
-  public var backgroundBlurEffectStyle: UIBlurEffect.Style?;
-  public var backgroundBlurEffectOpacity: CGFloat?;
-  public var backgroundBlurEffectIntensity: CGFloat?;
+  public var backgroundVisualEffect: UIVisualEffect?;
+  public var backgroundVisualEffectOpacity: CGFloat?;
+  public var backgroundVisualEffectIntensity: CGFloat?;
   
   public init(
     allowSnapping: Bool? = nil,
@@ -282,9 +282,9 @@ public struct AdaptiveModalKeyframeConfig: Equatable {
     modalContentOpacity: CGFloat? = nil,
     modalBackgroundColor: UIColor? = nil,
     modalBackgroundOpacity: CGFloat? = nil,
-    modalBackgroundBlurEffectStyle: UIBlurEffect.Style? = nil,
-    modalBackgroundBlurEffectOpacity: CGFloat? = nil,
-    modalBackgroundBlurEffectIntensity: CGFloat? = nil,
+    modalBackgroundVisualEffect: UIVisualEffect? = nil,
+    modalBackgroundVisualEffectOpacity: CGFloat? = nil,
+    modalBackgroundVisualEffectIntensity: CGFloat? = nil,
     modalDragHandleSize: CGSize? = nil,
     modalDragHandleOffset: CGFloat? = nil,
     modalDragHandleColor: UIColor? = nil,
@@ -292,9 +292,9 @@ public struct AdaptiveModalKeyframeConfig: Equatable {
     modalDragHandleCornerRadius: CGFloat? = nil,
     backgroundColor: UIColor? = nil,
     backgroundOpacity: CGFloat? = nil,
-    backgroundBlurEffectStyle: UIBlurEffect.Style? = nil,
-    backgroundBlurEffectOpacity: CGFloat? = nil,
-    backgroundBlurEffectIntensity: CGFloat? = nil
+    backgroundVisualEffect: UIVisualEffect? = nil,
+    backgroundVisualEffectOpacity: CGFloat? = nil,
+    backgroundVisualEffectIntensity: CGFloat? = nil
   ) {
   
     self.allowSnapping = allowSnapping;
@@ -324,9 +324,9 @@ public struct AdaptiveModalKeyframeConfig: Equatable {
     self.modalBackgroundColor = modalBackgroundColor;
     self.modalBackgroundOpacity = modalBackgroundOpacity;
     
-    self.modalBackgroundBlurEffectStyle = modalBackgroundBlurEffectStyle;
-    self.modalBackgroundBlurEffectOpacity = modalBackgroundBlurEffectOpacity;
-    self.modalBackgroundBlurEffectIntensity = modalBackgroundBlurEffectIntensity;
+    self.modalBackgroundVisualEffect = modalBackgroundVisualEffect;
+    self.modalBackgroundVisualEffectOpacity = modalBackgroundVisualEffectOpacity;
+    self.modalBackgroundVisualEffectIntensity = modalBackgroundVisualEffectIntensity;
     
     self.modalDragHandleSize = modalDragHandleSize;
     self.modalDragHandleOffset = modalDragHandleOffset
@@ -337,9 +337,9 @@ public struct AdaptiveModalKeyframeConfig: Equatable {
     self.backgroundColor = backgroundColor;
     self.backgroundOpacity = backgroundOpacity;
     
-    self.backgroundBlurEffectStyle = backgroundBlurEffectStyle;
-    self.backgroundBlurEffectOpacity = backgroundBlurEffectOpacity;
-    self.backgroundBlurEffectIntensity = backgroundBlurEffectIntensity;
+    self.backgroundVisualEffect = backgroundVisualEffect;
+    self.backgroundVisualEffectOpacity = backgroundVisualEffectOpacity;
+    self.backgroundVisualEffectIntensity = backgroundVisualEffectIntensity;
   };
   
   init(fromInterpolationPoint interpolationPoint: AdaptiveModalInterpolationPoint){

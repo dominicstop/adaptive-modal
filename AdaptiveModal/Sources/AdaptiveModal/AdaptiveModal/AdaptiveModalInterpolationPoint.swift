@@ -7,7 +7,6 @@
 
 import UIKit
 import ComputableLayout
-import VisualEffectBlurView
 
 public struct AdaptiveModalInterpolationPoint: Equatable {
 
@@ -62,9 +61,9 @@ public struct AdaptiveModalInterpolationPoint: Equatable {
   public var modalBackgroundColor: UIColor;
   public var modalBackgroundOpacity: CGFloat;
   
-  public var modalBackgroundBlurEffectStyle: UIBlurEffect.Style?;
-  public var modalBackgroundBlurEffectOpacity: CGFloat;
-  public var modalBackgroundBlurEffectIntensity: CGFloat;
+  public var modalBackgroundVisualEffect: UIVisualEffect?;
+  public var modalBackgroundVisualEffectOpacity: CGFloat;
+  public var modalBackgroundVisualEffectIntensity: CGFloat;
   public var modalDragHandleCornerRadius: CGFloat;
   
   public var modalDragHandleSize: CGSize;
@@ -75,9 +74,9 @@ public struct AdaptiveModalInterpolationPoint: Equatable {
   public var backgroundColor: UIColor;
   public var backgroundOpacity: CGFloat;
   
-  public var backgroundBlurEffectStyle: UIBlurEffect.Style?;
-  public var backgroundBlurEffectOpacity: CGFloat;
-  public var backgroundBlurEffectIntensity: CGFloat;
+  public var backgroundVisualEffect: UIVisualEffect?;
+  public var backgroundVisualEffectOpacity: CGFloat;
+  public var backgroundVisualEffectIntensity: CGFloat;
   
   // MARK: - Computed Properties
   // ---------------------------
@@ -92,9 +91,9 @@ public struct AdaptiveModalInterpolationPoint: Equatable {
   };
   
   public var isBgVisualEffectSeeThrough: Bool {
-       self.backgroundBlurEffectStyle == nil
-    || self.backgroundBlurEffectOpacity == 0
-    || self.backgroundBlurEffectIntensity == 0;
+       self.backgroundVisualEffect == nil
+    || self.backgroundVisualEffectOpacity == 0
+    || self.backgroundVisualEffectIntensity == 0;
   };
   
   public var isBgDimmingViewSeeThrough: Bool {
@@ -175,15 +174,15 @@ public struct AdaptiveModalInterpolationPoint: Equatable {
       bgView.backgroundColor = self.backgroundColor;
     };
     
-    if let modalBgBlurEffectView = modalManager.modalBackgroundBlurEffectView {
-      modalBgBlurEffectView.alpha = self.modalBackgroundBlurEffectOpacity;
+    if let modalBgEffectView = modalManager.modalBackgroundVisualEffectView {
+      modalBgEffectView.alpha = self.modalBackgroundVisualEffectOpacity;
       
-      modalBgBlurEffectView.layer.cornerRadius = self.modalCornerRadius;
-      modalBgBlurEffectView.layer.maskedCorners = self.modalMaskedCorners;
+      modalBgEffectView.layer.cornerRadius = self.modalCornerRadius;
+      modalBgEffectView.layer.maskedCorners = self.modalMaskedCorners;
     };
     
-    if let bgBlurEffectView = modalManager.backgroundBlurEffectView {
-      bgBlurEffectView.alpha = self.backgroundBlurEffectOpacity;
+    if let bgVisualEffectView = modalManager.backgroundVisualEffectView {
+      bgVisualEffectView.alpha = self.backgroundVisualEffectOpacity;
     };
     
     var shouldUpdateConstraints = false;
@@ -286,19 +285,19 @@ public struct AdaptiveModalInterpolationPoint: Equatable {
   };
   
   func applyAnimation(
-    toModalBgBlurEffectView modalBgEffectView: VisualEffectBlurView?,
-    toBgBlurEffectView bgVisualEffectView: VisualEffectBlurView?
+    toModalBackgroundEffectView modalBgEffectView: UIVisualEffectView?,
+    toBackgroundVisualEffectView bgVisualEffectView: UIVisualEffectView?
   ){
-    modalBgEffectView?.blurEffectStyle = self.modalBackgroundBlurEffectStyle;
-    bgVisualEffectView?.blurEffectStyle = self.backgroundBlurEffectStyle;
+    modalBgEffectView?.effect = self.modalBackgroundVisualEffect;
+    bgVisualEffectView?.effect = self.backgroundVisualEffect;
   };
   
   func applyConfig(toModalManager modalManager: AdaptiveModalManager){
     let bgTapInteraction = self.derivedBackgroundTapInteraction;
     let shouldAllowUserInteraction = !bgTapInteraction.isPassThrough;
   
-    if let bgBlurEffectView = modalManager.backgroundBlurEffectView {
-      bgBlurEffectView.isUserInteractionEnabled = shouldAllowUserInteraction;
+    if let bgVisualEffectView = modalManager.backgroundVisualEffectView {
+      bgVisualEffectView.isUserInteractionEnabled = shouldAllowUserInteraction;
     };
     
     if let bgDimmingView = modalManager.backgroundDimmingView {
@@ -447,15 +446,15 @@ public extension AdaptiveModalInterpolationPoint {
       ?? keyframePrev?.modalBackgroundOpacity
       ?? 1;
       
-    self.modalBackgroundBlurEffectStyle = keyframeCurrent?.modalBackgroundBlurEffectStyle
-      ?? keyframePrev?.modalBackgroundBlurEffectStyle;
+    self.modalBackgroundVisualEffect = keyframeCurrent?.modalBackgroundVisualEffect
+      ?? keyframePrev?.modalBackgroundVisualEffect;
       
-    self.modalBackgroundBlurEffectOpacity = keyframeCurrent?.modalBackgroundBlurEffectOpacity
-      ?? keyframePrev?.modalBackgroundBlurEffectOpacity
+    self.modalBackgroundVisualEffectOpacity = keyframeCurrent?.modalBackgroundVisualEffectOpacity
+      ?? keyframePrev?.modalBackgroundVisualEffectOpacity
       ?? 1;
       
-    self.modalBackgroundBlurEffectIntensity = keyframeCurrent?.modalBackgroundBlurEffectIntensity
-      ?? keyframePrev?.modalBackgroundBlurEffectIntensity
+    self.modalBackgroundVisualEffectIntensity = keyframeCurrent?.modalBackgroundVisualEffectIntensity
+      ?? keyframePrev?.modalBackgroundVisualEffectIntensity
       ?? (isFirstSnapPoint ? 0 : 1);
       
     self.modalDragHandleSize = {
@@ -524,15 +523,15 @@ public extension AdaptiveModalInterpolationPoint {
       ?? keyframePrev?.backgroundOpacity
       ?? 0;
       
-    self.backgroundBlurEffectStyle = keyframeCurrent?.backgroundBlurEffectStyle
-      ?? keyframePrev?.backgroundBlurEffectStyle;
+    self.backgroundVisualEffect = keyframeCurrent?.backgroundVisualEffect
+      ?? keyframePrev?.backgroundVisualEffect;
       
-    self.backgroundBlurEffectOpacity = keyframeCurrent?.backgroundBlurEffectOpacity
-      ?? keyframePrev?.backgroundBlurEffectOpacity
+    self.backgroundVisualEffectOpacity = keyframeCurrent?.backgroundVisualEffectOpacity
+      ?? keyframePrev?.backgroundVisualEffectOpacity
       ?? 1;
       
-    self.backgroundBlurEffectIntensity = keyframeCurrent?.backgroundBlurEffectIntensity
-      ?? keyframePrev?.backgroundBlurEffectIntensity
+    self.backgroundVisualEffectIntensity = keyframeCurrent?.backgroundVisualEffectIntensity
+      ?? keyframePrev?.backgroundVisualEffectIntensity
       ?? (isFirstSnapPoint ? 0 : 1);
       
     self.computedModalScrollViewContentInsets = {
