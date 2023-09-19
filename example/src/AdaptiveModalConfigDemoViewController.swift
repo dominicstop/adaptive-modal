@@ -269,8 +269,8 @@ fileprivate class TestModalViewController:
         modalCornerRadius: 15,
         modalMaskedCorners: .allCorners,
         modalBackgroundOpacity: 0.85,
-        modalBackgroundVisualEffect: UIBlurEffect(style: .regular),
-        modalBackgroundVisualEffectIntensity: 1
+        modalBackgroundBlurEffectStyle: .regular,
+        modalBackgroundBlurEffectIntensity: 1
       )
     );
     

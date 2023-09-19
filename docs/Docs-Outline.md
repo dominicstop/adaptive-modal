@@ -188,8 +188,8 @@
   
     * `AdaptiveModalExampleSnapPointKeyframesXX`
   
-      * `AdaptiveModalKeyframeConfig` properties used in this example: `modalBackgroundOpacity`, `modalBackgroundVisualEffect`, `modalBackgroundVisualEffectIntensity`.
-      * Mentioned, but not part of example: `modalBackgroundVisualEffectOpacity`.
+      * `AdaptiveModalKeyframeConfig` properties used in this example: `modalBackgroundOpacity`, `modalBackgroundBlurEffectStyle`, `modalBackgroundBlurEffectIntensity`.
+      * Mentioned, but not part of example: `modalBackgroundBlurEffectOpacity`.
   
   
     <br>
@@ -209,8 +209,8 @@
     <br>
   
     * `AdaptiveModalExampleSnapPointKeyframesXX`
-      * `AdaptiveModalKeyframeConfig` properties used in this example: `backgroundVisualEffect`, `backgroundVisualEffectIntensity`.
-      * Mentioned, but not part of example: `backgroundVisualEffectOpacity`, 
+      * `AdaptiveModalKeyframeConfig` properties used in this example: `backgroundBlurEffectStyle`, `backgroundBlurEffectIntensity`.
+      * Mentioned, but not part of example: `backgroundBlurEffectOpacity`, 
   
     <br><br>
   

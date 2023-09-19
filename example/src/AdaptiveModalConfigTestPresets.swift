@@ -345,8 +345,8 @@ enum AdaptiveModalConfigTestPresets: CaseIterable {
                 .layerMinXMinYCorner,
                 .layerMaxXMinYCorner
               ],
-              backgroundVisualEffect: UIBlurEffect(style: .regular),
-              backgroundVisualEffectIntensity: 0
+              backgroundBlurEffectStyle: .regular,
+              backgroundBlurEffectIntensity: 0
             )
           ),
           .snapPoint(
@@ -370,8 +370,8 @@ enum AdaptiveModalConfigTestPresets: CaseIterable {
                 .layerMaxXMinYCorner,
                 .layerMaxXMaxYCorner
               ],
-              backgroundVisualEffect: UIBlurEffect(style: .regular),
-              backgroundVisualEffectIntensity: 0.5
+              backgroundBlurEffectStyle: .regular,
+              backgroundBlurEffectIntensity: 0.5
             )
           ),
         ],
