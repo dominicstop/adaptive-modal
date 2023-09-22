@@ -6,11 +6,6 @@
 
 ## Current
 
-- [ ] `TODO:2023-09-15-21-58-53` - Fix: Drag handle layout bug - On a horizontal modal, the drag handle animates to the wrong position when dismissing via animator. 
-  * Caused by a misconfigured override undershoot snap point during dismissal (i.e. when `hideModal` is invoked). 
-
-<br>
-
 - [ ] `TODO:2023-09-16-06-33-40` - Fix: Modal corner radius layout bug - Modal corner radius mask not applying immediately during modal dragging.
 
 - [ ] `TODO:2023-08-29-10-07-08` - Impl: Present a modal in place (e.g. fade in, scale in, etc) via a animation keyframe config + snap point index/key.
@@ -59,6 +54,11 @@
 <br><br>
 
 ## Completed
+
+- [x] `TODO:2023-09-15-21-58-53` - Fix: Drag handle layout bug - On a horizontal modal, the drag handle animates to the wrong position when dismissing via animator. 
+  * Caused by a misconfigured override undershoot snap point during dismissal (i.e. when `hideModal` is invoked). 
+
+<br>
 
 - [x] `TODO:2023-09-15-22-06-28` - Fix: Modal blur layout bug - When a modal has a 3D transform, the modal's background blur disappears.
   * The layout bug is caused by the modal shadow view (`modalWrapperShadowView`.
