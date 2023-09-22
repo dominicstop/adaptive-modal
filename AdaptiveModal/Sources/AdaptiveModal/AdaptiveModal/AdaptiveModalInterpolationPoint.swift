@@ -458,26 +458,25 @@ public extension AdaptiveModalInterpolationPoint {
       ?? (isFirstSnapPoint ? 0 : 1);
       
     self.modalDragHandleSize = {
-      let currentSizeRaw = keyframeCurrent?.modalDragHandleSize;
+      let currentDragHandleSizeRaw = keyframeCurrent?.modalDragHandleSize;
       
-      if currentSizeRaw == nil,
-         let modalDragHandleSize = keyframePrev?.modalDragHandleSize {
+      if currentDragHandleSizeRaw == nil,
+         let prevModalDragHandleSize = keyframePrev?.modalDragHandleSize {
          
-        return modalDragHandleSize;
+        return prevModalDragHandleSize;
       };
       
-      let nextSize = currentSizeRaw ?? CGSize(width: 40, height: 6);
+      let defaultDragHandleSize = {
+        switch modalConfig.snapDirection.orientation {
+          case .horizontal:
+            return CGSize(width: 6, height: 40);
+            
+          case .vertical:
+            return CGSize(width: 40, height: 6);
+        };
+      }();
       
-      switch modalConfig.snapDirection {
-        case .bottomToTop, .topToBottom:
-          return nextSize;
-        
-        case .leftToRight, .rightToLeft:
-          return CGSize(
-            width : nextSize.height,
-            height: nextSize.width
-          );
-      };
+      return currentDragHandleSizeRaw ?? defaultDragHandleSize;
     }();
       
     self.modalDragHandleOffset = {
