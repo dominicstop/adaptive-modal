@@ -47,8 +47,16 @@ extension AdaptiveModalInterpolationPoint {
       );
     };
     
-    if let firstSnapPoint = snapPoints.first,
-       let secondInterpolationPoint = items[safeIndex: 1] {
+    let firstSnapPoint = snapPoints.first {
+      $0.offset == 0;
+    };
+    
+    let secondInterpolationPoint = items.first {
+      $0.snapPointIndex == 1;
+    };
+    
+    if let firstSnapPoint = firstSnapPoint,
+       let secondInterpolationPoint = secondInterpolationPoint {
        
       items[0] = AdaptiveModalInterpolationPoint(
         usingModalConfig: modalConfig,
