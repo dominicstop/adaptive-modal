@@ -3133,6 +3133,20 @@ public class AdaptiveModalManager: NSObject {
       self.modalStateMachine.setState(nextState);
     };
     
+    /// Note:2023-09-23-23-01-02
+    /// * `maskedCorners` cannot be animated, so we apply the next corner mask
+    ///    immediately to make it less noticeable
+    if let modalContentWrapperView = self.modalContentWrapperView {
+      let maskCountCurrent = modalContentWrapperView.layer.maskedCorners.count;
+      let maskCountNext = nextInterpolationPoint.modalMaskedCorners.count;
+      
+      // corner mask precedence
+      // apply the next corner mask only if has more masked corners
+      if maskCountNext > maskCountCurrent {
+        modalContentWrapperView.layer.maskedCorners = nextInterpolationPoint.modalMaskedCorners;
+      };
+    };
+    
     self.presentationEventsDelegate.invoke {
       $0.notifyOnModalWillSnap(
         sender: self,
