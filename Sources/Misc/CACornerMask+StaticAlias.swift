@@ -9,6 +9,13 @@ import UIKit
 
 extension CACornerMask {
 
+  public static let uniqueElements: [Self] = [
+    .layerMinXMinYCorner,
+    .layerMaxXMinYCorner,
+    .layerMinXMaxYCorner,
+    .layerMaxXMaxYCorner,
+  ];
+
   public static let allCorners: Self = [
     .layerMinXMinYCorner,
     .layerMaxXMinYCorner,
@@ -36,26 +43,37 @@ extension CACornerMask {
     .layerMaxXMaxYCorner,
   ];
   
-  var isMaskingTopCorners: Bool {
+  public var isMaskingTopCorners: Bool {
        self.contains(.layerMinXMinYCorner)
     || self.contains(.layerMaxXMinYCorner);
   };
        
     
-  var isMaskingLeftCorners: Bool {
+  public var isMaskingLeftCorners: Bool {
        self.contains(.layerMinXMinYCorner)
     || self.contains(.layerMinXMaxYCorner);
   };
        
     
-  var isMaskingBottomCorners: Bool {
+  public var isMaskingBottomCorners: Bool {
        self.contains(.layerMinXMaxYCorner)
     || self.contains(.layerMaxXMaxYCorner);
   };
        
     
-  var isMaskingRightCorners: Bool {
+  public var isMaskingRightCorners: Bool {
        self.contains(.layerMaxXMinYCorner)
     || self.contains(.layerMaxXMaxYCorner);
+  };
+  
+  public var count: Int {
+    var count = 0;
+  
+    Self.uniqueElements.forEach {
+      guard self.contains($0) else { return };
+      count += 1;
+    };
+    
+    return count;
   };
 };
