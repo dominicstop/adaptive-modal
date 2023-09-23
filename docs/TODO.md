@@ -6,8 +6,6 @@
 
 ## Current
 
-- [ ] `TODO:2023-09-16-06-33-40` - Fix: Modal corner radius layout bug - Modal corner radius mask cannot be animated, so applying next mask immediately during modal dragging/snapping.
-
 - [ ] `TODO:2023-08-29-10-07-08` - Impl: Present a modal in place (e.g. fade in, scale in, etc) via a animation keyframe config + snap point index/key.
 
 - [ ] `TODO:2023-09-19-14-25-06` - Refactor: Replace `UIVisualEffectView` usage w/ `VisualEffectBlurView`.
@@ -55,6 +53,7 @@
 
 ## Completed
 
+- [x] `TODO:2023-09-16-06-33-40` - Fix: Modal corner radius layout bug - Modal corner radius mask cannot be animated, so applying next mask immediately during modal dragging/snapping.
 - [x] `TODO:2023-09-15-21-58-53` - Fix: Drag handle layout bug - On a horizontal modal, the drag handle animates to the wrong position when dismissing via animator. 
   * Caused by a misconfigured override undershoot snap point during dismissal (i.e. when `hideModal` is invoked). 
 
