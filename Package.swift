@@ -31,7 +31,7 @@ let package = Package(
       dependencies: [
         "ComputableLayout",
       ],
-      path: "AdaptiveModal",
+      path: "Sources",
       linkerSettings: [
 				.linkedFramework("UIKit"),
 			]

@@ -21,7 +21,7 @@ Support for gesture-driven animations, and modals that adapt to the current devi
   s.ios.deployment_target = '11.0'
   s.swift_version = '5.0'
 
-  s.source_files = 'AdaptiveModal/Sources/**/*'
+  s.source_files = 'Sources/**/*'
   s.frameworks = 'UIKit'
   s.dependency 'ComputableLayout', '0.4.0'
 end
