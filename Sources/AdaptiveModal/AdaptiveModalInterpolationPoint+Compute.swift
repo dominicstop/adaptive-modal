@@ -66,22 +66,7 @@ extension AdaptiveModalInterpolationPoint {
         prevInterpolationPoint: secondInterpolationPoint
       );
     };
-    
-    #if DEBUG
-    let collisions = Self.itemsWithPercentCollision(interpolationPoints: items);
-      
-    collisions.forEach {
-      print(
-        "Warning: Snap point collision",
-        "\n - snapPointIndex: \($0.snapPointIndex)",
-        "\n - key: \($0.key)",
-        "\n - percent: \($0.percent)",
-        "\n - computedRect: \($0.computedRect)",
-        "\n"
-      );
-    };
-    #endif
-    
+
     return items;
   };
   
@@ -454,7 +439,7 @@ extension AdaptiveModalInterpolationPoint {
         
         collisions.enumerated().forEach {
           print(
-            "Snap point collision - #\($0.offset)",
+            "Snap point collision - \($0.offset + 1)/\(collisions.count)",
             "\n - snapPointIndex: \($0.element.snapPointIndex)",
             "\n - key: \($0.element.key)",
             "\n - percent: \($0.element.percent)",
