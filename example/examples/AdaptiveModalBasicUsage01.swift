@@ -144,7 +144,10 @@ class AdaptiveModalBasicUsage01 : UIViewController {
       )
     );
   
-    let modalManager = AdaptiveModalManager(staticConfig: modalConfig);
+    let modalManager = AdaptiveModalManager(
+      presentingViewController: self,
+      staticConfig: modalConfig
+    );
     
     let modalVC = ModalViewController();
     modalVC.modalManager = modalManager;

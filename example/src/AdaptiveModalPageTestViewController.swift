@@ -448,7 +448,10 @@ class AdaptiveModalPageTestViewController: UIViewController {
     let currentModalConfig = self.currentModalConfigPreset.config;
     let snapPoints = currentModalConfig.snapPoints;
   
-    let modalManager = AdaptiveModalManager(staticConfig: currentModalConfig);
+    let modalManager = AdaptiveModalManager(
+      presentingViewController: self,
+      staticConfig: currentModalConfig
+    );
     
     func makePageVC(instanceID: Int) -> ModalViewController {
       let modalVC = ModalViewController();

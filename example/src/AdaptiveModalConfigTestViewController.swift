@@ -13,6 +13,7 @@ class AdaptiveModalConfigTestViewController : UIViewController {
   
   lazy var modalManager: AdaptiveModalManager = {
     let manager = AdaptiveModalManager(
+      presentingViewController: self,
       staticConfig: AdaptiveModalConfigTestPresets.default.config
     );
     

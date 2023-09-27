@@ -466,6 +466,7 @@ fileprivate class TestModalViewController:
 class AdaptiveModalConfigDemoViewController : UIViewController {
 
   lazy var adaptiveModalManager = AdaptiveModalManager(
+    presentingViewController: self,
     staticConfig: self.currentModalConfigPreset.config
   );
   
@@ -674,6 +675,7 @@ class AdaptiveModalConfigDemoViewController : UIViewController {
     let (modalManager, topVC): (AdaptiveModalManager, UIViewController) = {
       if let presentedVC = self.presentedViewController {
         let modalManager = AdaptiveModalManager(
+          presentingViewController: self,
           adaptiveConfig: .adaptiveConfig(
             defaultConfig: self.currentModalConfigPreset.config,
             constrainedConfigs: self.currentModalConfigPreset.constrainedConfigs
