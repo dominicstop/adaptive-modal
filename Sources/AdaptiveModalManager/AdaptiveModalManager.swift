@@ -787,8 +787,12 @@ public class AdaptiveModalManager: NSObject {
   // MARK: - Init
   // ------------
   
-  public init(staticConfig: AdaptiveModalConfig) {
+  public init(
+    presentingViewController presentingVC: UIViewController? = nil,
+    staticConfig: AdaptiveModalConfig
+  ) {
     self.modalConfig = .staticConfig(staticConfig);
+    self.presentingViewController = presentingVC;
     
     super.init();
     
@@ -796,8 +800,12 @@ public class AdaptiveModalManager: NSObject {
     self.computeSnapPoints();
   };
   
-  public init(adaptiveConfig: AdaptiveModalConfigMode) {
+  public init(
+    presentingViewController presentingVC: UIViewController? = nil,
+    adaptiveConfig: AdaptiveModalConfigMode
+  ) {
     self.modalConfig = adaptiveConfig;
+    self.presentingViewController = presentingVC;
     
     super.init();
     
