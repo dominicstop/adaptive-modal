@@ -119,13 +119,13 @@ public enum AdaptiveModalSnapPointConfig: Equatable {
   
   public init(
     fromBase base: Self,
-    newKey: SnapPointKey? = nil,
+    fallbackKey: SnapPointKey? = nil,
     newSnapPoint: ComputableLayout? = nil,
     newAnimationKeyframe: AdaptiveModalKeyframeConfig? = nil
   ) {
   
     let key = base.key == .unspecified
-      ? newKey ?? base.key
+      ? fallbackKey ?? base.key
       : base.key;
       
     let layoutConfig = newSnapPoint ?? base.layoutConfig;
@@ -186,7 +186,7 @@ extension AdaptiveModalSnapPointConfig {
     items += inBetweenSnapPoints.enumerated().map {
       .init(
         fromBase: $0.element,
-        newKey: .index($0.offset + 1)
+        fallbackKey: .index($0.offset + 1)
       );
     };
     
