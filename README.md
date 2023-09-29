@@ -24,6 +24,8 @@ See [`AdaptiveModalConfigDemoPresets`](example/src/AdaptiveModalConfigDemoPreset
 
 ![Demo 13 to 15](assets/demo-13-14-15.gif)
 
+![paginated-demo-01-02-03-04-05](./assets/paginated-demo-01-02-03-04-05.gif)
+
 <br><br>
 
 ## Demo Videos
