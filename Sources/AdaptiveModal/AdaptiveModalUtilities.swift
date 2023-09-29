@@ -626,10 +626,10 @@ public class AdaptiveModalUtilities {
     /// `func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView?`
     ///
     impMethodType: T.Type =
-      @convention(c) (Any, Selector, CGPoint, UIEvent?) -> UIView?,
+      (@convention(c) (Any, Selector, CGPoint, UIEvent?) -> UIView?).self,
       
     impBlockType: U.Type =
-      @convention(block) (Any, CGPoint, UIEvent?) -> UIView?,
+      (@convention(block) (Any, CGPoint, UIEvent?) -> UIView?).self,
       
     forView view: UIView,
     hitTestBlockMaker: @escaping (
