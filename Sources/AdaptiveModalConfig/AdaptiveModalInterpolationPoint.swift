@@ -8,6 +8,10 @@
 import UIKit
 import ComputableLayout
 
+// TODO: Rename this to AdaptiveModalKeyframe
+/// Reasoning: `AdaptiveModalKeyframeConfig` -> `AdaptiveModalKeyframe`
+/// I.e. this type is produces from `AdaptiveModalKeyframeConfig`
+
 public struct AdaptiveModalInterpolationPoint: Equatable {
 
   public typealias BackgroundInteractionMode =
