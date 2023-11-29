@@ -168,11 +168,13 @@
 				"${PODS_ROOT}/Target Support Files/Pods-AdaptiveModal_Example/Pods-AdaptiveModal_Example-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/AdaptiveModal/AdaptiveModal.framework",
 				"${BUILT_PRODUCTS_DIR}/ComputableLayout/ComputableLayout.framework",
+				"${BUILT_PRODUCTS_DIR}/DGSwiftUtilities/DGSwiftUtilities.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AdaptiveModal.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ComputableLayout.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DGSwiftUtilities.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;

@@ -16,11 +16,13 @@ let package = Package(
     ),
   ],
   dependencies: [
-    // Dependencies declare other packages that this package depends on.
-    // .package(url: /* package url */, from: "1.0.0"),
     .package(
       url: "https://github.com/dominicstop/ComputableLayout",
-      .upToNextMajor(from: "0.1.0")
+      .upToNextMajor(from: "0.5.0")
+    ),
+    .package(
+      url: "https://github.com/dominicstop/DGSwiftUtilities",
+      .upToNextMajor(from: "0.7.0")
     ),
   ],
   targets: [
@@ -30,6 +32,7 @@ let package = Package(
       name: "AdaptiveModal",
       dependencies: [
         "ComputableLayout",
+        "DGSwiftUtilities",
       ],
       path: "Sources",
       linkerSettings: [

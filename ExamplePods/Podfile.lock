@@ -1,7 +1,10 @@
 PODS:
-  - AdaptiveModal (0.1.0):
-    - ComputableLayout (= 0.4.0)
-  - ComputableLayout (0.4.0)
+  - AdaptiveModal (1.0.7):
+    - ComputableLayout (~> 0.5)
+    - DGSwiftUtilities (~> 0.7)
+  - ComputableLayout (0.5.0):
+    - DGSwiftUtilities (~> 0.1)
+  - DGSwiftUtilities (0.7.0)
 
 DEPENDENCIES:
   - AdaptiveModal (from `../`)
@@ -9,15 +12,17 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - ComputableLayout
+    - DGSwiftUtilities
 
 EXTERNAL SOURCES:
   AdaptiveModal:
     :path: "../"
 
 SPEC CHECKSUMS:
-  AdaptiveModal: aedcf8fe25544ec0081e35b8dba46cedb7de9e80
-  ComputableLayout: 6dd2d980bd76f918dc17bf41499b970c901f0824
+  AdaptiveModal: f05f7d9a7587916ea2f282c15701216b761a13a1
+  ComputableLayout: 3ce5e05c4ba1cbae7e229a7f2e4952a135a068ba
+  DGSwiftUtilities: fd0d3a6f91889d3e507892b224cde4a88dbec3fe
 
 PODFILE CHECKSUM: 60e8cc19e6f427d05264b63bece248ca59907f38
 
-COCOAPODS: 1.12.0
+COCOAPODS: 1.14.2

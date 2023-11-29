@@ -5,8 +5,17 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/dominicstop/ComputableLayout",
       "state" : {
-        "revision" : "22f54ecbdcc84b4347e7f20e436044ca88c47ad1",
-        "version" : "0.4.0"
+        "revision" : "e9a736f3338e19f62b7a3198328f0a9710cec0fe",
+        "version" : "0.5.0"
+      }
+    },
+    {
+      "identity" : "dgswiftutilities",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/dominicstop/DGSwiftUtilities",
+      "state" : {
+        "revision" : "bf0baf10b25ec0f973ecf59dc6150ae99bd31ba0",
+        "version" : "0.7.0"
       }
     }
   ],
