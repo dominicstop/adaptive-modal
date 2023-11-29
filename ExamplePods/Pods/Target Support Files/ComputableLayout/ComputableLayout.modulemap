@@ -1,6 +1,0 @@
-framework module ComputableLayout {
-  umbrella header "ComputableLayout-umbrella.h"
-
-  export *
-  module * { export * }
-}
