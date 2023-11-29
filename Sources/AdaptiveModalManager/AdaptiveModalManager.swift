@@ -7,6 +7,7 @@
 
 import UIKit
 import ComputableLayout
+import DGSwiftUtilities
 
 
 public class AdaptiveModalManager: NSObject {

@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import DGSwiftUtilities
 
 public class AdaptiveModalUtilities {
 

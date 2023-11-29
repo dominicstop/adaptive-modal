@@ -6,7 +6,7 @@
 //
 
 import UIKit
-
+import DGSwiftUtilities
 
 public class AdaptiveModalPageViewController: UIViewController {
 

@@ -7,6 +7,7 @@
 
 import UIKit
 import ComputableLayout
+import DGSwiftUtilities
 
 // TODO: Rename this to AdaptiveModalKeyframe
 /// Reasoning: `AdaptiveModalKeyframeConfig` -> `AdaptiveModalKeyframe`
