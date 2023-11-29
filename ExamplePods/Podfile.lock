@@ -4,7 +4,7 @@ PODS:
     - DGSwiftUtilities (~> 0.7)
   - ComputableLayout (0.5.0):
     - DGSwiftUtilities (~> 0.1)
-  - DGSwiftUtilities (0.7.0)
+  - DGSwiftUtilities (0.7.1)
 
 DEPENDENCIES:
   - AdaptiveModal (from `../`)
@@ -21,7 +21,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   AdaptiveModal: f05f7d9a7587916ea2f282c15701216b761a13a1
   ComputableLayout: 3ce5e05c4ba1cbae7e229a7f2e4952a135a068ba
-  DGSwiftUtilities: fd0d3a6f91889d3e507892b224cde4a88dbec3fe
+  DGSwiftUtilities: 803ba97b8b4b9c7afcb109c08519552a4be0a5da
 
 PODFILE CHECKSUM: 60e8cc19e6f427d05264b63bece248ca59907f38
 
