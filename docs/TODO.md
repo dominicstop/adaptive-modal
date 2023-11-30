@@ -10,11 +10,15 @@
 
 <br>
 
+- [ ] `TODO:2023-12-01-01-34-47` - Refactor: `AdaptiveModalManager` - Extract and group functions into their own files.
 - [ ] `TODO:2023-11-30-15-17-43` - Refactor: `AdaptiveModalManager` - Move public functions to their own file, e.g. `AdaptiveModalManager+PublicFunctions`. 
 - [ ] `TODO:2023-11-30-15-19-38` - Refactor: `AdaptiveModalManager` - Extract/group gesture related properties to `AdaptiveModalGestureContext`.
 - [ ] `TODO:2023-11-30-17-50-08` - Refactor: `AdaptiveModalManager` - Extract/group display link related properties to `AdaptiveModalDisplayLinkContext`
 - [ ] `TODO:2023-11-30-17-51-09` - Refactor: `AdaptiveModalManager` - Extract/group interpolation point related values to `AdaptiveModalInterpolationPointContext` 
 - [ ] `TODO:2023-11-30-17-51-41` - Refactor: `AdaptiveModalManager` - Extract/group modal-related values to `AdaptiveModalMetadata`.
+
+<br>
+
 - [ ] `TODO:2023-11-30-17-52-05` - Refactor: `AdaptiveModalManager` - Extract/group modal animation related properties and logic to `AdaptiveModalAnimationContext`.
 
 <br><br>
