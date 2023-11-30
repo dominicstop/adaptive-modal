@@ -115,7 +115,7 @@ public class AdaptiveModalManager: NSObject {
   public var dragHandleViewProvider: (() -> AdaptiveModalDragHandleView)?;
   
   /// `transitionContext.containerView` or `UITransitionView`
-  public weak var targetView: UIView?;
+  public weak var rootView: UIView?;
   
   public var modalWrapperView: UIView? {
     self.modalWrapperViewController?.view;
@@ -186,9 +186,9 @@ public class AdaptiveModalManager: NSObject {
         );
       };
       
-      if let targetView = self.targetView {
+      if let rootView = self.rootView {
         return .init(
-          fromTargetView: targetView,
+          fromTargetView: rootView,
           keyboardValues: self.layoutKeyboardValues
         );
       };
@@ -374,8 +374,8 @@ public class AdaptiveModalManager: NSObject {
   };
   
   public var interpolationRangeMaxInput: CGFloat? {
-    guard let targetView = self.targetView else { return nil };
-    return targetView.frame[keyPath: self.currentModalConfig.maxInputRangeKeyForRect];
+    guard let rootView = self.rootView else { return nil };
+    return rootView.frame[keyPath: self.currentModalConfig.maxInputRangeKeyForRect];
   };
   
   public var currentSnapPoints: [AdaptiveModalSnapPointConfig] {
@@ -943,7 +943,7 @@ public class AdaptiveModalManager: NSObject {
   };
   
   func setupDummyModalView() {
-    guard let targetView = self.targetView,
+    guard let rootView = self.rootView,
           let dummyModalView = self.dummyModalView
     else { return };
     
@@ -951,7 +951,7 @@ public class AdaptiveModalManager: NSObject {
     dummyModalView.alpha = 0.1;
     dummyModalView.isUserInteractionEnabled = false;
     
-    targetView.addSubview(dummyModalView);
+    rootView.addSubview(dummyModalView);
   };
 
   func setupAddViews() {
@@ -959,10 +959,10 @@ public class AdaptiveModalManager: NSObject {
           let modalWrapperView = self.modalWrapperView
     else { return };
     
-    if let targetView = self.targetView,
+    if let rootView = self.rootView,
        let modalWrapperView = self.modalWrapperView {
        
-      targetView.addSubview(modalWrapperView);
+      rootView.addSubview(modalWrapperView);
     };
     
     if let bgVisualEffectView = self.backgroundVisualEffectView {
@@ -1168,16 +1168,16 @@ public class AdaptiveModalManager: NSObject {
           let modalContentWrapperView = self.modalContentWrapperView
     else { return };
     
-    if let targetView = self.targetView,
+    if let rootView = self.rootView,
        let modalWrapperView = self.modalWrapperViewController?.view {
        
       modalWrapperView.translatesAutoresizingMaskIntoConstraints = false;
        
       NSLayoutConstraint.activate([
-        modalWrapperView.topAnchor     .constraint(equalTo: targetView.topAnchor     ),
-        modalWrapperView.bottomAnchor  .constraint(equalTo: targetView.bottomAnchor  ),
-        modalWrapperView.leadingAnchor .constraint(equalTo: targetView.leadingAnchor ),
-        modalWrapperView.trailingAnchor.constraint(equalTo: targetView.trailingAnchor),
+        modalWrapperView.topAnchor     .constraint(equalTo: rootView.topAnchor     ),
+        modalWrapperView.bottomAnchor  .constraint(equalTo: rootView.bottomAnchor  ),
+        modalWrapperView.leadingAnchor .constraint(equalTo: rootView.leadingAnchor ),
+        modalWrapperView.trailingAnchor.constraint(equalTo: rootView.trailingAnchor),
       ]);
     };
     
@@ -1444,7 +1444,7 @@ public class AdaptiveModalManager: NSObject {
       view.removeFromSuperview();
     };
     
-    self.targetView = nil;
+    self.rootView = nil;
     self.dummyModalView = nil;
     
     self.modalWrapperLayoutView = nil;
@@ -2409,9 +2409,9 @@ public class AdaptiveModalManager: NSObject {
       + "\n - modalView: \(self.modalView?.debugDescription ?? "N/A")"
       + "\n - modalView frame: \(self.modalView?.frame.debugDescription ?? "N/A")"
       + "\n - modalView superview: \(self.modalView?.superview.debugDescription ?? "N/A")"
-      + "\n - targetView: \(self.targetView?.debugDescription ?? "N/A")"
-      + "\n - targetView frame: \(self.targetView?.frame.debugDescription ?? "N/A")"
-      + "\n - targetView superview: \(self.targetView?.superview.debugDescription ?? "N/A")"
+      + "\n - rootView: \(self.rootView?.debugDescription ?? "N/A")"
+      + "\n - rootView frame: \(self.rootView?.frame.debugDescription ?? "N/A")"
+      + "\n - rootView superview: \(self.rootView?.superview.debugDescription ?? "N/A")"
       + "\n - modalViewController: \(self.modalViewController?.debugDescription ?? "N/A")"
       + "\n - presentingViewController: \(self.presentingViewController?.debugDescription ?? "N/A")"
       + "\n - currentInterpolationIndex: \(self.currentInterpolationIndex)"
@@ -2747,10 +2747,10 @@ public class AdaptiveModalManager: NSObject {
   @objc private func onDragPanGesture(_ sender: UIPanGestureRecognizer) {
     var shouldClearGestureValues = false;
   
-    let gesturePoint = sender.location(in: self.targetView);
+    let gesturePoint = sender.location(in: self.rootView);
     self.gesturePoint = gesturePoint;
     
-    let gestureVelocity = sender.velocity(in: self.targetView);
+    let gestureVelocity = sender.velocity(in: self.rootView);
     self.gestureVelocity = gestureVelocity;
     
     #if DEBUG
@@ -3622,15 +3622,15 @@ public class AdaptiveModalManager: NSObject {
   };
   
   public func prepareForPresentation(
-    targetView: UIView? = nil,
+    rootView: UIView? = nil,
     shouldForceReset: Bool = false
   ) {
     guard let modalView = modalView ?? self.modalView,
-          let targetView = targetView ?? self.targetView
+          let rootView = rootView ?? self.rootView
     else { return };
 
     let didViewsChange =
-      modalView !== self.modalView || targetView !== self.targetView;
+      modalView !== self.modalView || rootView !== self.rootView;
       
     let shouldReset =
       !self.didTriggerSetup || didViewsChange || shouldForceReset;
@@ -3639,7 +3639,7 @@ public class AdaptiveModalManager: NSObject {
       self.cleanup();
     };
     
-    self.targetView = targetView;
+    self.rootView = rootView;
     
     self.updateCurrentModalConfig();
     self.computeSnapPoints();
@@ -3713,12 +3713,12 @@ public class AdaptiveModalManager: NSObject {
   };
   
   public func notifyDidLayoutSubviews() {
-    guard let targetView = self.targetView,
+    guard let rootView = self.rootView,
           let modalFrame = self.modalFrame
     else { return };
     
     let prevTargetFrame = self.prevTargetFrame;
-    let nextTargetFrame = targetView.frame;
+    let nextTargetFrame = rootView.frame;
     
     guard prevTargetFrame != nextTargetFrame else { return };
     self.prevTargetFrame = nextTargetFrame;

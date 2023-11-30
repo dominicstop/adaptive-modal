@@ -42,7 +42,7 @@ extension AdaptiveModalManager: UIViewControllerAnimatedTransitioning {
       case .presenting:
         let containerView = transitionContext.containerView
       
-        self.targetView = containerView;
+        self.rootView = containerView;
         self.presentingViewController = fromVC;
         
         self.prepareForPresentation();

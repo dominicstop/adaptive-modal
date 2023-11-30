@@ -54,7 +54,7 @@ extension AdaptiveModalManager: UIGestureRecognizerDelegate {
       otherGestureRecognizer.isEnabled.toggle();
     };
     
-    let gesturePoint = panGesture.location(in: self.targetView);
+    let gesturePoint = panGesture.location(in: self.rootView);
     
     let gestureVelocity = panGesture.velocity(in: modalView);
     
