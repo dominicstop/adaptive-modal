@@ -7,7 +7,6 @@
 ## Current
 
 - [ ] `TODO:2023-11-30-15-09-42` - Refactor: `AdaptiveModalManager` - Streamline modal presentation, and remove other ways of presenting the modal.
-- [ ] `TODO:2023-11-30-15-05-46` - Refactor: `AdaptiveModalManager` - Rename `modalRootView` to `modalWrapperView`.
 - [ ] `TODO:2023-11-30-15-10-26` - Refactor: `AdaptiveModalManager` - Rename `targetView` to `modalRootView`.
 
 <br>
@@ -66,6 +65,7 @@
 
 ## Completed
 
+- [x] `TODO:2023-11-30-15-05-46` - Refactor: `AdaptiveModalManager` - Rename `modalRootView` to `modalWrapperView`.
 - [x] `TODO:2023-09-16-06-33-40` - Fix: Modal corner radius layout bug - Modal corner radius mask cannot be animated, so applying next mask immediately during modal dragging/snapping.
 - [x] `TODO:2023-09-15-21-58-53` - Fix: Drag handle layout bug - On a horizontal modal, the drag handle animates to the wrong position when dismissing via animator. 
   * Caused by a misconfigured override undershoot snap point during dismissal (i.e. when `hideModal` is invoked). 
