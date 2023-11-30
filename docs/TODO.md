@@ -6,12 +6,6 @@
 
 ## Current
 
-- [ ] `TODO:2023-10-24-20-58-01` - Impl: Shared element transition for entrance transition - Accept a view that will be snapshotted, and will be used during the entrance transition of the view.
-
-- [ ] `TODO:2023-08-29-10-07-08` - Impl: Present a modal in place (e.g. fade in, scale in, etc) via a animation keyframe config + snap point index/key.
-
-- [ ] `TODO:2023-09-19-14-25-06` - Refactor: Replace `UIVisualEffectView` usage w/ `VisualEffectBlurView`.
-
 <br><br>
 
 ## WIP
@@ -23,6 +17,10 @@
 - [ ] `TODO:2023-06-28-04-17-34` Impl: Optimization - Conditionally initialize views only when needed.
 - [ ] `TODO:2023-06-23-18-15-46` -  Impl: `AdaptiveModal` - Add support for animating the home gesture bar + status bar.
 - [ ] `TODO:2023-06-23-18-17-01` - Impl: `AdaptiveModal` - Expose root view as computed property.
+- [ ] `TODO:2023-10-24-20-58-01` - Impl: Shared element transition for entrance transition - Accept a view that will be snapshotted, and will be used during the entrance transition of the view.
+- [ ] `TODO:2023-08-29-10-07-08` - Impl: Present a modal in place (e.g. fade in, scale in, etc) via a animation keyframe config + snap point index/key.
+
+- [ ] `TODO:2023-09-19-14-25-06` - Refactor: Replace `UIVisualEffectView` usage w/ `VisualEffectBlurView`.
 
 <br>
 
