@@ -673,9 +673,9 @@ class AdaptiveModalConfigDemoViewController : UIViewController {
     };
     
     let (modalManager, topVC): (AdaptiveModalManager, UIViewController) = {
-      if let presentedVC = self.presentedViewController {
+      if let presentedVC = self.view.window?.topmostPresentedViewController {
         let modalManager = AdaptiveModalManager(
-          presentingViewController: self,
+          presentingViewController: presentedVC,
           adaptiveConfig: .adaptiveConfig(
             defaultConfig: self.currentModalConfigPreset.config,
             constrainedConfigs: self.currentModalConfigPreset.constrainedConfigs
