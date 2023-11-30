@@ -117,18 +117,8 @@ public class AdaptiveModalManager: NSObject {
   /// `transitionContext.containerView` or `UITransitionView`
   public weak var targetView: UIView?;
   
-  /// * If `modalViewController` was presented via the modal manager,
-  ///   then the "root view" (i.e. the view in which we place the modal-related
-  ///   views) will be `modalWrapperViewController`
-  ///
-  /// * Otherwise, the "root view" will be `targetView`.
-  ///
-  /// * Note: This view is typically the size of the window, while the modal
-  ///   wrapper views are the size of the modal.
-  ///
-  public var modalRootView: UIView? {
-       self.modalWrapperViewController?.view
-    ?? self.targetView
+  public var modalWrapperView: UIView? {
+    self.modalWrapperViewController?.view;
   };
   
   public var modalView: UIView? {
@@ -966,17 +956,17 @@ public class AdaptiveModalManager: NSObject {
 
   func setupAddViews() {
     guard let modalView = self.modalView,
-          let modalRootView = self.modalRootView
+          let modalWrapperView = self.modalWrapperView
     else { return };
     
     if let targetView = self.targetView,
-       let modalRootView = self.modalRootView {
+       let modalWrapperView = self.modalWrapperView {
        
-      targetView.addSubview(modalRootView);
+      targetView.addSubview(modalWrapperView);
     };
     
     if let bgVisualEffectView = self.backgroundVisualEffectView {
-      modalRootView.addSubview(bgVisualEffectView);
+      modalWrapperView.addSubview(bgVisualEffectView);
       
       bgVisualEffectView.clipsToBounds = true;
       bgVisualEffectView.backgroundColor = .clear;
@@ -984,7 +974,7 @@ public class AdaptiveModalManager: NSObject {
     };
     
     if let bgDimmingView = self.backgroundDimmingView {
-      modalRootView.addSubview(bgDimmingView);
+      modalWrapperView.addSubview(bgDimmingView);
       
       bgDimmingView.clipsToBounds = true;
       bgDimmingView.backgroundColor = .black;
@@ -1005,7 +995,7 @@ public class AdaptiveModalManager: NSObject {
     
     wrapperViews.enumerated().forEach {
       guard let prev = wrapperViews[safeIndex: $0.offset - 1] else {
-        modalRootView.addSubview($0.element);
+        modalWrapperView.addSubview($0.element);
         return;
       };
       
@@ -1052,7 +1042,7 @@ public class AdaptiveModalManager: NSObject {
       let debugView = AdaptiveModalDebugOverlay(modalManager: self);
       self.debugView = debugView;
       
-      modalRootView.addSubview(debugView);
+      modalWrapperView.addSubview(debugView);
     };
     #endif
   };
@@ -1173,21 +1163,21 @@ public class AdaptiveModalManager: NSObject {
   
   func setupViewConstraints() {
     guard let modalView = self.modalView,
-          let modalRootView = self.modalRootView,
+          let modalWrapperView = self.modalWrapperView,
           
           let modalContentWrapperView = self.modalContentWrapperView
     else { return };
     
     if let targetView = self.targetView,
-       let modalRootView = self.modalWrapperViewController?.view {
+       let modalWrapperView = self.modalWrapperViewController?.view {
        
-      modalRootView.translatesAutoresizingMaskIntoConstraints = false;
+      modalWrapperView.translatesAutoresizingMaskIntoConstraints = false;
        
       NSLayoutConstraint.activate([
-        modalRootView.topAnchor     .constraint(equalTo: targetView.topAnchor     ),
-        modalRootView.bottomAnchor  .constraint(equalTo: targetView.bottomAnchor  ),
-        modalRootView.leadingAnchor .constraint(equalTo: targetView.leadingAnchor ),
-        modalRootView.trailingAnchor.constraint(equalTo: targetView.trailingAnchor),
+        modalWrapperView.topAnchor     .constraint(equalTo: targetView.topAnchor     ),
+        modalWrapperView.bottomAnchor  .constraint(equalTo: targetView.bottomAnchor  ),
+        modalWrapperView.leadingAnchor .constraint(equalTo: targetView.leadingAnchor ),
+        modalWrapperView.trailingAnchor.constraint(equalTo: targetView.trailingAnchor),
       ]);
     };
     
@@ -1195,10 +1185,10 @@ public class AdaptiveModalManager: NSObject {
       bgVisualEffectView.translatesAutoresizingMaskIntoConstraints = false;
       
       NSLayoutConstraint.activate([
-        bgVisualEffectView.topAnchor     .constraint(equalTo: modalRootView.topAnchor     ),
-        bgVisualEffectView.bottomAnchor  .constraint(equalTo: modalRootView.bottomAnchor  ),
-        bgVisualEffectView.leadingAnchor .constraint(equalTo: modalRootView.leadingAnchor ),
-        bgVisualEffectView.trailingAnchor.constraint(equalTo: modalRootView.trailingAnchor),
+        bgVisualEffectView.topAnchor     .constraint(equalTo: modalWrapperView.topAnchor     ),
+        bgVisualEffectView.bottomAnchor  .constraint(equalTo: modalWrapperView.bottomAnchor  ),
+        bgVisualEffectView.leadingAnchor .constraint(equalTo: modalWrapperView.leadingAnchor ),
+        bgVisualEffectView.trailingAnchor.constraint(equalTo: modalWrapperView.trailingAnchor),
       ]);
     };
     
@@ -1261,19 +1251,19 @@ public class AdaptiveModalManager: NSObject {
       
       NSLayoutConstraint.activate([
         bgDimmingView.topAnchor.constraint(
-          equalTo: modalRootView.topAnchor
+          equalTo: modalWrapperView.topAnchor
         ),
         
         bgDimmingView.bottomAnchor.constraint(
-          equalTo: modalRootView.bottomAnchor
+          equalTo: modalWrapperView.bottomAnchor
         ),
         
         bgDimmingView.leadingAnchor.constraint(
-          equalTo: modalRootView.leadingAnchor
+          equalTo: modalWrapperView.leadingAnchor
         ),
         
         bgDimmingView.trailingAnchor.constraint(
-          equalTo: modalRootView.trailingAnchor
+          equalTo: modalWrapperView.trailingAnchor
         ),
       ]);
     };
@@ -1316,12 +1306,12 @@ public class AdaptiveModalManager: NSObject {
         
         modalBGVisualEffectView.widthAnchor.constraint(
           equalTo: modalWrapperTransformView.widthAnchor//,
-          //constant: modalRootView.frame.width
+          //constant: modalWrapperView.frame.width
         ),
         
         modalBGVisualEffectView.heightAnchor.constraint(
           equalTo: modalContentWrapperView.heightAnchor//,
-          //constant: modalRootView.frame.height
+          //constant: modalWrapperView.frame.height
         ),
       ]);
     };
@@ -1333,19 +1323,19 @@ public class AdaptiveModalManager: NSObject {
       
       NSLayoutConstraint.activate([
         debugView.topAnchor.constraint(
-          equalTo: modalRootView.topAnchor
+          equalTo: modalWrapperView.topAnchor
         ),
         
         debugView.bottomAnchor.constraint(
-          equalTo: modalRootView.bottomAnchor
+          equalTo: modalWrapperView.bottomAnchor
         ),
         
         debugView.leadingAnchor.constraint(
-          equalTo: modalRootView.leadingAnchor
+          equalTo: modalWrapperView.leadingAnchor
         ),
         
         debugView.trailingAnchor.constraint(
-          equalTo: modalRootView.trailingAnchor
+          equalTo: modalWrapperView.trailingAnchor
         ),
       ]);
     };
