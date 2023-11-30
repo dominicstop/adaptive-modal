@@ -45,7 +45,7 @@ extension AdaptiveModalManager: UIViewControllerAnimatedTransitioning {
         self.rootView = containerView;
         self.presentingViewController = fromVC;
         
-        self.prepareForPresentation();
+        self.setupPrepareForPresentation();
         
         AdaptiveModalUtilities.swizzleHitTest(
           forView: containerView

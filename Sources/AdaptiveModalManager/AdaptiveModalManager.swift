@@ -1361,6 +1361,40 @@ public class AdaptiveModalManager: NSObject {
     self.modalContentScrollView = extractScrollView(inView: modalView);
   };
   
+  func setupPrepareForPresentation(shouldForceReset: Bool = false) {
+    guard let rootView = self.rootView else { return };
+
+    let shouldReset =
+      !self.didTriggerSetup || shouldForceReset;
+    
+    if shouldReset {
+      self.cleanup();
+    };
+    
+    self.rootView = rootView;
+    
+    self.updateCurrentModalConfig();
+    self.computeSnapPoints();
+    
+    if shouldReset {
+      self.setupInitViews();
+      self.setupDummyModalView();
+      self.setupGestureHandler();
+      
+      self.setupAddViews();
+      self.setupViewConstraints();
+      self.setupObservers();
+      
+      self.setupExtractScrollView();
+    };
+    
+    self.updateModal();
+    self.modalFrame = self.currentInterpolationStep.computedRect;
+    self.modalWrapperLayoutView?.layoutIfNeeded();
+    
+    self.didTriggerSetup = true;
+  };
+  
   // MARK: - Functions - Cleanup-Related
   // -----------------------------------
   
@@ -3619,48 +3653,6 @@ public class AdaptiveModalManager: NSObject {
     
     self.updateCurrentModalConfig();
     self.computeSnapPoints();
-  };
-  
-  public func prepareForPresentation(
-    rootView: UIView? = nil,
-    shouldForceReset: Bool = false
-  ) {
-    guard let modalView = modalView ?? self.modalView,
-          let rootView = rootView ?? self.rootView
-    else { return };
-
-    let didViewsChange =
-      modalView !== self.modalView || rootView !== self.rootView;
-      
-    let shouldReset =
-      !self.didTriggerSetup || didViewsChange || shouldForceReset;
-    
-    if shouldReset {
-      self.cleanup();
-    };
-    
-    self.rootView = rootView;
-    
-    self.updateCurrentModalConfig();
-    self.computeSnapPoints();
-    
-    if shouldReset {
-      self.setupInitViews();
-      self.setupDummyModalView();
-      self.setupGestureHandler();
-      
-      self.setupAddViews();
-      self.setupViewConstraints();
-      self.setupObservers();
-      
-      self.setupExtractScrollView();
-    };
-    
-    self.updateModal();
-    self.modalFrame = self.currentInterpolationStep.computedRect;
-    self.modalWrapperLayoutView?.layoutIfNeeded();
-    
-    self.didTriggerSetup = true;
   };
   
   public func prepareForPresentation(
