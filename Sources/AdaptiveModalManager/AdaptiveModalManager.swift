@@ -1548,7 +1548,7 @@ public class AdaptiveModalManager: NSObject {
   // MARK: - Functions - Interpolation-Related Helpers
   // -------------------------------------------------
   
-  private func interpolate(
+  func _interpolate(
     inputValue: CGFloat,
     rangeInput: [CGFloat]? = nil,
     rangeOutput: [AdaptiveModalInterpolationPoint]? = nil,
@@ -1572,7 +1572,7 @@ public class AdaptiveModalManager: NSObject {
     );
   };
   
-  private func interpolateColor(
+  func _interpolateColor(
     inputValue: CGFloat,
     rangeInput: [CGFloat]? = nil,
     rangeOutput: [AdaptiveModalInterpolationPoint]? = nil,
@@ -1596,7 +1596,7 @@ public class AdaptiveModalManager: NSObject {
     );
   };
   
-  private func getInterpolationStepRange(
+  func _getInterpolationStepRange(
    forInputPercentValue inputPercentValue: CGFloat
   ) -> (
     rangeStart: AdaptiveModalInterpolationPoint,
@@ -1651,12 +1651,12 @@ public class AdaptiveModalManager: NSObject {
   // MARK: - Functions - Property Interpolators
   // ------------------------------------------
   
-  private func applyInterpolationToModalBackgroundVisualEffect(
+  func _applyInterpolationToModalBackgroundVisualEffect(
     forInputPercentValue inputPercentValue: CGFloat
   ) {
   
     let animator: AdaptiveModalRangePropertyAnimator? = {
-      let interpolationRange = self.getInterpolationStepRange(
+      let interpolationRange = self._getInterpolationStepRange(
         forInputPercentValue: inputPercentValue
       );
       
@@ -1707,12 +1707,12 @@ public class AdaptiveModalManager: NSObject {
     );
   };
 
-  private func applyInterpolationToBackgroundVisualEffect(
+  func _applyInterpolationToBackgroundVisualEffect(
     forInputPercentValue inputPercentValue: CGFloat
   ) {
   
     let animator: AdaptiveModalRangePropertyAnimator? = {
-      let interpolationRange = self.getInterpolationStepRange(
+      let interpolationRange = self._getInterpolationStepRange(
         forInputPercentValue: inputPercentValue
       );
       
@@ -1763,7 +1763,7 @@ public class AdaptiveModalManager: NSObject {
     );
   };
   
-  private func applyInterpolationToModalPadding(
+  func _applyInterpolationToModalPadding(
     forInputPercentValue inputPercentValue: CGFloat
   ) {
     guard let modalView = self.modalView else { return };
@@ -1772,28 +1772,28 @@ public class AdaptiveModalManager: NSObject {
     let clampingKeysMin = clampingConfig.clampingKeysLeft;
     let clampingKeysMax = clampingConfig.clampingKeysRight;
   
-    let nextPaddingLeft = self.interpolate(
+    let nextPaddingLeft = self._interpolate(
       inputValue: inputPercentValue,
       rangeOutputKey: \.modalPaddingAdjusted.left,
       shouldClampMin: clampingKeysMin.contains(.modalPaddingLeft),
       shouldClampMax: clampingKeysMax.contains(.modalPaddingLeft)
     );
     
-    let nextPaddingRight = self.interpolate(
+    let nextPaddingRight = self._interpolate(
       inputValue: inputPercentValue,
       rangeOutputKey: \.modalPaddingAdjusted.right,
       shouldClampMin: clampingKeysMin.contains(.modalPaddingRight),
       shouldClampMax: clampingKeysMax.contains(.modalPaddingRight)
     );
     
-    let nextPaddingTop = self.interpolate(
+    let nextPaddingTop = self._interpolate(
       inputValue: inputPercentValue,
       rangeOutputKey: \.modalPaddingAdjusted.top,
       shouldClampMin: clampingKeysMin.contains(.modalPaddingTop),
       shouldClampMax: clampingKeysMax.contains(.modalPaddingTop)
     );
     
-    let nextPaddingBottom = self.interpolate(
+    let nextPaddingBottom = self._interpolate(
       inputValue: inputPercentValue,
       rangeOutputKey: \.modalPaddingAdjusted.bottom,
       shouldClampMin: clampingKeysMin.contains(.modalPaddingBottom),
@@ -1828,7 +1828,7 @@ public class AdaptiveModalManager: NSObject {
     modalView.setNeedsLayout();
   };
   
-  private func applyInterpolationToModalDragHandleOffset(
+  func _applyInterpolationToModalDragHandleOffset(
     forInputPercentValue inputPercentValue: CGFloat
   ) {
     guard let modalDragHandleView = self.modalDragHandleView else { return };
@@ -1837,7 +1837,7 @@ public class AdaptiveModalManager: NSObject {
     let clampingKeysMin = clampingConfig.clampingKeysLeft;
     let clampingKeysMax = clampingConfig.clampingKeysRight;
   
-    let nextDragHandleOffset = self.interpolate(
+    let nextDragHandleOffset = self._interpolate(
       inputValue: inputPercentValue,
       rangeOutputKey: \.modalDragHandleOffset,
       shouldClampMin: clampingKeysMin.contains(.modalDragHandleOffset),
@@ -1856,7 +1856,7 @@ public class AdaptiveModalManager: NSObject {
     modalDragHandleView.setNeedsLayout();
   };
   
-  private func applyInterpolationToModalDragHandleSize(
+  func _applyInterpolationToModalDragHandleSize(
     forInputPercentValue inputPercentValue: CGFloat
   ) {
     guard let modalDragHandleView = self.modalDragHandleView else { return };
@@ -1865,14 +1865,14 @@ public class AdaptiveModalManager: NSObject {
     let clampingKeysMin = clampingConfig.clampingKeysLeft;
     let clampingKeysMax = clampingConfig.clampingKeysRight;
   
-    let nextWidth = self.interpolate(
+    let nextWidth = self._interpolate(
       inputValue: inputPercentValue,
       rangeOutputKey: \.modalDragHandleSize.width,
       shouldClampMin: clampingKeysMin.contains(.modalDragHandleSizeWidth),
       shouldClampMax: clampingKeysMax.contains(.modalDragHandleSizeWidth)
     );
     
-    let nextHeight = self.interpolate(
+    let nextHeight = self._interpolate(
       inputValue: inputPercentValue,
       rangeOutputKey: \.modalDragHandleSize.height,
       shouldClampMin: clampingKeysMin.contains(.modalDragHandleSizeHeight),
@@ -1902,21 +1902,21 @@ public class AdaptiveModalManager: NSObject {
   // MARK: - Functions - Apply Interpolators
   // ----------------------------------------
   
-  private func applyInterpolationToRangeAnimators(
+  func _applyInterpolationToRangeAnimators(
     forInputPercentValue inputPercentValue: CGFloat
   ) {
-    self.applyInterpolationToBackgroundVisualEffect(
+    self._applyInterpolationToBackgroundVisualEffect(
       forInputPercentValue: inputPercentValue
     );
     
-    self.applyInterpolationToModalBackgroundVisualEffect(
+    self._applyInterpolationToModalBackgroundVisualEffect(
       forInputPercentValue: inputPercentValue
     );
     
     self.shouldResetRangePropertyAnimators = false;
   };
   
-  private func applyInterpolationToModal(
+  func _applyInterpolationToModal(
     forInputPercentValue inputPercentValue: CGFloat
   ) {
     guard let modalView = self.modalView else { return };
@@ -1958,7 +1958,7 @@ public class AdaptiveModalManager: NSObject {
       };
       
       let secondaryAxisAdj: CGFloat = {
-        let dampingPercentRaw = self.interpolate(
+        let dampingPercentRaw = self._interpolate(
           inputValue: inputPercentValue,
           rangeOutputKey: \.secondaryGestureAxisDampingPercent
         );
@@ -2010,15 +2010,15 @@ public class AdaptiveModalManager: NSObject {
       );
     }();
     
-    self.applyInterpolationToModalPadding(
+    self._applyInterpolationToModalPadding(
       forInputPercentValue: inputPercentValue
     );
     
-    self.applyInterpolationToModalDragHandleSize(
+    self._applyInterpolationToModalDragHandleSize(
       forInputPercentValue: inputPercentValue
     );
     
-    self.applyInterpolationToModalDragHandleOffset(
+    self._applyInterpolationToModalDragHandleOffset(
       forInputPercentValue: inputPercentValue
     );
     
@@ -2121,7 +2121,7 @@ public class AdaptiveModalManager: NSObject {
     AdaptiveModalUtilities.unwrapAndSetProperty(
       forObject: modalView,
       forPropertyKey: \.alpha,
-      withValue:  self.interpolate(
+      withValue:  self._interpolate(
         inputValue: inputPercentValue,
         rangeOutputKey: \.modalContentOpacity
       )
@@ -2130,7 +2130,7 @@ public class AdaptiveModalManager: NSObject {
     AdaptiveModalUtilities.unwrapAndSetProperty(
       forObject: self.modalWrapperLayoutView,
       forPropertyKey: \.alpha,
-      withValue:  self.interpolate(
+      withValue:  self._interpolate(
         inputValue: inputPercentValue,
         rangeOutputKey: \.modalOpacity
       )
@@ -2139,7 +2139,7 @@ public class AdaptiveModalManager: NSObject {
     AdaptiveModalUtilities.unwrapAndSetProperty(
       forObject: self.modalWrapperShadowView,
       forPropertyKey: \.layer.borderWidth,
-      withValue:  self.interpolate(
+      withValue:  self._interpolate(
         inputValue: inputPercentValue,
         rangeOutputKey: \.modalBorderWidth
       )
@@ -2149,7 +2149,7 @@ public class AdaptiveModalManager: NSObject {
       forObject: self.modalWrapperShadowView,
       forPropertyKey: \.layer.borderColor,
       withValue: {
-        let color = self.interpolateColor(
+        let color = self._interpolateColor(
           inputValue: inputPercentValue,
           rangeOutputKey: \.modalBorderColor
         );
@@ -2162,7 +2162,7 @@ public class AdaptiveModalManager: NSObject {
       forObject: self.modalWrapperShadowView,
       forPropertyKey: \.layer.shadowColor,
       withValue:  {
-        let color = self.interpolateColor(
+        let color = self._interpolateColor(
           inputValue: inputPercentValue,
           rangeOutputKey: \.modalShadowColor
         );
@@ -2190,7 +2190,7 @@ public class AdaptiveModalManager: NSObject {
       forObject: self.modalWrapperShadowView,
       forPropertyKey: \.layer.shadowOpacity,
       withValue: {
-        let value = self.interpolate(
+        let value = self._interpolate(
           inputValue: inputPercentValue,
           rangeOutputKey: \.modalShadowOpacity
         );
@@ -2203,7 +2203,7 @@ public class AdaptiveModalManager: NSObject {
     AdaptiveModalUtilities.unwrapAndSetProperty(
       forObject: self.modalWrapperShadowView,
       forPropertyKey: \.layer.shadowRadius,
-      withValue:  self.interpolate(
+      withValue:  self._interpolate(
         inputValue: inputPercentValue,
         rangeOutputKey: \.modalShadowRadius
       )
@@ -2212,7 +2212,7 @@ public class AdaptiveModalManager: NSObject {
     AdaptiveModalUtilities.unwrapAndSetProperty(
       forObject: self.modalContentWrapperView,
       forPropertyKey: \.layer.cornerRadius,
-      withValue:  self.interpolate(
+      withValue:  self._interpolate(
         inputValue: inputPercentValue,
         rangeOutputKey: \.modalCornerRadius
       )
@@ -2221,7 +2221,7 @@ public class AdaptiveModalManager: NSObject {
     AdaptiveModalUtilities.unwrapAndSetProperty(
       forObject: self.modalBackgroundView,
       forPropertyKey: \.backgroundColor,
-      withValue:  self.interpolateColor(
+      withValue:  self._interpolateColor(
         inputValue: inputPercentValue,
         rangeOutputKey: \.modalBackgroundColor
       )
@@ -2230,7 +2230,7 @@ public class AdaptiveModalManager: NSObject {
     AdaptiveModalUtilities.unwrapAndSetProperty(
       forObject: self.modalBackgroundView,
       forPropertyKey: \.alpha,
-      withValue:  self.interpolate(
+      withValue:  self._interpolate(
         inputValue: inputPercentValue,
         rangeOutputKey: \.modalBackgroundOpacity
       )
@@ -2239,7 +2239,7 @@ public class AdaptiveModalManager: NSObject {
     AdaptiveModalUtilities.unwrapAndSetProperty(
       forObject: self.modalBackgroundVisualEffectView,
       forPropertyKey: \.alpha,
-      withValue:  self.interpolate(
+      withValue:  self._interpolate(
         inputValue: inputPercentValue,
         rangeOutputKey: \.modalBackgroundVisualEffectOpacity
       )
@@ -2248,7 +2248,7 @@ public class AdaptiveModalManager: NSObject {
     AdaptiveModalUtilities.unwrapAndSetProperty(
       forObject: self.modalBackgroundVisualEffectView,
       forPropertyKey: \.layer.cornerRadius,
-      withValue:  self.interpolate(
+      withValue:  self._interpolate(
         inputValue: inputPercentValue,
         rangeOutputKey: \.modalCornerRadius
       )
@@ -2257,7 +2257,7 @@ public class AdaptiveModalManager: NSObject {
     AdaptiveModalUtilities.unwrapAndSetProperty(
       forObject: self.modalDragHandleView,
       forPropertyKey: \.backgroundColor,
-      withValue:  self.interpolateColor(
+      withValue:  self._interpolateColor(
         inputValue: inputPercentValue,
         rangeOutputKey: \.modalDragHandleColor
       )
@@ -2266,7 +2266,7 @@ public class AdaptiveModalManager: NSObject {
     AdaptiveModalUtilities.unwrapAndSetProperty(
       forObject: self.modalDragHandleView,
       forPropertyKey: \.alpha,
-      withValue:  self.interpolate(
+      withValue:  self._interpolate(
         inputValue: inputPercentValue,
         rangeOutputKey: \.modalDragHandleOpacity
       )
@@ -2275,7 +2275,7 @@ public class AdaptiveModalManager: NSObject {
     AdaptiveModalUtilities.unwrapAndSetProperty(
       forObject: self.modalDragHandleView,
       forPropertyKey: \.layer.cornerRadius,
-      withValue:  self.interpolate(
+      withValue:  self._interpolate(
         inputValue: inputPercentValue,
         rangeOutputKey: \.modalDragHandleCornerRadius
       )
@@ -2284,7 +2284,7 @@ public class AdaptiveModalManager: NSObject {
     AdaptiveModalUtilities.unwrapAndSetProperty(
       forObject: self.backgroundDimmingView,
       forPropertyKey: \.backgroundColor,
-      withValue:  self.interpolateColor(
+      withValue:  self._interpolateColor(
         inputValue: inputPercentValue,
         rangeOutputKey: \.backgroundColor
       )
@@ -2293,7 +2293,7 @@ public class AdaptiveModalManager: NSObject {
     AdaptiveModalUtilities.unwrapAndSetProperty(
       forObject: self.backgroundDimmingView,
       forPropertyKey: \.alpha,
-      withValue:  self.interpolate(
+      withValue:  self._interpolate(
         inputValue: inputPercentValue,
         rangeOutputKey: \.backgroundOpacity
       )
@@ -2302,13 +2302,13 @@ public class AdaptiveModalManager: NSObject {
     AdaptiveModalUtilities.unwrapAndSetProperty(
       forObject: self.backgroundVisualEffectView,
       forPropertyKey: \.alpha,
-      withValue:  self.interpolate(
+      withValue:  self._interpolate(
         inputValue: inputPercentValue,
         rangeOutputKey: \.backgroundVisualEffectOpacity
       )
     );
     
-    self.applyInterpolationToRangeAnimators(
+    self._applyInterpolationToRangeAnimators(
       forInputPercentValue: inputPercentValue
     );
     
@@ -2324,7 +2324,7 @@ public class AdaptiveModalManager: NSObject {
     #endif
   };
   
-  private func applyInterpolationToModal(forPoint point: CGPoint) {
+  func _applyInterpolationToModal(forPoint point: CGPoint) {
     guard let interpolationRangeMaxInput = self.interpolationRangeMaxInput
     else { return };
     
@@ -2352,10 +2352,10 @@ public class AdaptiveModalManager: NSObject {
       ? AdaptiveModalUtilities.invertPercent(percentClamped)
       : percentClamped;
       
-    self.applyInterpolationToModal(forInputPercentValue: percentAdj);
+    self._applyInterpolationToModal(forInputPercentValue: percentAdj);
   };
   
-  private func applyInterpolationToModal(forGesturePoint gesturePoint: CGPoint) {
+  func _applyInterpolationToModal(forGesturePoint gesturePoint: CGPoint) {
     let gesturePointWithOffset =
       self.applyGestureOffsets(forGesturePoint: gesturePoint);
       
@@ -2364,7 +2364,7 @@ public class AdaptiveModalManager: NSObject {
         gesturePointWithOffset[keyPath: self.currentModalConfig.secondarySwipeAxis];
     };
   
-    self.applyInterpolationToModal(forPoint: gesturePointWithOffset);
+    self._applyInterpolationToModal(forPoint: gesturePointWithOffset);
   };
   
   // MARK: - Functions - Helpers/Utilities
@@ -2520,7 +2520,7 @@ public class AdaptiveModalManager: NSObject {
     guard !self.isAnimating else { return };
         
     if let gesturePoint = self.gesturePoint {
-      self.applyInterpolationToModal(forGesturePoint: gesturePoint);
+      self._applyInterpolationToModal(forGesturePoint: gesturePoint);
     
     } else if self.currentInterpolationStep.computedRect != self.modalFrame {
       self.currentInterpolationStep.applyAnimation(toModalManager: self);
@@ -2809,7 +2809,7 @@ public class AdaptiveModalManager: NSObject {
           self.stopModalAnimator();
         };
         
-        self.applyInterpolationToModal(forGesturePoint: gesturePoint);
+        self._applyInterpolationToModal(forGesturePoint: gesturePoint);
         self.notifyOnModalWillSnap(shouldSetState: true);
         
         let shouldSetState =
@@ -3078,7 +3078,7 @@ public class AdaptiveModalManager: NSObject {
     
     guard let percent = percent else { return };
 
-    self.applyInterpolationToRangeAnimators(
+    self._applyInterpolationToRangeAnimators(
       forInputPercentValue: percent
     );
   };
