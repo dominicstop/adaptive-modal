@@ -12,23 +12,6 @@ import DGSwiftUtilities
 
 public class AdaptiveModalManager: NSObject {
 
-  public enum PresentationState {
-    case presenting, dismissing, none;
-  };
-  
-  /// `self.hideModal` param
-  enum HideModalMode: Equatable {
-    case direct, inBetween;
-    
-    case snapPointPreset(AdaptiveModalSnapPointPreset);
-    case keyframe(AdaptiveModalKeyframeConfig);
-  };
-  
-  enum ModalRangePropertyAnimatorMode: Equatable {
-    case modalPosition;
-    case animatorFractionComplete;
-  };
-  
   // MARK: -  Properties - Config-Related
   // ------------------------------------
   
