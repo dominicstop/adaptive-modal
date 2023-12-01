@@ -633,7 +633,7 @@ public class AdaptiveModalManager: NSObject {
   
   public var gesturePointWithOffsets: CGPoint? {
     guard let gesturePoint = self.gesturePoint else { return nil };
-    return self.applyGestureOffsets(forGesturePoint: gesturePoint)
+    return self._applyGestureOffsets(forGesturePoint: gesturePoint)
   };
   
   public var gestureDirection: AdaptiveModalConfig.SnapDirection? {
@@ -1414,7 +1414,7 @@ public class AdaptiveModalManager: NSObject {
     self.modalBackgroundVisualEffectAnimator?.clear();
     self.modalBackgroundVisualEffectAnimator = nil;
     
-    self.stopModalAnimator();
+    self._stopModalAnimator();
     self.modalAnimator = nil;
   };
   
@@ -2357,7 +2357,7 @@ public class AdaptiveModalManager: NSObject {
   
   func _applyInterpolationToModal(forGesturePoint gesturePoint: CGPoint) {
     let gesturePointWithOffset =
-      self.applyGestureOffsets(forGesturePoint: gesturePoint);
+      self._applyGestureOffsets(forGesturePoint: gesturePoint);
       
     if !self.shouldLockAxisToModalDirection {
       self.modalSecondaryAxisValue =
@@ -2370,7 +2370,7 @@ public class AdaptiveModalManager: NSObject {
   // MARK: - Functions - Helpers/Utilities
   // -------------------------------------
   
-  private func stopModalAnimator(){
+  func _stopModalAnimator(){
     self.modalAnimator?.stopAnimation(true);
     self._endDisplayLink();
     
@@ -2379,7 +2379,7 @@ public class AdaptiveModalManager: NSObject {
     };
   };
   
-  private func adjustInterpolationIndex(for nextIndex: Int) -> Int {
+  func _adjustInterpolationIndex(for nextIndex: Int) -> Int {
     if nextIndex == 0 {
       return self.canSnapToUnderShootSnapPoint
         ? 0
@@ -2399,7 +2399,7 @@ public class AdaptiveModalManager: NSObject {
     return nextIndex;
   };
   
-  private func applyGestureOffsets(
+  func _applyGestureOffsets(
     forGesturePoint gesturePoint: CGPoint
   ) -> CGPoint {
   
@@ -2437,7 +2437,7 @@ public class AdaptiveModalManager: NSObject {
     return CGPoint(x: x, y: y);
   };
   
-  func debug(prefix: String? = ""){
+  func _debug(prefix: String? = ""){
     print(
         "\n - AdaptiveModalManager.debug - \(prefix ?? "N/A")"
       + "\n - modalView: \(self.modalView?.debugDescription ?? "N/A")"
@@ -2578,7 +2578,7 @@ public class AdaptiveModalManager: NSObject {
         return firstIndex;
       };
       
-      return self.adjustInterpolationIndex(for: firstIndex);
+      return self._adjustInterpolationIndex(for: firstIndex);
     }();
 
     let interpolationPoint =
@@ -2659,7 +2659,7 @@ public class AdaptiveModalManager: NSObject {
       return nil;
     };
     
-    let closestInterpolationPointIndex = self.adjustInterpolationIndex(
+    let closestInterpolationPointIndex = self._adjustInterpolationIndex(
       for: firstMatch.snapPointIndex
     );
     
@@ -2704,7 +2704,7 @@ public class AdaptiveModalManager: NSObject {
         gestureInitialVelocity: self.gestureInitialVelocity
       );
       
-      self.stopModalAnimator();
+      self._stopModalAnimator();
       self.modalAnimator = animator;
       
       animator.addAnimations {
@@ -2806,7 +2806,7 @@ public class AdaptiveModalManager: NSObject {
     
       case .changed:
         if !self.isKeyboardVisible || self.isAnimating {
-          self.stopModalAnimator();
+          self._stopModalAnimator();
         };
         
         self._applyInterpolationToModal(forGesturePoint: gesturePoint);
@@ -2829,7 +2829,7 @@ public class AdaptiveModalManager: NSObject {
         let gestureFinalPointRaw = self.gestureFinalPoint ?? gesturePoint;
         
         let gestureFinalPoint =
-          self.applyGestureOffsets(forGesturePoint: gestureFinalPointRaw);
+          self._applyGestureOffsets(forGesturePoint: gestureFinalPointRaw);
           
         let shouldSetState =
              self.modalState != .PRESENTING_GESTURE
@@ -3111,7 +3111,7 @@ public class AdaptiveModalManager: NSObject {
         ?? self.currentInterpolationIndex;
     }();
     
-    let nextIndex = self.adjustInterpolationIndex(for: nextIndexRaw);
+    let nextIndex = self._adjustInterpolationIndex(for: nextIndexRaw);
     let nextInterpolationPoint = self.interpolationSteps[nextIndex];
     let nextSnapPointConfig = self.currentSnapPoints[nextIndex];
     
@@ -3427,7 +3427,7 @@ public class AdaptiveModalManager: NSObject {
     guard let closestSnapPoint = closestSnapPoint else { return };
     
     let nextInterpolationIndex =
-      self.adjustInterpolationIndex(for: closestSnapPoint.interpolationIndex);
+      self._adjustInterpolationIndex(for: closestSnapPoint.interpolationIndex);
     
     let nextInterpolationPoint =
       self.interpolationSteps[nextInterpolationIndex];
@@ -3489,7 +3489,7 @@ public class AdaptiveModalManager: NSObject {
   
     let nextIndex = 0;
     
-    self.stopModalAnimator();
+    self._stopModalAnimator();
     self._updateCurrentModalConfig();
     self._computeSnapPoints();
     
@@ -3647,7 +3647,7 @@ public class AdaptiveModalManager: NSObject {
   
   public func updateModalConfig(_ newConfig: AdaptiveModalConfigMode){
     self._cancelModalGesture();
-    self.stopModalAnimator();
+    self._stopModalAnimator();
     
     self.modalConfig = newConfig;
     
@@ -3910,7 +3910,7 @@ public class AdaptiveModalManager: NSObject {
   ) {
   
     let lastIndex = max(self.interpolationSteps.count - 1, 0);
-    let nextIndexAdj = self.adjustInterpolationIndex(for: nextIndex);
+    let nextIndexAdj = self._adjustInterpolationIndex(for: nextIndex);
     
     guard nextIndexAdj >= 0 && nextIndexAdj <= lastIndex,
           nextIndexAdj != self.currentInterpolationIndex
@@ -3991,7 +3991,7 @@ public class AdaptiveModalManager: NSObject {
       shouldExcludeUndershootSnapPoint: true
     );
     
-    let nextInterpolationIndex = self.adjustInterpolationIndex(
+    let nextInterpolationIndex = self._adjustInterpolationIndex(
       for: closestSnapPoint?.interpolationIndex ?? 1
     );
     
