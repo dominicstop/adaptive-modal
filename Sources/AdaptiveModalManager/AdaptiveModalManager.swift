@@ -787,8 +787,8 @@ public class AdaptiveModalManager: NSObject {
     
     super.init();
     
-    self.updateCurrentModalConfig();
-    self.computeSnapPoints();
+    self._updateCurrentModalConfig();
+    self._computeSnapPoints();
   };
   
   public init(
@@ -800,8 +800,8 @@ public class AdaptiveModalManager: NSObject {
     
     super.init();
     
-    self.updateCurrentModalConfig();
-    self.computeSnapPoints();
+    self._updateCurrentModalConfig();
+    self._computeSnapPoints();
   };
   
   deinit {
@@ -1373,8 +1373,8 @@ public class AdaptiveModalManager: NSObject {
     
     self.rootView = rootView;
     
-    self.updateCurrentModalConfig();
-    self.computeSnapPoints();
+    self._updateCurrentModalConfig();
+    self._computeSnapPoints();
     
     if shouldReset {
       self._setupInitViews();
@@ -1388,7 +1388,7 @@ public class AdaptiveModalManager: NSObject {
       self._setupExtractScrollView();
     };
     
-    self.updateModal();
+    self._updateModal();
     self.modalFrame = self.currentInterpolationStep.computedRect;
     self.modalWrapperLayoutView?.layoutIfNeeded();
     
@@ -2474,7 +2474,7 @@ public class AdaptiveModalManager: NSObject {
   // MARK: - Functions
   // -----------------
   
-  private func computeSnapPoints(
+  func _computeSnapPoints(
     usingLayoutValueContext context: ComputableLayoutValueContext? = nil
   ) {
     let context = context ?? self.layoutValueContext;
@@ -2494,7 +2494,7 @@ public class AdaptiveModalManager: NSObject {
     };
   };
   
-  private func updateCurrentModalConfig(){
+  func _updateCurrentModalConfig(){
     guard case let .adaptiveConfig(defaultConfig, constrainedConfigs) = self.modalConfig
     else { return };
     
@@ -2516,7 +2516,7 @@ public class AdaptiveModalManager: NSObject {
     self.notifyOnCurrentModalConfigDidChange();
   };
   
-  private func updateModal() {
+  func _updateModal() {
     guard !self.isAnimating else { return };
         
     if let gesturePoint = self.gesturePoint {
@@ -2531,7 +2531,7 @@ public class AdaptiveModalManager: NSObject {
     #endif
   };
   
-  private func getClosestSnapPoint(
+  func _getClosestSnapPoint(
     forCoord coord: CGFloat? = nil,
     shouldIgnoreAllowSnapping: Bool = false
   ) -> (
@@ -2591,7 +2591,7 @@ public class AdaptiveModalManager: NSObject {
     );
   };
   
-  private func getClosestSnapPoint(
+  func _getClosestSnapPoint(
     forRect currentRect: CGRect,
     shouldIgnoreAllowSnapping: Bool = false,
     shouldExcludeUndershootSnapPoint: Bool
@@ -2676,7 +2676,7 @@ public class AdaptiveModalManager: NSObject {
     );
   };
   
-  private func animateModal(
+  func _animateModal(
     to interpolationPoint: AdaptiveModalInterpolationPoint,
     isAnimated: Bool = true,
     animationConfigOverride: AdaptiveModalSnapAnimationConfig? = nil,
@@ -2762,7 +2762,7 @@ public class AdaptiveModalManager: NSObject {
     };
   };
   
-  private func cancelModalGesture(){
+  func _cancelModalGesture(){
     guard let modalGesture = self.modalGesture else { return };
     let currentValue = modalGesture.isEnabled;
     
@@ -2801,7 +2801,7 @@ public class AdaptiveModalManager: NSObject {
            let modalView = self.modalView {
            
           modalView.endEditing(true);
-          self.cancelModalGesture();
+          self._cancelModalGesture();
         };
     
       case .changed:
@@ -2923,10 +2923,10 @@ public class AdaptiveModalManager: NSObject {
     self.isKeyboardVisible = true;
     self.layoutKeyboardValues = keyboardValues;
     
-    self.updateCurrentModalConfig();
-    self.computeSnapPoints();
+    self._updateCurrentModalConfig();
+    self._computeSnapPoints();
 
-    self.animateModal(
+    self._animateModal(
       to: self.currentInterpolationStep,
       animationConfigOverride: .animator(keyboardValues.keyboardAnimator)
     );
@@ -2939,8 +2939,8 @@ public class AdaptiveModalManager: NSObject {
     self.isKeyboardVisible = true;
     self.layoutKeyboardValues = keyboardValues;
     
-    self.updateCurrentModalConfig();
-    self.computeSnapPoints();
+    self._updateCurrentModalConfig();
+    self._computeSnapPoints();
   };
 
   @objc func _onKeyboardWillHide(notification: NSNotification) {
@@ -2949,10 +2949,10 @@ public class AdaptiveModalManager: NSObject {
     else { return };
     
     self._clearLayoutKeyboardValues();
-    self.updateCurrentModalConfig();
-    self.computeSnapPoints();
+    self._updateCurrentModalConfig();
+    self._computeSnapPoints();
     
-    self.animateModal(
+    self._animateModal(
       to: self.currentInterpolationStep,
       animationConfigOverride: .animator(keyboardValues.keyboardAnimator),
       extraAnimation: nil
@@ -2973,10 +2973,10 @@ public class AdaptiveModalManager: NSObject {
     
     self.layoutKeyboardValues = keyboardValues;
     
-    self.updateCurrentModalConfig();
-    self.computeSnapPoints();
+    self._updateCurrentModalConfig();
+    self._computeSnapPoints();
     
-    self.animateModal(
+    self._animateModal(
       to: self.currentInterpolationStep,
       animationConfigOverride: .animator(keyboardValues.keyboardAnimator)
     );
@@ -2989,8 +2989,8 @@ public class AdaptiveModalManager: NSObject {
     
     self.layoutKeyboardValues = keyboardValues;
     
-    self.updateCurrentModalConfig();
-    self.computeSnapPoints();
+    self._updateCurrentModalConfig();
+    self._computeSnapPoints();
   };
   
   // MARK: - Functions - DisplayLink-Related
@@ -3105,7 +3105,7 @@ public class AdaptiveModalManager: NSObject {
         return nextIndex;
       };
     
-      let closestSnapPoint = self.getClosestSnapPoint();
+      let closestSnapPoint = self._getClosestSnapPoint();
       
       return closestSnapPoint?.interpolationPoint.snapPointIndex
         ?? self.currentInterpolationIndex;
@@ -3391,7 +3391,7 @@ public class AdaptiveModalManager: NSObject {
       self.modalStateMachine.setState(stateSnapping);
     };
     
-    self.animateModal(
+    self._animateModal(
       to: nextInterpolationPoint,
       isAnimated: isAnimated,
       animationConfigOverride: animationConfig,
@@ -3422,7 +3422,7 @@ public class AdaptiveModalManager: NSObject {
   ) {
     
     let coord = point[keyPath: self.currentModalConfig.inputValueKeyForPoint];
-    let closestSnapPoint = self.getClosestSnapPoint(forCoord: coord)
+    let closestSnapPoint = self._getClosestSnapPoint(forCoord: coord)
       
     guard let closestSnapPoint = closestSnapPoint else { return };
     
@@ -3490,8 +3490,8 @@ public class AdaptiveModalManager: NSObject {
     let nextIndex = 0;
     
     self.stopModalAnimator();
-    self.updateCurrentModalConfig();
-    self.computeSnapPoints();
+    self._updateCurrentModalConfig();
+    self._computeSnapPoints();
     
     let undershootSnapPoint: AdaptiveModalSnapPointPreset? = {
       switch mode {
@@ -3646,13 +3646,13 @@ public class AdaptiveModalManager: NSObject {
   // ------------------------------
   
   public func updateModalConfig(_ newConfig: AdaptiveModalConfigMode){
-    self.cancelModalGesture();
+    self._cancelModalGesture();
     self.stopModalAnimator();
     
     self.modalConfig = newConfig;
     
-    self.updateCurrentModalConfig();
-    self.computeSnapPoints();
+    self._updateCurrentModalConfig();
+    self._computeSnapPoints();
   };
   
   public func prepareForPresentation(
@@ -3715,15 +3715,15 @@ public class AdaptiveModalManager: NSObject {
     guard prevTargetFrame != nextTargetFrame else { return };
     self.prevTargetFrame = nextTargetFrame;
     
-    self.updateCurrentModalConfig();
+    self._updateCurrentModalConfig();
     
     if self.pendingCurrentModalConfigUpdate {
     
       // config changes while a snap override is active is buggy...
       self._cleanupSnapPointOverride();
-      self.computeSnapPoints();
+      self._computeSnapPoints();
       
-      let closestSnapPoint = self.getClosestSnapPoint(
+      let closestSnapPoint = self._getClosestSnapPoint(
         forRect: modalFrame,
         shouldExcludeUndershootSnapPoint: true
       );
@@ -3743,12 +3743,12 @@ public class AdaptiveModalManager: NSObject {
         self._setupDragHandleConstraints(shouldDeactivateOldConstraints: true);
       };
       
-      self.updateModal();
+      self._updateModal();
       self.pendingCurrentModalConfigUpdate = false;
       
     } else {
-      self.computeSnapPoints();
-      self.updateModal();
+      self._computeSnapPoints();
+      self._updateModal();
     };
   };
   
@@ -3986,7 +3986,7 @@ public class AdaptiveModalManager: NSObject {
     completion: (() -> Void)? = nil
   ) {
   
-    let closestSnapPoint = self.getClosestSnapPoint(
+    let closestSnapPoint = self._getClosestSnapPoint(
       forRect: self.modalFrame ?? .zero,
       shouldExcludeUndershootSnapPoint: true
     );
@@ -4171,7 +4171,7 @@ public class AdaptiveModalManager: NSObject {
     let nextInterpolationPointIndex = prevSnapPointConfigs.count;
     
     self.overrideSnapPoints = snapPoints;
-    self.computeSnapPoints();
+    self._computeSnapPoints();
     
     guard let overrideInterpolationPoints = self.overrideInterpolationPoints,
           let nextInterpolationPoint =
@@ -4184,7 +4184,7 @@ public class AdaptiveModalManager: NSObject {
     self.shouldResetRangePropertyAnimators = true;
     self.currentOverrideInterpolationIndex = nextInterpolationPointIndex;
 
-    self.animateModal(
+    self._animateModal(
       to: nextInterpolationPoint,
       isAnimated: isAnimated,
       animationConfigOverride: animationConfig,
@@ -4235,7 +4235,7 @@ public class AdaptiveModalManager: NSObject {
     self.modalStateMachine.setState(.SNAPPING_PROGRAMMATIC);
     self.notifyOnModalWillSnap(shouldSetState: false);
     
-    self.animateModal(
+    self._animateModal(
       to: matchingInterpolationPoint,
       isAnimated: isAnimated,
       animationConfigOverride: animationConfig,
