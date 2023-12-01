@@ -2278,8 +2278,8 @@ public class AdaptiveModalManager: NSObject {
     );
   };
 
-  // MARK: - Functions
-  // -----------------
+  // MARK: - Functions - Internal Modal Controls
+  // -------------------------------------------
     
   func snapTo(
     interpolationIndex nextIndex: Int,
