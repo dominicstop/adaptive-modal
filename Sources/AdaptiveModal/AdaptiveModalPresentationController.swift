@@ -46,12 +46,12 @@ class AdaptiveModalPresentationController: UIPresentationController {
         self.modalManager.notifyDidLayoutSubviews();
       },
       completion: { _ in
-        self.modalManager.endDisplayLink();
+        self.modalManager._endDisplayLink();
         self.shouldPauseLayoutUpdates = false;
       }
     );
     
-    self.modalManager.startDisplayLink(shouldAutoEndDisplayLink: false);
+    self.modalManager._startDisplayLink(shouldAutoEndDisplayLink: false);
   };
   
   override func containerViewWillLayoutSubviews(){

@@ -1529,7 +1529,7 @@ public class AdaptiveModalManager: NSObject {
     
     self._cleanupSnapPointOverride();
     self._removeObservers();
-    self.endDisplayLink();
+    self._endDisplayLink();
     
     self.currentInterpolationIndex = 0;
     self.modalSecondaryAxisValue = nil;
@@ -2372,7 +2372,7 @@ public class AdaptiveModalManager: NSObject {
   
   private func stopModalAnimator(){
     self.modalAnimator?.stopAnimation(true);
-    self.endDisplayLink();
+    self._endDisplayLink();
     
     self.animationEventDelegate.invoke {
       $0.notifyOnModalAnimatorStop(sender: self);
@@ -2725,7 +2725,7 @@ public class AdaptiveModalManager: NSObject {
       };
       
       animator.addCompletion { _ in
-        self.endDisplayLink();
+        self._endDisplayLink();
         self.modalAnimator = nil;
         
         #if DEBUG
@@ -2734,7 +2734,7 @@ public class AdaptiveModalManager: NSObject {
       };
     
       animator.startAnimation();
-      self.startDisplayLink(shouldAutoEndDisplayLink: true);
+      self._startDisplayLink(shouldAutoEndDisplayLink: true);
       
     } else {
       animationBlock();
@@ -2996,7 +2996,7 @@ public class AdaptiveModalManager: NSObject {
   // MARK: - Functions - DisplayLink-Related
   // ---------------------------------------
     
-  func startDisplayLink(shouldAutoEndDisplayLink: Bool) {
+  func _startDisplayLink(shouldAutoEndDisplayLink: Bool) {
     self.shouldAutoEndDisplayLink = shouldAutoEndDisplayLink;
     
     let displayLink = CADisplayLink(
@@ -3016,7 +3016,7 @@ public class AdaptiveModalManager: NSObject {
     displayLink.add(to: .current, forMode: .common);
   };
   
-  func endDisplayLink() {
+  func _endDisplayLink() {
     self.shouldAutoEndDisplayLink = true;
     self.displayLink?.invalidate();
   };
@@ -3030,7 +3030,7 @@ public class AdaptiveModalManager: NSObject {
       #endif
     
       if shouldEndDisplayLink && self.shouldAutoEndDisplayLink {
-        self.endDisplayLink();
+        self._endDisplayLink();
       };
     };
     
