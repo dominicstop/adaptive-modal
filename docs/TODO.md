@@ -19,7 +19,6 @@
 
 <br>
 
-- [ ] `TODO:2023-11-30-15-17-43` - Refactor: `AdaptiveModalManager` - Move public functions to their own file, e.g. `AdaptiveModalManager+PublicFunctions`. 
 - [ ] `TODO:2023-11-30-15-19-38` - Refactor: `AdaptiveModalManager` - Extract/group gesture related properties to `AdaptiveModalGestureContext`.
 - [ ] `TODO:2023-11-30-17-50-08` - Refactor: `AdaptiveModalManager` - Extract/group display link related properties to `AdaptiveModalDisplayLinkContext`
 - [ ] `TODO:2023-11-30-17-51-09` - Refactor: `AdaptiveModalManager` - Extract/group interpolation point related values to `AdaptiveModalInterpolationPointContext` 
@@ -76,6 +75,7 @@
 
 ## Completed
 
+- [x] `TODO:2023-11-30-15-17-43` - Refactor: `AdaptiveModalManager` - Move public functions to their own file, e.g. `AdaptiveModalManager+PublicFunctions`. 
 - [x] `TODO:2023-11-30-15-10-26` - Refactor: `AdaptiveModalManager` - Rename `targetView` to `rootView`.
 - [x] `TODO:2023-11-30-15-05-46` - Refactor: `AdaptiveModalManager` - Rename `modalRootView` to `modalWrapperView`.
 - [x] `TODO:2023-09-16-06-33-40` - Fix: Modal corner radius layout bug - Modal corner radius mask cannot be animated, so applying next mask immediately during modal dragging/snapping.
