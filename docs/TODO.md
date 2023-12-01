@@ -6,13 +6,16 @@
 
 ## Current
 
+- [ ] `TODO:2023-11-30-17-51-09` - Refactor: `AdaptiveModalManager` - Extract/group interpolation point related values to `AdaptiveModalConfigInterpolationStepsContext`.
+
+<br>
+
 - [ ] `TODO:2023-11-30-15-09-42` - Refactor: `AdaptiveModalManager` - Streamline modal presentation, and remove other ways of presenting the modal.
 
 <br>
 
 - [ ] `TODO:2023-11-30-15-19-38` - Refactor: `AdaptiveModalManager` - Extract/group gesture related properties to `AdaptiveModalGestureContext`.
 - [ ] `TODO:2023-11-30-17-50-08` - Refactor: `AdaptiveModalManager` - Extract/group display link related properties to `AdaptiveModalDisplayLinkContext`
-- [ ] `TODO:2023-11-30-17-51-09` - Refactor: `AdaptiveModalManager` - Extract/group interpolation point related values to `AdaptiveModalInterpolationPointContext` 
 - [ ] `TODO:2023-11-30-17-51-41` - Refactor: `AdaptiveModalManager` - Extract/group modal-related values to `AdaptiveModalMetadata`.
 
 <br>
