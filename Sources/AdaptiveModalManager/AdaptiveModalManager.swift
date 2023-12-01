@@ -34,7 +34,7 @@ public class AdaptiveModalManager: NSObject {
   
   public var modalConfig: AdaptiveModalConfigMode;
   
-  private(set) public var prevModalConfig: AdaptiveModalConfig? = nil;
+  public internal(set) var prevModalConfig: AdaptiveModalConfig? = nil;
   
   private var _currentModalConfig: AdaptiveModalConfig?;
   public var currentModalConfig: AdaptiveModalConfig {
@@ -125,27 +125,27 @@ public class AdaptiveModalManager: NSObject {
     self.modalViewController?.view;
   };
   
-  private(set) public var dummyModalView: UIView?;
+  public internal(set) var dummyModalView: UIView?;
   
-  private(set) public var modalWrapperLayoutView: AdaptiveModalWrapperView?;
-  private(set) public var modalWrapperTransformView: AdaptiveModalWrapperView?;
-  private(set) public var modalWrapperShadowView: AdaptiveModalWrapperView?;
-  private(set) public var modalContentWrapperView: UIView?;
+  public internal(set) var modalWrapperLayoutView: AdaptiveModalWrapperView?;
+  public internal(set) var modalWrapperTransformView: AdaptiveModalWrapperView?;
+  public internal(set) var modalWrapperShadowView: AdaptiveModalWrapperView?;
+  public internal(set) var modalContentWrapperView: UIView?;
   
   public var modalDragHandleView: AdaptiveModalDragHandleView?;
   
   public weak var modalContentScrollView: UIScrollView?;
   
-  public private(set) var prevModalFrame: CGRect = .zero;
-  public private(set) var prevTargetFrame: CGRect = .zero;
+  public internal(set) var prevModalFrame: CGRect = .zero;
+  public internal(set) var prevTargetFrame: CGRect = .zero;
   
-  public private(set) var modalBackgroundView: UIView?;
-  public private(set) var modalBackgroundVisualEffectView: UIVisualEffectView?;
+  public internal(set) var modalBackgroundView: UIView?;
+  public internal(set) var modalBackgroundVisualEffectView: UIVisualEffectView?;
   
-  public private(set) var backgroundDimmingView: UIView?;
-  public private(set) var backgroundVisualEffectView: UIVisualEffectView?;
+  public internal(set) var backgroundDimmingView: UIView?;
+  public internal(set) var backgroundVisualEffectView: UIVisualEffectView?;
   
-  public private(set) var modalFrame: CGRect? {
+  public internal(set) var modalFrame: CGRect? {
     set {
       guard let newValue = newValue else { return };
       
@@ -163,7 +163,7 @@ public class AdaptiveModalManager: NSObject {
     }
   };
   
-  private var modalSecondaryAxisValue: CGFloat? = nil;
+  var _modalSecondaryAxisValue: CGFloat? = nil;
   
   weak var modalConstraintLeft  : NSLayoutConstraint?;
   weak var modalConstraintRight : NSLayoutConstraint?;
@@ -175,21 +175,21 @@ public class AdaptiveModalManager: NSObject {
   weak var modalDragHandleConstraintHeight: NSLayoutConstraint?;
   weak var modalDragHandleConstraintWidth : NSLayoutConstraint?;
   
-  private var layoutKeyboardValues: ComputableLayoutKeyboardValues?;
+  var _layoutKeyboardValues: ComputableLayoutKeyboardValues?;
   
-  private var layoutValueContext: ComputableLayoutValueContext {
+  var _layoutValueContext: ComputableLayoutValueContext {
     let context: ComputableLayoutValueContext? = {
       if let targetVC = self.presentingViewController {
         return .init(
           fromTargetViewController: targetVC,
-          keyboardValues: self.layoutKeyboardValues
+          keyboardValues: self._layoutKeyboardValues
         );
       };
       
       if let rootView = self.rootView {
         return .init(
           fromTargetView: rootView,
-          keyboardValues: self.layoutKeyboardValues
+          keyboardValues: self._layoutKeyboardValues
         );
       };
       
@@ -199,21 +199,21 @@ public class AdaptiveModalManager: NSObject {
     return context ?? .default;
   };
   
-  private var isKeyboardVisible = false;
+  var _isKeyboardVisible = false;
   
-  var pendingCurrentModalConfigUpdate = false;
+  var _pendingCurrentModalConfigUpdate = false;
   
   // MARK: -  Properties - Config Interpolation Points
   // -------------------------------------------------
   
   /// The computed frames of the modal based on the snap points
-  private(set) var configInterpolationSteps: [AdaptiveModalInterpolationPoint]!;
+  var configInterpolationSteps: [AdaptiveModalInterpolationPoint]!;
   
   var currentConfigInterpolationStep: AdaptiveModalInterpolationPoint {
     self.interpolationSteps[self.currentInterpolationIndex];
   };
   
-  private var configInterpolationRangeInput: [CGFloat]! {
+  var configInterpolationRangeInput: [CGFloat]! {
     self.interpolationSteps.map { $0.percent };
   };
   
@@ -229,7 +229,7 @@ public class AdaptiveModalManager: NSObject {
   // MARK: -  Properties - Override Interpolation Points
   // ---------------------------------------------------
   
-  private(set) var isOverridingSnapPoints = false;
+  public internal(set) var isOverridingSnapPoints = false;
   
   var prevOverrideInterpolationIndex = 0;
   var nextOverrideInterpolationIndex: Int?;
@@ -269,10 +269,10 @@ public class AdaptiveModalManager: NSObject {
   // MARK: -  Properties - Interpolation Points
   // ------------------------------------------
   
-  public private(set) var onModalWillSnapPrevIndex: Int?;
-  public private(set) var onModalWillSnapNextIndex: Int?;
+  public internal(set) var onModalWillSnapPrevIndex: Int?;
+  public internal(set) var onModalWillSnapNextIndex: Int?;
   
-  public private(set) var prevInterpolationIndex: Int {
+  public internal(set) var prevInterpolationIndex: Int {
     get {
       self.shouldUseOverrideSnapPoints
         ? self.prevOverrideInterpolationIndex
@@ -288,7 +288,7 @@ public class AdaptiveModalManager: NSObject {
     }
   };
   
-  public private(set) var nextInterpolationIndex: Int? {
+  public internal(set) var nextInterpolationIndex: Int? {
     get {
       self.shouldUseOverrideSnapPoints
         ? self.nextOverrideInterpolationIndex
@@ -304,7 +304,7 @@ public class AdaptiveModalManager: NSObject {
     }
   };
   
-  public private(set) var currentInterpolationIndex: Int {
+  public internal(set) var currentInterpolationIndex: Int {
     get {
       self.shouldUseOverrideSnapPoints
         ? self.currentOverrideInterpolationIndex
@@ -346,7 +346,7 @@ public class AdaptiveModalManager: NSObject {
     }
   };
   
-  public private(set) var interpolationSteps: [AdaptiveModalInterpolationPoint]! {
+  public internal(set) var interpolationSteps: [AdaptiveModalInterpolationPoint]! {
     get {
       self.shouldUseOverrideSnapPoints
         ? self.overrideInterpolationPoints
@@ -362,8 +362,7 @@ public class AdaptiveModalManager: NSObject {
     }
   };
   
-  
-  public private(set) var prevInterpolationStep: AdaptiveModalInterpolationPoint?;
+  public internal(set) var prevInterpolationStep: AdaptiveModalInterpolationPoint?;
   
   public var currentInterpolationStep: AdaptiveModalInterpolationPoint {
     self.interpolationSteps[self.currentInterpolationIndex];
@@ -388,7 +387,7 @@ public class AdaptiveModalManager: NSObject {
     return self.currentModalConfig.snapPoints;
   };
   
-  public private(set) var prevSnapPointConfig: AdaptiveModalSnapPointConfig?;
+  public internal(set) var prevSnapPointConfig: AdaptiveModalSnapPointConfig?;
   
   public var currentSnapPointConfig: AdaptiveModalSnapPointConfig {
     return self.currentSnapPoints[
@@ -401,7 +400,7 @@ public class AdaptiveModalManager: NSObject {
   
   weak var transitionContext: UIViewControllerContextTransitioning?;
   
-  private var modalAnimator: UIViewPropertyAnimator?;
+  var _modalAnimator: UIViewPropertyAnimator?;
 
   var backgroundVisualEffectAnimator: AdaptiveModalRangePropertyAnimator?;
   var modalBackgroundVisualEffectAnimator: AdaptiveModalRangePropertyAnimator?;
@@ -410,7 +409,7 @@ public class AdaptiveModalManager: NSObject {
   var displayLinkStartTimestamp: CFTimeInterval?;
   
   var displayLinkEndTimestamp: CFTimeInterval? {
-    guard let animator = self.modalAnimator,
+    guard let animator = self._modalAnimator,
           let displayLinkStartTimestamp = self.displayLinkStartTimestamp
     else { return nil };
     
@@ -426,7 +425,7 @@ public class AdaptiveModalManager: NSObject {
   
   var rangeAnimatorMode: ModalRangePropertyAnimatorMode = .modalPosition;
   
-  private var shouldResetRangePropertyAnimators = false;
+  var _shouldResetRangePropertyAnimators = false;
   
   // MARK: -  Properties - Gesture-Related
   // -------------------------------------
@@ -436,13 +435,13 @@ public class AdaptiveModalManager: NSObject {
   weak var backgroundTapGesture: UITapGestureRecognizer?;
   weak var edgePanGesture: UIScreenEdgePanGestureRecognizer?;
   
-  internal(set) public var gestureOffset: CGPoint?;
-  internal(set) public var gestureVelocity: CGPoint?;
-  internal(set) public var gestureInitialPoint: CGPoint?;
+  public internal(set) var gestureOffset: CGPoint?;
+  public internal(set) var gestureVelocity: CGPoint?;
+  public internal(set) var gestureInitialPoint: CGPoint?;
   
-  internal(set) public var gesturePointPrev: CGPoint?;
+  public internal(set) var gesturePointPrev: CGPoint?;
   
-  internal(set) public var gesturePoint: CGPoint? {
+  public internal(set) var gesturePoint: CGPoint? {
     didSet {
       self.gesturePointPrev = oldValue;
     }
@@ -533,7 +532,7 @@ public class AdaptiveModalManager: NSObject {
           /// When modal is presented via gesture, wait for `presentModal` to
           /// finish before computing offsets, so that the modal frame
           /// is not nil/zero.
-          self.showModalCommandArgs == nil
+          self._tempShowModalCommandArgs == nil
     else { return nil };
     
     if let gestureOffset = self.gestureOffset {
@@ -677,7 +676,7 @@ public class AdaptiveModalManager: NSObject {
   // MARK: -  Properties - Modal State
   // ---------------------------------
   
-  internal(set) public var presentationState: PresentationState = .none;
+  public internal(set) var presentationState: PresentationState = .none;
   
   lazy var modalStateMachine = AdaptiveModalStateMachine(
     onStateWillChangeBlock: { [unowned self] in
@@ -715,7 +714,7 @@ public class AdaptiveModalManager: NSObject {
   // -------------------
   
   /// Args for indirect call to `showModal` via `UIViewController.show`
-  var showModalCommandArgs: (
+  var _tempShowModalCommandArgs: (
     isAnimated: Bool,
     snapPointIndex: Int?,
     animationConfig: AdaptiveModalSnapAnimationConfig,
@@ -726,7 +725,7 @@ public class AdaptiveModalManager: NSObject {
   )?;
   
   /// Args for  indirect call to `hideModal` via `UIViewController.dismiss`
-  var hideModalCommandArgs: (
+  var _tempHideModalCommandArgs: (
     isAnimated: Bool,
     mode: HideModalMode,
     animationConfig: AdaptiveModalSnapAnimationConfig,
@@ -736,7 +735,7 @@ public class AdaptiveModalManager: NSObject {
     extraAnimationBlock: (() -> Void)?
   )?;
   
-  private(set) var didTriggerSetup = false;
+  var _didTriggerSetup = false;
   
   // MARK: - Computed Properties
   // ---------------------------
@@ -752,7 +751,7 @@ public class AdaptiveModalManager: NSObject {
   };
   
   public var isAnimating: Bool {
-    self.modalAnimator?.isRunning ?? false;
+    self._modalAnimator?.isRunning ?? false;
   };
   
   public var currentSnapPointIndex: Int {
@@ -1365,7 +1364,7 @@ public class AdaptiveModalManager: NSObject {
     guard let rootView = self.rootView else { return };
 
     let shouldReset =
-      !self.didTriggerSetup || shouldForceReset;
+      !self._didTriggerSetup || shouldForceReset;
     
     if shouldReset {
       self._cleanup();
@@ -1392,7 +1391,7 @@ public class AdaptiveModalManager: NSObject {
     self.modalFrame = self.currentInterpolationStep.computedRect;
     self.modalWrapperLayoutView?.layoutIfNeeded();
     
-    self.didTriggerSetup = true;
+    self._didTriggerSetup = true;
   };
   
   // MARK: - Functions - Cleanup-Related
@@ -1415,12 +1414,12 @@ public class AdaptiveModalManager: NSObject {
     self.modalBackgroundVisualEffectAnimator = nil;
     
     self._stopModalAnimator();
-    self.modalAnimator = nil;
+    self._modalAnimator = nil;
   };
   
   func _clearLayoutKeyboardValues(){
-    self.layoutKeyboardValues = nil;
-    self.isKeyboardVisible = false;
+    self._layoutKeyboardValues = nil;
+    self._isKeyboardVisible = false;
   };
   
   func _removeObservers(){
@@ -1503,7 +1502,7 @@ public class AdaptiveModalManager: NSObject {
     self.modalDragHandleConstraintWidth = nil;
     
     
-    self.didTriggerSetup = false;
+    self._didTriggerSetup = false;
   };
   
   func _cleanupSnapPointOverride(){
@@ -1532,10 +1531,10 @@ public class AdaptiveModalManager: NSObject {
     self._endDisplayLink();
     
     self.currentInterpolationIndex = 0;
-    self.modalSecondaryAxisValue = nil;
+    self._modalSecondaryAxisValue = nil;
     
-    self.shouldResetRangePropertyAnimators = false;
-    self.pendingCurrentModalConfigUpdate = false;
+    self._shouldResetRangePropertyAnimators = false;
+    self._pendingCurrentModalConfigUpdate = false;
     
     self.rangeAnimatorMode = .modalPosition;
     self._currentModalConfig = nil;
@@ -1668,7 +1667,7 @@ public class AdaptiveModalManager: NSObject {
         interpolationRangeEnd: interpolationRange.rangeEnd
       );
  
-      if !self.shouldResetRangePropertyAnimators,
+      if !self._shouldResetRangePropertyAnimators,
          var animator = animator,
          let animatorRangeDidChange = animatorRangeDidChange {
          
@@ -1724,7 +1723,7 @@ public class AdaptiveModalManager: NSObject {
         interpolationRangeEnd: interpolationRange.rangeEnd
       );
     
-      if !self.shouldResetRangePropertyAnimators,
+      if !self._shouldResetRangePropertyAnimators,
          var animator = animator,
          let animatorRangeDidChange = animatorRangeDidChange {
          
@@ -1913,7 +1912,7 @@ public class AdaptiveModalManager: NSObject {
       forInputPercentValue: inputPercentValue
     );
     
-    self.shouldResetRangePropertyAnimators = false;
+    self._shouldResetRangePropertyAnimators = false;
   };
   
   func _applyInterpolationToModal(
@@ -1952,7 +1951,7 @@ public class AdaptiveModalManager: NSObject {
       };
       
       guard !self.shouldLockAxisToModalDirection,
-            let secondaryAxis = self.modalSecondaryAxisValue
+            let secondaryAxis = self._modalSecondaryAxisValue
       else {
         return nextRect;
       };
@@ -2360,7 +2359,7 @@ public class AdaptiveModalManager: NSObject {
       self._applyGestureOffsets(forGesturePoint: gesturePoint);
       
     if !self.shouldLockAxisToModalDirection {
-      self.modalSecondaryAxisValue =
+      self._modalSecondaryAxisValue =
         gesturePointWithOffset[keyPath: self.currentModalConfig.secondarySwipeAxis];
     };
   
@@ -2371,7 +2370,7 @@ public class AdaptiveModalManager: NSObject {
   // -------------------------------------
   
   func _stopModalAnimator(){
-    self.modalAnimator?.stopAnimation(true);
+    self._modalAnimator?.stopAnimation(true);
     self._endDisplayLink();
     
     self.animationEventDelegate.invoke {
@@ -2459,7 +2458,7 @@ public class AdaptiveModalManager: NSObject {
       + "\n - isOverridingSnapPoints: \(self.isOverridingSnapPoints)"
       + "\n - shouldUseOverrideSnapPoints: \(self.shouldUseOverrideSnapPoints)"
       + "\n - shouldClearOverrideSnapPoints: \(self.shouldClearOverrideSnapPoints)"
-      + "\n - layoutKeyboardValues: \(self.layoutKeyboardValues.debugDescription )"
+      + "\n - layoutKeyboardValues: \(self._layoutKeyboardValues.debugDescription )"
       + "\n - presentationState: \(self.presentationState )"
       + "\n - interpolationSteps.computedRect: \(self.interpolationSteps.map({ $0.computedRect }))"
       + "\n - configInterpolationSteps.computedRect: \(self.configInterpolationSteps.map({ $0.computedRect }))"
@@ -2477,7 +2476,7 @@ public class AdaptiveModalManager: NSObject {
   func _computeSnapPoints(
     usingLayoutValueContext context: ComputableLayoutValueContext? = nil
   ) {
-    let context = context ?? self.layoutValueContext;
+    let context = context ?? self._layoutValueContext;
     let modalConfig = self.currentModalConfig;
     
     self.configInterpolationSteps = .Element.compute(
@@ -2498,7 +2497,7 @@ public class AdaptiveModalManager: NSObject {
     guard case let .adaptiveConfig(defaultConfig, constrainedConfigs) = self.modalConfig
     else { return };
     
-    let context = self.layoutValueContext.evaluableConditionContext;
+    let context = self._layoutValueContext.evaluableConditionContext;
     
     let match = constrainedConfigs.first {
       $0.evaluateConstraints(usingContext: context);
@@ -2512,7 +2511,7 @@ public class AdaptiveModalManager: NSObject {
     self.prevModalConfig = prevConfig;
     self._currentModalConfig = nextConfig;
     
-    self.pendingCurrentModalConfigUpdate = self.currentInterpolationIndex > 0;
+    self._pendingCurrentModalConfigUpdate = self.currentInterpolationIndex > 0;
     self._notifyOnCurrentModalConfigDidChange();
   };
   
@@ -2705,7 +2704,7 @@ public class AdaptiveModalManager: NSObject {
       );
       
       self._stopModalAnimator();
-      self.modalAnimator = animator;
+      self._modalAnimator = animator;
       
       animator.addAnimations {
         animationBlock();
@@ -2726,7 +2725,7 @@ public class AdaptiveModalManager: NSObject {
       
       animator.addCompletion { _ in
         self._endDisplayLink();
-        self.modalAnimator = nil;
+        self._modalAnimator = nil;
         
         #if DEBUG
         self.debugView?.notifyOnAnimateModalCompletion();
@@ -2755,7 +2754,7 @@ public class AdaptiveModalManager: NSObject {
     self.animationEventDelegate.invoke {
       $0.notifyOnModalAnimatorStart(
         sender: self,
-        animator: self.modalAnimator,
+        animator: self._modalAnimator,
         interpolationPoint: interpolationPoint,
         isAnimated: isAnimated
       );
@@ -2795,7 +2794,7 @@ public class AdaptiveModalManager: NSObject {
       case .began:
         self.gestureInitialPoint = gesturePoint;
         
-        if self.isKeyboardVisible,
+        if self._isKeyboardVisible,
            self.shouldDismissKeyboardOnGestureSwipe,
            self.currentOverrideInterpolationIndex <= 1,
            let modalView = self.modalView {
@@ -2805,7 +2804,7 @@ public class AdaptiveModalManager: NSObject {
         };
     
       case .changed:
-        if !self.isKeyboardVisible || self.isAnimating {
+        if !self._isKeyboardVisible || self.isAnimating {
           self._stopModalAnimator();
         };
         
@@ -2920,8 +2919,8 @@ public class AdaptiveModalManager: NSObject {
           !self.isAnimating
     else { return };
     
-    self.isKeyboardVisible = true;
-    self.layoutKeyboardValues = keyboardValues;
+    self._isKeyboardVisible = true;
+    self._layoutKeyboardValues = keyboardValues;
     
     self._updateCurrentModalConfig();
     self._computeSnapPoints();
@@ -2936,8 +2935,8 @@ public class AdaptiveModalManager: NSObject {
     guard let keyboardValues = ComputableLayoutKeyboardValues(fromNotification: notification)
     else { return };
     
-    self.isKeyboardVisible = true;
-    self.layoutKeyboardValues = keyboardValues;
+    self._isKeyboardVisible = true;
+    self._layoutKeyboardValues = keyboardValues;
     
     self._updateCurrentModalConfig();
     self._computeSnapPoints();
@@ -2958,12 +2957,12 @@ public class AdaptiveModalManager: NSObject {
       extraAnimation: nil
     ) { _ in
     
-      self.isKeyboardVisible = false;
+      self._isKeyboardVisible = false;
     };
   };
   
   @objc func _onKeyboardDidHide(notification: NSNotification) {
-    self.isKeyboardVisible = false;
+    self._isKeyboardVisible = false;
   };
   
   @objc func _onKeyboardWillChange(notification: NSNotification) {
@@ -2971,7 +2970,7 @@ public class AdaptiveModalManager: NSObject {
           !self.isAnimating
     else { return };
     
-    self.layoutKeyboardValues = keyboardValues;
+    self._layoutKeyboardValues = keyboardValues;
     
     self._updateCurrentModalConfig();
     self._computeSnapPoints();
@@ -2987,7 +2986,7 @@ public class AdaptiveModalManager: NSObject {
           self.presentationState == .none
     else { return };
     
-    self.layoutKeyboardValues = keyboardValues;
+    self._layoutKeyboardValues = keyboardValues;
     
     self._updateCurrentModalConfig();
     self._computeSnapPoints();
@@ -3034,7 +3033,7 @@ public class AdaptiveModalManager: NSObject {
       };
     };
     
-    if self.isSwiping && !self.isKeyboardVisible {
+    if self.isSwiping && !self._isKeyboardVisible {
       shouldEndDisplayLink = true;
     };
     
@@ -3071,7 +3070,7 @@ public class AdaptiveModalManager: NSObject {
           return percentAdj;
           
         case .animatorFractionComplete:
-          guard let modalAnimator = modalAnimator else { return nil };
+          guard let modalAnimator = self._modalAnimator else { return nil };
           return AdaptiveModalUtilities.invertPercent(modalAnimator.fractionComplete);
       };
     }();
@@ -3278,7 +3277,7 @@ public class AdaptiveModalManager: NSObject {
   };
   
   func _notifyOnModalWillHide(){
-    if self.isKeyboardVisible,
+    if self._isKeyboardVisible,
        let modalView = self.modalView {
        
       modalView.endEditing(true);
@@ -3548,7 +3547,7 @@ public class AdaptiveModalManager: NSObject {
       self.overrideInterpolationPoints = {
         var points = AdaptiveModalInterpolationPoint.compute(
           usingConfig: self.currentModalConfig,
-          usingContext: self.layoutValueContext,
+          usingContext: self._layoutValueContext,
           snapPoints: overrideSnapPoints,
           shouldCheckForPercentCollision: false
         );
@@ -3568,7 +3567,7 @@ public class AdaptiveModalManager: NSObject {
       self.isOverridingSnapPoints = true;
       self.currentOverrideInterpolationIndex = 1;
       
-      self.shouldResetRangePropertyAnimators = true;
+      self._shouldResetRangePropertyAnimators = true;
       self.rangeAnimatorMode = .animatorFractionComplete;
       
       self.snapTo(
@@ -3616,7 +3615,7 @@ public class AdaptiveModalManager: NSObject {
     let animationConfig = animationConfig
       ?? self.currentModalConfig.entranceAnimationConfig;
     
-    self.showModalCommandArgs = (
+    self._tempShowModalCommandArgs = (
       isAnimated: animated,
       snapPointIndex: snapPointIndex,
       animationConfig: animationConfig,
@@ -3717,7 +3716,7 @@ public class AdaptiveModalManager: NSObject {
     
     self._updateCurrentModalConfig();
     
-    if self.pendingCurrentModalConfigUpdate {
+    if self._pendingCurrentModalConfigUpdate {
     
       // config changes while a snap override is active is buggy...
       self._cleanupSnapPointOverride();
@@ -3744,7 +3743,7 @@ public class AdaptiveModalManager: NSObject {
       };
       
       self._updateModal();
-      self.pendingCurrentModalConfigUpdate = false;
+      self._pendingCurrentModalConfigUpdate = false;
       
     } else {
       self._computeSnapPoints();
@@ -4111,7 +4110,7 @@ public class AdaptiveModalManager: NSObject {
         let overrideInterpolationPoint = AdaptiveModalInterpolationPoint(
           usingModalConfig: self.currentModalConfig,
           snapPointIndex: 1,
-          layoutValueContext: self.layoutValueContext,
+          layoutValueContext: self._layoutValueContext,
           snapPointConfig: overrideSnapPointConfig
         );
         
@@ -4181,7 +4180,7 @@ public class AdaptiveModalManager: NSObject {
     };
     
     self.isOverridingSnapPoints = true;
-    self.shouldResetRangePropertyAnimators = true;
+    self._shouldResetRangePropertyAnimators = true;
     self.currentOverrideInterpolationIndex = nextInterpolationPointIndex;
 
     self._animateModal(

@@ -43,7 +43,7 @@ extension AdaptiveModalManager: UIViewControllerTransitioningDelegate {
     source: UIViewController
   ) -> UIViewControllerAnimatedTransitioning? {
     
-    if !self.didTriggerSetup {
+    if !self._didTriggerSetup {
       self.prepareForPresentation(
         viewControllerToPresent: presented,
         presentingViewController: presenting

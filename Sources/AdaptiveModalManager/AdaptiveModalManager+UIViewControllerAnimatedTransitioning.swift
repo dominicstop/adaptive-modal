@@ -14,11 +14,11 @@ extension AdaptiveModalManager: UIViewControllerAnimatedTransitioning {
   ) -> TimeInterval {
   
     let isAnimated: Bool = {
-      if let args = self.showModalCommandArgs {
+      if let args = self._tempShowModalCommandArgs {
         return args.isAnimated;
       };
       
-      if let args = self.hideModalCommandArgs {
+      if let args = self._tempHideModalCommandArgs {
         return args.isAnimated;
       };
       
@@ -81,7 +81,7 @@ extension AdaptiveModalManager: UIViewControllerAnimatedTransitioning {
           self.modalStateMachine.setState(.PRESENTING_PROGRAMMATIC);
         };
         
-        let args = self.showModalCommandArgs;
+        let args = self._tempShowModalCommandArgs;
         
         self.showModal(
           snapPointIndex: args?.snapPointIndex,
@@ -94,7 +94,7 @@ extension AdaptiveModalManager: UIViewControllerAnimatedTransitioning {
         ) {
           transitionContext.completeTransition(true);
           
-          self.showModalCommandArgs = nil;
+          self._tempShowModalCommandArgs = nil;
           self.presentationState = .none;
           
           if shouldSetState {
@@ -107,7 +107,7 @@ extension AdaptiveModalManager: UIViewControllerAnimatedTransitioning {
         };
       
       case .dismissing:
-        let args = self.hideModalCommandArgs;
+        let args = self._tempHideModalCommandArgs;
         
         if !self.modalState.isDismissing {
           self.modalStateMachine.setState(.DISMISSING_PROGRAMMATIC);
@@ -124,7 +124,7 @@ extension AdaptiveModalManager: UIViewControllerAnimatedTransitioning {
         ){
           transitionContext.completeTransition(true);
           
-          self.hideModalCommandArgs = nil;
+          self._tempHideModalCommandArgs = nil;
           self.presentationState = .none;
           
           if !self.modalStateMachine.currentState.isDismissed {
