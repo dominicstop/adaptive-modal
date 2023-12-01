@@ -11,6 +11,14 @@
 <br>
 
 - [ ] `TODO:2023-12-01-01-34-47` - Refactor: `AdaptiveModalManager` - Extract and group functions into their own files.
+  * Move related code into extensions into their own separate file (e.g. `AdaptiveModalManager+GROUP_NAME`).
+  * However, extensions cannot call members that are marked as private; as such, we cannot move functions that reference/call private members.
+  * As workaround, we will refactor them to be `internal`, and add a underscore prefix to their identifiers.
+  * Internal members that begin with an underscore means that they are marked as "protected"; i.e. they are private functions that can only be called from inside the enclosing type.
+  * We cannot enforce this rule via the compiler, so it's just a reminder.
+
+<br>
+
 - [ ] `TODO:2023-11-30-15-17-43` - Refactor: `AdaptiveModalManager` - Move public functions to their own file, e.g. `AdaptiveModalManager+PublicFunctions`. 
 - [ ] `TODO:2023-11-30-15-19-38` - Refactor: `AdaptiveModalManager` - Extract/group gesture related properties to `AdaptiveModalGestureContext`.
 - [ ] `TODO:2023-11-30-17-50-08` - Refactor: `AdaptiveModalManager` - Extract/group display link related properties to `AdaptiveModalDisplayLinkContext`
