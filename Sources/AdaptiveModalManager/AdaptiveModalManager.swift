@@ -681,7 +681,7 @@ public class AdaptiveModalManager: NSObject {
   
   lazy var modalStateMachine = AdaptiveModalStateMachine(
     onStateWillChangeBlock: { [unowned self] in
-      self.notifyOnModalStateWillChange($0, $1, $2);
+      self._notifyOnModalStateWillChange($0, $1, $2);
     }
   );
   
@@ -2513,7 +2513,7 @@ public class AdaptiveModalManager: NSObject {
     self._currentModalConfig = nextConfig;
     
     self.pendingCurrentModalConfigUpdate = self.currentInterpolationIndex > 0;
-    self.notifyOnCurrentModalConfigDidChange();
+    self._notifyOnCurrentModalConfigDidChange();
   };
   
   func _updateModal() {
@@ -2810,7 +2810,7 @@ public class AdaptiveModalManager: NSObject {
         };
         
         self._applyInterpolationToModal(forGesturePoint: gesturePoint);
-        self.notifyOnModalWillSnap(shouldSetState: true);
+        self._notifyOnModalWillSnap(shouldSetState: true);
         
         let shouldSetState =
              self.modalState != .PRESENTING_GESTURE
@@ -3086,7 +3086,7 @@ public class AdaptiveModalManager: NSObject {
   // MARK: - Event Functions
   // -----------------------
   
-  private func notifyOnCurrentModalConfigDidChange(){
+  func _notifyOnCurrentModalConfigDidChange(){
     self.presentationEventsDelegate.invoke {
       $0.notifyOnCurrentModalConfigDidChange(
         sender: self,
@@ -3096,7 +3096,7 @@ public class AdaptiveModalManager: NSObject {
     };
   };
   
-  private func notifyOnModalWillSnap(shouldSetState: Bool) {
+  func _notifyOnModalWillSnap(shouldSetState: Bool) {
     let prevIndex = self.onModalWillSnapPrevIndex
       ?? self.currentInterpolationIndex;
       
@@ -3197,7 +3197,7 @@ public class AdaptiveModalManager: NSObject {
     };
   };
   
-  private func notifyOnModalDidSnap(shouldSetState: Bool) {
+  func _notifyOnModalDidSnap(shouldSetState: Bool) {
     #if DEBUG
     self.debugView?.notifyOnModalDidSnap();
     #endif
@@ -3264,20 +3264,20 @@ public class AdaptiveModalManager: NSObject {
     self._clearAnimators();
   };
   
-  private func notifyOnModalWillShow(){
+  func _notifyOnModalWillShow(){
     self.presentationEventsDelegate.invoke {
       $0.notifyOnAdaptiveModalWillShow(sender: self);
     };
   };
   
-  private func notifyOnModalDidShow(){
+  func _notifyOnModalDidShow(){
     //self.modalState = .presented;
     self.presentationEventsDelegate.invoke {
       $0.notifyOnAdaptiveModalDidShow(sender: self);
     };
   };
   
-  private func notifyOnModalWillHide(){
+  func _notifyOnModalWillHide(){
     if self.isKeyboardVisible,
        let modalView = self.modalView {
        
@@ -3289,7 +3289,7 @@ public class AdaptiveModalManager: NSObject {
     };
   };
   
-  private func notifyOnModalDidHide(){
+  func _notifyOnModalDidHide(){
     self._cleanup();
     self._clearGestureValues();
     
@@ -3301,23 +3301,23 @@ public class AdaptiveModalManager: NSObject {
     };
   };
   
-  private func notifyOnModalStateWillChange(
+  func _notifyOnModalStateWillChange(
     _ prevState   : AdaptiveModalState,
     _ currentState: AdaptiveModalState,
     _ nextState   : AdaptiveModalState
   ) {
   
     if nextState.isPresenting {
-      self.notifyOnModalWillShow();
+      self._notifyOnModalWillShow();
       
     } else if nextState.isPresented {
-      self.notifyOnModalDidShow();
+      self._notifyOnModalDidShow();
       
     } else if nextState.isDismissing {
-      self.notifyOnModalWillHide();
+      self._notifyOnModalWillHide();
       
     } else if nextState.isDismissed {
-      self.notifyOnModalDidHide();
+      self._notifyOnModalDidHide();
     };
     
     if prevState.isDismissed && currentState.isPresenting && nextState.isDismissed {
@@ -3385,7 +3385,7 @@ public class AdaptiveModalManager: NSObject {
     let nextInterpolationPoint = interpolationPoint
       ?? self.interpolationSteps[nextIndex];
     
-    self.notifyOnModalWillSnap(shouldSetState: shouldSetStateOnSnap);
+    self._notifyOnModalWillSnap(shouldSetState: shouldSetStateOnSnap);
     
     if let stateSnapping = stateSnapping {
       self.modalStateMachine.setState(stateSnapping);
@@ -3401,7 +3401,7 @@ public class AdaptiveModalManager: NSObject {
       self.currentInterpolationIndex = nextIndex;
       self.nextInterpolationIndex = nil;
       
-      self.notifyOnModalDidSnap(shouldSetState: shouldSetStateOnSnap);
+      self._notifyOnModalDidSnap(shouldSetState: shouldSetStateOnSnap);
       
       if let stateSnapped = stateSnapped {
         self.modalStateMachine.setState(stateSnapped);
@@ -4233,7 +4233,7 @@ public class AdaptiveModalManager: NSObject {
       matchingInterpolationPoint.snapPointIndex;
     
     self.modalStateMachine.setState(.SNAPPING_PROGRAMMATIC);
-    self.notifyOnModalWillSnap(shouldSetState: false);
+    self._notifyOnModalWillSnap(shouldSetState: false);
     
     self._animateModal(
       to: matchingInterpolationPoint,
@@ -4243,7 +4243,7 @@ public class AdaptiveModalManager: NSObject {
     ) { _ in
       
       self.modalStateMachine.setState(.SNAPPED_PROGRAMMATIC);
-      self.notifyOnModalDidSnap(shouldSetState: false);
+      self._notifyOnModalDidSnap(shouldSetState: false);
       completion?();
     };
   };
