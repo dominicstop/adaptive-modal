@@ -814,37 +814,37 @@ public class AdaptiveModalManager: NSObject {
   
   func _setupObservers(){
     NotificationCenter.default.addObserver(self,
-      selector: #selector(self.onKeyboardWillShow(notification:)),
+      selector: #selector(self._onKeyboardWillShow(notification:)),
       name: UIResponder.keyboardWillShowNotification,
       object: nil
     );
     
     NotificationCenter.default.addObserver(self,
-      selector: #selector(self.onKeyboardDidShow(notification:)),
+      selector: #selector(self._onKeyboardDidShow(notification:)),
       name: UIResponder.keyboardDidShowNotification,
       object: nil
     );
 
     NotificationCenter.default.addObserver(self,
-      selector: #selector(self.onKeyboardWillHide(notification:)),
+      selector: #selector(self._onKeyboardWillHide(notification:)),
       name: UIResponder.keyboardWillHideNotification,
       object: nil
     );
     
     NotificationCenter.default.addObserver(self,
-      selector: #selector(self.onKeyboardDidHide(notification:)),
+      selector: #selector(self._onKeyboardDidHide(notification:)),
       name: UIResponder.keyboardDidHideNotification,
       object: nil
     );
     
     NotificationCenter.default.addObserver(self,
-      selector: #selector(self.onKeyboardWillChange(notification:)),
+      selector: #selector(self._onKeyboardWillChange(notification:)),
       name: UIResponder.keyboardWillChangeFrameNotification,
       object: nil
     );
     
     NotificationCenter.default.addObserver(self,
-      selector: #selector(self.onKeyboardDidChange(notification:)),
+      selector: #selector(self._onKeyboardDidChange(notification:)),
       name: UIResponder.keyboardDidChangeFrameNotification,
       object: nil
     );
@@ -909,7 +909,7 @@ public class AdaptiveModalManager: NSObject {
     
     let gesture = UIPanGestureRecognizer(
       target: self,
-      action: #selector(self.onDragPanGesture(_:))
+      action: #selector(self._onDragPanGesture(_:))
     );
     
     self.modalGesture = gesture;
@@ -921,7 +921,7 @@ public class AdaptiveModalManager: NSObject {
     if let modalDragHandleView = self.modalDragHandleView {
       let gesture = UIPanGestureRecognizer(
         target: self,
-        action: #selector(self.onDragPanGesture(_:))
+        action: #selector(self._onDragPanGesture(_:))
       );
     
       self.modalDragHandleGesture = gesture;
@@ -933,7 +933,7 @@ public class AdaptiveModalManager: NSObject {
     if let bgDimmingView = self.backgroundDimmingView {
       let gesture = UITapGestureRecognizer(
         target: self,
-        action: #selector(self.onBackgroundTapGesture(_:))
+        action: #selector(self._onBackgroundTapGesture(_:))
       );
       
       gesture.isEnabled = false;
@@ -2778,7 +2778,7 @@ public class AdaptiveModalManager: NSObject {
   // MARK: - Functions - Handlers
   // ----------------------------
   
-  @objc private func onDragPanGesture(_ sender: UIPanGestureRecognizer) {
+  @objc func _onDragPanGesture(_ sender: UIPanGestureRecognizer) {
     var shouldClearGestureValues = false;
   
     let gesturePoint = sender.location(in: self.rootView);
@@ -2867,7 +2867,7 @@ public class AdaptiveModalManager: NSObject {
     };
   };
   
-  @objc private func onDragScreenEdge(_ sender: UIScreenEdgePanGestureRecognizer){
+  @objc func _onDragScreenEdge(_ sender: UIScreenEdgePanGestureRecognizer){
     switch sender.state {
       case .began:
       
@@ -2890,18 +2890,18 @@ public class AdaptiveModalManager: NSObject {
         );
         
         self.currentInterpolationIndex = 0;
-        self.onDragPanGesture(sender);
+        self._onDragPanGesture(sender);
         
       case .ended:
         self.modalStateMachine.stateOverride = nil;
-        self.onDragPanGesture(sender);
+        self._onDragPanGesture(sender);
         
       default:
-        self.onDragPanGesture(sender);
+        self._onDragPanGesture(sender);
     };
   };
   
-  @objc private func onBackgroundTapGesture(_ sender: UITapGestureRecognizer) {
+  @objc func _onBackgroundTapGesture(_ sender: UITapGestureRecognizer) {
     self.backgroundTapDelegate.invoke {
       $0.notifyOnBackgroundTapGesture(sender: sender);
     };
@@ -2915,7 +2915,7 @@ public class AdaptiveModalManager: NSObject {
     };
   };
   
-  @objc private func onKeyboardWillShow(notification: NSNotification) {
+  @objc func _onKeyboardWillShow(notification: NSNotification) {
     guard let keyboardValues = ComputableLayoutKeyboardValues(fromNotification: notification),
           !self.isAnimating
     else { return };
@@ -2932,7 +2932,7 @@ public class AdaptiveModalManager: NSObject {
     );
   };
   
-  @objc private func onKeyboardDidShow(notification: NSNotification) {
+  @objc func _onKeyboardDidShow(notification: NSNotification) {
     guard let keyboardValues = ComputableLayoutKeyboardValues(fromNotification: notification)
     else { return };
     
@@ -2943,7 +2943,7 @@ public class AdaptiveModalManager: NSObject {
     self.computeSnapPoints();
   };
 
-  @objc private func onKeyboardWillHide(notification: NSNotification) {
+  @objc func _onKeyboardWillHide(notification: NSNotification) {
     guard let keyboardValues = ComputableLayoutKeyboardValues(fromNotification: notification),
           !self.isAnimating
     else { return };
@@ -2962,11 +2962,11 @@ public class AdaptiveModalManager: NSObject {
     };
   };
   
-  @objc private func onKeyboardDidHide(notification: NSNotification) {
+  @objc func _onKeyboardDidHide(notification: NSNotification) {
     self.isKeyboardVisible = false;
   };
   
-  @objc private func onKeyboardWillChange(notification: NSNotification) {
+  @objc func _onKeyboardWillChange(notification: NSNotification) {
     guard let keyboardValues = ComputableLayoutKeyboardValues(fromNotification: notification),
           !self.isAnimating
     else { return };
@@ -2982,7 +2982,7 @@ public class AdaptiveModalManager: NSObject {
     );
   };
   
-  @objc private func onKeyboardDidChange(notification: NSNotification) {
+  @objc func _onKeyboardDidChange(notification: NSNotification) {
     guard let keyboardValues = ComputableLayoutKeyboardValues(fromNotification: notification),
           self.presentationState == .none
     else { return };
@@ -3001,7 +3001,7 @@ public class AdaptiveModalManager: NSObject {
     
     let displayLink = CADisplayLink(
       target: self,
-      selector: #selector(self.onDisplayLinkTick(displayLink:))
+      selector: #selector(self._onDisplayLinkTick(displayLink:))
     );
     
     self.displayLink = displayLink;
@@ -3021,7 +3021,7 @@ public class AdaptiveModalManager: NSObject {
     self.displayLink?.invalidate();
   };
   
-  @objc private func onDisplayLinkTick(displayLink: CADisplayLink) {
+  @objc func _onDisplayLinkTick(displayLink: CADisplayLink) {
     var shouldEndDisplayLink = false;
     
     defer {
@@ -3689,7 +3689,7 @@ public class AdaptiveModalManager: NSObject {
     if let prevEdgePanGesture = self.edgePanGesture {
       prevEdgePanGesture.removeTarget(
         self,
-        action: #selector(self.onDragScreenEdge(_:))
+        action: #selector(self._onDragScreenEdge(_:))
       );
       
       self.edgePanGesture = nil;
@@ -3697,7 +3697,7 @@ public class AdaptiveModalManager: NSObject {
     
     edgePanGesture.addTarget(
       self,
-      action: #selector(self.onDragScreenEdge(_:))
+      action: #selector(self._onDragScreenEdge(_:))
     );
     
     self.edgePanGesture = edgePanGesture;
