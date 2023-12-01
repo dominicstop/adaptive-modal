@@ -38,7 +38,7 @@ class AdaptiveModalPresentationController: UIPresentationController {
   ) {
   
     super.viewWillTransition(to: size, with: coordinator);
-    self.modalManager.clearAnimators();
+    self.modalManager._clearAnimators();
     self.shouldPauseLayoutUpdates = true;
     
     coordinator.animate(

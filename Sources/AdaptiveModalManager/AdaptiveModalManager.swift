@@ -805,8 +805,8 @@ public class AdaptiveModalManager: NSObject {
   };
   
   deinit {
-    self.clearAnimators();
-    self.removeObservers();
+    self._clearAnimators();
+    self._removeObservers();
   };
   
   // MARK: - Functions - Setup
@@ -1368,7 +1368,7 @@ public class AdaptiveModalManager: NSObject {
       !self.didTriggerSetup || shouldForceReset;
     
     if shouldReset {
-      self.cleanup();
+      self._cleanup();
     };
     
     self.rootView = rootView;
@@ -1398,7 +1398,7 @@ public class AdaptiveModalManager: NSObject {
   // MARK: - Functions - Cleanup-Related
   // -----------------------------------
   
-  private func clearGestureValues() {
+  func _clearGestureValues() {
     self.gestureOffset = nil;
     self.gestureVelocity = nil;
     
@@ -1407,7 +1407,7 @@ public class AdaptiveModalManager: NSObject {
     self.gestureInitialPoint = nil;
   };
   
-  func clearAnimators() {
+  func _clearAnimators() {
     self.backgroundVisualEffectAnimator?.clear();
     self.backgroundVisualEffectAnimator = nil;
     
@@ -1418,12 +1418,12 @@ public class AdaptiveModalManager: NSObject {
     self.modalAnimator = nil;
   };
   
-  private func clearLayoutKeyboardValues(){
+  func _clearLayoutKeyboardValues(){
     self.layoutKeyboardValues = nil;
     self.isKeyboardVisible = false;
   };
   
-  private func removeObservers(){
+  func _removeObservers(){
     let notificationNames = [
       UIResponder.keyboardWillShowNotification,
       UIResponder.keyboardDidShowNotification,
@@ -1440,7 +1440,7 @@ public class AdaptiveModalManager: NSObject {
     NotificationCenter.default.removeObserver(self);
   };
   
-  private func cleanupViewControllers(){
+  func _cleanupViewControllers(){
     defer {
       self.modalWrapperViewController = nil;
       self.modalViewController = nil;
@@ -1456,7 +1456,7 @@ public class AdaptiveModalManager: NSObject {
     modalVC.view.removeFromSuperview();
   };
   
-  private func cleanupViews() {
+  func _cleanupViews() {
     let viewsToCleanup: [UIView?] = [
       self.dummyModalView,
       self.modalWrapperLayoutView,
@@ -1506,7 +1506,7 @@ public class AdaptiveModalManager: NSObject {
     self.didTriggerSetup = false;
   };
   
-  private func cleanupSnapPointOverride(){
+  func _cleanupSnapPointOverride(){
     self.isOverridingSnapPoints = false;
 
     self.overrideSnapPoints = nil;
@@ -1517,18 +1517,18 @@ public class AdaptiveModalManager: NSObject {
     self.nextOverrideInterpolationIndex = nil;
   };
  
-  private func cleanup() {
+  func _cleanup() {
     self.modalFrame = .zero;
     self.prevModalFrame = .zero;
     self.prevTargetFrame = .zero;
     
-    self.clearAnimators();
-    self.clearLayoutKeyboardValues();
+    self._clearAnimators();
+    self._clearLayoutKeyboardValues();
     
-    self.cleanupViews();
+    self._cleanupViews();
     
-    self.cleanupSnapPointOverride();
-    self.removeObservers();
+    self._cleanupSnapPointOverride();
+    self._removeObservers();
     self.endDisplayLink();
     
     self.currentInterpolationIndex = 0;
@@ -2863,7 +2863,7 @@ public class AdaptiveModalManager: NSObject {
     };
     
     if shouldClearGestureValues {
-      self.clearGestureValues();
+      self._clearGestureValues();
     };
   };
   
@@ -2948,7 +2948,7 @@ public class AdaptiveModalManager: NSObject {
           !self.isAnimating
     else { return };
     
-    self.clearLayoutKeyboardValues();
+    self._clearLayoutKeyboardValues();
     self.updateCurrentModalConfig();
     self.computeSnapPoints();
     
@@ -3258,10 +3258,10 @@ public class AdaptiveModalManager: NSObject {
     };
     
     if self.shouldClearOverrideSnapPoints {
-      self.cleanupSnapPointOverride();
+      self._cleanupSnapPointOverride();
     };
     
-    self.clearAnimators();
+    self._clearAnimators();
   };
   
   private func notifyOnModalWillShow(){
@@ -3290,11 +3290,11 @@ public class AdaptiveModalManager: NSObject {
   };
   
   private func notifyOnModalDidHide(){
-    self.cleanup();
-    self.clearGestureValues();
+    self._cleanup();
+    self._clearGestureValues();
     
     self.modalViewController?.dismiss(animated: false);
-    self.cleanupViewControllers();
+    self._cleanupViewControllers();
     
     self.presentationEventsDelegate.invoke {
       $0.notifyOnAdaptiveModalDidHide(sender: self);
@@ -3522,7 +3522,7 @@ public class AdaptiveModalManager: NSObject {
     }();
     
     if let undershootSnapPoint = undershootSnapPoint {
-      self.clearAnimators();
+      self._clearAnimators();
     
       let currentSnapPoint: AdaptiveModalSnapPointConfig = {
         var newKeyframe = AdaptiveModalKeyframeConfig(
@@ -3720,7 +3720,7 @@ public class AdaptiveModalManager: NSObject {
     if self.pendingCurrentModalConfigUpdate {
     
       // config changes while a snap override is active is buggy...
-      self.cleanupSnapPointOverride();
+      self._cleanupSnapPointOverride();
       self.computeSnapPoints();
       
       let closestSnapPoint = self.getClosestSnapPoint(
@@ -3755,7 +3755,7 @@ public class AdaptiveModalManager: NSObject {
   public func clearSnapPointOverride(completion: (() -> Void)?){
     guard self.isOverridingSnapPoints else { return };
   
-    self.cleanupSnapPointOverride();
+    self._cleanupSnapPointOverride();
     self.snapToCurrentSnapPointIndex(completion: completion);
   };
   
@@ -4100,7 +4100,7 @@ public class AdaptiveModalManager: NSObject {
     completion: (() -> Void)? = nil
   ) throws {
   
-    self.cleanupSnapPointOverride();
+    self._cleanupSnapPointOverride();
     
     let prevSnapPointConfigs: [AdaptiveModalSnapPointConfig] = {
       if let prevSnapPointConfigs = prevSnapPointConfigs {
