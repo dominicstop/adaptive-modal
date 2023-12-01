@@ -812,7 +812,7 @@ public class AdaptiveModalManager: NSObject {
   // MARK: - Functions - Setup
   // -------------------------
   
-  private func setupObservers(){
+  func _setupObservers(){
     NotificationCenter.default.addObserver(self,
       selector: #selector(self.onKeyboardWillShow(notification:)),
       name: UIResponder.keyboardWillShowNotification,
@@ -850,14 +850,14 @@ public class AdaptiveModalManager: NSObject {
     );
   };
   
-  func setupViewControllers() {
+  func _setupViewControllers() {
     guard let presentedVC = self.presentedViewController else { return };
   
     presentedVC.modalPresentationStyle = .custom;
     presentedVC.transitioningDelegate = self;
   };
   
-  func setupInitViews() {
+  func _setupInitViews() {
     self.dummyModalView = UIView();
     
     self.modalWrapperLayoutView = {
@@ -903,7 +903,7 @@ public class AdaptiveModalManager: NSObject {
     };
   };
   
-  func setupGestureHandler() {
+  func _setupGestureHandler() {
     guard let modalView = self.modalView else { return };
     modalView.gestureRecognizers?.removeAll();
     
@@ -942,7 +942,7 @@ public class AdaptiveModalManager: NSObject {
     };
   };
   
-  func setupDummyModalView() {
+  func _setupDummyModalView() {
     guard let rootView = self.rootView,
           let dummyModalView = self.dummyModalView
     else { return };
@@ -954,7 +954,7 @@ public class AdaptiveModalManager: NSObject {
     rootView.addSubview(dummyModalView);
   };
 
-  func setupAddViews() {
+  func _setupAddViews() {
     guard let modalView = self.modalView,
           let modalWrapperView = self.modalWrapperView
     else { return };
@@ -1047,7 +1047,7 @@ public class AdaptiveModalManager: NSObject {
     #endif
   };
   
-  func setupDragHandleConstraints(shouldDeactivateOldConstraints: Bool){
+  func _setupDragHandleConstraints(shouldDeactivateOldConstraints: Bool){
     guard let modalDragHandleView = self.modalDragHandleView,
           let modalWrapperShadowView = self.modalWrapperShadowView
     else { return };
@@ -1161,7 +1161,7 @@ public class AdaptiveModalManager: NSObject {
     NSLayoutConstraint.activate(constraints);
   };
   
-  func setupViewConstraints() {
+  func _setupViewConstraints() {
     guard let modalView = self.modalView,
           let modalWrapperView = self.modalWrapperView,
           
@@ -1244,7 +1244,7 @@ public class AdaptiveModalManager: NSObject {
       self.modalConstraintBottom!,
     ]);
 
-    self.setupDragHandleConstraints(shouldDeactivateOldConstraints: false);
+    self._setupDragHandleConstraints(shouldDeactivateOldConstraints: false);
     
     if let bgDimmingView = self.backgroundDimmingView {
       bgDimmingView.translatesAutoresizingMaskIntoConstraints = false;
@@ -1342,7 +1342,7 @@ public class AdaptiveModalManager: NSObject {
     #endif
   };
   
-  func setupExtractScrollView(){
+  func _setupExtractScrollView(){
     guard let modalView = self.modalView
     else { return };
     
@@ -1361,7 +1361,7 @@ public class AdaptiveModalManager: NSObject {
     self.modalContentScrollView = extractScrollView(inView: modalView);
   };
   
-  func setupPrepareForPresentation(shouldForceReset: Bool = false) {
+  func _setupPrepareForPresentation(shouldForceReset: Bool = false) {
     guard let rootView = self.rootView else { return };
 
     let shouldReset =
@@ -1377,15 +1377,15 @@ public class AdaptiveModalManager: NSObject {
     self.computeSnapPoints();
     
     if shouldReset {
-      self.setupInitViews();
-      self.setupDummyModalView();
-      self.setupGestureHandler();
+      self._setupInitViews();
+      self._setupDummyModalView();
+      self._setupGestureHandler();
       
-      self.setupAddViews();
-      self.setupViewConstraints();
-      self.setupObservers();
+      self._setupAddViews();
+      self._setupViewConstraints();
+      self._setupObservers();
       
-      self.setupExtractScrollView();
+      self._setupExtractScrollView();
     };
     
     self.updateModal();
@@ -3675,7 +3675,7 @@ public class AdaptiveModalManager: NSObject {
     modalWrapperVC.view.addSubview(presentedVC.view);
     presentedVC.didMove(toParent: presentedVC);
     
-    self.setupViewControllers();
+    self._setupViewControllers();
   };
   
   public func setScreenEdgePanGestureRecognizer(
@@ -3740,7 +3740,7 @@ public class AdaptiveModalManager: NSObject {
       }();
       
       if shouldUpdateDragHandleConstraints {
-        self.setupDragHandleConstraints(shouldDeactivateOldConstraints: true);
+        self._setupDragHandleConstraints(shouldDeactivateOldConstraints: true);
       };
       
       self.updateModal();
