@@ -1,5 +1,5 @@
 //
-//  AdaptiveModalSnapPoint.swift
+//  AdaptiveModalSnapPointConfig.swift
 //  swift-programmatic-modal
 //
 //  Created by Dominic Go on 5/23/23.
