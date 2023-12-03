@@ -14,9 +14,10 @@
   * Problem: We cannot uniquely identify a `AdaptiveModalSnapPointConfig` item (e.g. because it's a struct/value type), or uniquely match it to its corresponding `AdaptiveModalInterpolationPoint` item (e.g. because they aren't stored together).
     * Currently, we can match a `AdaptiveModalInterpolationPoint` to its associated `AdaptiveModalSnapPointConfig` via `snapPointIndex`.
     * We can also do the reverse, and match a `AdaptiveModalSnapPointConfig` item to its associated `AdaptiveModalInterpolationPoint` item, via using its `snapPointIndex`, and indexing `[AdaptiveModalSnapPointConfig]`.
+    * Due to the usage of above methods, we need to store an index of the interpolation/snap point.
   * However, this current method is prone to errors:
     * Getting a snap point's corresponding interpolation point (or vice versa) relies on indexes. This means that we can get the wrong corresponding item, or go out of bounds.
-    * There are times when change the current snap points, and thus need to re-compute a new list of interpolation points; thus, any of those two items can become stale/out-of-sync.
+    * There are times when change the current snap points, and thus need to re-compute a new list of interpolation points; thus, any of those two items can become stale/out-of-sync with one another.
     * As the modal is being moved around (e.g. changing from one snap point to another), we independently store the prev/current/next interpolation point index. These indexes may not point to the correct interpolation point/snap point.
   * Solution: Create a new type: `AdaptiveModalSnapPoint`
     * `AdaptiveModalSnapPoint` will be a internal type, and `AdaptiveModalSnapPointConfig` will be a public type.
@@ -25,8 +26,8 @@
     * During interpolation steps computation, we derive `[AdaptiveModalSnapPoint]` from `[AdaptiveModalSnapPointConfig]` via `AdaptiveModalConfig.snapPoints`. 
     * We store the `[AdaptiveModalSnapPoint]`, alongside the computed `[AdaptiveModalInterpolationPoint]`.
     * This is so we can guarantee that a particular `AdaptiveModalSnapPoint`, has a corresponding `AdaptiveModalInterpolationPoint` (and vice versa).
-    * This also allows us to uniquely identify a `AdaptiveModalSnapPoint` by "burning in" a constant id (e.g. `snapPointIndex`, or maybe an `UUID`?).
-    * Thus, given an `[AdaptiveModalInterpolationPoint]`, we can uniquely match its corresponding item in a `[AdaptiveModalSnapPoint]` (and vice versa).
+    * This also allows us to uniquely identify a `AdaptiveModalSnapPoint` by "burning in" a constant id (e.g. `snapPointIndex`, or maybe an `UUID`?); this will allow us to get both the snap point and interpolation point.
+    * Thus, given an `[AdaptiveModalInterpolationPoint]`, we can uniquely match its corresponding item in a `[AdaptiveModalSnapPoint]` (and vice versa), even if somehow the order of the items are changed.
     * Alternatively, we can just use ref. types instead of value types so we can use `===`? Though, this method will lead to a diff. host of problems (e.g. circular references, unintended mutations, etc).
   * Note - Relies on the completion of another task:
     * `TODO:2023-11-30-17-51-09` - `AdaptiveModalConfigInterpolationStepsContext`
