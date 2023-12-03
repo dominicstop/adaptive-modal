@@ -8,7 +8,7 @@
 import Foundation
 
 /// An indexed snap point paired with it's corresponding interpolation point
-struct AdaptiveModalResolvedInterpolationPoint {
+struct AdaptiveModalResolvedInterpolationPoint: Equatable {
   let index: Int;
   
   var snapPoint: AdaptiveModalSnapPointConfig;

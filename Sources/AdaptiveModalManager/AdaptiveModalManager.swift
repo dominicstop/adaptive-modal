@@ -1569,7 +1569,7 @@ public class AdaptiveModalManager: NSObject {
       + "\n - modalViewController: \(self.modalViewController?.debugDescription ?? "N/A")"
       + "\n - presentingViewController: \(self.presentingViewController?.debugDescription ?? "N/A")"
       + "\n - current snapPointIndex: \(self.interpolationStepsContext?.interpolationPointCurrent.snapPointIndex ?? -1)"
-      + "\n - current interpolationStep mode: \(self.interpolationStepsContext?.currentMode.description ?? "N/A")"
+      + "\n - current interpolationStep mode: \(self.interpolationStepsContext?.interpolationMode.description ?? "N/A")"
       + "\n - currentInterpolationStep: computedRect \(self.interpolationStepsContext?.interpolationPointCurrent.computedRect.debugDescription ?? "N/A")"
       + "\n - modalView gestureRecognizers: \(self.modalView?.gestureRecognizers.debugDescription ?? "N/A")"
       + "\n - isOverridingSnapPoints: \(self.interpolationStepsContext?.isOverridingSnapPoints.description ?? "N/A")"
@@ -1593,7 +1593,7 @@ public class AdaptiveModalManager: NSObject {
     let modalConfig = self.currentModalConfig;
     
     if let interpolationStepsContext = self.interpolationStepsContext {
-      interpolationStepsContext.currentMode.associatedValue = .init(
+      interpolationStepsContext.interpolationMode.associatedValue = .init(
         usingModalConfig: modalConfig,
         usingContext: context
       );

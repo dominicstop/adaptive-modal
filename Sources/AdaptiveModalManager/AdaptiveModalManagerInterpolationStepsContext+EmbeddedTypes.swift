@@ -8,154 +8,96 @@
 import Foundation
 import ComputableLayout
 
-extension AdaptiveModalManagerInterpolationStepsContext {
-
-  // MARK: - InterpolationMode
-  // -------------------------
-
-  enum InterpolationMode<T: Equatable>: Equatable, CustomStringConvertible {
+enum AdaptiveModalManagerInterpolationMode<T> {
   
-    // MARK: Enum Members
-    // ------------------
-    
-    case config(T);
-    case overrideSnapPoint(T);
-    
-    // MARK: Computed Properties - Alias
-    // ---------------------------------
-    
-    var isConfig: Bool {
-      if case .overrideSnapPoint = self {
-        return true;
-      };
-      
-      return false;
+  // MARK: Enum Members
+  // ------------------
+  
+  case config(T);
+  case overrideSnapPoint(T);
+  
+  // MARK: Computed Properties - Alias
+  // ---------------------------------
+  
+  var isConfig: Bool {
+    if case .overrideSnapPoint = self {
+      return true;
     };
     
-    var isOverrideSnapPoint: Bool {
-      if case .overrideSnapPoint = self {
-        return true;
-      };
-      
-      return false;
+    return false;
+  };
+  
+  var isOverrideSnapPoint: Bool {
+    if case .overrideSnapPoint = self {
+      return true;
     };
     
-    // MARK: Computed Properties
-    // -------------------------
-    
-    var associatedValue: T {
-      get {
-        switch self {
-          case let .config(value):
-            return value;
-            
-          case let .overrideSnapPoint(value):
-            return value;
-        };
-      }
-      set {
-        switch self {
-          case .config:
-            self = .config(newValue);
-            
-          case .overrideSnapPoint:
-            self = .overrideSnapPoint(newValue);
-        };
-      }
-    };
-    
-    var description: String {
+    return false;
+  };
+  
+  // MARK: Computed Properties
+  // -------------------------
+  
+  var associatedValue: T {
+    get {
       switch self {
-        case .config(_):
-          return "config";
+        case let .config(value):
+          return value;
           
-        case .overrideSnapPoint(_):
-          return "overrideSnapPoint";
+        case let .overrideSnapPoint(value):
+          return value;
       };
+    }
+    set {
+      switch self {
+        case .config:
+          self = .config(newValue);
+          
+        case .overrideSnapPoint:
+          self = .overrideSnapPoint(newValue);
+      };
+    }
+  };
+  
+  var description: String {
+    switch self {
+      case .config(_):
+        return "config";
+        
+      case .overrideSnapPoint(_):
+        return "overrideSnapPoint";
     };
   };
   
-  // MARK: - CurrentModeMetadata
-  // ---------------------------
-  
-  struct CurrentModeMetadata: Equatable {
-  
-    // MARK: Properties
-    // ----------------
-  
-    var snapPoints: [AdaptiveModalSnapPointConfig];
-    var interpolationSteps: [AdaptiveModalInterpolationPoint];
+  init?(
+    usingModalConfig modalConfig: AdaptiveModalConfig,
+    usingContext context: ComputableLayoutValueContext
+  ) where T == [AdaptiveModalResolvedInterpolationPoint] {
     
-    var hasOvershootSnapPoint: Bool {
-      self.snapPoints.contains {
-        $0.key == .overshootPoint;
-      };
-    };
-    
-    // MARK: Init
-    // ----------
-    
-    init(
-      snapPoints: [AdaptiveModalSnapPointConfig],
-      interpolationSteps: [AdaptiveModalInterpolationPoint]
-    ) {
-    
-      self.snapPoints = snapPoints
-      self.interpolationSteps = interpolationSteps
-    };
-    
-    init(
-      usingModalConfig modalConfig: AdaptiveModalConfig,
-      usingContext context: ComputableLayoutValueContext
-    ) {
-    
-      self.snapPoints = modalConfig.snapPoints;
-      
-      self.interpolationSteps = .Element.compute(
+    self = .config(
+      .Element.compute(
         usingConfig: modalConfig,
         usingContext: context
-      );
-    };
+      )
+    );
   };
-  
-  // MARK: - InterpolationPointMetadata
-  // ----------------------------------
-  
-  struct InterpolationPointMetadata: Equatable {
-  
-    // MARK: Properties
-    // ----------------
+};
+
+extension AdaptiveModalManagerInterpolationMode
+  where T == [AdaptiveModalResolvedInterpolationPoint]  {
+
+  mutating func computeInterpolationPoints(
+    usingModalConfig modalConfig: AdaptiveModalConfig,
+    usingContext context: ComputableLayoutValueContext,
+    snapPoints: [AdaptiveModalSnapPointConfig]
+  ) where T == [AdaptiveModalResolvedInterpolationPoint] {
     
-    var snapPoint: AdaptiveModalSnapPointConfig;
-    var interpolationPoint: AdaptiveModalInterpolationPoint;
+    let oldCopy = self;
     
-    // MARK: Init
-    // ----------
-    
-    init(
-      snapPoint: AdaptiveModalSnapPointConfig,
-      interpolationPoint: AdaptiveModalInterpolationPoint
-    ) {
-      self.snapPoint = snapPoint
-      self.interpolationPoint = interpolationPoint
-    };
-    
-    init?(
-      modeMetadata: CurrentModeMetadata,
-      snapPointKey: AdaptiveModalSnapPointConfig.SnapPointKey
-    ) {
-      
-      let snapPointMatch =
-        modeMetadata.snapPoints.first(forSnapPointKey: snapPointKey);
-      
-      guard let snapPointMatch = snapPointMatch else { return nil };
-      self.snapPoint = snapPointMatch;
-      
-      let interpolationPointMatch =
-        modeMetadata.interpolationSteps.first(forSnapPointKey: snapPointKey);
-    
-      guard let interpolationPointMatch = interpolationPointMatch else { return nil };
-      self.interpolationPoint = interpolationPointMatch;
-    };
+    self.associatedValue = .Element.compute(
+      usingConfig: modalConfig,
+      usingContext: context,
+      snapPoints: oldCopy.associatedValue.snapPoints
+    );
   };
 };

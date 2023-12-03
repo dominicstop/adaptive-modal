@@ -14,16 +14,17 @@ class AdaptiveModalManagerInterpolationStepsContext {
   // MARK: - Properties
   // ------------------
   
-  var currentMode: InterpolationMode<CurrentModeMetadata>;
+  var interpolationMode:
+    AdaptiveModalManagerInterpolationMode<[AdaptiveModalResolvedInterpolationPoint]>;
 
-  var interpolationPointMetadataPrev:
-    InterpolationMode<InterpolationPointMetadata>?;
+  var resolvedInterpolationPointPrev:
+    AdaptiveModalManagerInterpolationMode<AdaptiveModalResolvedInterpolationPoint>?;
   
-  var interpolationPointMetadataCurrent:
-    InterpolationMode<InterpolationPointMetadata>;
+  var resolvedInterpolationPointCurrent:
+    AdaptiveModalManagerInterpolationMode<AdaptiveModalResolvedInterpolationPoint>;
     
-  var interpolationPointMetadataNext:
-    InterpolationMode<InterpolationPointMetadata>?;
+  var resolvedInterpolationPointNext:
+    AdaptiveModalManagerInterpolationMode<AdaptiveModalResolvedInterpolationPoint>?;
     
   /// * Indicates the next potential snapping point.
   /// * As the modal is being dragged, this will be updated to the next closest
@@ -32,8 +33,8 @@ class AdaptiveModalManagerInterpolationStepsContext {
   /// * Note: This is a temp. variable that is set from:
   ///   `AdaptiveModalManager._notifyOnModalWillSnap`.
   ///
-  var onModalWillSnapInterpolationPointMetadataNext:
-    InterpolationMode<InterpolationPointMetadata>?;
+  var onModalWillSnapResolvedInterpolationPointNext:
+    AdaptiveModalManagerInterpolationMode<AdaptiveModalResolvedInterpolationPoint>?;
     
   /// Owned by: `_notifyOnModalWillSnap`
   /// * The previous value of `onModalWillSnapInterpolationPointNext`
@@ -42,146 +43,138 @@ class AdaptiveModalManagerInterpolationStepsContext {
   /// * Note: This is a temp. variable that is set from:
   ///   `AdaptiveModalManager._notifyOnModalWillSnap`.
   ///
-  var onModalWillSnapInterpolationPointMetadataPrev:
-    InterpolationMode<InterpolationPointMetadata>?;
+  var onModalWillSnapResolvedInterpolationPointPrev:
+    AdaptiveModalManagerInterpolationMode<AdaptiveModalResolvedInterpolationPoint>?;
     
   // MARK: Computed Properties - Alias/Shortcuts
   // -------------------------------------------
   
-  var currentModeMetadata: CurrentModeMetadata {
-    self.currentMode.associatedValue;
+  var resolvedInterpolationPoints: [AdaptiveModalResolvedInterpolationPoint] {
+    self.interpolationMode.associatedValue;
   };
   
   public var snapPoints: [AdaptiveModalSnapPointConfig] {
-    self.currentModeMetadata.snapPoints;
+    self.interpolationMode.associatedValue.snapPoints;
   };
   
   public var snapPointPrev: AdaptiveModalSnapPointConfig? {
-    self.interpolationPointMetadataPrev?.associatedValue.snapPoint;
+    self.resolvedInterpolationPointPrev?.associatedValue.snapPoint;
   };
   
   public var snapPointCurrent: AdaptiveModalSnapPointConfig {
-    self.interpolationPointMetadataCurrent.associatedValue.snapPoint;
+    self.resolvedInterpolationPointCurrent.associatedValue.snapPoint;
   };
   
   public var snapPointNext: AdaptiveModalSnapPointConfig? {
-    self.interpolationPointMetadataNext?.associatedValue.snapPoint;
+    self.resolvedInterpolationPointNext?.associatedValue.snapPoint;
   };
   
-  public var interpolationSteps: [AdaptiveModalInterpolationPoint] {
-    self.currentModeMetadata.interpolationSteps;
+  public var interpolationPoints: [AdaptiveModalInterpolationPoint] {
+    self.interpolationMode.associatedValue.interpolationPoints;
   };
   
   public var interpolationPointPrev: AdaptiveModalInterpolationPoint? {
-    self.interpolationPointMetadataPrev?.associatedValue.interpolationPoint;
+    self.resolvedInterpolationPointPrev?.associatedValue.interpolationPoint;
   };
   
   public var interpolationPointCurrent: AdaptiveModalInterpolationPoint {
-    self.interpolationPointMetadataCurrent.associatedValue.interpolationPoint;
+    self.resolvedInterpolationPointCurrent.associatedValue.interpolationPoint;
   };
   
   public var interpolationPointNext: AdaptiveModalInterpolationPoint? {
-    self.interpolationPointMetadataNext?.associatedValue.interpolationPoint;
+    self.resolvedInterpolationPointNext?.associatedValue.interpolationPoint;
   };
   
   // MARK: - Computed Properties
   // ---------------------------
   
   public var interpolationRangeInput: [CGFloat] {
-    self.interpolationSteps.map { $0.percent };
+    self.interpolationPoints.map { $0.percent };
   };
   
   public var isOverridingSnapPoints: Bool {
-    !self.currentMode.isConfig;
+    !self.interpolationMode.isConfig;
   };
   
   // MARK: - Init
   // ------------
   
   init(
-    currentMode:
-      InterpolationMode<CurrentModeMetadata>,
+    interpolationMode:
+      AdaptiveModalManagerInterpolationMode<[AdaptiveModalResolvedInterpolationPoint]>,
       
     interpolationPointMetadataPrev:
-      InterpolationMode<InterpolationPointMetadata>?,
+      AdaptiveModalManagerInterpolationMode<AdaptiveModalResolvedInterpolationPoint>? = nil,
       
     interpolationPointMetadataCurrent:
-      InterpolationMode<InterpolationPointMetadata>,
+      AdaptiveModalManagerInterpolationMode<AdaptiveModalResolvedInterpolationPoint>,
       
     interpolationPointMetadataNext:
-      InterpolationMode<InterpolationPointMetadata>,
+      AdaptiveModalManagerInterpolationMode<AdaptiveModalResolvedInterpolationPoint>? = nil,
       
     onModalWillSnapInterpolationPointMetadataNext:
-      InterpolationMode<InterpolationPointMetadata>?,
+      AdaptiveModalManagerInterpolationMode<AdaptiveModalResolvedInterpolationPoint>? = nil,
       
     onModalWillSnapInterpolationPointMetadataPrev:
-      InterpolationMode<InterpolationPointMetadata>?
+      AdaptiveModalManagerInterpolationMode<AdaptiveModalResolvedInterpolationPoint>? = nil
   ) {
   
-    self.currentMode = currentMode;
+    self.interpolationMode = interpolationMode;
     
-    self.interpolationPointMetadataPrev = interpolationPointMetadataPrev;
-    self.interpolationPointMetadataCurrent = interpolationPointMetadataCurrent;
-    self.interpolationPointMetadataNext = interpolationPointMetadataNext;
+    self.resolvedInterpolationPointPrev = interpolationPointMetadataPrev;
+    self.resolvedInterpolationPointCurrent = interpolationPointMetadataCurrent;
+    self.resolvedInterpolationPointNext = interpolationPointMetadataNext;
     
-    self.onModalWillSnapInterpolationPointMetadataNext = onModalWillSnapInterpolationPointMetadataNext;
-    self.onModalWillSnapInterpolationPointMetadataPrev = onModalWillSnapInterpolationPointMetadataPrev;
+    self.onModalWillSnapResolvedInterpolationPointNext = onModalWillSnapInterpolationPointMetadataNext;
+    self.onModalWillSnapResolvedInterpolationPointPrev = onModalWillSnapInterpolationPointMetadataPrev;
   };
   
   init?(
     usingModalConfig modalConfig: AdaptiveModalConfig,
     usingContext context: ComputableLayoutValueContext
-  ){
-    
-    let configMetadata = CurrentModeMetadata(
+  ) {
+  
+    let interpolationMode = AdaptiveModalManagerInterpolationMode(
       usingModalConfig: modalConfig,
       usingContext: context
     );
     
-    self.currentMode = .config(configMetadata);
-
-    let startSnapPoint =
-      configMetadata.snapPoints.first(forSnapPointKey: .undershootPoint);
-    
-    let startInterpolationPoint = configMetadata.interpolationSteps.first {
-      $0.key == .undershootPoint;
+    guard let interpolationMode = interpolationMode else { return nil };
+    self.interpolationMode = interpolationMode;
+  
+    let initialResolvedInterpolationPoint = interpolationMode.associatedValue.first {
+      $0.snapPoint.key == .undershootPoint
     };
     
-    guard let startSnapPoint = startSnapPoint,
-          let startInterpolationPoint = startInterpolationPoint
+    guard let initialResolvedInterpolationPoint = initialResolvedInterpolationPoint
     else { return nil };
     
-    self.interpolationPointMetadataCurrent = .config(
-      InterpolationPointMetadata(
-        snapPoint: startSnapPoint,
-        interpolationPoint: startInterpolationPoint
-      )
-    );
+    self.resolvedInterpolationPointCurrent =
+      .config(initialResolvedInterpolationPoint);
   };
   
   // MARK: - Functions
   // -----------------
   
   func shouldRevertCurrentModeToConfig(
-    nextInterpolationPoint: AdaptiveModalInterpolationPoint
+    nextResolvedInterpolationPoint: AdaptiveModalResolvedInterpolationPoint
   ) -> Bool {
-    switch self.currentMode {
+    switch self.interpolationMode {
       case .config:
         return false;
         
-      case let .overrideSnapPoint(metadata):
+      case let .overrideSnapPoint(resolvedInterpolationPoints):
         // guard adaptiveModalManager.presentationState == .none
         // else { return false };
         
-        let hasOvershootPoint = metadata.hasOvershootSnapPoint;
-        let interpolationPointsCount = metadata.interpolationSteps.count;
-        
+        let hasOvershootPoint = resolvedInterpolationPoints.hasOvershootPoint;
+        let lastIndex = resolvedInterpolationPoints.count - 1;
+  
         // index of the override snap point
-        let overrideIndex = hasOvershootPoint
-          ? interpolationPointsCount - 2
-          : interpolationPointsCount - 1;
-        
-        return nextInterpolationPoint.snapPointIndex <= overrideIndex;
+        let overrideIndex =
+          resolvedInterpolationPoints.overshootIndex ?? lastIndex;
+          
+        return nextResolvedInterpolationPoint.index < overrideIndex;
     };
   };
 };
