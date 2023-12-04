@@ -617,8 +617,8 @@ public class AdaptiveModalManager: NSObject {
     shouldClampMax: Bool = false
   ) -> CGFloat? {
   
-    guard let interpolationSteps = rangeOutput
-            ?? self.interpolationStepsContext?.interpolationSteps,
+    guard let interpolationPoints = rangeOutput
+            ?? self.interpolationStepsContext?.interpolationPoints,
             
           let interpolationRangeInput = rangeInput
             ?? self.interpolationStepsContext?.interpolationRangeInput
@@ -627,7 +627,7 @@ public class AdaptiveModalManager: NSObject {
     return AdaptiveModalUtilities.interpolate(
       inputValue: inputValue,
       rangeInput: interpolationRangeInput,
-      rangeOutput: interpolationSteps.map {
+      rangeOutput: interpolationPoints.map {
         $0[keyPath: rangeOutputKey];
       },
       shouldClampMin: shouldClampMin,
@@ -644,8 +644,8 @@ public class AdaptiveModalManager: NSObject {
     shouldClampMax: Bool = false
   ) -> UIColor? {
   
-    guard let interpolationSteps = rangeOutput
-            ?? self.interpolationStepsContext?.interpolationSteps,
+    guard let interpolationPoints = rangeOutput
+            ?? self.interpolationStepsContext?.interpolationPoints,
             
           let interpolationRangeInput = rangeInput
             ?? self.interpolationStepsContext?.interpolationRangeInput
@@ -654,7 +654,7 @@ public class AdaptiveModalManager: NSObject {
     return AdaptiveModalUtilities.interpolateColor(
       inputValue: inputValue,
       rangeInput: interpolationRangeInput,
-      rangeOutput: interpolationSteps.map {
+      rangeOutput: interpolationPoints.map {
         $0[keyPath: rangeOutputKey];
       },
       shouldClampMin: shouldClampMin,
@@ -668,14 +668,14 @@ public class AdaptiveModalManager: NSObject {
     rangeStart: AdaptiveModalInterpolationPoint,
     rangeEnd: AdaptiveModalInterpolationPoint
   )? {
-    guard let interpolationSteps =
-            self.interpolationStepsContext?.interpolationSteps,
+    guard let interpolationPoints =
+            self.interpolationStepsContext?.interpolationPoints,
             
-          let minStep = interpolationSteps.first,
-          let maxStep = interpolationSteps.last
+          let minStep = interpolationPoints.first,
+          let maxStep = interpolationPoints.last
     else { return nil };
     
-    let lastIndex = interpolationSteps.count - 1;
+    let lastIndex = interpolationPoints.count - 1;
     
     let minStepValue = minStep.percent;
     let maxStepValue = maxStep.percent;
@@ -683,19 +683,19 @@ public class AdaptiveModalManager: NSObject {
     if inputPercentValue <= minStepValue {
       return (
         rangeStart: minStep,
-        rangeEnd: interpolationSteps[1]
+        rangeEnd: interpolationPoints[1]
       );
     };
     
     if inputPercentValue >= maxStepValue {
       return (
-        rangeStart: interpolationSteps[lastIndex - 1],
+        rangeStart: interpolationPoints[lastIndex - 1],
         rangeEnd: maxStep
       );
     };
     
-    let firstMatch = interpolationSteps.enumerated().first {
-      guard let nextItem = interpolationSteps[safeIndex: $0.offset + 1]
+    let firstMatch = interpolationPoints.enumerated().first {
+      guard let nextItem = interpolationPoints[safeIndex: $0.offset + 1]
       else { return false };
       
       let percentCurrent = $0.element.percent;
@@ -710,7 +710,7 @@ public class AdaptiveModalManager: NSObject {
     
     guard let rangeStart = firstMatch?.element,
           let rangeStartIndex = firstMatch?.offset,
-          let rangeEnd = interpolationSteps[safeIndex: rangeStartIndex + 1]
+          let rangeEnd = interpolationPoints[safeIndex: rangeStartIndex + 1]
     else { return nil };
     
     return (rangeStart, rangeEnd);
@@ -988,8 +988,8 @@ public class AdaptiveModalManager: NSObject {
     forInputPercentValue inputPercentValue: CGFloat
   ) {
     guard let modalView = self.modalView,
-          let interpolationSteps =
-            self.interpolationStepsContext?.interpolationSteps
+          let interpolationPoints =
+            self.interpolationStepsContext?.interpolationPoints
     else { return };
     
     let clampingConfig = self.currentModalConfig.interpolationClampingConfig;
@@ -997,7 +997,7 @@ public class AdaptiveModalManager: NSObject {
     let clampingKeysMin = clampingConfig.clampingKeysLeft;
     let clampingKeysMax = clampingConfig.clampingKeysRight;
     
-    let rangeInput = interpolationSteps.map {
+    let rangeInput = interpolationPoints.map {
       $0[keyPath: \.percent]
     };
     
@@ -1006,7 +1006,7 @@ public class AdaptiveModalManager: NSObject {
         inputValue: inputPercentValue,
         rangeInput: rangeInput,
         rangeOutput: AdaptiveModalUtilities.extractValuesFromArray(
-          for: interpolationSteps,
+          for: interpolationPoints,
           key: \.computedRect
         ),
         shouldClampMinHeight: clampingKeysMin.contains(.modalSizeHeight),
@@ -1102,7 +1102,7 @@ public class AdaptiveModalManager: NSObject {
         inputValue: inputPercentValue,
         rangeInput: rangeInput,
         rangeOutput: AdaptiveModalUtilities.extractValuesFromArray(
-          for: interpolationSteps,
+          for: interpolationPoints,
           key: \.computedModalScrollViewContentInsets
         )
       );
@@ -1123,7 +1123,7 @@ public class AdaptiveModalManager: NSObject {
         inputValue: inputPercentValue,
         rangeInput: rangeInput,
         rangeOutput: AdaptiveModalUtilities.extractValuesFromArray(
-          for: interpolationSteps,
+          for: interpolationPoints,
           key: \.computedModalScrollViewVerticalScrollIndicatorInsets
         )
       );
@@ -1142,7 +1142,7 @@ public class AdaptiveModalManager: NSObject {
         inputValue: inputPercentValue,
         rangeInput: rangeInput,
         rangeOutput: AdaptiveModalUtilities.extractValuesFromArray(
-          for: interpolationSteps,
+          for: interpolationPoints,
           key: \.computedModalScrollViewHorizontalScrollIndicatorInsets
         )
       );
@@ -1159,7 +1159,7 @@ public class AdaptiveModalManager: NSObject {
           inputValue: inputPercentValue,
           rangeInput: rangeInput,
           rangeOutput: AdaptiveModalUtilities.extractValuesFromArray(
-            for: interpolationSteps,
+            for: interpolationPoints,
             key: \.modalTransform
           ),
           shouldClampMinTranslateX:
@@ -1294,7 +1294,7 @@ public class AdaptiveModalManager: NSObject {
           inputValue: inputPercentValue,
           rangeInput: rangeInput,
           rangeOutput: AdaptiveModalUtilities.extractValuesFromArray(
-            for: interpolationSteps,
+            for: interpolationPoints,
             key: \.modalShadowOffset
           )
         )
@@ -1575,10 +1575,10 @@ public class AdaptiveModalManager: NSObject {
       + "\n - isOverridingSnapPoints: \(self.interpolationStepsContext?.isOverridingSnapPoints.description ?? "N/A")"
       + "\n - layoutKeyboardValues: \(self._layoutKeyboardValues.debugDescription )"
       + "\n - presentationState: \(self.presentationState )"
-      + "\n - interpolationSteps.computedRect: \((self.interpolationStepsContext?.interpolationSteps ?? []).map({ $0.computedRect }))"
-      + "\n - interpolationSteps.percent: \((self.interpolationStepsContext?.interpolationSteps ?? []).map({ $0.percent }))"
-      + "\n - interpolationSteps.backgroundVisualEffectIntensity: \((self.interpolationStepsContext?.interpolationSteps ?? []).map({ $0.backgroundVisualEffectIntensity }))"
-      + "\n - interpolationSteps.backgroundVisualEffect: \((self.interpolationStepsContext?.interpolationSteps ?? []).map({ $0.backgroundVisualEffect }))"
+      + "\n - interpolationPoints.computedRect: \((self.interpolationStepsContext?.interpolationPoints ?? []).map({ $0.computedRect }))"
+      + "\n - interpolationPoints.percent: \((self.interpolationStepsContext?.interpolationPoints ?? []).map({ $0.percent }))"
+      + "\n - interpolationPoints.backgroundVisualEffectIntensity: \((self.interpolationStepsContext?.interpolationPoints ?? []).map({ $0.backgroundVisualEffectIntensity }))"
+      + "\n - interpolationPoints.backgroundVisualEffect: \((self.interpolationStepsContext?.interpolationPoints ?? []).map({ $0.backgroundVisualEffect }))"
       + "\n"
     );
   };
@@ -1593,7 +1593,7 @@ public class AdaptiveModalManager: NSObject {
     let modalConfig = self.currentModalConfig;
     
     if let interpolationStepsContext = self.interpolationStepsContext {
-      interpolationStepsContext.interpolationMode.associatedValue = .init(
+      interpolationStepsContext.interpolationMode.computeInterpolationPoints(
         usingModalConfig: modalConfig,
         usingContext: context
       );
@@ -1672,12 +1672,12 @@ public class AdaptiveModalManager: NSObject {
     else { return nil };
     
     let currentInterpolationSteps =
-      interpolationStepsContext.interpolationSteps;
+      interpolationStepsContext.interpolationPoints;
     
     let inputCoord = coord ??
       inputRect[keyPath: self.currentModalConfig.inputValueKeyForRect];
       
-    let interpolationSteps: [AdaptiveModalInterpolationPoint] = {
+    let interpolationPoints: [AdaptiveModalInterpolationPoint] = {
       guard !shouldIgnoreAllowSnapping else {
         return currentInterpolationSteps;
       };
@@ -1687,7 +1687,7 @@ public class AdaptiveModalManager: NSObject {
       };
     }();
     
-    let delta = interpolationSteps.map {
+    let delta = interpolationPoints.map {
       let coord = $0.computedRect[
         keyPath: self.currentModalConfig.inputValueKeyForRect
       ];
@@ -1747,9 +1747,9 @@ public class AdaptiveModalManager: NSObject {
     else { return nil };
     
     let currentInterpolationSteps =
-      interpolationStepsContext.interpolationSteps;
+      interpolationStepsContext.interpolationPoints;
   
-    let interpolationSteps: [AdaptiveModalInterpolationPoint] = {
+    let interpolationPoints: [AdaptiveModalInterpolationPoint] = {
       guard !shouldIgnoreAllowSnapping else {
         if shouldExcludeUndershootSnapPoint {
           return currentInterpolationSteps.filter {
@@ -1772,7 +1772,7 @@ public class AdaptiveModalManager: NSObject {
       \.minY, \.midY, \.maxY, \.height,
     ];
   
-    let delta = interpolationSteps.map { item in
+    let delta = interpolationPoints.map { item in
       let deltas = keysToComputeDelta.map {
         abs(item.computedRect[keyPath: $0] - currentRect[keyPath: $0]);
       };
@@ -2021,7 +2021,9 @@ public class AdaptiveModalManager: NSObject {
   // -------------------------------------------
     
   func snapTo(
-    interpolationPoint nextInterpolationPoint: AdaptiveModalInterpolationPoint,
+    interpolationStepsContextModeItem nextModeItem:
+      InterpolationStepsContext.ModeItem,
+      
     isAnimated: Bool = true,
     animationConfig: AdaptiveModalSnapAnimationConfig? = nil,
     shouldSetStateOnSnap: Bool,
@@ -2034,18 +2036,15 @@ public class AdaptiveModalManager: NSObject {
     guard let interpolationStepsContext = self.interpolationStepsContext
     else { return };
     
-    interpolationStepsContext.interpolationPointMetadataNext = {
+    let hasMatch = interpolationStepsContext.interpolationMode.contains(
+      modeItem: nextModeItem
+    );
     
-      return .init(
-        snapPoint: ,
-        interpolationPoint: nextInterpolationPoint
-      );
-    }();
-  
-    self.nextInterpolationIndex = nextIndex;
-  
-    let nextInterpolationPoint = interpolationPoint
-      ?? self.interpolationSteps[nextIndex];
+    guard hasMatch else { return };
+    interpolationStepsContext.resolvedInterpolationPointNext = nextModeItem;
+    
+    let nextResolvedInterpolationPoint = nextModeItem.associatedValue;
+    let nextInterpolationPoint = nextResolvedInterpolationPoint.interpolationPoint;
     
     self._notifyOnModalWillSnap(shouldSetState: shouldSetStateOnSnap);
     
@@ -2060,8 +2059,8 @@ public class AdaptiveModalManager: NSObject {
       extraAnimation: extraAnimation
     ) { _ in
     
-      self.currentInterpolationIndex = nextIndex;
-      self.nextInterpolationIndex = nil;
+      interpolationStepsContext.resolvedInterpolationPointCurrent = nextModeItem;
+      interpolationStepsContext.resolvedInterpolationPointNext = nil;
       
       self._notifyOnModalDidSnap(shouldSetState: shouldSetStateOnSnap);
       
@@ -2092,7 +2091,7 @@ public class AdaptiveModalManager: NSObject {
       self._adjustInterpolationIndex(for: closestSnapPoint.interpolationIndex);
     
     let nextInterpolationPoint =
-      self.interpolationSteps[nextInterpolationIndex];
+      self.interpolationPoints[nextInterpolationIndex];
  
     let prevFrame = self.modalFrame;
     let nextFrame = nextInterpolationPoint.computedRect;

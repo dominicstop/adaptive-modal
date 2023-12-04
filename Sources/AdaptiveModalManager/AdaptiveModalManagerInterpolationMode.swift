@@ -1,5 +1,5 @@
 //
-//  AdaptiveModalManagerInterpolationStepsContext+EmbeddedTypes.swift
+//  AdaptiveModalManagerInterpolationMode.swift
 //  
 //
 //  Created by Dominic Go on 12/3/23.
@@ -59,7 +59,8 @@ enum AdaptiveModalManagerInterpolationMode<T> {
     }
   };
   
-  var description: String {
+  /// The name of the enum case as a string
+  var memberName: String {
     switch self {
       case .config(_):
         return "config";
@@ -67,6 +68,10 @@ enum AdaptiveModalManagerInterpolationMode<T> {
       case .overrideSnapPoint(_):
         return "overrideSnapPoint";
     };
+  };
+  
+  var description: String {
+    self.memberName;
   };
   
   init?(
@@ -81,23 +86,59 @@ enum AdaptiveModalManagerInterpolationMode<T> {
       )
     );
   };
+  
+  func createNew<U>(
+    wrappingItem item: U
+  ) -> AdaptiveModalManagerInterpolationMode<U> {
+  
+    switch self {
+      case .config:
+        return .config(item);
+        
+      case .overrideSnapPoint:
+        return .overrideSnapPoint(item);
+    };
+  };
 };
 
 extension AdaptiveModalManagerInterpolationMode
-  where T == [AdaptiveModalResolvedInterpolationPoint]  {
+  where T == AdaptiveModalManager.InterpolationStepsContext.Items {
 
   mutating func computeInterpolationPoints(
     usingModalConfig modalConfig: AdaptiveModalConfig,
     usingContext context: ComputableLayoutValueContext,
-    snapPoints: [AdaptiveModalSnapPointConfig]
-  ) where T == [AdaptiveModalResolvedInterpolationPoint] {
+    snapPoints: [AdaptiveModalSnapPointConfig]? = nil
+  ) {
     
     let oldCopy = self;
+    let snapPoints = snapPoints ?? oldCopy.associatedValue.snapPoints;
     
     self.associatedValue = .Element.compute(
       usingConfig: modalConfig,
       usingContext: context,
-      snapPoints: oldCopy.associatedValue.snapPoints
+      snapPoints: snapPoints
     );
+  };
+  
+  func getMatchingItem(
+    forModeItem modeItem: AdaptiveModalManager.InterpolationStepsContext.ModeItem
+  ) -> AdaptiveModalManager.InterpolationStepsContext.ModeItem? {
+  
+    guard self.memberName != modeItem.memberName else { return nil };
+    
+    let match = self.associatedValue.first {
+      $0.index == modeItem.associatedValue.index;
+    };
+    
+    guard let match = match else { return nil };
+    return self.createNew(wrappingItem: match);
+  };
+  
+  func contains(
+    modeItem: AdaptiveModalManager.InterpolationStepsContext.ModeItem
+  ) -> Bool {
+    
+    let match = self.getMatchingItem(forModeItem: modeItem);
+    return match != nil;
   };
 };

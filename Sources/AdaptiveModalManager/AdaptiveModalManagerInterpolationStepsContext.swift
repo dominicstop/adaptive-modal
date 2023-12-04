@@ -10,21 +10,21 @@ import ComputableLayout
 
 
 class AdaptiveModalManagerInterpolationStepsContext {
+
+  typealias Item = AdaptiveModalResolvedInterpolationPoint;
+  typealias Items = [Item];
+  
+  typealias Mode = AdaptiveModalManager.InterpolationMode<Items>;
+  typealias ModeItem = AdaptiveModalManager.InterpolationMode<Item>;
   
   // MARK: - Properties
   // ------------------
   
-  var interpolationMode:
-    AdaptiveModalManagerInterpolationMode<[AdaptiveModalResolvedInterpolationPoint]>;
-
-  var resolvedInterpolationPointPrev:
-    AdaptiveModalManagerInterpolationMode<AdaptiveModalResolvedInterpolationPoint>?;
-  
-  var resolvedInterpolationPointCurrent:
-    AdaptiveModalManagerInterpolationMode<AdaptiveModalResolvedInterpolationPoint>;
+  var interpolationMode: Mode;
     
-  var resolvedInterpolationPointNext:
-    AdaptiveModalManagerInterpolationMode<AdaptiveModalResolvedInterpolationPoint>?;
+  var resolvedInterpolationPointPrev: ModeItem?;
+  var resolvedInterpolationPointCurrent: ModeItem;
+  var resolvedInterpolationPointNext: ModeItem?;
     
   /// * Indicates the next potential snapping point.
   /// * As the modal is being dragged, this will be updated to the next closest
@@ -33,8 +33,7 @@ class AdaptiveModalManagerInterpolationStepsContext {
   /// * Note: This is a temp. variable that is set from:
   ///   `AdaptiveModalManager._notifyOnModalWillSnap`.
   ///
-  var onModalWillSnapResolvedInterpolationPointNext:
-    AdaptiveModalManagerInterpolationMode<AdaptiveModalResolvedInterpolationPoint>?;
+  var onModalWillSnapResolvedInterpolationPointNext: ModeItem?;
     
   /// Owned by: `_notifyOnModalWillSnap`
   /// * The previous value of `onModalWillSnapInterpolationPointNext`
@@ -43,13 +42,12 @@ class AdaptiveModalManagerInterpolationStepsContext {
   /// * Note: This is a temp. variable that is set from:
   ///   `AdaptiveModalManager._notifyOnModalWillSnap`.
   ///
-  var onModalWillSnapResolvedInterpolationPointPrev:
-    AdaptiveModalManagerInterpolationMode<AdaptiveModalResolvedInterpolationPoint>?;
+  var onModalWillSnapResolvedInterpolationPointPrev: ModeItem?;
     
   // MARK: Computed Properties - Alias/Shortcuts
   // -------------------------------------------
   
-  var resolvedInterpolationPoints: [AdaptiveModalResolvedInterpolationPoint] {
+  var resolvedInterpolationPoints: Items {
     self.interpolationMode.associatedValue;
   };
   
@@ -100,23 +98,12 @@ class AdaptiveModalManagerInterpolationStepsContext {
   // ------------
   
   init(
-    interpolationMode:
-      AdaptiveModalManagerInterpolationMode<[AdaptiveModalResolvedInterpolationPoint]>,
-      
-    interpolationPointMetadataPrev:
-      AdaptiveModalManagerInterpolationMode<AdaptiveModalResolvedInterpolationPoint>? = nil,
-      
-    interpolationPointMetadataCurrent:
-      AdaptiveModalManagerInterpolationMode<AdaptiveModalResolvedInterpolationPoint>,
-      
-    interpolationPointMetadataNext:
-      AdaptiveModalManagerInterpolationMode<AdaptiveModalResolvedInterpolationPoint>? = nil,
-      
-    onModalWillSnapInterpolationPointMetadataNext:
-      AdaptiveModalManagerInterpolationMode<AdaptiveModalResolvedInterpolationPoint>? = nil,
-      
-    onModalWillSnapInterpolationPointMetadataPrev:
-      AdaptiveModalManagerInterpolationMode<AdaptiveModalResolvedInterpolationPoint>? = nil
+    interpolationMode: Mode,
+    interpolationPointMetadataPrev: ModeItem? = nil,
+    interpolationPointMetadataCurrent: ModeItem,
+    interpolationPointMetadataNext: ModeItem? = nil,
+    onModalWillSnapInterpolationPointMetadataNext: ModeItem? = nil,
+    onModalWillSnapInterpolationPointMetadataPrev: ModeItem? = nil
   ) {
   
     self.interpolationMode = interpolationMode;
@@ -157,17 +144,17 @@ class AdaptiveModalManagerInterpolationStepsContext {
   // -----------------
   
   func shouldRevertCurrentModeToConfig(
-    nextResolvedInterpolationPoint: AdaptiveModalResolvedInterpolationPoint
+    nextModeItem nextResolvedInterpolationPoint: AdaptiveModalResolvedInterpolationPoint
   ) -> Bool {
     switch self.interpolationMode {
       case .config:
         return false;
         
       case let .overrideSnapPoint(resolvedInterpolationPoints):
+        // TODO:
         // guard adaptiveModalManager.presentationState == .none
         // else { return false };
         
-        let hasOvershootPoint = resolvedInterpolationPoints.hasOvershootPoint;
         let lastIndex = resolvedInterpolationPoints.count - 1;
   
         // index of the override snap point
