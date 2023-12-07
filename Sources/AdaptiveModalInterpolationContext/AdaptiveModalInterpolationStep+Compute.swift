@@ -1,79 +1,90 @@
 //
-//  AdaptiveModalInterpolationPoint+Compute.swift
+//  AdaptiveModalInterpolationStep+Compute.swift
 //  
 //
-//  Created by Dominic Go on 8/9/23.
+//  Created by Dominic Go on 12/3/23.
 //
 
 import UIKit
 import ComputableLayout
 import DGSwiftUtilities
 
-extension AdaptiveModalInterpolationPoint {
-  
+
+extension AdaptiveModalInterpolationStep {
+
   /// Same as: `EnumeratedSequence<[AdaptiveModalSnapPointConfig]>`,
-  /// but the compiler keeps getting confused when chaining array operation...
-  typealias SnapPointsIndexed = (
+  /// but the compiler keeps getting confused when chaining array operations...
+  fileprivate typealias SnapPointsIndexed = (
     offset: Int,
     element: AdaptiveModalSnapPointConfig
   );
-
-  static func itemsWithPercentCollision(interpolationPoints: [Self]) -> [Self] {
-    interpolationPoints.filter { interpolationPoint in
-      interpolationPoints.contains {
-        $0 != interpolationPoint && $0.percent == interpolationPoint.percent;
+  
+  static private func itemsWithPercentCollision(_ items: [Self]) -> [Self] {
+    items.filter { item in
+      items.contains {
+           $0.interpolationPoint != item.interpolationPoint
+        && $0.interpolationPoint.percent == item.interpolationPoint.percent;
       };
     };
   };
   
-  /// `KeyframeMode.standard` snap points
+  /// Handles `KeyframeMode.standard` snap points
   static private func computeStandard(
     usingConfig modalConfig: AdaptiveModalConfig,
     usingContext context: ComputableLayoutValueContext,
-    snapPointsIndexed snapPoints: [SnapPointsIndexed]
+    snapPointsIndexed: [SnapPointsIndexed]
   ) -> [Self] {
 
-    var items: [AdaptiveModalInterpolationPoint] = [];
+    var items: [Self] = [];
     
-    for (index, snapConfig) in snapPoints {
+    for (index, snapPoint) in snapPointsIndexed {
+      let newInterpolationPoint = AdaptiveModalInterpolationPoint(
+        usingModalConfig: modalConfig,
+        snapPointIndex: index,
+        layoutValueContext: context,
+        snapPointConfig: snapPoint,
+        prevInterpolationPoint: items.last?.interpolationPoint
+      );
+      
       items.append(
-        AdaptiveModalInterpolationPoint(
-          usingModalConfig: modalConfig,
+        .init(
           snapPointIndex: index,
-          layoutValueContext: context,
-          snapPointConfig: snapConfig,
-          prevInterpolationPoint: items.last
+          snapPoint: snapPoint,
+          interpolationPoint: newInterpolationPoint
         )
       );
     };
-    
-    let firstSnapPoint = snapPoints.first {
-      $0.offset == 0;
+
+    let secondResolvedInterpolationPoint = items.first {
+      $0.interpolationPoint.snapPointIndex == 1;
     };
     
-    let secondInterpolationPoint = items.first {
-      $0.snapPointIndex == 1;
-    };
-    
-    if let firstSnapPoint = firstSnapPoint,
-       let secondInterpolationPoint = secondInterpolationPoint {
+    if let firstIndexedSnapPoint = snapPointsIndexed.first,
+       let secondResolvedInterpolationPoint = secondResolvedInterpolationPoint {
        
-      items[0] = AdaptiveModalInterpolationPoint(
+      let interpolationPoint = AdaptiveModalInterpolationPoint(
         usingModalConfig: modalConfig,
-        snapPointIndex: 0,
+        snapPointIndex: firstIndexedSnapPoint.offset,
         layoutValueContext: context,
-        snapPointConfig: firstSnapPoint.element,
-        prevInterpolationPoint: secondInterpolationPoint
+        snapPointConfig: firstIndexedSnapPoint.element,
+        prevInterpolationPoint: secondResolvedInterpolationPoint.interpolationPoint
+      );
+       
+      items[firstIndexedSnapPoint.offset] = .init(
+        snapPointIndex: firstIndexedSnapPoint.offset,
+        snapPoint: firstIndexedSnapPoint.element,
+        interpolationPoint: interpolationPoint
       );
     };
 
     return items;
   };
   
+  /// Handles `KeyframeMode.inBetween` snap points
   static private func computeInBetween(
     usingConfig modalConfig: AdaptiveModalConfig,
     usingContext context: ComputableLayoutValueContext,
-    snapPointsIndexed snapPoints: [SnapPointsIndexed],
+    snapPointsIndexed: [SnapPointsIndexed],
     standardInterpolationPoints: [Self],
     startPoint: Self,
     endPoint: Self?,
@@ -82,14 +93,14 @@ extension AdaptiveModalInterpolationPoint {
   
     let snapPointPercentList: [CGFloat] = {
       let rangeInput = standardInterpolationPoints.map {
-        CGFloat($0.snapPointIndex);
+        CGFloat($0.interpolationPoint.snapPointIndex);
       };
       
       let rangeOutput = standardInterpolationPoints.map {
-        $0.percent;
+        $0.interpolationPoint.percent;
       };
       
-      return snapPoints.map {
+      return snapPointsIndexed.map {
         AdaptiveModalUtilities.interpolate(
           inputValue: CGFloat($0.offset),
           rangeInput: rangeInput,
@@ -105,7 +116,7 @@ extension AdaptiveModalInterpolationPoint {
     
     func getRangeInputOutput<T>(
       keyframeKey: WritableKeyPath<AdaptiveModalKeyframeConfig, T?>,
-      interpolationPointKey: KeyPath<Self, T>
+      interpolationPointKey: KeyPath<AdaptiveModalInterpolationPoint, T>
     ) -> (
       rangeInput: [CGFloat],
       rangeOutput: [T]
@@ -113,8 +124,8 @@ extension AdaptiveModalInterpolationPoint {
       var rangeInputOutput: [(input: CGFloat, output: T)] = [];
       
       rangeInputOutput.append((
-        input: startPoint.percent,
-        output: startPoint[keyPath: interpolationPointKey]
+        input: startPoint.interpolationPoint.percent,
+        output: startPoint.interpolationPoint[keyPath: interpolationPointKey]
       ));
       
       rangeInputOutput += inBetweenPoints.compactMap {
@@ -130,8 +141,8 @@ extension AdaptiveModalInterpolationPoint {
       
       if let endPoint = endPoint {
         rangeInputOutput.append((
-          input: endPoint.percent,
-          output: endPoint[keyPath: interpolationPointKey]
+          input: endPoint.interpolationPoint.percent,
+          output: endPoint.interpolationPoint[keyPath: interpolationPointKey]
         ));
       };
       
@@ -148,9 +159,10 @@ extension AdaptiveModalInterpolationPoint {
       }();
     };
     
+    /// Mutates `inBetweenKeyframes`
     func setKeyframeValue<T>(
-      keyframeKey: WritableKeyPath<AdaptiveModalKeyframeConfig, T?>,
-      interpolationPointKey: KeyPath<Self, T>,
+      forKeyframeKey keyframeKey: WritableKeyPath<AdaptiveModalKeyframeConfig, T?>,
+      interpolationPointKey: KeyPath<AdaptiveModalInterpolationPoint, T>,
       interpolator: (
         _ inputValue    : CGFloat,
         _ rangeInput    : [CGFloat],
@@ -180,7 +192,8 @@ extension AdaptiveModalInterpolationPoint {
           false
         );
         
-        inBetweenKeyframes[index].element[keyPath: keyframeKey] = interpolatedValue!;
+        inBetweenKeyframes[index]
+          .element[keyPath: keyframeKey] = interpolatedValue!;
       };
     };
     
@@ -194,11 +207,14 @@ extension AdaptiveModalInterpolationPoint {
     AdaptiveModalKeyframeConfig.keyMap.forEach {
       switch ($0.keyframeKey, $0.interpolationPointKey) {
         case (
-          let keyframeKey as WritableKeyPath<AdaptiveModalKeyframeConfig, CGRect?>,
-          let interpolationPointKey as WritableKeyPath<Self, CGRect>
+          let keyframeKey
+            as WritableKeyPath<AdaptiveModalKeyframeConfig, CGRect?>,
+            
+          let interpolationPointKey
+            as WritableKeyPath<AdaptiveModalInterpolationPoint, CGRect>
         ):
           setKeyframeValue(
-            keyframeKey: keyframeKey,
+            forKeyframeKey: keyframeKey,
             interpolationPointKey: interpolationPointKey,
             interpolator: {
               AdaptiveModalUtilities.interpolateRect(
@@ -218,31 +234,40 @@ extension AdaptiveModalInterpolationPoint {
           );
           
         case (
-          let keyframeKey as WritableKeyPath<AdaptiveModalKeyframeConfig, UIEdgeInsets?>,
-          let interpolationPointKey as WritableKeyPath<Self, UIEdgeInsets>
+          let keyframeKey
+            as WritableKeyPath<AdaptiveModalKeyframeConfig, UIEdgeInsets?>,
+            
+          let interpolationPointKey
+            as WritableKeyPath<AdaptiveModalInterpolationPoint, UIEdgeInsets>
         ):
           setKeyframeValue(
-            keyframeKey: keyframeKey,
+            forKeyframeKey: keyframeKey,
             interpolationPointKey: interpolationPointKey,
             interpolator: AdaptiveModalUtilities.interpolateEdgeInsets
           );
           
         case (
-          let keyframeKey as WritableKeyPath<AdaptiveModalKeyframeConfig, CGFloat?>,
-          let interpolationPointKey as WritableKeyPath<Self, CGFloat>
+          let keyframeKey
+            as WritableKeyPath<AdaptiveModalKeyframeConfig, CGFloat?>,
+            
+          let interpolationPointKey
+            as WritableKeyPath<AdaptiveModalInterpolationPoint, CGFloat>
         ):
           setKeyframeValue(
-            keyframeKey: keyframeKey,
+            forKeyframeKey: keyframeKey,
             interpolationPointKey: interpolationPointKey,
             interpolator: AdaptiveModalUtilities.interpolate
           );
           
         case (
-          let keyframeKey as WritableKeyPath<AdaptiveModalKeyframeConfig, Transform3D?>,
-          let interpolationPointKey as WritableKeyPath<Self, Transform3D>
+          let keyframeKey
+            as WritableKeyPath<AdaptiveModalKeyframeConfig, Transform3D?>,
+            
+          let interpolationPointKey
+            as WritableKeyPath<AdaptiveModalInterpolationPoint, Transform3D>
         ):
           setKeyframeValue(
-            keyframeKey: keyframeKey,
+            forKeyframeKey: keyframeKey,
             interpolationPointKey: interpolationPointKey,
             interpolator: {
               AdaptiveModalUtilities.interpolateTransform3D(
@@ -276,21 +301,27 @@ extension AdaptiveModalInterpolationPoint {
           );
           
         case (
-          let keyframeKey as WritableKeyPath<AdaptiveModalKeyframeConfig, UIColor?>,
-          let interpolationPointKey as WritableKeyPath<Self, UIColor>
+          let keyframeKey
+            as WritableKeyPath<AdaptiveModalKeyframeConfig, UIColor?>,
+            
+          let interpolationPointKey
+            as WritableKeyPath<AdaptiveModalInterpolationPoint, UIColor>
         ):
           setKeyframeValue(
-            keyframeKey: keyframeKey,
+            forKeyframeKey: keyframeKey,
             interpolationPointKey: interpolationPointKey,
             interpolator: AdaptiveModalUtilities.interpolateColor
           );
         
         case (
-          let keyframeKey as WritableKeyPath<AdaptiveModalKeyframeConfig, CGSize?>,
-          let interpolationPointKey as WritableKeyPath<Self, CGSize>
+          let keyframeKey
+            as WritableKeyPath<AdaptiveModalKeyframeConfig, CGSize?>,
+            
+          let interpolationPointKey
+            as WritableKeyPath<AdaptiveModalInterpolationPoint, CGSize>
         ):
           setKeyframeValue(
-            keyframeKey: keyframeKey,
+            forKeyframeKey: keyframeKey,
             interpolationPointKey: interpolationPointKey,
             interpolator: AdaptiveModalUtilities.interpolateSize
           );
@@ -302,7 +333,7 @@ extension AdaptiveModalInterpolationPoint {
     
     if inBetweenPoints.count > 0 {
       let startPointKeyframe = AdaptiveModalKeyframeConfig(
-        fromInterpolationPoint: startPoint
+        fromInterpolationPoint: startPoint.interpolationPoint
       );
       
       inBetweenKeyframes[0].element.setNonNilValues(
@@ -338,8 +369,8 @@ extension AdaptiveModalInterpolationPoint {
       snapPointsIndexed: inBetweenPointsMerged
     );
   };
-
-  public static func compute(
+  
+  static func compute(
     usingConfig modalConfig: AdaptiveModalConfig,
     usingContext context: ComputableLayoutValueContext,
     snapPoints: [AdaptiveModalSnapPointConfig]? = nil,
@@ -421,14 +452,10 @@ extension AdaptiveModalInterpolationPoint {
     );
     
     #if DEBUG
-    func checkForCollisions(
-      _ interpolationPoints: [AdaptiveModalInterpolationPoint]
-    ) {
+    func checkForCollisions(_ items: [Self]) {
       guard shouldCheckForPercentCollision else { return };
       
-      let collisions = Self.itemsWithPercentCollision(
-        interpolationPoints: interpolationPoints
-      );
+      let collisions = Self.itemsWithPercentCollision(items);
       
       if collisions.count > 0 {
         print(
@@ -438,12 +465,13 @@ extension AdaptiveModalInterpolationPoint {
         );
         
         collisions.enumerated().forEach {
+          let interpolationPoint = $0.element.interpolationPoint;
           print(
             "Snap point collision - \($0.offset + 1)/\(collisions.count)",
-            "\n - snapPointIndex: \($0.element.snapPointIndex)",
-            "\n - key: \($0.element.key)",
-            "\n - percent: \($0.element.percent)",
-            "\n - computedRect: \($0.element.computedRect)",
+            "\n - index: \($0.element.snapPointIndex)",
+            "\n - key: \(interpolationPoint.key)",
+            "\n - percent: \(interpolationPoint.percent)",
+            "\n - computedRect: \(interpolationPoint.computedRect)",
             "\n"
           );
         };

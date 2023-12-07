@@ -71,7 +71,8 @@ public extension AdaptiveModalManager {
   
   func notifyDidLayoutSubviews() {
     guard let rootView = self.rootView,
-          let modalFrame = self.modalFrame
+          let modalFrame = self.modalFrame,
+          let interpolationContext = self.interpolationContext
     else { return };
     
     let prevTargetFrame = self.prevTargetFrame;
@@ -93,15 +94,19 @@ public extension AdaptiveModalManager {
         shouldExcludeUndershootSnapPoint: true
       );
       
-      self.currentConfigInterpolationIndex = closestSnapPoint?.interpolationIndex
-        ?? self.currentConfigInterpolationIndex;
-      
+      if let closestSnapPoint = closestSnapPoint {
+        interpolationContext.interpolationStepItemCurrent = closestSnapPoint.interpolationStepItem;
+      };
+
       let shouldUpdateDragHandleConstraints: Bool = {
         guard let prevConfig = self.prevModalConfig else {
           return false;
         };
         
-        return self.currentModalConfig.dragHandlePosition != prevConfig.dragHandlePosition;
+        let dragHandlePositionPrev = prevConfig.dragHandlePosition;
+        let dragHandlePositionNext = self.currentModalConfig.dragHandlePosition;
+        
+        return dragHandlePositionPrev != dragHandlePositionNext;
       }();
       
       if shouldUpdateDragHandleConstraints {
@@ -118,10 +123,19 @@ public extension AdaptiveModalManager {
   };
   
   func clearSnapPointOverride(completion: (() -> Void)?){
-    guard self.isOverridingSnapPoints else { return };
+    guard let interpolationContext = self.interpolationContext,
+          interpolationContext.isOverridingSnapPoints
+    else { return };
   
-    self._cleanupSnapPointOverride();
-    self.snapToCurrentSnapPointIndex(completion: completion);
+    let interpolationMode = AdaptiveModalInterpolationMode(
+      usingModalConfig: self.currentModalConfig,
+      usingContext: self._layoutValueContext
+    );
+    
+    guard let interpolationMode = interpolationMode else { return };
+    interpolationContext.mode = interpolationMode;
+    
+    self.snapToClosestSnapPoint();
   };
   
   func presentModal(
@@ -158,14 +172,14 @@ public extension AdaptiveModalManager {
     completion: (() -> Void)? = nil
   ) {
   
-    let snapPointMatch = self.interpolationSteps.first {
-      $0.key == snapPointKey;
+    let snapPointMatch = self.currentModalConfig.snapPoints.enumerated().first {
+      $0.element.key == snapPointKey;
     };
   
     self.presentModal(
       viewControllerToPresent: modalVC,
       presentingViewController: targetVC,
-      snapPointIndex: snapPointMatch?.snapPointIndex,
+      snapPointIndex: snapPointMatch?.offset,
       animated: animated,
       animationConfig: animationConfig,
       extraAnimation: extraAnimation,
@@ -265,7 +279,7 @@ public extension AdaptiveModalManager {
       }
     );
   };
-  
+    
   func snapTo(
     snapPointIndex nextIndex: Int,
     isAnimated: Bool = true,
@@ -273,12 +287,18 @@ public extension AdaptiveModalManager {
     extraAnimation: (() -> Void)? = nil,
     completion: (() -> Void)? = nil
   ) {
-  
-    let lastIndex = max(self.interpolationSteps.count - 1, 0);
-    let nextIndexAdj = self._adjustInterpolationIndex(for: nextIndex);
+ 
+    let lastIndex = max(self.currentModalConfig.snapPoints.count - 1, 0);
+    let nextIndexAdj = self._adjustSnapPointIndex(for: lastIndex);
+
+    guard nextIndexAdj >= 0 && nextIndexAdj <= lastIndex else { return };
     
-    guard nextIndexAdj >= 0 && nextIndexAdj <= lastIndex,
-          nextIndexAdj != self.currentInterpolationIndex
+    let nextInterpolationStepItem = self.interpolationContext.mode.getMatchingItem(
+      forSnapPointIndex: nextIndex
+    );
+    
+    guard let nextInterpolationStepItem = nextInterpolationStepItem,
+          interpolationContext.interpolationStepItemCurrent != nextInterpolationStepItem
     else { return };
     
     let isDismissing: Bool = {
@@ -330,8 +350,8 @@ public extension AdaptiveModalManager {
       return .SNAPPED_PROGRAMMATIC;
     }();
     
-    self.snapTo(
-      interpolationIndex: nextIndex,
+    self._snapTo(
+      snapPointIndex: nextIndex,
       isAnimated: isAnimated,
       animationConfig: animationConfig,
       shouldSetStateOnSnap: true,
@@ -355,23 +375,11 @@ public extension AdaptiveModalManager {
       forRect: self.modalFrame ?? .zero,
       shouldExcludeUndershootSnapPoint: true
     );
-    
-    let nextInterpolationIndex = self._adjustInterpolationIndex(
-      for: closestSnapPoint?.interpolationIndex ?? 1
-    );
-    
-    let nextInterpolationPoint =
-      self.interpolationSteps[nextInterpolationIndex];
-    
-    let prevFrame = self.modalFrame;
-    let nextFrame = nextInterpolationPoint.computedRect;
-    
-    guard nextInterpolationIndex != self.currentInterpolationIndex,
-          prevFrame != nextFrame
-    else { return };
+
+    guard let closestSnapPoint = closestSnapPoint else { return };
     
     self.snapTo(
-      snapPointIndex: nextInterpolationIndex,
+      snapPointIndex: closestSnapPoint.interpolationStepItem.snapPointIndex,
       isAnimated: isAnimated,
       animationConfig: animationConfig,
       extraAnimation: extraAnimation,
@@ -386,7 +394,7 @@ public extension AdaptiveModalManager {
     completion: (() -> Void)? = nil
   ) {
   
-    let nextIndex = self.currentInterpolationIndex - 1;
+    let nextIndex = self.interpolationContext.snapPointIndexCurrent - 1;
     
     self.snapTo(
       snapPointIndex: nextIndex,
@@ -404,7 +412,7 @@ public extension AdaptiveModalManager {
     completion: (() -> Void)? = nil
   ) {
   
-    let nextIndex = self.currentInterpolationIndex;
+    let nextIndex = self.interpolationContext.snapPointIndexCurrent;
     
     self.snapTo(
       snapPointIndex: nextIndex,
@@ -422,7 +430,7 @@ public extension AdaptiveModalManager {
     completion: (() -> Void)? = nil
   ) {
     
-    let nextIndex = self.currentInterpolationIndex + 1;
+    let nextIndex = self.interpolationContext.snapPointIndexCurrent + 1;
     
     self.snapTo(
       snapPointIndex: nextIndex,
@@ -465,6 +473,7 @@ public extension AdaptiveModalManager {
     completion: (() -> Void)? = nil
   ) throws {
   
+    let interpolationContext = self.interpolationContext!;
     self._cleanupSnapPointOverride();
     
     let prevSnapPointConfigs: [AdaptiveModalSnapPointConfig] = {
@@ -480,7 +489,7 @@ public extension AdaptiveModalManager {
           snapPointConfig: overrideSnapPointConfig
         );
         
-        let items = self.configInterpolationSteps.filter {
+        let items = interpolationContext.interpolationPoints.filter {
           let delta = $0.percent - overrideInterpolationPoint.percent;
           guard delta <= 0 else { return false };
           
@@ -489,7 +498,7 @@ public extension AdaptiveModalManager {
         };
         
         guard items.count > 0 else {
-          return [self.configInterpolationSteps.first!];
+          return [interpolationContext.interpolationPoints.first!];
         };
         
         return items;
@@ -533,30 +542,24 @@ public extension AdaptiveModalManager {
       snapPoints.append(overshootSnapPointConfig);
     };
     
-    let nextInterpolationPointIndex = prevSnapPointConfigs.count;
+    interpolationContext.mode = .overrideSnapPoint(
+      .Element.compute(
+        usingConfig: self.currentModalConfig,
+        usingContext: self._layoutValueContext,
+        snapPoints: snapPoints
+      )
+    );
     
-    self.overrideSnapPoints = snapPoints;
-    self._computeSnapPoints();
-    
-    guard let overrideInterpolationPoints = self.overrideInterpolationPoints,
-          let nextInterpolationPoint =
-            overrideInterpolationPoints[safeIndex: nextInterpolationPointIndex]
-    else {
-      throw NSError();
-    };
-    
-    self.isOverridingSnapPoints = true;
+    let nextSnapPointIndex = prevSnapPointConfigs.count;
     self._shouldResetRangePropertyAnimators = true;
-    self.currentOverrideInterpolationIndex = nextInterpolationPointIndex;
-
-    self._animateModal(
-      to: nextInterpolationPoint,
+    
+    self.snapTo(
+      snapPointIndex: nextSnapPointIndex,
       isAnimated: isAnimated,
-      animationConfigOverride: animationConfig,
-      extraAnimation: extraAnimation
-    ) { _ in
-      completion?();
-    };
+      animationConfig: animationConfig,
+      extraAnimation: extraAnimation,
+      completion: completion
+    );
   };
   
   func snapTo(
@@ -567,49 +570,45 @@ public extension AdaptiveModalManager {
     completion: (() -> Void)? = nil
   ) throws {
   
-    let matchingInterpolationPoint: AdaptiveModalInterpolationPoint? = {
+    let interpolationContext = self.interpolationContext!;
+  
+    let interpolationStepMatch: AdaptiveModalInterpolationStepItem? = {
       switch key {
         case let .index(indexKey):
-          return self.configInterpolationSteps?.first {
-            $0.snapPointIndex == indexKey;
-          };
+          return interpolationContext.mode.getMatchingItem(
+            forSnapPointIndex: indexKey
+          )!;
           
-        case .string(_):
-          return self.configInterpolationSteps.first {
-            $0.key == key;
-          };
+        case let .string(stringKey):
+          return interpolationContext.mode.getMatchingItem(
+            forStringKey: stringKey
+          )!;
           
         case .undershootPoint:
-          return self.configInterpolationSteps?.first;
+          return interpolationContext.mode.getMatchingItem(
+            forSnapPointKey: .undershootPoint
+          )!;
           
         case .overshootPoint:
-          return self.configInterpolationSteps?.last;
+          return interpolationContext.mode.getMatchingItem(
+            forSnapPointKey: .overshootPoint
+          )!;
           
         case .unspecified:
           return nil;
       };
     }();
     
-    guard let matchingInterpolationPoint = matchingInterpolationPoint else {
+    guard let interpolationStepMatch = interpolationStepMatch else {
       throw NSError();
     };
     
-    self.nextConfigInterpolationIndex =
-      matchingInterpolationPoint.snapPointIndex;
-    
-    self.modalStateMachine.setState(.SNAPPING_PROGRAMMATIC);
-    self._notifyOnModalWillSnap(shouldSetState: false);
-    
-    self._animateModal(
-      to: matchingInterpolationPoint,
-      isAnimated: isAnimated,
-      animationConfigOverride: animationConfig,
-      extraAnimation: animationBlock
-    ) { _ in
-      
-      self.modalStateMachine.setState(.SNAPPED_PROGRAMMATIC);
-      self._notifyOnModalDidSnap(shouldSetState: false);
-      completion?();
-    };
+    self.snapTo(
+      snapPointIndex: <#T##Int#>,
+      isAnimated: ,
+      animationConfig: ,
+      animationBlock: ,
+      completion: completion
+    );
   };
 };

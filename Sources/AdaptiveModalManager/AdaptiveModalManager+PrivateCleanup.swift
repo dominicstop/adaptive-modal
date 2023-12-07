@@ -118,14 +118,16 @@ extension AdaptiveModalManager {
   };
   
   func _cleanupSnapPointOverride(){
-    self.isOverridingSnapPoints = false;
-
-    self.overrideSnapPoints = nil;
-    self.overrideInterpolationPoints = nil;
+  
+    guard let interpolationContext = self.interpolationContext,
+          interpolationContext.mode.isOverrideSnapPoint
+    else { return };
     
-    self.currentOverrideInterpolationIndex = 0;
-    self.prevOverrideInterpolationIndex = 0;
-    self.nextOverrideInterpolationIndex = nil;
+    // reset to `.config`
+    interpolationContext.mode = .init(
+      usingModalConfig: self.currentModalConfig,
+      usingContext: self._layoutValueContext
+    );
   };
  
   func _cleanup() {
@@ -138,11 +140,12 @@ extension AdaptiveModalManager {
     
     self._cleanupViews();
     
-    self._cleanupSnapPointOverride();
+    self.interpolationContext = nil;
+    self._setupInterpolationContext();
+    
     self._removeObservers();
     self._endDisplayLink();
     
-    self.currentInterpolationIndex = 0;
     self._modalSecondaryAxisValue = nil;
     
     self._shouldResetRangePropertyAnimators = false;

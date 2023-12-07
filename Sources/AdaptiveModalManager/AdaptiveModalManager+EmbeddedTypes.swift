@@ -11,7 +11,7 @@ import Foundation
 extension AdaptiveModalManager {
 
   // MARK: - Public Embedded Types
-  // --------==-------------------
+  // -----------------------------
   
   public enum PresentationState {
     case presenting, dismissing, none;
@@ -32,4 +32,12 @@ extension AdaptiveModalManager {
     case modalPosition;
     case animatorFractionComplete;
   };
+  
+  typealias InterpolationContext = AdaptiveModalInterpolationContext;
+  
+  typealias InterpolationMode = AdaptiveModalInterpolationMode;
+  
+  typealias InterpolationStep = AdaptiveModalInterpolationStep;
+  
+  typealias InterpolationStepItem = AdaptiveModalInterpolationStepItem;
 };
