@@ -126,10 +126,15 @@ fileprivate class ModalViewController: UIViewController {
   };
   
   @objc func onPressLabelSnapPointIndex(_ sender: UITapGestureRecognizer){
-    guard let modalManager = self.modalManager else { return };
+    guard let modalManager = self.modalManager,
+          let interpolationContext = modalManager.interpolationContext
+    else { return };
+    
     let modalConfig = modalManager.currentModalConfig;
 
-    let currentIndex = modalManager.currentInterpolationIndex;
+    let currentIndex =
+      interpolationContext.interpolationStepCurrent.snapPointIndex;
+      
     let lastIndex = {
       guard let overshootIndex = modalConfig.overshootSnapPointIndex else {
         return modalConfig.snapPointLastIndex;

@@ -17,4 +17,11 @@ extension Array where Element == AdaptiveModalInterpolationPoint {
       $0.key == snapPointKey;
     };
   };
+  
+  func first(forSnapPointIndex snapPointIndex: Int) -> Element? {
+    
+    self.first {
+      $0.snapPointIndex == snapPointIndex;
+    };
+  };
 };

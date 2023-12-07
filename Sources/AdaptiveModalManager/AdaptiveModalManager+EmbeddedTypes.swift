@@ -33,8 +33,11 @@ extension AdaptiveModalManager {
     case animatorFractionComplete;
   };
   
-  typealias InterpolationMode = AdaptiveModalManagerInterpolationMode;
-
-  typealias InterpolationStepsContext =
-    AdaptiveModalManagerInterpolationStepsContext;
+  typealias InterpolationContext = AdaptiveModalInterpolationContext;
+  
+  typealias InterpolationMode = AdaptiveModalInterpolationMode;
+  
+  typealias InterpolationStep = AdaptiveModalInterpolationStep;
+  
+  typealias InterpolationStepItem = AdaptiveModalInterpolationStepItem;
 };

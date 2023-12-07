@@ -1,5 +1,5 @@
 //
-//  AdaptiveModalResolvedInterpolationPoint+Compute.swift
+//  AdaptiveModalInterpolationStep+Compute.swift
 //  
 //
 //  Created by Dominic Go on 12/3/23.
@@ -10,7 +10,7 @@ import ComputableLayout
 import DGSwiftUtilities
 
 
-extension AdaptiveModalResolvedInterpolationPoint {
+extension AdaptiveModalInterpolationStep {
 
   /// Same as: `EnumeratedSequence<[AdaptiveModalSnapPointConfig]>`,
   /// but the compiler keeps getting confused when chaining array operations...
@@ -48,7 +48,7 @@ extension AdaptiveModalResolvedInterpolationPoint {
       
       items.append(
         .init(
-          index: index,
+          snapPointIndex: index,
           snapPoint: snapPoint,
           interpolationPoint: newInterpolationPoint
         )
@@ -71,7 +71,7 @@ extension AdaptiveModalResolvedInterpolationPoint {
       );
        
       items[firstIndexedSnapPoint.offset] = .init(
-        index: firstIndexedSnapPoint.offset,
+        snapPointIndex: firstIndexedSnapPoint.offset,
         snapPoint: firstIndexedSnapPoint.element,
         interpolationPoint: interpolationPoint
       );
@@ -468,7 +468,7 @@ extension AdaptiveModalResolvedInterpolationPoint {
           let interpolationPoint = $0.element.interpolationPoint;
           print(
             "Snap point collision - \($0.offset + 1)/\(collisions.count)",
-            "\n - index: \($0.element.index)",
+            "\n - index: \($0.element.snapPointIndex)",
             "\n - key: \(interpolationPoint.key)",
             "\n - percent: \(interpolationPoint.percent)",
             "\n - computedRect: \(interpolationPoint.computedRect)",
@@ -534,14 +534,14 @@ extension AdaptiveModalResolvedInterpolationPoint {
         guard let snapPointStart = snapPointStart else { break };
         
         let interpolationPointStart = interpolationPointsStandard.first {
-          $0.index == snapPointStart.offset;
+          $0.snapPointIndex == snapPointStart.offset;
         };
         
         let interpolationPointEnd: Self? = {
           guard let snapPointEnd = snapPointEnd else { return nil };
           
           return interpolationPointsStandard.first {
-            $0.index == snapPointEnd.offset;
+            $0.snapPointIndex == snapPointEnd.offset;
           };
         }();
         
@@ -552,8 +552,8 @@ extension AdaptiveModalResolvedInterpolationPoint {
         /// `snapPointStart` (exclusive) and `snapPointEnd` (exclusive)
         ///
         let inBetweenSnapPoints: [SnapPointsIndexed] = snapPointsIndexed.compactMap {
-          let minIndex = interpolationPointStart.index;
-          let maxIndex = interpolationPointEnd?.index ?? lastIndex + 1;
+          let minIndex = interpolationPointStart.snapPointIndex;
+          let maxIndex = interpolationPointEnd?.snapPointIndex ?? lastIndex + 1;
           
           guard $0.offset > minIndex && $0.offset < maxIndex else { return nil };
           return $0;
@@ -605,12 +605,12 @@ extension AdaptiveModalResolvedInterpolationPoint {
       
       if $0.element.mode == .standard {
         return interpolationPointsStandard.first {
-          $0.index == currentIndex;
+          $0.snapPointIndex == currentIndex;
         };
       };
       
       return interpolationPointsInBetween.first {
-        $0.index == currentIndex;
+        $0.snapPointIndex == currentIndex;
       };
     };
     
