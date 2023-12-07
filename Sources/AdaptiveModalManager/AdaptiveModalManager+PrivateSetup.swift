@@ -8,13 +8,6 @@
 import UIKit
 
 extension AdaptiveModalManager {
-
-  func _setupInterpolationContext(){
-    self.interpolationContext = .init(
-      usingModalConfig: self.currentModalConfig,
-      usingContext: self._layoutValueContext
-    );
-  };
   
   func _setupObservers(){
     NotificationCenter.default.addObserver(self,
@@ -255,9 +248,7 @@ extension AdaptiveModalManager {
     guard let modalDragHandleView = self.modalDragHandleView,
           let modalWrapperShadowView = self.modalWrapperShadowView
     else { return };
-    
-    let interpolationSteps = self.interpolationContext.interpolationSteps;
-    
+  
     modalDragHandleView.translatesAutoresizingMaskIntoConstraints = false;
     
     if shouldDeactivateOldConstraints {
@@ -280,10 +271,11 @@ extension AdaptiveModalManager {
     };
     
     let dragHandleOffset: CGFloat = {
-      guard let undershootStep = interpolationSteps.undershootStep
+      guard let interpolationSteps = self.interpolationSteps,
+            let undershoot = interpolationSteps.first
       else { return 0 };
       
-      return undershootStep.interpolationPoint.modalDragHandleOffset;
+      return undershoot.modalDragHandleOffset;
     }();
     
     let offsetConstraint: NSLayoutConstraint? = {
@@ -347,8 +339,7 @@ extension AdaptiveModalManager {
     };
     
     constraints += {
-      let dragHandleSize =
-        interpolationContext.interpolationPointCurrent.modalDragHandleSize;
+      let dragHandleSize = self.currentInterpolationStep.modalDragHandleSize;
       
       let heightConstraint = modalDragHandleView.heightAnchor.constraint(
         equalToConstant: dragHandleSize.height
@@ -583,8 +574,6 @@ extension AdaptiveModalManager {
     self._computeSnapPoints();
     
     if shouldReset {
-      self._setupInterpolationContext();
-      
       self._setupInitViews();
       self._setupDummyModalView();
       self._setupGestureHandler();
@@ -597,11 +586,9 @@ extension AdaptiveModalManager {
     };
     
     self._updateModal();
-    
-    self.modalFrame =
-      self.interpolationContext.interpolationPointCurrent.computedRect;
-    
+    self.modalFrame = self.currentInterpolationStep.computedRect;
     self.modalWrapperLayoutView?.layoutIfNeeded();
+    
     self._didTriggerSetup = true;
   };
 };
