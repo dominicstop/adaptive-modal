@@ -1,7 +1,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'AdaptiveModal'
-  s.version          = '1.0.7'
+  s.version          = '1.2.0'
   s.summary          = 'Config-based UIViewController modal presentation.'
 
   s.description      = <<-DESC
@@ -18,7 +18,7 @@ Support for gesture-driven animations, and modals that adapt to the current devi
 
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
 
-  s.ios.deployment_target = '11.0'
+  s.ios.deployment_target = '12.0'
   s.swift_version = '5.0'
 
   s.source_files = 'Sources/**/*'
