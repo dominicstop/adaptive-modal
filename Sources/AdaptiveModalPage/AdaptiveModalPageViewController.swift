@@ -132,7 +132,9 @@ public class AdaptiveModalPageViewController: UIViewController {
   
   public func resolvePages(){
     guard let modalManager = self.modalManager else { return };
-    self.resolvePages(interpolationPoints: modalManager.interpolationSteps);
+    self.resolvePages(
+      interpolationPoints: modalManager.interpolationContext.interpolationPoints
+    );
   };
   
   public func refreshPages(){
@@ -179,7 +181,7 @@ public class AdaptiveModalPageViewController: UIViewController {
         ),
       ]);
       
-      if $0.offset == modalManager.currentSnapPointIndex {
+      if $0.offset == modalManager.interpolationContext.snapPointIndexCurrent {
         childVC.view.alpha = 1;
         
       } else {

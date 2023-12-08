@@ -42,7 +42,10 @@ fileprivate class TestModalViewController:
   lazy var floatingViewLabel: UILabel = {
     let label = UILabel();
     
-    label.text = "\(self.modalManager?.currentInterpolationIndex ?? -1)";
+    let snapPointIndexCurrent =
+      self.modalManager?.interpolationContext.snapPointIndexCurrent ?? -1;
+    
+    label.text = "\(snapPointIndexCurrent)";
     label.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0.5);
     label.font = .boldSystemFont(ofSize: 22);
     
@@ -210,7 +213,9 @@ fileprivate class TestModalViewController:
     let modalConfig = modalManager.currentModalConfig;
 
     
-    let currentIndex = modalManager.currentInterpolationIndex;
+    let snapPointIndexCurrent =
+      modalManager.interpolationContext.snapPointIndexCurrent;
+    
     let lastIndex = {
       guard let overshootIndex = modalConfig.overshootSnapPointIndex else {
         return modalConfig.snapPointLastIndex;
@@ -219,10 +224,10 @@ fileprivate class TestModalViewController:
       return overshootIndex - 1;
     }();
     
-    if currentIndex == lastIndex {
+    if snapPointIndexCurrent == lastIndex {
       self.shouldIncreaseModalIndexOnTap = false;
     
-    } else if currentIndex == 0 {
+    } else if snapPointIndexCurrent == 0 {
       self.shouldIncreaseModalIndexOnTap = true;
     };
     
@@ -288,19 +293,19 @@ fileprivate class TestModalViewController:
   
   func notifyOnModalWillSnap(
     sender: AdaptiveModalManager,
-    prevSnapPointIndex: Int?,
-    nextSnapPointIndex: Int,
-    prevSnapPointConfig: AdaptiveModalSnapPointConfig?,
-    nextSnapPointConfig: AdaptiveModalSnapPointConfig,
-    prevInterpolationPoint: AdaptiveModalInterpolationPoint?,
-    nextInterpolationPoint: AdaptiveModalInterpolationPoint
+    prevInterpolationStep: AdaptiveModalInterpolationStep?,
+    nextInterpolationStep: AdaptiveModal.AdaptiveModalInterpolationStep
   ) {
+    
+    let prevSnapPointIndex = prevInterpolationStep?.snapPointIndex ?? -1;
+    let nextSnapPointIndex = nextInterpolationStep.snapPointIndex;
+    
     self.floatingViewLabel.text = "\(nextSnapPointIndex)";
     
     if Self.enableLogging {
       print(
         "notifyOnModalWillSnap",
-        "\n - prevSnapPointIndex:", prevSnapPointIndex ?? -1,
+        "\n - prevSnapPointIndex:", prevSnapPointIndex,
         "\n - nextSnapPointIndex:", nextSnapPointIndex,
         "\n"
       );
@@ -309,19 +314,19 @@ fileprivate class TestModalViewController:
   
   func notifyOnModalDidSnap(
     sender: AdaptiveModalManager,
-    prevSnapPointIndex: Int?,
-    currentSnapPointIndex: Int,
-    prevSnapPointConfig: AdaptiveModalSnapPointConfig?,
-    currentSnapPointConfig: AdaptiveModalSnapPointConfig,
-    prevInterpolationPoint: AdaptiveModalInterpolationPoint?,
-    currentInterpolationPoint: AdaptiveModalInterpolationPoint
+    prevInterpolationStep: AdaptiveModalInterpolationStep?,
+    currentInterpolationStep: AdaptiveModalInterpolationStep
   ) {
+    
+    let prevSnapPointIndex = prevInterpolationStep?.snapPointIndex ?? -1;
+    let currentSnapPointIndex = currentInterpolationStep.snapPointIndex;
+    
     self.floatingViewLabel.text = "\(currentSnapPointIndex)";
     
     if Self.enableLogging {
       print(
         "notifyOnModalDidSnap",
-        "\n - prevSnapPointIndex:", prevSnapPointIndex ?? -1,
+        "\n - prevSnapPointIndex:", prevSnapPointIndex,
         "\n - currentSnapPointIndex:", currentSnapPointIndex,
         "\n"
       );

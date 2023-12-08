@@ -30,7 +30,7 @@ extension AdaptiveModalManager {
         
         if self._isKeyboardVisible,
            self.shouldDismissKeyboardOnGestureSwipe,
-           self.currentOverrideInterpolationIndex <= 1,
+           self.interpolationContext.snapPointIndexCurrent <= 1,
            let modalView = self.modalView {
            
           modalView.endEditing(true);
@@ -68,7 +68,7 @@ extension AdaptiveModalManager {
              self.modalState != .PRESENTING_GESTURE
           && self.modalState != .DISMISSING_GESTURE;
 
-        self.snapToClosestSnapPoint(
+        self._snapToClosestSnapPoint(
           forPoint: gestureFinalPoint,
           direction: self.gestureDirection,
           shouldSetStateOnSnap: true,
@@ -122,7 +122,6 @@ extension AdaptiveModalManager {
           stateSnapped: nil
         );
         
-        self.currentInterpolationIndex = 0;
         self._onDragPanGesture(sender);
         
       case .ended:
@@ -135,11 +134,16 @@ extension AdaptiveModalManager {
   };
   
   @objc func _onBackgroundTapGesture(_ sender: UITapGestureRecognizer) {
+    let interpolationContext = self.interpolationContext!;
+    
+    let currentInterpolationPoint =
+      interpolationContext.interpolationStepCurrent.interpolationPoint
+
     self.backgroundTapDelegate.invoke {
       $0.notifyOnBackgroundTapGesture(sender: sender);
     };
     
-    switch self.currentInterpolationStep.backgroundTapInteraction {
+    switch currentInterpolationPoint.backgroundTapInteraction {
       case .dismiss:
         self.dismissModal();
       
@@ -149,6 +153,8 @@ extension AdaptiveModalManager {
   };
   
   @objc func _onKeyboardWillShow(notification: NSNotification) {
+    let interpolationContext = self.interpolationContext!;
+    
     guard let keyboardValues = ComputableLayoutKeyboardValues(fromNotification: notification),
           !self.isAnimating
     else { return };
@@ -160,7 +166,7 @@ extension AdaptiveModalManager {
     self._computeSnapPoints();
 
     self._animateModal(
-      to: self.currentInterpolationStep,
+      to: interpolationContext.interpolationPointCurrent,
       animationConfigOverride: .animator(keyboardValues.keyboardAnimator)
     );
   };
@@ -177,6 +183,8 @@ extension AdaptiveModalManager {
   };
 
   @objc func _onKeyboardWillHide(notification: NSNotification) {
+    let interpolationContext = self.interpolationContext!;
+    
     guard let keyboardValues = ComputableLayoutKeyboardValues(fromNotification: notification),
           !self.isAnimating
     else { return };
@@ -186,7 +194,7 @@ extension AdaptiveModalManager {
     self._computeSnapPoints();
     
     self._animateModal(
-      to: self.currentInterpolationStep,
+      to: interpolationContext.interpolationPointCurrent,
       animationConfigOverride: .animator(keyboardValues.keyboardAnimator),
       extraAnimation: nil
     ) { _ in
@@ -200,6 +208,8 @@ extension AdaptiveModalManager {
   };
   
   @objc func _onKeyboardWillChange(notification: NSNotification) {
+    let interpolationContext = self.interpolationContext!;
+    
     guard let keyboardValues = ComputableLayoutKeyboardValues(fromNotification: notification),
           !self.isAnimating
     else { return };
@@ -210,7 +220,7 @@ extension AdaptiveModalManager {
     self._computeSnapPoints();
     
     self._animateModal(
-      to: self.currentInterpolationStep,
+      to: interpolationContext.interpolationPointCurrent,
       animationConfigOverride: .animator(keyboardValues.keyboardAnimator)
     );
   };

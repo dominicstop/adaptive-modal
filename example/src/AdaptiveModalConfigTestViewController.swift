@@ -30,7 +30,10 @@ class AdaptiveModalConfigTestViewController : UIViewController {
   lazy var floatingViewLabel: UILabel = {
     let label = UILabel();
     
-    label.text = "\(self.modalManager.currentSnapPointIndex)";
+    let snapPointIndexCurrent =
+      self.modalManager.interpolationContext.snapPointIndexCurrent;
+    
+    label.text = "\(snapPointIndexCurrent)";
     label.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0.5);
     label.font = .boldSystemFont(ofSize: 22);
 
@@ -134,25 +137,21 @@ extension AdaptiveModalConfigTestViewController:
   
   func notifyOnModalWillSnap(
     sender: AdaptiveModalManager,
-    prevSnapPointIndex: Int?,
-    nextSnapPointIndex: Int,
-    prevSnapPointConfig: AdaptiveModalSnapPointConfig?,
-    nextSnapPointConfig: AdaptiveModalSnapPointConfig,
-    prevInterpolationPoint: AdaptiveModalInterpolationPoint?,
-    nextInterpolationPoint: AdaptiveModalInterpolationPoint
+    prevInterpolationStep: AdaptiveModalInterpolationStep?,
+    nextInterpolationStep: AdaptiveModalInterpolationStep
   ) {
+    
+    let nextSnapPointIndex = nextInterpolationStep.snapPointIndex;
     self.floatingViewLabel.text = "\(nextSnapPointIndex)";
-  }
+  };
   
   func notifyOnModalDidSnap(
     sender: AdaptiveModalManager,
-    prevSnapPointIndex: Int?,
-    currentSnapPointIndex: Int,
-    prevSnapPointConfig: AdaptiveModalSnapPointConfig?,
-    currentSnapPointConfig: AdaptiveModalSnapPointConfig,
-    prevInterpolationPoint: AdaptiveModalInterpolationPoint?,
-    currentInterpolationPoint: AdaptiveModalInterpolationPoint
+    prevInterpolationStep: AdaptiveModalInterpolationStep?,
+    currentInterpolationStep: AdaptiveModalInterpolationStep
   ) {
+    
+    let currentSnapPointIndex = currentInterpolationStep.snapPointIndex;
     self.floatingViewLabel.text = "\(currentSnapPointIndex)";
   };
   

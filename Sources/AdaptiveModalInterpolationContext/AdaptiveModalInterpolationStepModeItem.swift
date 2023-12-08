@@ -17,10 +17,20 @@ extension AdaptiveModalInterpolationMode
   var snapPointIndex: Int {
     self.associatedValue.snapPointIndex;
   };
+  
   var snapPoint: AdaptiveModalSnapPointConfig {
     self.associatedValue.snapPoint;
   };
+  
   var interpolationPoint: AdaptiveModalInterpolationPoint {
     self.associatedValue.interpolationPoint;
+  };
+  
+  var isUndershootSnapPoint: Bool {
+    self.snapPoint.key == .undershootPoint;
+  };
+  
+  var isOvershootSnapPoint: Bool {
+    self.snapPoint.key == .overshootPoint;
   };
 };

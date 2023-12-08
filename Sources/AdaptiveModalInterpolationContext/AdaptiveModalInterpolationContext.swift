@@ -27,7 +27,7 @@ public class AdaptiveModalInterpolationContext {
   /// * Note: This is a temp. variable that is set from:
   ///   `AdaptiveModalManager._notifyOnModalWillSnap`.
   ///
-  var onModalWillSnapNextModeItem: AdaptiveModalInterpolationStepItem?;
+  var onModalWillSnapNextItem: AdaptiveModalInterpolationStepItem?;
     
   /// Owned by: `_notifyOnModalWillSnap`
   /// * The previous value of `onModalWillSnapInterpolationPointNext`
@@ -36,7 +36,7 @@ public class AdaptiveModalInterpolationContext {
   /// * Note: This is a temp. variable that is set from:
   ///   `AdaptiveModalManager._notifyOnModalWillSnap`.
   ///
-  var onModalWillSnapPrevModeItem: AdaptiveModalInterpolationStepItem?;
+  var onModalWillSnapPrevItem: AdaptiveModalInterpolationStepItem?;
     
   // MARK: Computed Properties - Alias/Shortcuts
   // -------------------------------------------
@@ -120,8 +120,8 @@ public class AdaptiveModalInterpolationContext {
     interpolationStepItemCurrent: AdaptiveModalInterpolationStepItem,
     interpolationStepItemPrev: AdaptiveModalInterpolationStepItem? = nil,
     interpolationStepItemNext: AdaptiveModalInterpolationStepItem? = nil,
-    onModalWillSnapNextModeItem: AdaptiveModalInterpolationStepItem? = nil,
-    onModalWillSnapPrevModeItem: AdaptiveModalInterpolationStepItem? = nil
+    onModalWillSnapNextItem: AdaptiveModalInterpolationStepItem? = nil,
+    onModalWillSnapPrevItem: AdaptiveModalInterpolationStepItem? = nil
   ) {
   
     self.mode = mode;
@@ -130,8 +130,8 @@ public class AdaptiveModalInterpolationContext {
     self.interpolationStepItemPrev = interpolationStepItemPrev;
     self.interpolationStepItemNext = interpolationStepItemNext;
     
-    self.onModalWillSnapNextModeItem = onModalWillSnapNextModeItem;
-    self.onModalWillSnapPrevModeItem = onModalWillSnapPrevModeItem;
+    self.onModalWillSnapNextItem = onModalWillSnapNextItem;
+    self.onModalWillSnapPrevItem = onModalWillSnapPrevItem;
   }
   
   init?(
@@ -183,11 +183,7 @@ public class AdaptiveModalInterpolationContext {
       case .config:
         return false;
         
-      case let .overrideSnapPoint(resolvedInterpolationPoints):
-        // TODO:
-        // guard adaptiveModalManager.presentationState == .none
-        // else { return false };
-        
+      case let .overrideSnapPoint(resolvedInterpolationPoints):        
         let lastIndex = resolvedInterpolationPoints.count - 1;
   
         // index of the override snap point

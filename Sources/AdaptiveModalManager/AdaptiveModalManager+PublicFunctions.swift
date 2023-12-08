@@ -127,13 +127,10 @@ public extension AdaptiveModalManager {
           interpolationContext.isOverridingSnapPoints
     else { return };
   
-    let interpolationMode = AdaptiveModalInterpolationMode(
+    interpolationContext.mode = AdaptiveModalInterpolationMode(
       usingModalConfig: self.currentModalConfig,
       usingContext: self._layoutValueContext
     );
-    
-    guard let interpolationMode = interpolationMode else { return };
-    interpolationContext.mode = interpolationMode;
     
     self.snapToClosestSnapPoint();
   };
@@ -566,13 +563,13 @@ public extension AdaptiveModalManager {
     key: AdaptiveModalSnapPointConfig.SnapPointKey,
     isAnimated: Bool = true,
     animationConfig: AdaptiveModalSnapAnimationConfig? = nil,
-    animationBlock: (() -> Void)? = nil,
+    extraAnimation: (() -> Void)? = nil,
     completion: (() -> Void)? = nil
   ) throws {
   
     let interpolationContext = self.interpolationContext!;
   
-    let interpolationStepMatch: AdaptiveModalInterpolationStepItem? = {
+    let interpolationStepNext: AdaptiveModalInterpolationStepItem? = {
       switch key {
         case let .index(indexKey):
           return interpolationContext.mode.getMatchingItem(
@@ -599,15 +596,15 @@ public extension AdaptiveModalManager {
       };
     }();
     
-    guard let interpolationStepMatch = interpolationStepMatch else {
+    guard let interpolationStepNext = interpolationStepNext else {
       throw NSError();
     };
     
     self.snapTo(
-      snapPointIndex: <#T##Int#>,
-      isAnimated: ,
-      animationConfig: ,
-      animationBlock: ,
+      snapPointIndex: interpolationStepNext.snapPointIndex,
+      isAnimated: isAnimated,
+      animationConfig: animationConfig,
+      extraAnimation: extraAnimation,
       completion: completion
     );
   };

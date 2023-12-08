@@ -9,8 +9,8 @@ import UIKit
 
 
 public struct AdaptiveModalPageItemConfig {
+
   public enum AssociatedSnapPoint: Equatable {
-  
     case key(AdaptiveModalSnapPointConfig.SnapPointKey);
     case index(Int);
   };
@@ -32,6 +32,7 @@ public struct AdaptiveModalPageItemConfig {
 };
 
 extension AdaptiveModalPageItemConfig: Equatable {
+
   public static func == (
     lhs: AdaptiveModalPageItemConfig,
     rhs: AdaptiveModalPageItemConfig

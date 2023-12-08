@@ -172,29 +172,23 @@ fileprivate class ModalViewController: UIViewController {
 };
 
 extension ModalViewController: AdaptiveModalPresentationEventsNotifiable {
-
+  
   func notifyOnModalWillSnap(
     sender: AdaptiveModalManager,
-    prevSnapPointIndex: Int?,
-    nextSnapPointIndex: Int,
-    prevSnapPointConfig: AdaptiveModalSnapPointConfig?,
-    nextSnapPointConfig: AdaptiveModalSnapPointConfig,
-    prevInterpolationPoint: AdaptiveModalInterpolationPoint?,
-    nextInterpolationPoint: AdaptiveModalInterpolationPoint
+    prevInterpolationStep: AdaptiveModalInterpolationStep?,
+    nextInterpolationStep: AdaptiveModalInterpolationStep
   ) {
-    self.snapPointIndex = nextSnapPointIndex;
+  
+    self.snapPointIndex = nextInterpolationStep.snapPointIndex;
   };
   
   func notifyOnModalDidSnap(
     sender: AdaptiveModalManager,
-    prevSnapPointIndex: Int?,
-    currentSnapPointIndex: Int,
-    prevSnapPointConfig: AdaptiveModalSnapPointConfig?,
-    currentSnapPointConfig: AdaptiveModalSnapPointConfig,
-    prevInterpolationPoint: AdaptiveModalInterpolationPoint?,
-    currentInterpolationPoint: AdaptiveModalInterpolationPoint
+    prevInterpolationStep: AdaptiveModalInterpolationStep?,
+    currentInterpolationStep: AdaptiveModalInterpolationStep
   ) {
-    self.snapPointIndex = currentSnapPointIndex;
+  
+    self.snapPointIndex = currentInterpolationStep.snapPointIndex;
   };
   
   func notifyOnAdaptiveModalWillShow(sender: AdaptiveModalManager) {

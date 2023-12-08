@@ -8,24 +8,26 @@
 import UIKit
 
 
-extension AdaptiveModalPageViewController: AdaptiveModalPresentationEventsNotifiable {
-
+extension AdaptiveModalPageViewController:
+  AdaptiveModalPresentationEventsNotifiable {
+  
   public func notifyOnModalWillSnap(
     sender: AdaptiveModalManager,
-    prevSnapPointIndex: Int?,
-    nextSnapPointIndex: Int,
-    prevSnapPointConfig: AdaptiveModalSnapPointConfig?,
-    nextSnapPointConfig: AdaptiveModalSnapPointConfig,
-    prevInterpolationPoint: AdaptiveModalInterpolationPoint?,
-    nextInterpolationPoint: AdaptiveModalInterpolationPoint
+    prevInterpolationStep: AdaptiveModalInterpolationStep?,
+    nextInterpolationStep: AdaptiveModalInterpolationStep
   ) {
   
+    let nextSnapPointIndex = nextInterpolationStep.snapPointIndex;
+    
     guard let resolvedPages = self.resolvedPages,
           let nextPage = resolvedPages[safeIndex: nextSnapPointIndex]
     else { return };
     
     let prevPage: AdaptiveModalResolvedPageItemConfig? = {
-      guard let prevSnapPointIndex = prevSnapPointIndex else { return nil };
+      guard let prevInterpolationStep = prevInterpolationStep
+      else { return nil };
+      
+      let prevSnapPointIndex = prevInterpolationStep.snapPointIndex;
       return resolvedPages[safeIndex: prevSnapPointIndex]
     }();
   
@@ -54,25 +56,27 @@ extension AdaptiveModalPageViewController: AdaptiveModalPresentationEventsNotifi
         pageToFocus: nextPage
       );
     };
+    
   };
   
   public func notifyOnModalDidSnap(
     sender: AdaptiveModalManager,
-    prevSnapPointIndex: Int?,
-    currentSnapPointIndex: Int,
-    prevSnapPointConfig: AdaptiveModalSnapPointConfig?,
-    currentSnapPointConfig: AdaptiveModalSnapPointConfig,
-    prevInterpolationPoint: AdaptiveModalInterpolationPoint?,
-    currentInterpolationPoint: AdaptiveModalInterpolationPoint
+    prevInterpolationStep: AdaptiveModalInterpolationStep?,
+    currentInterpolationStep: AdaptiveModalInterpolationStep
   ) {
+  
+    let currentSnapPointIndex = currentInterpolationStep.snapPointIndex;
     
     guard let resolvedPages = self.resolvedPages,
           let currentPage = resolvedPages[safeIndex: currentSnapPointIndex]
     else { return };
     
     let prevPage: AdaptiveModalResolvedPageItemConfig? = {
-      guard let prevSnapPointIndex = prevSnapPointIndex else { return nil };
-      return resolvedPages[safeIndex: prevSnapPointIndex]
+      guard let prevInterpolationStep = prevInterpolationStep
+      else { return nil };
+      
+      let prevSnapPointIndex = prevInterpolationStep.snapPointIndex;
+      return resolvedPages[safeIndex: prevSnapPointIndex];
     }();
     
     self.pageChangeEventDelegate.invoke {
@@ -103,7 +107,9 @@ extension AdaptiveModalPageViewController: AdaptiveModalPresentationEventsNotifi
   };
   
   public func notifyOnAdaptiveModalWillShow(sender: AdaptiveModalManager) {
-    self.resolvePages(interpolationPoints: sender.interpolationSteps);
+    let interpolationPoints = sender.interpolationContext.interpolationPoints;
+    self.resolvePages(interpolationPoints: interpolationPoints);
+    
     self.attachPages();
   };
   
@@ -132,6 +138,7 @@ extension AdaptiveModalPageViewController: AdaptiveModalPresentationEventsNotifi
     currentModalConfig: AdaptiveModalConfig?,
     prevModalConfig: AdaptiveModalConfig?
   ) {
+  
     self.refreshPages();
   };
 };

@@ -47,10 +47,11 @@ extension AdaptiveModalPageViewController: AdaptiveModalAnimationEventsNotifiabl
   ) {
   
     guard let resolvedPages = self.resolvedPages,
-          let interpolationSteps = sender.interpolationSteps
+          let interpolationContext = sender.interpolationContext
     else { return };
     
-    let rangeInput = interpolationSteps.map { $0.percent };
+    let interpolationPoints = interpolationContext.interpolationPoints;
+    let rangeInput = interpolationPoints.map { $0.percent };
     
     resolvedPages.enumerated().forEach {
       guard let pageVC = $0.element.viewController else { return };

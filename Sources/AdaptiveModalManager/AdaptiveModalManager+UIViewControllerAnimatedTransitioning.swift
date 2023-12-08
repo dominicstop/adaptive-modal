@@ -62,10 +62,11 @@ extension AdaptiveModalManager: UIViewControllerAnimatedTransitioning {
                   hitView === _self
             else { return hitView };
             
-            let currentInterpolationStep = self.currentInterpolationStep;
+            let interpolationPointCurrent =
+              self.interpolationContext.interpolationPointCurrent;
             
             let bgTapInteraction =
-              currentInterpolationStep.derivedBackgroundTapInteraction;
+              interpolationPointCurrent.derivedBackgroundTapInteraction;
               
             if bgTapInteraction.isPassThrough {
               return nil;

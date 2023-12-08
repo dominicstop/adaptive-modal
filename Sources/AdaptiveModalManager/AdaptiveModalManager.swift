@@ -2106,8 +2106,6 @@ public class AdaptiveModalManager: NSObject {
     completion: (() -> Void)? = nil
   ) {
   
-    guard let interpolationContext = self.interpolationContext else { return };
-    
     let coord = point[keyPath: self.currentModalConfig.inputValueKeyForPoint];
     let closestSnapPoint = self._getClosestSnapPoint(forCoord: coord)
       
@@ -2244,9 +2242,7 @@ public class AdaptiveModalManager: NSObject {
         
         return points;
       }();
-      
-      let undershootInterpolationStep = overrideInterpolationSteps[nextIndex];
-      
+
       interpolationContext.mode =
         .overrideSnapPoint(overrideInterpolationSteps);
       

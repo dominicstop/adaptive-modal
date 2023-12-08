@@ -17,10 +17,11 @@ extension AdaptiveModalManager: UIGestureRecognizerDelegate {
     guard let panGesture = gestureRecognizer as? UIPanGestureRecognizer
     else { return true };
   
-    let currentInterpolationStep = self.currentInterpolationStep;
+    let interpolationPointCurrent =
+      self.interpolationContext.interpolationPointCurrent;
     
     let secondaryGestureAxisDampingPercent =
-      currentInterpolationStep.secondaryGestureAxisDampingPercent;
+      interpolationPointCurrent.secondaryGestureAxisDampingPercent;
       
     let isLockedToPrimaryAxis = secondaryGestureAxisDampingPercent >= 1;
     let velocity = panGesture.velocity(in: self.modalView);

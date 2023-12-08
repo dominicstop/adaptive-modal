@@ -15,22 +15,14 @@ public protocol AdaptiveModalPresentationEventsNotifiable: AnyObject {
 
   func notifyOnModalWillSnap(
     sender: AdaptiveModalManager,
-    prevSnapPointIndex: Int?,
-    nextSnapPointIndex: Int,
-    prevSnapPointConfig: AdaptiveModalSnapPointConfig?,
-    nextSnapPointConfig: AdaptiveModalSnapPointConfig,
-    prevInterpolationPoint: AdaptiveModalInterpolationPoint?,
-    nextInterpolationPoint: AdaptiveModalInterpolationPoint
+    prevInterpolationStep: AdaptiveModalInterpolationStep?,
+    nextInterpolationStep: AdaptiveModalInterpolationStep
   );
   
   func notifyOnModalDidSnap(
     sender: AdaptiveModalManager,
-    prevSnapPointIndex: Int?,
-    currentSnapPointIndex: Int,
-    prevSnapPointConfig: AdaptiveModalSnapPointConfig?,
-    currentSnapPointConfig: AdaptiveModalSnapPointConfig,
-    prevInterpolationPoint: AdaptiveModalInterpolationPoint?,
-    currentInterpolationPoint: AdaptiveModalInterpolationPoint
+    prevInterpolationStep: AdaptiveModalInterpolationStep?,
+    currentInterpolationStep: AdaptiveModalInterpolationStep
   );
   
   func notifyOnAdaptiveModalWillShow(

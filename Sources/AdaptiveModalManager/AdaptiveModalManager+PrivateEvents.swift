@@ -20,38 +20,52 @@ extension AdaptiveModalManager {
   };
   
   func _notifyOnModalWillSnap(shouldSetState: Bool) {
-    let prevIndex = self.onModalWillSnapPrevIndex
-      ?? self.currentInterpolationIndex;
+    let interpolationContext = self.interpolationContext!;
+  
+    let interpolationStepItemPrev =
+         interpolationContext.onModalWillSnapPrevItem
+      ?? interpolationContext.interpolationStepItemCurrent;
       
-    let nextIndexRaw: Int = {
-      if let nextIndex = self.nextInterpolationIndex {
-        return nextIndex;
+    let interpolationStepItemNext: InterpolationStepItem = {
+      if let nextItem = interpolationContext.onModalWillSnapNextItem {
+        return nextItem;
       };
-    
+      
       let closestSnapPoint = self._getClosestSnapPoint();
       
-      return closestSnapPoint?.interpolationPoint.snapPointIndex
-        ?? self.currentInterpolationIndex;
+      return closestSnapPoint?.interpolationStepItem
+        ?? interpolationContext.interpolationStepItemCurrent;
     }();
     
-    let nextIndex = self._adjustInterpolationIndex(for: nextIndexRaw);
-    let nextInterpolationPoint = self.interpolationSteps[nextIndex];
-    let nextSnapPointConfig = self.currentSnapPoints[nextIndex];
+    let interpolationStepItemNextAdj: InterpolationStepItem = {
+      let nextIndex = self._adjustSnapPointIndex(
+        for: interpolationStepItemNext.snapPointIndex
+      );
+      
+      let match = interpolationContext.mode.getMatchingItem(
+        forSnapPointIndex: nextIndex
+      );
+      
+      return match ?? interpolationStepItemNext;
+    }();
     
-    guard prevIndex != nextIndex else { return };
-    self.onModalWillSnapPrevIndex = nextIndex;
+    guard interpolationStepItemPrev != interpolationStepItemNext
+    else { return };
+    
+    let snapPointNext = interpolationStepItemNextAdj.snapPointIndex;
+    interpolationContext.interpolationStepItemPrev = interpolationStepItemNextAdj;
     
     let isDismissingToUnderShootSnapPoint =
          self.shouldDismissModalOnSnapToUnderShootSnapPoint
-      && nextIndex == 0;
+      && snapPointNext == 0;
       
     let isDismissingToOverShootSnapPoint =
          self.shouldDismissModalOnSnapToOverShootSnapPoint
-      && nextIndex == self.currentModalConfig.overshootSnapPointIndex;
+      && snapPointNext == self.currentModalConfig.overshootSnapPointIndex;
     
     let isPresenting =
-         self.currentInterpolationIndex == 0
-      && nextIndex == 1;
+         interpolationContext.snapPointIndexCurrent == 0
+      && snapPointNext == 1;
       
     let isDismissing =
          isDismissingToUnderShootSnapPoint
@@ -89,63 +103,90 @@ extension AdaptiveModalManager {
       self.modalStateMachine.setState(nextState);
     };
     
+    let interpolationPointNext = interpolationStepItemNextAdj.interpolationPoint;
+    
     /// Note:2023-09-23-23-01-02
     /// * `maskedCorners` cannot be animated, so we apply the next corner mask
     ///    immediately to make it less noticeable
     block:
     if let modalContentWrapperView = self.modalContentWrapperView {
       let maskCountCurrent = modalContentWrapperView.layer.maskedCorners.count;
-      let maskCountNext = nextInterpolationPoint.modalMaskedCorners.count;
+      let maskCountNext = interpolationPointNext.modalMaskedCorners.count;
       
       // corner mask precedence
       // apply the next corner mask only if has more masked corners
       guard maskCountNext > maskCountCurrent else { break block };
-      modalContentWrapperView.layer.maskedCorners = nextInterpolationPoint.modalMaskedCorners;
+      
+      modalContentWrapperView.layer.maskedCorners =
+        interpolationPointNext.modalMaskedCorners;
      
       if let modalBgEffectView = self.modalBackgroundVisualEffectView {
-        modalBgEffectView.layer.maskedCorners = nextInterpolationPoint.modalMaskedCorners;
+        modalBgEffectView.layer.maskedCorners =
+          interpolationPointNext.modalMaskedCorners;
       };
     };
     
     self.presentationEventsDelegate.invoke {
       $0.notifyOnModalWillSnap(
         sender: self,
-        prevSnapPointIndex: prevIndex,
-        nextSnapPointIndex: nextIndex,
-        prevSnapPointConfig: self.prevSnapPointConfig,
-        nextSnapPointConfig: nextSnapPointConfig,
-        prevInterpolationPoint: self.prevInterpolationStep,
-        nextInterpolationPoint: nextInterpolationPoint
+        prevInterpolationStep: interpolationStepItemPrev.associatedValue,
+        nextInterpolationStep: interpolationStepItemNextAdj.associatedValue
       );
     };
   };
   
   func _notifyOnModalDidSnap(shouldSetState: Bool) {
+    let interpolationContext = self.interpolationContext!;
+    
     #if DEBUG
     self.debugView?.notifyOnModalDidSnap();
     #endif
     
-    self.nextInterpolationIndex = nil;
+    interpolationContext.interpolationStepItemNext = nil;
+    
+    let currentInterpolationPoint =
+      interpolationContext.interpolationStepItemCurrent.interpolationPoint;
       
-    self.currentInterpolationStep.applyConfig(toModalManager: self);
+    currentInterpolationPoint.applyConfig(toModalManager: self);
+    
+    let isSnappedToUndershoot =
+      interpolationContext.interpolationStepItemCurrent.isUndershootSnapPoint;
+      
+    let isSnappedToOvershoot =
+      interpolationContext.interpolationStepItemCurrent.isOvershootSnapPoint;
     
     let shouldDismissOnSnapToUnderShootSnapPoint =
-      self.currentInterpolationIndex == 0 &&
-      self.shouldDismissModalOnSnapToUnderShootSnapPoint;
+         isSnappedToUndershoot
+      && self.shouldDismissModalOnSnapToUnderShootSnapPoint;
       
     let shouldDismissOnSnapToOverShootSnapPoint =
-      self.currentInterpolationIndex == self.currentModalConfig.overshootSnapPointIndex &&
-      self.shouldDismissModalOnSnapToOverShootSnapPoint;
+         isSnappedToOvershoot
+      && self.shouldDismissModalOnSnapToOverShootSnapPoint;
     
     let shouldDismiss =
       shouldDismissOnSnapToUnderShootSnapPoint ||
       shouldDismissOnSnapToOverShootSnapPoint;
       
-    let isPresenting =
-         self.modalState.isPresenting
-      || self.currentInterpolationIndex == 1
-      && self.prevInterpolationIndex == 0;
+    let isPresenting = {
+      if self.modalState.isPresenting {
+        return true;
+      };
       
+      guard let interpolationStepItemPrev =
+              interpolationContext.interpolationStepItemPrev
+      else {
+        return false
+      };
+      
+      let wasPrevUndershoot =
+        interpolationStepItemPrev.isUndershootSnapPoint;
+        
+      let isCurrentlyNotUndershoot =
+        !interpolationContext.interpolationStepItemCurrent.isUndershootSnapPoint;
+       
+      return wasPrevUndershoot && isCurrentlyNotUndershoot;
+    }();
+    
     let nextState: AdaptiveModalState? = {
       if shouldDismiss {
         return self.modalState.isProgrammatic
@@ -171,16 +212,22 @@ extension AdaptiveModalManager {
     self.presentationEventsDelegate.invoke {
       $0.notifyOnModalDidSnap(
         sender: self,
-        prevSnapPointIndex: self.prevInterpolationIndex,
-        currentSnapPointIndex: self.currentSnapPointIndex,
-        prevSnapPointConfig: self.prevSnapPointConfig,
-        currentSnapPointConfig: self.currentSnapPointConfig,
-        prevInterpolationPoint: self.prevInterpolationStep,
-        currentInterpolationPoint: self.currentInterpolationStep
+        prevInterpolationStep: interpolationContext.interpolationStepPrev,
+        currentInterpolationStep: interpolationContext.interpolationStepCurrent
       );
     };
     
-    if self.shouldClearOverrideSnapPoints {
+    let shouldRevertCurrentModeToConfig = {
+      if self.presentationState != .none {
+        return false;
+      };
+    
+      return interpolationContext.shouldRevertCurrentModeToConfig(
+        nextModeItem: interpolationContext.interpolationStepCurrent
+      );
+    }();
+    
+    if shouldRevertCurrentModeToConfig {
       self._cleanupSnapPointOverride();
     };
     

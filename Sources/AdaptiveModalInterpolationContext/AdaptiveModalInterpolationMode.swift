@@ -74,6 +74,9 @@ enum AdaptiveModalInterpolationMode<T: Equatable>: Equatable {
     self.memberName;
   };
   
+  // MARK: Functions
+  // ---------------
+  
   func copy<U>(
     newAssociatedValue: U
   ) -> AdaptiveModalInterpolationMode<U> {
