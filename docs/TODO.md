@@ -6,10 +6,6 @@
 
 ## Current
 
-- [ ] `TODO:2023-11-30-17-51-09` - Refactor: `AdaptiveModalManager` - Extract/group interpolation point related values to `AdaptiveModalInterpolationContext`.
-
-<br>
-
 - [ ] `TODO:2023-12-02-22-08-27` - Refactor: Impl. type `AdaptiveModalSnapPoint` - Derived/Created from `AdaptiveModalSnapPointConfig`.
   * Problem: We cannot uniquely identify a `AdaptiveModalSnapPointConfig` item (e.g. because it's a struct/value type), or uniquely match it to its corresponding `AdaptiveModalInterpolationPoint` item (e.g. because they aren't stored together).
     * Currently, we can match a `AdaptiveModalInterpolationPoint` to its associated `AdaptiveModalSnapPointConfig` via `snapPointIndex`.
@@ -92,6 +88,10 @@
 <br><br>
 
 ## Completed
+
+- [x] `TODO:2023-11-30-17-51-09` - Refactor: `AdaptiveModalManager` - Extract/group interpolation point related values to `AdaptiveModalInterpolationContext`.
+
+<br>
 
 - [x] `TODO:2023-12-09-03-24-54` - Bug: Present modal not working
   * "Snap points" -> "Interpolation points" compute working properly.
