@@ -112,7 +112,7 @@ extension AdaptiveModalManager {
         self.modalStateMachine.stateOverride = .PRESENTING_GESTURE;
         self.modalStateMachine.setState(.PRESENTING_GESTURE);
 
-        self.presentModal(
+        self._presentModal(
           viewControllerToPresent: modalVC,
           presentingViewController: presentingVC,
           snapPointIndex: 0,

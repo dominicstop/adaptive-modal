@@ -585,9 +585,9 @@ public class AdaptiveModalManager: NSObject {
     self.presentingViewController = presentingVC;
     
     super.init();
+    self._setupInterpolationContext();
     
     self._updateCurrentModalConfig();
-    self._setupInterpolationContext();
     self._computeSnapPoints();
   };
   
@@ -599,9 +599,9 @@ public class AdaptiveModalManager: NSObject {
     self.presentingViewController = presentingVC;
     
     super.init();
+    self._setupInterpolationContext();
     
     self._updateCurrentModalConfig();
-    self._setupInterpolationContext();
     self._computeSnapPoints();
   };
   
@@ -2131,7 +2131,7 @@ public class AdaptiveModalManager: NSObject {
     );
   };
   
-  func showModal(
+  func _showModal(
     snapPointIndex: Int? = nil,
     isAnimated: Bool = true,
     animationConfig: AdaptiveModalSnapAnimationConfig? = nil,
@@ -2157,7 +2157,7 @@ public class AdaptiveModalManager: NSObject {
     );
   };
   
-  func hideModal(
+  func _hideModal(
     mode: HideModalMode,
     isAnimated: Bool = true,
     animationConfig: AdaptiveModalSnapAnimationConfig? = nil,
@@ -2277,7 +2277,7 @@ public class AdaptiveModalManager: NSObject {
     };
   };
   
-  func presentModal(
+  func _presentModal(
     viewControllerToPresent modalVC: UIViewController,
     presentingViewController targetVC: UIViewController,
     snapPointIndex: Int? = nil,

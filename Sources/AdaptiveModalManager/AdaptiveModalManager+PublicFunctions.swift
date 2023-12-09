@@ -145,7 +145,7 @@ public extension AdaptiveModalManager {
     completion: (() -> Void)? = nil
   ) {
 
-    self.presentModal(
+    self._presentModal(
       viewControllerToPresent: modalVC,
       presentingViewController: targetVC,
       snapPointIndex: snapPointIndex,

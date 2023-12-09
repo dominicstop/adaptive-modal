@@ -84,7 +84,7 @@ extension AdaptiveModalManager: UIViewControllerAnimatedTransitioning {
         
         let args = self._tempShowModalCommandArgs;
         
-        self.showModal(
+        self._showModal(
           snapPointIndex: args?.snapPointIndex,
           isAnimated: args?.isAnimated ?? true,
           animationConfig: args?.animationConfig,
@@ -114,7 +114,7 @@ extension AdaptiveModalManager: UIViewControllerAnimatedTransitioning {
           self.modalStateMachine.setState(.DISMISSING_PROGRAMMATIC);
         };
       
-        self.hideModal(
+        self._hideModal(
           mode: args?.mode ?? .direct,
           isAnimated: args?.isAnimated ?? true,
           animationConfig: args?.animationConfig,
