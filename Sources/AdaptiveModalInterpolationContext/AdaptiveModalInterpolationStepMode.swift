@@ -51,7 +51,7 @@ extension AdaptiveModalInterpolationMode
     forInterpolationStepItem stepItem: AdaptiveModalInterpolationStepItem
   ) -> AdaptiveModalInterpolationStepItem? {
   
-    guard self.memberName != stepItem.memberName else { return nil };
+    guard self.memberName == stepItem.memberName else { return nil };
     
     let match = self.associatedValue.first {
       $0.snapPointIndex == stepItem.associatedValue.snapPointIndex;
