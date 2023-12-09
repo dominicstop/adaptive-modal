@@ -6,7 +6,7 @@
 
 ## Current
 
-- [ ] `TODO:2023-11-30-17-51-09` - Refactor: `AdaptiveModalManager` - Extract/group interpolation point related values to `AdaptiveModalConfigInterpolationStepsContext`.
+- [ ] `TODO:2023-11-30-17-51-09` - Refactor: `AdaptiveModalManager` - Extract/group interpolation point related values to `AdaptiveModalInterpolationContext`.
 
 <br>
 
