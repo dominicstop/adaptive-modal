@@ -6,6 +6,13 @@
 
 ## Current
 
+- [ ] `TODO:2023-12-09-03-24-54` - Bug: Present modal not working
+  * "Snap points" -> "Interpolation points" compute working properly.
+  * `presentModal` -> `_presentModal` -> `animateTransition` -> `_showModal` -> `_snapTo`
+    * `_snapTo`: Guard check failed, `hasMatch` is `false`.
+
+<br>
+
 - [ ] `TODO:2023-11-30-17-51-09` - Refactor: `AdaptiveModalManager` - Extract/group interpolation point related values to `AdaptiveModalConfigInterpolationStepsContext`.
 
 <br>
