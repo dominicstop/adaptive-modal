@@ -6,7 +6,7 @@
 //
 
 import UIKit
-
+import DGSwiftUtilities
 
 public extension AdaptiveModalManager {
 
@@ -129,7 +129,7 @@ public extension AdaptiveModalManager {
     presentingViewController targetVC: UIViewController,
     snapPointIndex: Int? = nil,
     animated: Bool = true,
-    animationConfig: AdaptiveModalSnapAnimationConfig? = nil,
+    animationConfig: AnimationConfig? = nil,
     extraAnimation: (() -> Void)? = nil,
     completion: (() -> Void)? = nil
   ) {
@@ -152,7 +152,7 @@ public extension AdaptiveModalManager {
     viewControllerToPresent modalVC: UIViewController,
     presentingViewController targetVC: UIViewController,
     snapPointKey: AdaptiveModalSnapPointConfig.SnapPointKey,
-    animationConfig: AdaptiveModalSnapAnimationConfig? = nil,
+    animationConfig: AnimationConfig? = nil,
     extraAnimation: (() -> Void)? = nil,
     animated: Bool = true,
     completion: (() -> Void)? = nil
@@ -176,7 +176,7 @@ public extension AdaptiveModalManager {
   func dismissModal(
     useInBetweenSnapPoints: Bool = false,
     animated: Bool = true,
-    animationConfig: AdaptiveModalSnapAnimationConfig? = nil,
+    animationConfig: AnimationConfig? = nil,
     extraAnimation: (() -> Void)? = nil,
     completion: (() -> Void)? = nil
   ) {
@@ -207,7 +207,7 @@ public extension AdaptiveModalManager {
   func dismissModal(
     snapPointPreset: AdaptiveModalSnapPointPreset,
     animated: Bool = true,
-    animationConfig: AdaptiveModalSnapAnimationConfig? = nil,
+    animationConfig: AnimationConfig? = nil,
     extraAnimation: (() -> Void)? = nil,
     completion: (() -> Void)? = nil
   ) {
@@ -238,7 +238,7 @@ public extension AdaptiveModalManager {
   func dismissModal(
     keyframe: AdaptiveModalKeyframeConfig,
     animated: Bool = true,
-    animationConfig: AdaptiveModalSnapAnimationConfig? = nil,
+    animationConfig: AnimationConfig? = nil,
     extraAnimation: (() -> Void)? = nil,
     completion: (() -> Void)? = nil
   ) {
@@ -269,7 +269,7 @@ public extension AdaptiveModalManager {
   func snapTo(
     snapPointIndex nextIndex: Int,
     isAnimated: Bool = true,
-    animationConfig: AdaptiveModalSnapAnimationConfig? = nil,
+    animationConfig: AnimationConfig? = nil,
     extraAnimation: (() -> Void)? = nil,
     completion: (() -> Void)? = nil
   ) {
@@ -346,7 +346,7 @@ public extension AdaptiveModalManager {
   
   func snapToClosestSnapPoint(
     isAnimated: Bool = true,
-    animationConfig: AdaptiveModalSnapAnimationConfig? = nil,
+    animationConfig: AnimationConfig? = nil,
     extraAnimation: (() -> Void)? = nil,
     completion: (() -> Void)? = nil
   ) {
@@ -381,7 +381,7 @@ public extension AdaptiveModalManager {
   
   func snapToPrevSnapPointIndex(
     isAnimated: Bool = true,
-    animationConfig: AdaptiveModalSnapAnimationConfig? = nil,
+    animationConfig: AnimationConfig? = nil,
     extraAnimation: (() -> Void)? = nil,
     completion: (() -> Void)? = nil
   ) {
@@ -399,7 +399,7 @@ public extension AdaptiveModalManager {
   
   func snapToCurrentSnapPointIndex(
     isAnimated: Bool = true,
-    animationConfig: AdaptiveModalSnapAnimationConfig? = nil,
+    animationConfig: AnimationConfig? = nil,
     extraAnimation: (() -> Void)? = nil,
     completion: (() -> Void)? = nil
   ) {
@@ -417,7 +417,7 @@ public extension AdaptiveModalManager {
   
   func snapToNextSnapPointIndex(
     isAnimated: Bool = true,
-    animationConfig: AdaptiveModalSnapAnimationConfig? = nil,
+    animationConfig: AnimationConfig? = nil,
     extraAnimation: (() -> Void)? = nil,
     completion: (() -> Void)? = nil
   ) {
@@ -460,7 +460,7 @@ public extension AdaptiveModalManager {
     overshootSnapPointPreset: AdaptiveModalSnapPointPreset? = .automatic,
     inBetweenSnapPointsMinPercentDiff: CGFloat = 0.1,
     isAnimated: Bool = true,
-    animationConfig: AdaptiveModalSnapAnimationConfig? = nil,
+    animationConfig: AnimationConfig? = nil,
     extraAnimation: (() -> Void)? = nil,
     completion: (() -> Void)? = nil
   ) throws {
@@ -562,7 +562,7 @@ public extension AdaptiveModalManager {
   func snapTo(
     key: AdaptiveModalSnapPointConfig.SnapPointKey,
     isAnimated: Bool = true,
-    animationConfig: AdaptiveModalSnapAnimationConfig? = nil,
+    animationConfig: AnimationConfig? = nil,
     animationBlock: (() -> Void)? = nil,
     completion: (() -> Void)? = nil
   ) throws {

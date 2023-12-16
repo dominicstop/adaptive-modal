@@ -7,7 +7,7 @@
 
 import UIKit
 import ComputableLayout
-
+import DGSwiftUtilities
 
 public struct AdaptiveModalConfig: Equatable {
 
@@ -80,9 +80,9 @@ public struct AdaptiveModalConfig: Equatable {
   
   public var snapPercentStrategy: SnapPercentStrategy = .position;
   
-  public var snapAnimationConfig: AdaptiveModalSnapAnimationConfig = .default;
-  public var entranceAnimationConfig: AdaptiveModalSnapAnimationConfig = .default;
-  public var exitAnimationConfig: AdaptiveModalSnapAnimationConfig = .default;
+  public var snapAnimationConfig: AnimationConfig = .default;
+  public var entranceAnimationConfig: AnimationConfig = .default;
+  public var exitAnimationConfig: AnimationConfig = .default;
   
   public var interpolationClampingConfig: AdaptiveModalClampingConfig;
   
@@ -258,9 +258,9 @@ public struct AdaptiveModalConfig: Equatable {
     snapPoints: [AdaptiveModalSnapPointConfig],
     snapDirection: SnapDirection,
     snapPercentStrategy: SnapPercentStrategy? = nil,
-    snapAnimationConfig: AdaptiveModalSnapAnimationConfig? = nil,
-    entranceAnimationConfig: AdaptiveModalSnapAnimationConfig? = nil,
-    exitAnimationConfig: AdaptiveModalSnapAnimationConfig? = nil,
+    snapAnimationConfig: AnimationConfig? = nil,
+    entranceAnimationConfig: AnimationConfig? = nil,
+    exitAnimationConfig: AnimationConfig? = nil,
     interpolationClampingConfig: AdaptiveModalClampingConfig? = nil,
     initialSnapPointIndex: Int? = nil,
     undershootSnapPoint: AdaptiveModalSnapPointPreset? = nil,

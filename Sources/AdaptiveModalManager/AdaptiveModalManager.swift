@@ -700,7 +700,7 @@ public class AdaptiveModalManager: NSObject {
   var _tempShowModalCommandArgs: (
     isAnimated: Bool,
     snapPointIndex: Int?,
-    animationConfig: AdaptiveModalSnapAnimationConfig,
+    animationConfig: AnimationConfig,
     shouldSetStateOnSnap: Bool,
     stateSnapping: AdaptiveModalState?,
     stateSnapped: AdaptiveModalState?,
@@ -711,7 +711,7 @@ public class AdaptiveModalManager: NSObject {
   var _tempHideModalCommandArgs: (
     isAnimated: Bool,
     mode: HideModalMode,
-    animationConfig: AdaptiveModalSnapAnimationConfig,
+    animationConfig: AnimationConfig,
     shouldSetStateOnSnap: Bool,
     stateSnapping: AdaptiveModalState?,
     stateSnapped: AdaptiveModalState?,
@@ -1925,7 +1925,7 @@ public class AdaptiveModalManager: NSObject {
   func _animateModal(
     to interpolationPoint: AdaptiveModalInterpolationPoint,
     isAnimated: Bool = true,
-    animationConfigOverride: AdaptiveModalSnapAnimationConfig? = nil,
+    animationConfigOverride: AnimationConfig? = nil,
     extraAnimation: (() -> Void)? = nil,
     completion: ((UIViewAnimatingPosition) -> Void)? = nil
   ) {
@@ -2118,7 +2118,7 @@ public class AdaptiveModalManager: NSObject {
     interpolationIndex nextIndex: Int,
     interpolationPoint: AdaptiveModalInterpolationPoint? = nil,
     isAnimated: Bool = true,
-    animationConfig: AdaptiveModalSnapAnimationConfig? = nil,
+    animationConfig: AnimationConfig? = nil,
     shouldSetStateOnSnap: Bool,
     stateSnapping: AdaptiveModalState?,
     stateSnapped: AdaptiveModalState?,
@@ -2159,7 +2159,7 @@ public class AdaptiveModalManager: NSObject {
   func snapToClosestSnapPoint(
     forPoint point: CGPoint,
     direction: AdaptiveModalConfig.SnapDirection?,
-    animationConfig: AdaptiveModalSnapAnimationConfig? = nil,
+    animationConfig: AnimationConfig? = nil,
     shouldSetStateOnSnap: Bool,
     stateSnapping: AdaptiveModalState?,
     stateSnapped: AdaptiveModalState?,
@@ -2198,7 +2198,7 @@ public class AdaptiveModalManager: NSObject {
   func showModal(
     snapPointIndex: Int? = nil,
     isAnimated: Bool = true,
-    animationConfig: AdaptiveModalSnapAnimationConfig? = nil,
+    animationConfig: AnimationConfig? = nil,
     shouldSetStateOnSnap: Bool,
     stateSnapping: AdaptiveModalState?,
     stateSnapped: AdaptiveModalState?,
@@ -2224,7 +2224,7 @@ public class AdaptiveModalManager: NSObject {
   func hideModal(
     mode: HideModalMode,
     isAnimated: Bool = true,
-    animationConfig: AdaptiveModalSnapAnimationConfig? = nil,
+    animationConfig: AnimationConfig? = nil,
     shouldSetStateOnSnap: Bool,
     stateSnapping: AdaptiveModalState?,
     stateSnapped: AdaptiveModalState?,
@@ -2350,7 +2350,7 @@ public class AdaptiveModalManager: NSObject {
     presentingViewController targetVC: UIViewController,
     snapPointIndex: Int? = nil,
     animated: Bool = true,
-    animationConfig: AdaptiveModalSnapAnimationConfig? = nil,
+    animationConfig: AnimationConfig? = nil,
     shouldSetStateOnSnap: Bool,
     stateSnapping: AdaptiveModalState?,
     stateSnapped: AdaptiveModalState?,
