@@ -1,5 +1,7 @@
 # adaptive-modal
 
+![demo-01-to-15](assets/demo-01-to-15.gif)
+
 An all-in-one, "config-based" `UIViewController` modal presentation `UIKit` component for making: interactive modals, sheets, drawers, dialogs, and overlays, with built in support for: 
 
 * 💖 Gesture-driven modal presentation and animation.
