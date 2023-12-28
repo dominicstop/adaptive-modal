@@ -18,11 +18,11 @@ let package = Package(
   dependencies: [
     .package(
       url: "https://github.com/dominicstop/ComputableLayout",
-      .upToNextMajor(from: "0.5.0")
+      .upToNextMajor(from: "0.7.0")
     ),
     .package(
       url: "https://github.com/dominicstop/DGSwiftUtilities",
-      .upToNextMajor(from: "0.7.0")
+      .upToNextMajor(from: "0.11.0")
     ),
   ],
   targets: [
