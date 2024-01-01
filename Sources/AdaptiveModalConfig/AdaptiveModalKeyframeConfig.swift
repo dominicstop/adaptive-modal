@@ -15,7 +15,7 @@ public struct AdaptiveModalKeyframeConfig: Equatable {
   // MARK: - Embedded Types
   // ----------------------
 
-  public enum BackgroundInteractionMode: String, Equatable {
+  public enum BackgroundInteractionMode: String {
     static let `default`: Self = .automatic;
   
     case automatic;

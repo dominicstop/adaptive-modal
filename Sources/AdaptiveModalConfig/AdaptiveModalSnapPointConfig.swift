@@ -20,7 +20,7 @@ public enum AdaptiveModalSnapPointConfig: Equatable {
     case index(_ indexKey: Int);
   };
   
-  enum SnapPointMode: Equatable {
+  enum SnapPointMode: String {
     case standard;
     case inBetween;
   };

@@ -8,7 +8,7 @@
 import Foundation
 
 
-public enum AdaptiveModalState {
+public enum AdaptiveModalState: String {
 
   case INITIAL;
 

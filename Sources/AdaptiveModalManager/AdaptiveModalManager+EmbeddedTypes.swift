@@ -13,7 +13,7 @@ extension AdaptiveModalManager {
   // MARK: - Public Embedded Types
   // --------==-------------------
   
-  public enum PresentationState {
+  public enum PresentationState: String {
     case presenting, dismissing, none;
   };
   
@@ -28,7 +28,7 @@ extension AdaptiveModalManager {
     case keyframe(AdaptiveModalKeyframeConfig);
   };
   
-  enum ModalRangePropertyAnimatorMode: Equatable {
+  enum ModalRangePropertyAnimatorMode: String {
     case modalPosition;
     case animatorFractionComplete;
   };

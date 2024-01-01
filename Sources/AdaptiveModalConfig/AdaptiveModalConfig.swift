@@ -14,12 +14,12 @@ public struct AdaptiveModalConfig: Equatable {
   // MARK: - Types
   // -------------
   
-  public enum Orientation: Equatable {
+  public enum Orientation: String {
     case vertical;
     case horizontal;
   };
 
-  public enum SnapDirection: Equatable {
+  public enum SnapDirection: String {
     case bottomToTop;
     case topToBottom;
     case leftToRight;
@@ -63,12 +63,12 @@ public struct AdaptiveModalConfig: Equatable {
     };
   };
   
-  public enum SnapPercentStrategy: Equatable {
+  public enum SnapPercentStrategy: String {
     case index;
     case position;
   };
   
-  public enum DragHandlePosition: Equatable {
+  public enum DragHandlePosition: String {
     case automatic, none;
     case top, bottom, left, right;
   };

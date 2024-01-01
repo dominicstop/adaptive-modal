@@ -9,7 +9,7 @@ import Foundation
 
 public struct AdaptiveModalClampingConfig: Equatable {
 
-  public enum ClampingKeys: Equatable, CaseIterable {
+  public enum ClampingKeys: String, CaseIterable {
     case modalSizeHeight;
     case modalSizeWidth;
     case modalOriginX;
