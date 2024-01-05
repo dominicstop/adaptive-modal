@@ -1,7 +1,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'AdaptiveModal'
-  s.version          = '1.3.1'
+  s.version          = '1.4.0'
   s.summary          = 'Config-based UIViewController modal presentation.'
 
   s.description      = <<-DESC
