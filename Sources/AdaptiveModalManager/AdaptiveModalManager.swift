@@ -693,6 +693,9 @@ public class AdaptiveModalManager: NSObject {
   public var animationEventDelegate =
     MulticastDelegate<AdaptiveModalAnimationEventsNotifiable>();
     
+  public weak var displayLinkEventsDelegate:
+    AdaptiveModalDisplayLinkEventsNotifiable?;
+    
   // MARK: -  Properties
   // -------------------
   
@@ -2070,16 +2073,24 @@ public class AdaptiveModalManager: NSObject {
       self.displayLinkStartTimestamp = displayLink.timestamp;
     };
     
+    guard let dummyModalView = self.dummyModalView,
+          let dummyModalViewLayer = dummyModalView.layer.presentation()
+    else {
+      shouldEndDisplayLink = true;
+      return;
+    };
+    
+    self.displayLinkEventsDelegate?.onDisplayLinkTick(
+      sender: self,
+      displayLink: displayLink,
+      modalFrame: dummyModalViewLayer.frame
+    );
+    
     let percent: CGFloat? = {
       switch self.rangeAnimatorMode {
         case .modalPosition:
-          guard let dummyModalView = self.dummyModalView,
-                let dummyModalViewLayer = dummyModalView.layer.presentation(),
-                let interpolationRangeMaxInput = self.interpolationRangeMaxInput
-          else {
-            shouldEndDisplayLink = true;
-            return nil;
-          };
+          guard let interpolationRangeMaxInput = self.interpolationRangeMaxInput
+          else { return nil };
           
           let prevModalFrame = self.prevModalFrame;
           let nextModalFrame = dummyModalViewLayer.frame;
