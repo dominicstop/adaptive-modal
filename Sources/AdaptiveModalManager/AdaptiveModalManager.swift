@@ -1620,8 +1620,14 @@ public class AdaptiveModalManager: NSObject {
   // -------------------------------------
   
   func _stopModalAnimator(){
-    self._modalAnimator?.stopAnimation(false);
     self._endDisplayLink();
+    
+    guard let modalAnimator = self._modalAnimator,
+          modalAnimator.isRunning
+    else { return };
+    
+    modalAnimator.stopAnimation(false);
+    self._modalAnimator = nil;
     
     self.animationEventDelegate.invoke {
       $0.notifyOnModalAnimatorStop(sender: self);
@@ -1974,9 +1980,7 @@ public class AdaptiveModalManager: NSObject {
       };
       
       animator.addCompletion { _ in
-        animator.stopAnimation(false);
-        self._endDisplayLink();
-        self._modalAnimator = nil;
+        self._stopModalAnimator();
         
         #if DEBUG
         self.debugView?.notifyOnAnimateModalCompletion();
