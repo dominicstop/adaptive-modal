@@ -121,6 +121,8 @@ extension AdaptiveModalManager {
   };
   
   func _notifyOnModalDidSnap(shouldSetState: Bool) {
+    self._clearAnimators();
+    
     #if DEBUG
     self.debugView?.notifyOnModalDidSnap();
     #endif
@@ -168,6 +170,10 @@ extension AdaptiveModalManager {
       self.modalStateMachine.setState(nextState);
     };
     
+    if self.shouldClearOverrideSnapPoints {
+      self._cleanupSnapPointOverride();
+    };
+    
     self.presentationEventsDelegate.invoke {
       $0.notifyOnModalDidSnap(
         sender: self,
@@ -179,12 +185,6 @@ extension AdaptiveModalManager {
         currentInterpolationPoint: self.currentInterpolationStep
       );
     };
-    
-    if self.shouldClearOverrideSnapPoints {
-      self._cleanupSnapPointOverride();
-    };
-    
-    self._clearAnimators();
   };
   
   func _notifyOnModalWillShow(){
