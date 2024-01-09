@@ -1951,7 +1951,26 @@ public class AdaptiveModalManager: NSObject {
     
     self.modalWrapperLayoutView?.layoutIfNeeded();
     
-    if isAnimated {
+    let startAnimation = {
+      guard isAnimated else {
+        // not animated, immediately apply animation
+        return {
+          animationBlock();
+        
+          interpolationPoint.applyAnimation(
+            toModalBackgroundEffectView: self.modalBackgroundVisualEffectView,
+            toBackgroundVisualEffectView: self.backgroundVisualEffectView
+          );
+        
+          extraAnimation?();
+          completion?(.end);
+          
+          #if DEBUG
+          self.debugView?.notifyOnAnimateModalCompletion();
+          #endif
+        };
+      };
+      
       let snapAnimationConfig = animationConfigOverride
         ?? self.currentModalConfig.snapAnimationConfig;
       
@@ -1986,25 +2005,12 @@ public class AdaptiveModalManager: NSObject {
         self.debugView?.notifyOnAnimateModalCompletion();
         #endif
       };
-    
-      animator.startAnimation();
-      self._startDisplayLink(shouldAutoEndDisplayLink: true);
       
-    } else {
-      animationBlock();
-      
-      interpolationPoint.applyAnimation(
-        toModalBackgroundEffectView: self.modalBackgroundVisualEffectView,
-        toBackgroundVisualEffectView: self.backgroundVisualEffectView
-      );
-    
-      extraAnimation?();
-      completion?(.end);
-      
-      #if DEBUG
-      self.debugView?.notifyOnAnimateModalCompletion();
-      #endif
-    };
+      return {
+        animator.startAnimation();
+        self._startDisplayLink(shouldAutoEndDisplayLink: true);
+      };
+    }();
     
     self.animationEventDelegate.invoke {
       $0.notifyOnModalAnimatorStart(
@@ -2014,6 +2020,8 @@ public class AdaptiveModalManager: NSObject {
         isAnimated: isAnimated
       );
     };
+    
+    startAnimation();
   };
   
   func _cancelModalGesture(){
