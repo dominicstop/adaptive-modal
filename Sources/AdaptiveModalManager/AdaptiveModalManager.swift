@@ -1056,31 +1056,41 @@ public class AdaptiveModalManager: NSObject {
       shouldClampMax: clampingKeysMax.contains(.modalPaddingBottom)
     );
     
-    guard let nextPaddingLeft   = nextPaddingLeft  ,
-          let nextPaddingRight  = nextPaddingRight ,
-          let nextPaddingTop    = nextPaddingTop   ,
-          let nextPaddingBottom = nextPaddingBottom,
-          
-          let modalConstraintLeft   = self.modalConstraintLeft  ,
-          let modalConstraintRight  = self.modalConstraintRight ,
-          let modalConstraintTop    = self.modalConstraintTop   ,
-          let modalConstraintBottom = self.modalConstraintBottom
-    else { return };
+    var didPaddingChange = false;
     
-    let didChange =
-         modalConstraintLeft  .constant != nextPaddingLeft
-      || modalConstraintRight .constant != nextPaddingRight
-      || modalConstraintTop   .constant != nextPaddingTop
-      || modalConstraintBottom.constant != nextPaddingBottom;
+    if let nextPaddingLeft = nextPaddingLeft,
+       let modalConstraintLeft = self.modalConstraintLeft,
+       modalConstraintLeft.constant != nextPaddingLeft {
       
-    guard didChange else { return };
+      modalConstraintLeft.constant = nextPaddingLeft;
+      didPaddingChange = true;
+    };
     
-    modalConstraintLeft  .constant = nextPaddingLeft;
-    modalConstraintRight .constant = nextPaddingRight;
-    modalConstraintTop   .constant = nextPaddingTop;
-    modalConstraintBottom.constant = nextPaddingBottom;
+    if let nextPaddingRight = nextPaddingRight,
+       let modalConstraintRight = self.modalConstraintRight,
+       modalConstraintRight.constant != nextPaddingRight {
+      
+      modalConstraintRight.constant = nextPaddingRight;
+      didPaddingChange = true;
+    };
     
+    if let nextPaddingTop = nextPaddingTop,
+       let modalConstraintTop = self.modalConstraintTop,
+       modalConstraintTop.constant != nextPaddingTop {
+      
+      modalConstraintTop.constant = nextPaddingTop;
+      didPaddingChange = true;
+    };
     
+    if let nextPaddingBottom = nextPaddingBottom,
+       let modalConstraintBottom = self.modalConstraintBottom,
+       modalConstraintBottom.constant != nextPaddingBottom {
+      
+      modalConstraintBottom.constant = nextPaddingBottom;
+      didPaddingChange = true;
+    };
+    
+    guard didPaddingChange else { return };
     modalView.updateConstraints();
     modalView.setNeedsLayout();
   };
@@ -1102,11 +1112,12 @@ public class AdaptiveModalManager: NSObject {
     );
 
     guard let nextDragHandleOffset = nextDragHandleOffset,
-          let modalDragHandleConstraintOffset = self.modalDragHandleConstraintOffset,
+          nextDragHandleOffset.isFinite,
           
+          let modalDragHandleConstraintOffset = self.modalDragHandleConstraintOffset,
           modalDragHandleConstraintOffset.constant != nextDragHandleOffset
     else { return };
-
+    
     modalDragHandleConstraintOffset.constant = nextDragHandleOffset;
     
     modalDragHandleView.updateConstraints();
@@ -1135,23 +1146,27 @@ public class AdaptiveModalManager: NSObject {
       shouldClampMin: clampingKeysMin.contains(.modalDragHandleSizeHeight),
       shouldClampMax: clampingKeysMax.contains(.modalDragHandleSizeHeight)
     );
-
-    guard let nextWidth = nextWidth,
-          let nextHeight = nextHeight,
-          
-          let dragHandleConstraintWidth = self.modalDragHandleConstraintWidth,
-          let dragHandleConstraintHeight = self.modalDragHandleConstraintHeight
-    else { return };
     
-    let didSizeChange =
-         dragHandleConstraintWidth.constant != nextWidth
-      || dragHandleConstraintHeight.constant != nextHeight;
+    var didSizeChange = false;
+    
+    if let nextWidth = nextWidth,
+       let dragHandleConstraintWidth = self.modalDragHandleConstraintWidth,
+       dragHandleConstraintWidth.constant != nextWidth {
+      
+      dragHandleConstraintWidth.constant = nextWidth;
+      didSizeChange = true;
+    };
+    
+    if let nextHeight = nextHeight,
+       let dragHandleConstraintHeight = self.modalDragHandleConstraintHeight,
+       dragHandleConstraintHeight.constant != nextHeight {
+       
+       dragHandleConstraintHeight.constant = nextHeight;
+       didSizeChange = true;
+    };
       
     guard didSizeChange else { return };
 
-    dragHandleConstraintWidth.constant = nextWidth;
-    dragHandleConstraintHeight.constant = nextHeight;
-    
     modalDragHandleView.updateConstraints();
     modalDragHandleView.setNeedsLayout();
   };

@@ -105,11 +105,14 @@ public class AdaptiveModalUtilities {
 
     let progress = inputValueAdj / rangeInputEndAdj;
           
-    return Self.lerp(
+    let interpolatedValue = Self.lerp(
       valueStart: rangeOutputStart,
       valueEnd  : rangeOutputEnd,
       percent   : progress
     );
+    
+    guard interpolatedValue.isFinite else { return nil };
+    return interpolatedValue;
   };
   
   public static func interpolateColor(
