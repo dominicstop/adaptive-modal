@@ -2137,15 +2137,7 @@ public class AdaptiveModalManager: NSObject {
       return;
     };
     
-    print(
-      "_onDisplayLinkTick",
-      "\n - dummyModalViewLayer - origin:", dummyModalViewLayer.frame.origin,
-      "\n - modalWrapperLayoutView - origin:", self.modalWrapperLayoutView?.layer.presentation()?.frame.origin ?? .zero,
-      "\n"
-    );
-    
     if self.animationMode == .viewPropertyAnimatorDiscrete {
-
       self._applyInterpolationToModal(
         forPoint: dummyModalViewLayer.frame.origin
       );
