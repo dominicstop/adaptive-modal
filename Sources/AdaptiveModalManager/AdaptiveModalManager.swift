@@ -1079,13 +1079,6 @@ public class AdaptiveModalManager: NSObject {
     modalConstraintRight .constant = nextPaddingRight;
     modalConstraintTop   .constant = nextPaddingTop;
     modalConstraintBottom.constant = nextPaddingBottom;
-    print(
-      "\n - nextPaddingLeft:", nextPaddingLeft,
-      "\n - nextPaddingRight:", nextPaddingRight,
-      "\n - nextPaddingTop:", nextPaddingTop,
-      "\n - nextPaddingBottom:", nextPaddingBottom,
-      "\n"
-    );
     
     
     modalView.updateConstraints();
@@ -2152,16 +2145,6 @@ public class AdaptiveModalManager: NSObject {
           return AdaptiveModalUtilities.invertPercent(modalAnimator.fractionComplete);
       };
     }();
-    
-    print(
-      "_onDisplayLinkTick",
-      "\n - percent:", percent ?? 0,
-      "\n - dummyModalViewLayer.frame:", dummyModalViewLayer.frame,
-      "\n - shouldEndDisplayLink:", shouldEndDisplayLink,
-      "\n - self.modalWrapperLayoutView.frame", self.modalWrapperLayoutView?.frame ?? .zero,
-      "\n - self.modalView.frame", self.modalView?.frame ?? .zero,
-      "\n"
-    );
     
     guard let percent = percent else { return };
     
