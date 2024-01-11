@@ -42,11 +42,17 @@ public class AdaptiveModalUtilities {
     else { return nil };
     
     if shouldClampMin, inputValue < rangeInput.first! {
-      return rangeOutput.first!;
+      let interpolatedValue = rangeOutput.first!;
+      
+      guard interpolatedValue.isFinite else { return nil };
+      return interpolatedValue;
     };
     
     if shouldClampMax, inputValue > rangeInput.last! {
-      return rangeOutput.last!;
+      let interpolatedValue = rangeOutput.last!;
+      
+      guard interpolatedValue.isFinite else { return nil };
+      return interpolatedValue;
     };
     
     // A - Extrapolate Left
@@ -66,6 +72,8 @@ public class AdaptiveModalUtilities {
         valueEnd  : rangeOutputStart,
         percent   : percent
       );
+      
+      guard interpolatedValue.isFinite else { return nil };
       
       let delta2 = interpolatedValue - rangeOutputEnd;
       return rangeOutputStart - delta2;
