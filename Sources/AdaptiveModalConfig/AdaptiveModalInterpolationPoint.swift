@@ -130,18 +130,25 @@ public struct AdaptiveModalInterpolationPoint: Equatable {
   ){
     let modalConfig = modalManager.currentModalConfig;
     
+    if let dummyModalView = modalManager.dummyModalView {
+      dummyModalView.frame = self.computedRect;
+    };
+    
+    guard modalManager.animationMode == .viewPropertyAnimatorContinuous
+    else { return };
+    
     if let modalView = modalManager.modalView {
       modalView.alpha = self.modalContentOpacity;
     };
     
     if let modalWrapperLayoutView = modalManager.modalWrapperLayoutView {
+    
+      modalWrapperLayoutView.alpha = self.modalOpacity;
+    
       if modalWrapperLayoutView.frame != self.computedRect {
         modalWrapperLayoutView.frame = self.computedRect;
-        
         modalWrapperLayoutView.setNeedsLayout();
       };
-      
-      modalWrapperLayoutView.alpha = self.modalOpacity;
     };
     
     if let modalWrapperTransformView = modalManager.modalWrapperTransformView {
@@ -163,10 +170,6 @@ public struct AdaptiveModalInterpolationPoint: Equatable {
     if let modalContentWrapperView = modalManager.modalContentWrapperView {
       modalContentWrapperView.layer.cornerRadius = self.modalCornerRadius;
       modalContentWrapperView.layer.maskedCorners = self.modalMaskedCorners;
-    };
-    
-    if let dummyModalView = modalManager.dummyModalView {
-      dummyModalView.frame = self.computedRect;
     };
     
     if let modalBgView = modalManager.modalBackgroundView {

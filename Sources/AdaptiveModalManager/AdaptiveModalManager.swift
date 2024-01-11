@@ -10,6 +10,7 @@ import ComputableLayout
 import DGSwiftUtilities
 
 
+
 public class AdaptiveModalManager: NSObject {
 
   // MARK: -  Properties - Config-Related
@@ -29,6 +30,8 @@ public class AdaptiveModalManager: NSObject {
         return self._currentModalConfig ?? defaultConfig;
     };
   };
+  
+  public var animationMode: AdaptiveModalAnimationMode = .default;
   
   public var shouldEnableSnapping = true;
   public var shouldEnableOverShooting = true;
@@ -139,7 +142,11 @@ public class AdaptiveModalManager: NSObject {
       guard !newValue.isNaN else { return };
       
       self.modalWrapperLayoutView?.frame = newValue;
-      self.dummyModalView?.frame = newValue;
+      
+      if !self.isAnimating {
+        self.dummyModalView?.frame = newValue;
+      };
+      
     }
     get {
       self.dummyModalView?.frame;
@@ -1072,6 +1079,14 @@ public class AdaptiveModalManager: NSObject {
     modalConstraintRight .constant = nextPaddingRight;
     modalConstraintTop   .constant = nextPaddingTop;
     modalConstraintBottom.constant = nextPaddingBottom;
+    print(
+      "\n - nextPaddingLeft:", nextPaddingLeft,
+      "\n - nextPaddingRight:", nextPaddingRight,
+      "\n - nextPaddingTop:", nextPaddingTop,
+      "\n - nextPaddingBottom:", nextPaddingBottom,
+      "\n"
+    );
+    
     
     modalView.updateConstraints();
     modalView.setNeedsLayout();
@@ -2051,7 +2066,10 @@ public class AdaptiveModalManager: NSObject {
     self.displayLink = displayLink;
     
     if #available(iOS 15.0, *) {
-      displayLink.preferredFrameRateRange = CAFrameRateRange(minimum: 60, maximum: 120);
+      displayLink.preferredFrameRateRange = CAFrameRateRange(
+        minimum: 60,
+        maximum: 120
+      );
       
     } else {
       displayLink.preferredFramesPerSecond = 60;
@@ -2093,6 +2111,13 @@ public class AdaptiveModalManager: NSObject {
       return;
     };
     
+    if self.animationMode == .viewPropertyAnimatorDiscrete {
+
+      self._applyInterpolationToModal(
+        forPoint: dummyModalViewLayer.frame.origin
+      );
+    };
+    
     self.displayLinkEventsDelegate?.onDisplayLinkTick(
       sender: self,
       displayLink: displayLink,
@@ -2128,8 +2153,18 @@ public class AdaptiveModalManager: NSObject {
       };
     }();
     
+    print(
+      "_onDisplayLinkTick",
+      "\n - percent:", percent ?? 0,
+      "\n - dummyModalViewLayer.frame:", dummyModalViewLayer.frame,
+      "\n - shouldEndDisplayLink:", shouldEndDisplayLink,
+      "\n - self.modalWrapperLayoutView.frame", self.modalWrapperLayoutView?.frame ?? .zero,
+      "\n - self.modalView.frame", self.modalView?.frame ?? .zero,
+      "\n"
+    );
+    
     guard let percent = percent else { return };
-
+    
     self._applyInterpolationToRangeAnimators(
       forInputPercentValue: percent
     );
