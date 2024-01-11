@@ -756,6 +756,11 @@ public class AdaptiveModalManager: NSObject {
     self._modalAnimator?.isRunning ?? false;
   };
   
+  public var isAnimatingWithViewPropertyAnimatorDiscrete: Bool {
+       self.isAnimating
+    && self.animationMode == .viewPropertyAnimatorDiscrete;
+  };
+  
   public var currentSnapPointIndex: Int {
     self.currentInterpolationStep.snapPointIndex
   };
@@ -1232,7 +1237,11 @@ public class AdaptiveModalManager: NSObject {
         return self.modalFrame;
       };
       
-      guard !self.shouldLockAxisToModalDirection,
+      let shouldAdjustSecondaryAxis: Bool =
+           !self.shouldLockAxisToModalDirection
+        && !self.isAnimatingWithViewPropertyAnimatorDiscrete
+      
+      guard shouldAdjustSecondaryAxis,
             let secondaryAxis = self._modalSecondaryAxisValue
       else {
         return nextRect;
@@ -2127,6 +2136,13 @@ public class AdaptiveModalManager: NSObject {
       shouldEndDisplayLink = true;
       return;
     };
+    
+    print(
+      "_onDisplayLinkTick",
+      "\n - dummyModalViewLayer - origin:", dummyModalViewLayer.frame.origin,
+      "\n - modalWrapperLayoutView - origin:", self.modalWrapperLayoutView?.layer.presentation()?.frame.origin ?? .zero,
+      "\n"
+    );
     
     if self.animationMode == .viewPropertyAnimatorDiscrete {
 

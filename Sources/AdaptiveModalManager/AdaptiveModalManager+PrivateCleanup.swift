@@ -10,6 +10,8 @@ import UIKit
 extension AdaptiveModalManager {
 
  func _clearGestureValues() {
+    self._modalSecondaryAxisValue = nil;
+    
     self.gestureOffset = nil;
     self.gestureVelocity = nil;
     
