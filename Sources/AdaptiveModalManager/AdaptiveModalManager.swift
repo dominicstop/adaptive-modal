@@ -34,11 +34,16 @@ public class AdaptiveModalManager: NSObject {
   var _animationModeOverride: AdaptiveModalAnimationMode?;
   var _animationMode: AdaptiveModalAnimationMode = .default;
   public var animationMode: AdaptiveModalAnimationMode {
-    if let _animationModeOverride = self._animationModeOverride {
-      return _animationModeOverride;
-    };
-    
-    return self._animationMode;
+    get {
+      if let _animationModeOverride = self._animationModeOverride {
+        return _animationModeOverride;
+      };
+      
+      return self._animationMode;
+    }
+    set {
+      self._animationMode = newValue;
+    }
   };
   
   
