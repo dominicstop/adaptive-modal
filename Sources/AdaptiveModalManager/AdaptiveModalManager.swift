@@ -2137,18 +2137,6 @@ public class AdaptiveModalManager: NSObject {
       return;
     };
     
-    if self.animationMode == .viewPropertyAnimatorDiscrete {
-      self._applyInterpolationToModal(
-        forPoint: dummyModalViewLayer.frame.origin
-      );
-    };
-    
-    self.displayLinkEventsDelegate?.onDisplayLinkTick(
-      sender: self,
-      displayLink: displayLink,
-      modalFrame: dummyModalViewLayer.frame
-    );
-    
     let percent: CGFloat? = {
       switch self.rangeAnimatorMode {
         case .modalPosition:
@@ -2178,10 +2166,36 @@ public class AdaptiveModalManager: NSObject {
       };
     }();
     
+    print(
+      "percent:", percent ?? 0,
+      "\n - self.animationMode:", self.animationMode,
+      "\n"
+    );
+    
     guard let percent = percent else { return };
     
     self._applyInterpolationToRangeAnimators(
       forInputPercentValue: percent
+    );
+    
+    if self.isAnimatingWithViewPropertyAnimatorDiscrete {
+      let inputPoint = dummyModalViewLayer.frame[
+        keyPath: self.currentModalConfig.inputValueKeyForRect
+      ];
+    
+      //self._applyInterpolationToModal(
+      //  forPoint: dummyModalViewLayer.frame.origin
+      //);
+      
+      self._applyInterpolationToModal(
+        forInputPercentValue: percent
+      );
+    };
+    
+    self.displayLinkEventsDelegate?.onDisplayLinkTick(
+      sender: self,
+      displayLink: displayLink,
+      modalFrame: dummyModalViewLayer.frame
     );
   };
 
@@ -2231,7 +2245,7 @@ public class AdaptiveModalManager: NSObject {
       
       let modalCoordDelta = abs(modalCoordCurrent - modalCoordNext);
       
-      let MIN_DELTA: CGFloat = 150;
+      let MIN_DELTA: CGFloat = 200;
       return modalCoordDelta <= MIN_DELTA;
     }();
     
