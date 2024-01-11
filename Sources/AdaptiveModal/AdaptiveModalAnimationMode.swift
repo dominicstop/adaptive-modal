@@ -8,7 +8,7 @@
 import Foundation
 
 
-public enum AdaptiveModalAnimationMode {
+public enum AdaptiveModalAnimationMode: String {
   
   public static let `default`: Self = .viewPropertyAnimatorContinuous;
 
