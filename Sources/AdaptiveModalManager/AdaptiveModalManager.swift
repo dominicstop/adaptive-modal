@@ -2166,12 +2166,6 @@ public class AdaptiveModalManager: NSObject {
       };
     }();
     
-    print(
-      "percent:", percent ?? 0,
-      "\n - self.animationMode:", self.animationMode,
-      "\n"
-    );
-    
     guard let percent = percent else { return };
     
     self._applyInterpolationToRangeAnimators(
@@ -2179,14 +2173,6 @@ public class AdaptiveModalManager: NSObject {
     );
     
     if self.isAnimatingWithViewPropertyAnimatorDiscrete {
-      let inputPoint = dummyModalViewLayer.frame[
-        keyPath: self.currentModalConfig.inputValueKeyForRect
-      ];
-    
-      //self._applyInterpolationToModal(
-      //  forPoint: dummyModalViewLayer.frame.origin
-      //);
-      
       self._applyInterpolationToModal(
         forInputPercentValue: percent
       );
