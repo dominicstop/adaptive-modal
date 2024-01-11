@@ -31,7 +31,16 @@ public class AdaptiveModalManager: NSObject {
     };
   };
   
-  public var animationMode: AdaptiveModalAnimationMode = .default;
+  var _animationModeOverride: AdaptiveModalAnimationMode?;
+  var _animationMode: AdaptiveModalAnimationMode = .viewPropertyAnimatorDiscrete;
+  public var animationMode: AdaptiveModalAnimationMode {
+    if let _animationModeOverride = self._animationModeOverride {
+      return _animationModeOverride;
+    };
+    
+    return self._animationMode;
+  };
+  
   
   public var shouldEnableSnapping = true;
   public var shouldEnableOverShooting = true;
@@ -2193,6 +2202,31 @@ public class AdaptiveModalManager: NSObject {
       self.modalStateMachine.setState(stateSnapping);
     };
     
+    let shouldOverrideAnimationMode = {
+      if self.modalState.isProgrammatic {
+        return true;
+      };
+      
+      guard let modalFrame = self.modalFrame else { return false };
+      
+      let modalCoordCurrent = modalFrame[
+        keyPath: self.currentModalConfig.inputValueKeyForRect
+      ];
+        
+      let modalCoordNext = nextInterpolationPoint.computedRect[
+        keyPath: self.currentModalConfig.inputValueKeyForRect
+      ];
+      
+      let modalCoordDelta = abs(modalCoordCurrent - modalCoordNext);
+      
+      let MIN_DELTA: CGFloat = 150;
+      return modalCoordDelta <= MIN_DELTA;
+    }();
+    
+    if shouldOverrideAnimationMode {
+      self._animationModeOverride = .viewPropertyAnimatorContinuous;
+    };
+    
     self._animateModal(
       to: nextInterpolationPoint,
       isAnimated: isAnimated,
@@ -2209,6 +2243,7 @@ public class AdaptiveModalManager: NSObject {
         self.modalStateMachine.setState(stateSnapped);
       };
       
+      self._animationModeOverride = nil;
       completion?();
     }
   };
