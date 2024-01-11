@@ -2211,7 +2211,11 @@ public class AdaptiveModalManager: NSObject {
     };
     
     let shouldOverrideAnimationMode = {
-      if self.modalState.isProgrammatic {
+      let isPresentingOrDismissing =
+           self.modalState.isPresenting
+        || self.modalState.isDismissing;
+    
+      if isPresentingOrDismissing || self.modalState.isProgrammatic {
         return true;
       };
       
