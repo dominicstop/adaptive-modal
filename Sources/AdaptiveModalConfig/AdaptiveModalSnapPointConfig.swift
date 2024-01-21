@@ -8,110 +8,47 @@
 import UIKit
 import ComputableLayout
 
-public enum AdaptiveModalSnapPointConfig: Equatable {
 
-  // MARK: Types
-  // -----------
-
-  public enum SnapPointKey: Equatable {
-    case undershootPoint, overshootPoint, unspecified;
-    
-    case string(_ stringKey: String);
-    case index(_ indexKey: Int);
-  };
+public struct AdaptiveModalSnapPointConfig: Equatable {
   
-  enum SnapPointMode: String {
-    case standard;
-    case inBetween;
-  };
+  public var mode: AdaptiveModalSnapPointMode;
+  public var layoutConfig: ComputableLayout;
+  public var keyframeConfig: AdaptiveModalKeyframeConfig?;
   
-  // MARK: - Enum Cases
-  // ------------------
-  
-  case snapPoint(
-    key: SnapPointKey = .unspecified,
-    layoutConfig: ComputableLayout,
-    keyframeConfig: AdaptiveModalKeyframeConfig? = nil
-  );
-  
-  case inBetweenSnapPoint(
-    key: SnapPointKey = .unspecified,
-    layoutConfig: ComputableLayout?,
-    keyframeConfig: AdaptiveModalKeyframeConfig? = nil
-  );
-  
-  // MARK: Computed Properties
-  // -------------------------
-  
-  var mode: SnapPointMode {
-    switch self {
-      case .snapPoint:
-        return .standard;
-        
-      case .inBetweenSnapPoint:
-        return .inBetween;
-    };
-  };
-
-  public var key: SnapPointKey {
-    switch self {
-      case let .snapPoint(key, _, _):
-        return key;
-        
-      case let .inBetweenSnapPoint(key, _, _):
-        return key;
-    };
-  };
-  
-  public var layoutConfig: ComputableLayout {
-    switch self {
-      case let .snapPoint(_, layoutConfig, _):
-        return layoutConfig;
-        
-      case let .inBetweenSnapPoint(_, layoutConfig, _):
-        return layoutConfig ?? .zero;
-    };
-  };
-  
-  public var keyframeConfig: AdaptiveModalKeyframeConfig? {
-    switch self {
-      case let .snapPoint(_, _, keyframeConfig):
-        return keyframeConfig;
-        
-      case let .inBetweenSnapPoint(_, _, keyframeConfig):
-        return keyframeConfig;
-    };
-  };
+  public var key: String?;
   
   // MARK: Init
   // ----------
   
   public init(
-    key: SnapPointKey = .unspecified,
+    key: String? = nil,
+    mode: AdaptiveModalSnapPointMode = .standard,
     layoutConfig: ComputableLayout,
     keyframeConfig: AdaptiveModalKeyframeConfig? = nil
   ) {
   
-    self = .snapPoint(
-      key: key,
-      layoutConfig: layoutConfig,
-      keyframeConfig: keyframeConfig
-    );
+    self.key = key;
+    self.mode = mode;
+    self.layoutConfig = layoutConfig;
+    self.keyframeConfig = keyframeConfig;
   };
   
   public init(
-    key: SnapPointKey = .unspecified,
+    key: String? = nil,
+    mode: AdaptiveModalSnapPointMode = .standard,
     fromSnapPointPreset snapPointPreset: AdaptiveModalSnapPointPreset,
     fromBaseLayoutConfig baseLayoutConfig: ComputableLayout
   ) {
+  
     let snapPointLayoutPreset = snapPointPreset.layoutPreset;
     
     let snapPointLayout = snapPointLayoutPreset.getLayoutConfig(
       fromBaseLayoutConfig: baseLayoutConfig
     );
     
-    self = .snapPoint(
+    self.init(
       key: key,
+      mode: mode,
       layoutConfig: snapPointLayout,
       keyframeConfig: snapPointPreset.keyframeConfig
     );
@@ -119,35 +56,22 @@ public enum AdaptiveModalSnapPointConfig: Equatable {
   
   public init(
     fromBase base: Self,
-    fallbackKey: SnapPointKey? = nil,
     newSnapPoint: ComputableLayout? = nil,
     newAnimationKeyframe: AdaptiveModalKeyframeConfig? = nil
   ) {
   
-    let key = base.key == .unspecified
-      ? fallbackKey ?? base.key
-      : base.key;
-      
     let layoutConfig = newSnapPoint ?? base.layoutConfig;
     let keyframeConfig = newAnimationKeyframe ?? base.keyframeConfig;
-  
-    switch base.mode {
-      case .standard:
-        self = .snapPoint(
-          key: key,
-          layoutConfig: layoutConfig,
-          keyframeConfig: keyframeConfig
-        );
-        
-      case .inBetween:
-        self = .inBetweenSnapPoint(
-          key: key,
-          layoutConfig: layoutConfig,
-          keyframeConfig: keyframeConfig
-        );
-    };
+    
+    self.init(
+      key: base.key,
+      mode: base.mode,
+      layoutConfig: layoutConfig,
+      keyframeConfig: keyframeConfig
+    );
   };
 };
+
 
 // MARK: Helpers
 // -------------
@@ -158,13 +82,12 @@ extension AdaptiveModalSnapPointConfig {
     undershootSnapPoint: AdaptiveModalSnapPointPreset,
     inBetweenSnapPoints: [AdaptiveModalSnapPointConfig],
     overshootSnapPoint: AdaptiveModalSnapPointPreset?
-  ) -> [AdaptiveModalSnapPointConfig] {
+  ) -> [AdaptiveModalSnapPoint] {
 
-    var items: [AdaptiveModalSnapPointConfig] = [];
+    var items: [AdaptiveModalSnapPoint] = [];
     
     if let snapPointFirst = inBetweenSnapPoints.first {
       var initialSnapPointConfig = AdaptiveModalSnapPointConfig(
-        key: .undershootPoint,
         fromSnapPointPreset: undershootSnapPoint,
         fromBaseLayoutConfig: snapPointFirst.layoutConfig
       );
@@ -180,13 +103,20 @@ extension AdaptiveModalSnapPointConfig {
         );
       };
       
-      items.append(initialSnapPointConfig);
+      let undershootSnapPoint = AdaptiveModalSnapPoint(
+        fromSnapPointConfig: initialSnapPointConfig,
+        index: 0,
+        type: .undershootSnapPoint
+      );
+      
+      items.append(undershootSnapPoint);
     };
     
     items += inBetweenSnapPoints.enumerated().map {
       .init(
-        fromBase: $0.element,
-        fallbackKey: .index($0.offset + 1)
+        fromSnapPointConfig: $0.element,
+        index: $0.offset + 1,
+        type: .snapPoint
       );
     };
     
@@ -194,12 +124,19 @@ extension AdaptiveModalSnapPointConfig {
        let snapPointLast = inBetweenSnapPoints.last {
        
       let overshootSnapPointConfig = AdaptiveModalSnapPointConfig(
-        key: .overshootPoint,
         fromSnapPointPreset: overshootSnapPoint,
         fromBaseLayoutConfig: snapPointLast.layoutConfig
       );
       
-      items.append(overshootSnapPointConfig);
+      let lastIndex = items.count - 1;
+      
+      let overshootSnapPoint = AdaptiveModalSnapPoint(
+        fromSnapPointConfig: overshootSnapPointConfig,
+        index: lastIndex,
+        type: .overshootSnapPoint
+      );
+      
+      items.append(overshootSnapPoint);
     };
     
     return items;
