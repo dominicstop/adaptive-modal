@@ -141,7 +141,7 @@ public struct AdaptiveModalConfig: Equatable {
     };
   };
   
-  public var snapPoints: [AdaptiveModalSnapPointConfig] {
+  public var snapPoints: [AdaptiveModalSnapPoint] {
     .Element.deriveSnapPoints(
       undershootSnapPoint: self.undershootSnapPoint,
       inBetweenSnapPoints: self.baseSnapPoints,

@@ -15,7 +15,7 @@ extension AdaptiveModalInterpolationPoint {
   /// but the compiler keeps getting confused when chaining array operation...
   typealias SnapPointsIndexed = (
     offset: Int,
-    element: AdaptiveModalSnapPointConfig
+    element: AdaptiveModalSnapPoint
   );
 
   static func itemsWithPercentCollision(interpolationPoints: [Self]) -> [Self] {
@@ -317,8 +317,9 @@ extension AdaptiveModalInterpolationPoint {
         let prevSnapPoint = inBetweenPoints[index];
         let nextKeyframe = inBetweenKeyframes[index];
         
-        let newSnapPoint: AdaptiveModalSnapPointConfig = .inBetweenSnapPoint(
+        let newSnapPoint = AdaptiveModalSnapPointConfig(
           key: prevSnapPoint.element.key,
+          mode: .inBetween,
           layoutConfig: prevSnapPoint.element.layoutConfig,
           keyframeConfig: nextKeyframe.element
         );
@@ -342,7 +343,7 @@ extension AdaptiveModalInterpolationPoint {
   public static func compute(
     usingConfig modalConfig: AdaptiveModalConfig,
     usingContext context: ComputableLayoutValueContext,
-    snapPoints: [AdaptiveModalSnapPointConfig]? = nil,
+    snapPoints: [AdaptiveModalSnapPoint]? = nil,
     shouldCheckForPercentCollision: Bool = true
   ) -> [Self] {
   
@@ -357,31 +358,34 @@ extension AdaptiveModalInterpolationPoint {
     var snapPointsInBetween: [SnapPointsIndexed] = [];
     
     snapPointsIndexed.forEach {
-      switch $0.element {
-        case .snapPoint:
+      switch $0.element.mode {
+        case .standard:
           snapPointsStandard.append($0);
           
-        case let .inBetweenSnapPoint(key, layoutConfig, keyframeConfig):
+        case .inBetween:
           let shouldComputedLayoutConfig =
-            layoutConfig != nil && layoutConfig != .zero;
+               $0.element.layoutConfig != nil
+            && $0.element.layoutConfig != .zero;
             
-          let shouldComputeKeyframe: Bool = {
-            guard let keyframeConfig = keyframeConfig else { return false };
-            
-            return
-                 keyframeConfig.modalScrollViewContentInsets != nil
-              || keyframeConfig.modalScrollViewVerticalScrollIndicatorInsets != nil
-              || keyframeConfig.modalScrollViewHorizontalScrollIndicatorInsets != nil
-          }();
+          let shouldComputeKeyframe: Bool = false//{
+          // guard let keyframeConfig = $0.element.keyframeConfig
+          //   else { return false };
+          //
+          //
+          //   return
+          //        keyframeConfig.modalScrollViewContentInsets != nil
+          //     || keyframeConfig.modalScrollViewVerticalScrollIndicatorInsets != nil
+          //     || keyframeConfig.modalScrollViewHorizontalScrollIndicatorInsets != nil
+          // }();
         
           guard shouldComputedLayoutConfig || shouldComputeKeyframe else {
             snapPointsInBetween.append($0);
             break;
           };
         
-          var nextKeyframeConfig = keyframeConfig ?? .init();
+          var nextKeyframeConfig = $0.element.keyframeConfig ?? .init();
           
-          if let layoutConfig = layoutConfig {
+          if let layoutConfig = $0.element.layoutConfig {
             nextKeyframeConfig.computedRect =
               layoutConfig.computeRect(usingLayoutValueContext: context);
           };
@@ -401,9 +405,12 @@ extension AdaptiveModalInterpolationPoint {
               insets.compute(usingLayoutValueContext: context);
           };
           
-          let newInBetweenSnapPoint: AdaptiveModalSnapPointConfig = .inBetweenSnapPoint(
-            key: key,
-            layoutConfig: layoutConfig,
+          let newInBetweenSnapPoint = AdaptiveModalSnapPoint(
+            index: $0.offset,
+            key: $0.element.key,
+            mode: .inBetween,
+            type: .snapPoint,
+            layoutConfig: $0.element.layoutConfig,
             keyframeConfig: nextKeyframeConfig
           );
           
@@ -441,7 +448,7 @@ extension AdaptiveModalInterpolationPoint {
           print(
             "Snap point collision - \($0.offset + 1)/\(collisions.count)",
             "\n - snapPointIndex: \($0.element.snapPointIndex)",
-            "\n - key: \($0.element.key)",
+            "\n - key: \($0.element.key ?? "N/A")",
             "\n - percent: \($0.element.percent)",
             "\n - computedRect: \($0.element.computedRect)",
             "\n"

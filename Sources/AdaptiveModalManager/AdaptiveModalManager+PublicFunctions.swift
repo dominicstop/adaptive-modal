@@ -151,7 +151,7 @@ public extension AdaptiveModalManager {
   func presentModal(
     viewControllerToPresent modalVC: UIViewController,
     presentingViewController targetVC: UIViewController,
-    snapPointKey: AdaptiveModalSnapPointConfig.SnapPointKey,
+    snapPointKey: String,
     animationConfig: AnimationConfig? = nil,
     extraAnimation: (() -> Void)? = nil,
     animated: Bool = true,
@@ -456,7 +456,6 @@ public extension AdaptiveModalManager {
   ///
   func snapTo(
     overrideSnapPointConfig: AdaptiveModalSnapPointConfig,
-    prevSnapPointConfigs: [AdaptiveModalSnapPointConfig]? = nil,
     overshootSnapPointPreset: AdaptiveModalSnapPointPreset? = .automatic,
     inBetweenSnapPointsMinPercentDiff: CGFloat = 0.1,
     isAnimated: Bool = true,
@@ -468,9 +467,6 @@ public extension AdaptiveModalManager {
     self._cleanupSnapPointOverride();
     
     let prevSnapPointConfigs: [AdaptiveModalSnapPointConfig] = {
-      if let prevSnapPointConfigs = prevSnapPointConfigs {
-        return prevSnapPointConfigs;
-      };
     
       let prevInterpolationPoints: [AdaptiveModalInterpolationPoint] = {
         let overrideInterpolationPoint = AdaptiveModalInterpolationPoint(
@@ -560,36 +556,17 @@ public extension AdaptiveModalManager {
   };
   
   func snapTo(
-    key: AdaptiveModalSnapPointConfig.SnapPointKey,
+    key: String,
     isAnimated: Bool = true,
     animationConfig: AnimationConfig? = nil,
     animationBlock: (() -> Void)? = nil,
     completion: (() -> Void)? = nil
   ) throws {
   
-    let matchingInterpolationPoint: AdaptiveModalInterpolationPoint? = {
-      switch key {
-        case let .index(indexKey):
-          return self.configInterpolationSteps?.first {
-            $0.snapPointIndex == indexKey;
-          };
+    let matchingInterpolationPoint = self.configInterpolationSteps.first {
+      $0.key == key;
+    };
           
-        case .string(_):
-          return self.configInterpolationSteps.first {
-            $0.key == key;
-          };
-          
-        case .undershootPoint:
-          return self.configInterpolationSteps?.first;
-          
-        case .overshootPoint:
-          return self.configInterpolationSteps?.last;
-          
-        case .unspecified:
-          return nil;
-      };
-    }();
-    
     guard let matchingInterpolationPoint = matchingInterpolationPoint else {
       throw NSError();
     };

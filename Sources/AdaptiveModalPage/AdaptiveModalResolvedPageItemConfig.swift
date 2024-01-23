@@ -13,7 +13,7 @@ public struct AdaptiveModalResolvedPageItemConfig {
   public var pageKey: String?;
 
   public var associatedSnapPoints: [(
-    snapPointKey: AdaptiveModalSnapPointConfig.SnapPointKey,
+    snapPointKey: String,
     snapPointIndex: Int
   )];
   
@@ -42,12 +42,12 @@ public struct AdaptiveModalResolvedPageItemConfig {
     self.viewController = pageConfig.viewController;
     
     self.associatedSnapPoints = matches.map {(
-      snapPointKey: $0.key,
+      snapPointKey: $0.key!,
       snapPointIndex: $0.snapPointIndex
     )};
   };
   
-  public func contains(key: AdaptiveModalSnapPointConfig.SnapPointKey) -> Bool {
+  public func contains(key: String) -> Bool {
     self.associatedSnapPoints.contains {
       $0.snapPointKey == key;
     };

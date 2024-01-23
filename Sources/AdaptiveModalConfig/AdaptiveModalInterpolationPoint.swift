@@ -29,7 +29,7 @@ public struct AdaptiveModalInterpolationPoint: Equatable {
   // MARK: - Properties - Config
   // ---------------------------
   
-  public var key: AdaptiveModalSnapPointConfig.SnapPointKey;
+  public var key: String?;
   public var percent: CGFloat;
   public var snapPointIndex: Int;
 

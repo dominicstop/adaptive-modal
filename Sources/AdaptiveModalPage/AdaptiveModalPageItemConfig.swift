@@ -11,7 +11,7 @@ import UIKit
 public struct AdaptiveModalPageItemConfig {
   public enum AssociatedSnapPoint: Equatable {
   
-    case key(AdaptiveModalSnapPointConfig.SnapPointKey);
+    case key(String);
     case index(Int);
   };
   
