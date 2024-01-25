@@ -36,8 +36,7 @@ extension AdaptiveModalManager {
     
     let nextIndex = self._adjustInterpolationIndex(for: nextIndexRaw);
     let nextInterpolationPoint = self.interpolationSteps[nextIndex];
-    let nextSnapPointConfig = self.currentSnapPoints[nextIndex];
-    
+
     guard prevIndex != nextIndex else { return };
     self.onModalWillSnapPrevIndex = nextIndex;
     
