@@ -29,9 +29,8 @@ public struct AdaptiveModalInterpolationPoint: Equatable {
   // MARK: - Properties - Config
   // ---------------------------
   
-  public var key: AdaptiveModalSnapPointConfig.SnapPointKey;
+  public var snapPoint: AdaptiveModalSnapPoint;
   public var percent: CGFloat;
-  public var snapPointIndex: Int;
 
   public var computedRect: CGRect;
   public var modalPadding: UIEdgeInsets;
@@ -325,21 +324,20 @@ public extension AdaptiveModalInterpolationPoint {
 
   init(
     usingModalConfig modalConfig: AdaptiveModalConfig,
-    snapPointIndex: Int,
     percent: CGFloat? = nil,
     layoutValueContext baseContext: ComputableLayoutValueContext,
-    snapPointConfig: AdaptiveModalSnapPointConfig,
+    snapPoint: AdaptiveModalSnapPoint,
     prevInterpolationPoint keyframePrev: Self? = nil
   ) {
-    self.key = snapPointConfig.key;
-    self.snapPointIndex = snapPointIndex;
+  
+    self.snapPoint = snapPoint;
     
     let computedRect: CGRect = {
-      if let computedRect = snapPointConfig.keyframeConfig?.computedRect {
+      if let computedRect = snapPoint.keyframeConfig?.computedRect {
         return computedRect;
       };
       
-      return snapPointConfig.layoutConfig.computeRect(
+      return snapPoint.layoutConfig.computeRect(
         usingLayoutValueContext: baseContext
       );
     }();
@@ -351,7 +349,7 @@ public extension AdaptiveModalInterpolationPoint {
     
     self.computedRect = computedRect;
     
-    self.modalPadding = snapPointConfig.layoutConfig.computePadding(
+    self.modalPadding = snapPoint.layoutConfig.computePadding(
       usingLayoutValueContext: context
     );
     
@@ -371,15 +369,15 @@ public extension AdaptiveModalInterpolationPoint {
             : percent;
             
         case .index:
-          let current = CGFloat(snapPointIndex + 1);
+          let current = CGFloat(snapPoint.index + 1);
           let max = CGFloat(modalConfig.snapPoints.count);
           
           return current / max;
       };
     }();
     
-    let isFirstSnapPoint = snapPointIndex == 0;
-    let keyframeCurrent = snapPointConfig.keyframeConfig;
+    let isFirstSnapPoint = snapPoint.index == 0;
+    let keyframeCurrent = snapPoint.keyframeConfig;
     
     self.allowSnapping = keyframeCurrent?.allowSnapping ?? true;
     

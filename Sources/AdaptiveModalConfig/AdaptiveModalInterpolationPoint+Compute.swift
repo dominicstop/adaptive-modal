@@ -10,13 +10,6 @@ import ComputableLayout
 import DGSwiftUtilities
 
 extension AdaptiveModalInterpolationPoint {
-  
-  /// Same as: `EnumeratedSequence<[AdaptiveModalSnapPointConfig]>`,
-  /// but the compiler keeps getting confused when chaining array operation...
-  typealias SnapPointsIndexed = (
-    offset: Int,
-    element: AdaptiveModalSnapPointConfig
-  );
 
   static func itemsWithPercentCollision(interpolationPoints: [Self]) -> [Self] {
     interpolationPoints.filter { interpolationPoint in
@@ -30,29 +23,28 @@ extension AdaptiveModalInterpolationPoint {
   static private func computeStandard(
     usingConfig modalConfig: AdaptiveModalConfig,
     usingContext context: ComputableLayoutValueContext,
-    snapPointsIndexed snapPoints: [SnapPointsIndexed]
+    snapPointsIndexed snapPoints: [AdaptiveModalSnapPoint]
   ) -> [Self] {
 
     var items: [AdaptiveModalInterpolationPoint] = [];
     
-    for (index, snapConfig) in snapPoints {
+    for snapPoint in snapPoints {
       items.append(
         AdaptiveModalInterpolationPoint(
           usingModalConfig: modalConfig,
-          snapPointIndex: index,
           layoutValueContext: context,
-          snapPointConfig: snapConfig,
+          snapPoint: snapPoint,
           prevInterpolationPoint: items.last
         )
       );
     };
     
     let firstSnapPoint = snapPoints.first {
-      $0.offset == 0;
+      $0.index == 0;
     };
     
     let secondInterpolationPoint = items.first {
-      $0.snapPointIndex == 1;
+      $0.snapPoint.index == 1;
     };
     
     if let firstSnapPoint = firstSnapPoint,
@@ -60,9 +52,8 @@ extension AdaptiveModalInterpolationPoint {
        
       items[0] = AdaptiveModalInterpolationPoint(
         usingModalConfig: modalConfig,
-        snapPointIndex: 0,
         layoutValueContext: context,
-        snapPointConfig: firstSnapPoint.element,
+        snapPoint: firstSnapPoint,
         prevInterpolationPoint: secondInterpolationPoint
       );
     };
@@ -73,16 +64,16 @@ extension AdaptiveModalInterpolationPoint {
   static private func computeInBetween(
     usingConfig modalConfig: AdaptiveModalConfig,
     usingContext context: ComputableLayoutValueContext,
-    snapPointsIndexed snapPoints: [SnapPointsIndexed],
+    snapPoints: [AdaptiveModalSnapPoint],
     standardInterpolationPoints: [Self],
     startPoint: Self,
     endPoint: Self?,
-    inBetweenPoints: [SnapPointsIndexed]
+    inBetweenPoints: [AdaptiveModalSnapPoint]
   ) -> [Self] {
   
     let snapPointPercentList: [CGFloat] = {
       let rangeInput = standardInterpolationPoints.map {
-        CGFloat($0.snapPointIndex);
+        CGFloat($0.snapPoint.index);
       };
       
       let rangeOutput = standardInterpolationPoints.map {
@@ -91,7 +82,7 @@ extension AdaptiveModalInterpolationPoint {
       
       return snapPoints.map {
         AdaptiveModalUtilities.interpolate(
-          inputValue: CGFloat($0.offset),
+          inputValue: CGFloat($0.index),
           rangeInput: rangeInput,
           rangeOutput: rangeOutput
         )!;
@@ -99,8 +90,8 @@ extension AdaptiveModalInterpolationPoint {
     }();
     
     var inBetweenKeyframes = inBetweenPoints.map {(
-      offset: $0.offset,
-      element: $0.element.keyframeConfig ?? .init()
+      offset: $0.index,
+      element: $0.keyframeConfig ?? .init()
     )};
     
     func getRangeInputOutput<T>(
@@ -118,8 +109,8 @@ extension AdaptiveModalInterpolationPoint {
       ));
       
       rangeInputOutput += inBetweenPoints.compactMap {
-        guard let keyframeConfig = $0.element.keyframeConfig,
-              let rangeInput = snapPointPercentList[safeIndex: $0.offset],
+        guard let keyframeConfig = $0.keyframeConfig,
+              let rangeInput = snapPointPercentList[safeIndex: $0.index],
               let rangeOutput = keyframeConfig[keyPath: keyframeKey]
         else {
           return nil;
@@ -310,23 +301,22 @@ extension AdaptiveModalInterpolationPoint {
       );
     };
     
-    let inBetweenPointsMerged: [SnapPointsIndexed] = {
-      var items: [SnapPointsIndexed] = [];
+    let inBetweenPointsMerged: [AdaptiveModalSnapPoint] = {
+      var items: [AdaptiveModalSnapPoint] = [];
       
       for index in 0 ..< inBetweenPoints.count {
         let prevSnapPoint = inBetweenPoints[index];
         let nextKeyframe = inBetweenKeyframes[index];
         
-        let newSnapPoint: AdaptiveModalSnapPointConfig = .inBetweenSnapPoint(
-          key: prevSnapPoint.element.key,
-          layoutConfig: prevSnapPoint.element.layoutConfig,
+        let newSnapPoint = AdaptiveModalSnapPoint(
+          key: prevSnapPoint.key,
+          index: prevSnapPoint.index,
+          mode: .inBetween(layoutConfig: prevSnapPoint.layoutConfig),
+          type: .snapPoint,
           keyframeConfig: nextKeyframe.element
         );
         
-        items.append((
-          offset: prevSnapPoint.offset,
-          element: newSnapPoint
-        ));
+        items.append(newSnapPoint);
       };
       
       return items;
@@ -342,31 +332,28 @@ extension AdaptiveModalInterpolationPoint {
   public static func compute(
     usingConfig modalConfig: AdaptiveModalConfig,
     usingContext context: ComputableLayoutValueContext,
-    snapPoints: [AdaptiveModalSnapPointConfig]? = nil,
+    snapPoints: [AdaptiveModalSnapPoint]? = nil,
     shouldCheckForPercentCollision: Bool = true
   ) -> [Self] {
   
     let snapPoints = snapPoints ?? modalConfig.snapPoints;
+
+    var snapPointsStandard: [AdaptiveModalSnapPoint] = [];
+    var snapPointsInBetween: [AdaptiveModalSnapPoint] = [];
     
-    let snapPointsIndexed: [SnapPointsIndexed] = snapPoints.enumerated().map {(
-      offset: $0.offset,
-      element: $0.element
-    )};
-    
-    var snapPointsStandard: [SnapPointsIndexed] = [];
-    var snapPointsInBetween: [SnapPointsIndexed] = [];
-    
-    snapPointsIndexed.forEach {
-      switch $0.element {
-        case .snapPoint:
+    snapPoints.forEach {
+      switch $0.mode {
+        case .standard:
           snapPointsStandard.append($0);
           
-        case let .inBetweenSnapPoint(key, layoutConfig, keyframeConfig):
+        case let .inBetween(layoutConfig):
+          var snapPoint = $0;
+          
           let shouldComputedLayoutConfig =
             layoutConfig != nil && layoutConfig != .zero;
             
           let shouldComputeKeyframe: Bool = {
-            guard let keyframeConfig = keyframeConfig else { return false };
+            guard let keyframeConfig = snapPoint.keyframeConfig else { return false };
             
             return
                  keyframeConfig.modalScrollViewContentInsets != nil
@@ -375,11 +362,11 @@ extension AdaptiveModalInterpolationPoint {
           }();
         
           guard shouldComputedLayoutConfig || shouldComputeKeyframe else {
-            snapPointsInBetween.append($0);
+            snapPointsInBetween.append(snapPoint);
             break;
           };
         
-          var nextKeyframeConfig = keyframeConfig ?? .init();
+          var nextKeyframeConfig = $0.keyframeConfig ?? .init();
           
           if let layoutConfig = layoutConfig {
             nextKeyframeConfig.computedRect =
@@ -400,17 +387,9 @@ extension AdaptiveModalInterpolationPoint {
             nextKeyframeConfig.computedModalScrollViewHorizontalScrollIndicatorInsets =
               insets.compute(usingLayoutValueContext: context);
           };
-          
-          let newInBetweenSnapPoint: AdaptiveModalSnapPointConfig = .inBetweenSnapPoint(
-            key: key,
-            layoutConfig: layoutConfig,
-            keyframeConfig: nextKeyframeConfig
-          );
-          
-          snapPointsInBetween.append((
-            offset: $0.offset,
-            element: newInBetweenSnapPoint
-          ));
+ 
+          snapPoint.keyframeConfig = nextKeyframeConfig;
+          snapPointsInBetween.append(snapPoint);
       };
     };
     
@@ -440,8 +419,8 @@ extension AdaptiveModalInterpolationPoint {
         collisions.enumerated().forEach {
           print(
             "Snap point collision - \($0.offset + 1)/\(collisions.count)",
-            "\n - snapPointIndex: \($0.element.snapPointIndex)",
-            "\n - key: \($0.element.key)",
+            "\n - snapPointIndex: \($0.element.snapPoint.index)",
+            "\n - key: \($0.element.snapPoint.key ?? "N/A")",
             "\n - percent: \($0.element.percent)",
             "\n - computedRect: \($0.element.computedRect)",
             "\n"
@@ -462,7 +441,7 @@ extension AdaptiveModalInterpolationPoint {
     typealias QueueItem = (
       startPoint: Self,
       endPoint: Self?,
-      inBetweenSnapPoints: [SnapPointsIndexed]
+      inBetweenSnapPoints: [AdaptiveModalSnapPoint]
     );
     
     let queue: [QueueItem] = {
@@ -474,46 +453,50 @@ extension AdaptiveModalInterpolationPoint {
       while currentIndex < snapPoints.count {
         
         // standard snap point - start
-        let snapPointStart = snapPointsIndexed.first {
-          guard $0.offset >= currentIndex else {
+        let snapPointStart = snapPoints.first {
+          guard $0.index >= currentIndex else {
             return false;
           };
           
-          let snapPointCurrent = snapPoints[$0.offset];
-          let snapPointNext    = snapPoints[safeIndex: $0.offset + 1];
+          let snapPointCurrent = snapPoints[$0.index];
+          
+          guard let snapPointNext = snapPoints[safeIndex: $0.index + 1]
+          else { return false };
 
           return (
-               snapPointCurrent.mode == .standard
-            && snapPointNext?.mode   == .inBetween
+               snapPointCurrent.mode.isStandard
+            && snapPointNext.mode.isInBetween
           );
         };
         
         // standard snap point - end
-        let snapPointEnd = snapPointsIndexed.first {
-          guard $0.offset >= currentIndex else {
+        let snapPointEnd = snapPoints.first {
+          guard $0.index >= currentIndex else {
             return false;
           };
           
-          let snapPointCurrent = snapPoints[$0.offset];
-          let snapPointPrev    = snapPoints[safeIndex: $0.offset - 1];
+          let snapPointCurrent = snapPoints[$0.index];
+          
+          guard let snapPointPrev = snapPoints[safeIndex: $0.index - 1]
+          else { return false };
           
           return (
-               snapPointCurrent.mode == .standard
-            && snapPointPrev?.mode   == .inBetween
+               snapPointCurrent.mode.isStandard
+            && snapPointPrev.mode.isInBetween
           );
         };
         
         guard let snapPointStart = snapPointStart else { break };
         
         let interpolationPointStart = interpolationPointsStandard.first {
-          $0.snapPointIndex == snapPointStart.offset;
+          $0.snapPoint.index == snapPointStart.index;
         };
         
         let interpolationPointEnd: Self? = {
           guard let snapPointEnd = snapPointEnd else { return nil };
           
           return interpolationPointsStandard.first {
-            $0.snapPointIndex == snapPointEnd.offset;
+            $0.snapPoint.index == snapPointEnd.index;
           };
         }();
         
@@ -523,11 +506,14 @@ extension AdaptiveModalInterpolationPoint {
         /// "in-between snap point", i.e. snap points between
         /// `snapPointStart` (exclusive) and `snapPointEnd` (exclusive)
         ///
-        let inBetweenSnapPoints: [SnapPointsIndexed] = snapPointsIndexed.compactMap {
-          let minIndex = interpolationPointStart.snapPointIndex;
-          let maxIndex = interpolationPointEnd?.snapPointIndex ?? lastIndex + 1;
+        let inBetweenSnapPoints: [AdaptiveModalSnapPoint] = snapPoints.compactMap {
+          let minIndex = interpolationPointStart.snapPoint.index;
           
-          guard $0.offset > minIndex && $0.offset < maxIndex else { return nil };
+          let maxIndex =
+               interpolationPointEnd?.snapPoint.index
+            ?? lastIndex + 1;
+          
+          guard $0.index > minIndex && $0.index < maxIndex else { return nil };
           return $0;
         };
         
@@ -537,7 +523,7 @@ extension AdaptiveModalInterpolationPoint {
           inBetweenSnapPoints: inBetweenSnapPoints
         ));
         
-        currentIndex = snapPointEnd?.offset ?? lastIndex;
+        currentIndex = snapPointEnd?.index ?? lastIndex;
         currentIndex += 1;
       };
       
@@ -559,7 +545,7 @@ extension AdaptiveModalInterpolationPoint {
         let inBetweenPoints = Self.computeInBetween(
           usingConfig: modalConfig,
           usingContext: context,
-          snapPointsIndexed: snapPointsIndexed,
+          snapPoints: snapPoints,
           standardInterpolationPoints: interpolationPointsStandard,
           startPoint: $0.startPoint,
           endPoint: $0.endPoint,
@@ -572,17 +558,17 @@ extension AdaptiveModalInterpolationPoint {
       return items;
     }();
     
-    let interpolationPointsCombined = snapPointsIndexed.compactMap {
-      let currentIndex = $0.offset;
+    let interpolationPointsCombined = snapPoints.compactMap {
+      let currentIndex = $0.index;
       
-      if $0.element.mode == .standard {
+      if $0.mode.isStandard {
         return interpolationPointsStandard.first {
-          $0.snapPointIndex == currentIndex;
+          $0.snapPoint.index == currentIndex;
         };
       };
       
       return interpolationPointsInBetween.first {
-        $0.snapPointIndex == currentIndex;
+        $0.snapPoint.index == currentIndex;
       };
     };
     

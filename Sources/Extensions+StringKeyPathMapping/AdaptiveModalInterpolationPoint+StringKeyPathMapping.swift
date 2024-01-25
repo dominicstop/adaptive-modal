@@ -12,7 +12,7 @@ extension AdaptiveModalInterpolationPoint: StringKeyPathMapping {
 
   public static var partialKeyPathMap: Dictionary<String, PartialKeyPath<Self>> = [
     "percent": \.percent,
-    "snapPointIndex": \.snapPointIndex,
+    "snapPoint": \.snapPoint,
     "computedRect": \.computedRect,
     "modalPadding": \.modalPadding,
     "allowSnapping": \.allowSnapping,

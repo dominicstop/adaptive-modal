@@ -9,6 +9,7 @@ import UIKit
 import ComputableLayout
 import DGSwiftUtilities
 
+
 public struct AdaptiveModalConfig: Equatable {
 
   // MARK: - Types
@@ -141,7 +142,7 @@ public struct AdaptiveModalConfig: Equatable {
     };
   };
   
-  public var snapPoints: [AdaptiveModalSnapPointConfig] {
+  public var snapPoints: [AdaptiveModalSnapPoint] {
     .Element.deriveSnapPoints(
       undershootSnapPoint: self.undershootSnapPoint,
       inBetweenSnapPoints: self.baseSnapPoints,
@@ -281,10 +282,8 @@ public struct AdaptiveModalConfig: Equatable {
         var firstKeyframe = firstSnapPoint.keyframeConfig;
         firstKeyframe?.setNonNilValues(using: .defaultFirstKeyframe);
          
-        snapPointsNew[0] = .init(
-          fromBase: firstSnapPoint,
-          newAnimationKeyframe: firstKeyframe ?? .defaultFirstKeyframe
-        );
+        snapPointsNew[0].keyframeConfig =
+          firstKeyframe ?? .defaultFirstKeyframe;
       };
       
       return snapPointsNew;
