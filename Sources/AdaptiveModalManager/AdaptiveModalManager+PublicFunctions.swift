@@ -531,10 +531,12 @@ public extension AdaptiveModalManager {
     overrideSnapPoints.append(overrideSnapPoint);
     
     if let overshootSnapPointConfig = overshootSnapPointConfig {
+      let lastIndex = overrideSnapPoints.count - 1;
+      
       let overshootSnapPoint = AdaptiveModalSnapPoint(
         fromSnapPointConfig: overshootSnapPointConfig,
         type: .overshootSnapPoint,
-        index: overrideSnapPoints.count - 1
+        index: lastIndex + 1
       );
       
       overrideSnapPoints.append(overshootSnapPoint);
