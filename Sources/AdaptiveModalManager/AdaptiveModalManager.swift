@@ -1687,14 +1687,14 @@ public class AdaptiveModalManager: NSObject {
         : nextIndex + 1;
     };
     
-    let overshootIndex = self.currentModalConfig.overshootSnapPointIndex;
-    
-    if let overshootIndex = overshootIndex,
-       nextIndex == overshootIndex {
-       
+    if let lastSnapPoint = self.currentSnapPoints.last,
+       lastSnapPoint.type == .overshootSnapPoint,
+       nextIndex >= lastSnapPoint.index,
+       self.currentSnapPoints.count >= 3  {
+      
       return self.canSnapToOverShootSnapPoint
         ? nextIndex
-        : overshootIndex - 1;
+        : nextIndex - 1;
     };
     
     return nextIndex;
