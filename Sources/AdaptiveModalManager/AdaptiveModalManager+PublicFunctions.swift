@@ -93,7 +93,8 @@ public extension AdaptiveModalManager {
         shouldExcludeUndershootSnapPoint: true
       );
       
-      self.currentConfigInterpolationIndex = closestSnapPoint?.interpolationIndex
+      self.currentConfigInterpolationIndex =
+           closestSnapPoint?.interpolationPoint.snapPoint.index
         ?? self.currentConfigInterpolationIndex;
       
       let shouldUpdateDragHandleConstraints: Bool = {
@@ -151,21 +152,21 @@ public extension AdaptiveModalManager {
   func presentModal(
     viewControllerToPresent modalVC: UIViewController,
     presentingViewController targetVC: UIViewController,
-    snapPointKey: AdaptiveModalSnapPointConfig.SnapPointKey,
+    snapPointKey: String?,
     animationConfig: AnimationConfig? = nil,
     extraAnimation: (() -> Void)? = nil,
     animated: Bool = true,
     completion: (() -> Void)? = nil
   ) {
   
-    let snapPointMatch = self.interpolationSteps.first {
-      $0.key == snapPointKey;
+    let match = self.interpolationSteps.first {
+      $0.snapPoint.key == snapPointKey;
     };
   
     self.presentModal(
       viewControllerToPresent: modalVC,
       presentingViewController: targetVC,
-      snapPointIndex: snapPointMatch?.snapPointIndex,
+      snapPointIndex: match?.snapPoint.index,
       animated: animated,
       animationConfig: animationConfig,
       extraAnimation: extraAnimation,
@@ -357,7 +358,7 @@ public extension AdaptiveModalManager {
     );
     
     let nextInterpolationIndex = self._adjustInterpolationIndex(
-      for: closestSnapPoint?.interpolationIndex ?? 1
+      for: closestSnapPoint?.interpolationPoint.snapPoint.index ?? 1
     );
     
     let nextInterpolationPoint =
@@ -440,9 +441,6 @@ public extension AdaptiveModalManager {
   /// Parameters
   /// * `overrideSnapPointConfig`: The custom snap point you want to snap to.
   ///
-  /// * `prevSnapPointConfigs`: The snap points that precede the
-  /// `overrideSnapPointConfig.
-  ///
   ///   * Once you snap to any of these points, the
   ///     override snap point will be cleared automatically.
   ///
@@ -456,7 +454,6 @@ public extension AdaptiveModalManager {
   ///
   func snapTo(
     overrideSnapPointConfig: AdaptiveModalSnapPointConfig,
-    prevSnapPointConfigs: [AdaptiveModalSnapPointConfig]? = nil,
     overshootSnapPointPreset: AdaptiveModalSnapPointPreset? = .automatic,
     inBetweenSnapPointsMinPercentDiff: CGFloat = 0.1,
     isAnimated: Bool = true,
@@ -467,17 +464,18 @@ public extension AdaptiveModalManager {
   
     self._cleanupSnapPointOverride();
     
-    let prevSnapPointConfigs: [AdaptiveModalSnapPointConfig] = {
-      if let prevSnapPointConfigs = prevSnapPointConfigs {
-        return prevSnapPointConfigs;
-      };
+    var overrideSnapPoint = AdaptiveModalSnapPoint(
+      fromSnapPointConfig: overrideSnapPointConfig,
+      type: .snapPoint,
+      index: 1 // placeholder index...
+    );
     
+    let prevSnapPoints: [AdaptiveModalSnapPoint] = {
       let prevInterpolationPoints: [AdaptiveModalInterpolationPoint] = {
         let overrideInterpolationPoint = AdaptiveModalInterpolationPoint(
           usingModalConfig: self.currentModalConfig,
-          snapPointIndex: 1,
           layoutValueContext: self._layoutValueContext,
-          snapPointConfig: overrideSnapPointConfig
+          snapPoint: overrideSnapPoint
         );
         
         let items = self.configInterpolationSteps.filter {
@@ -496,7 +494,7 @@ public extension AdaptiveModalManager {
       }();
     
       return prevInterpolationPoints.map {
-        self.currentModalConfig.snapPoints[$0.snapPointIndex];
+        self.currentModalConfig.snapPoints[$0.snapPoint.index];
       };
     }();
     
@@ -525,17 +523,26 @@ public extension AdaptiveModalManager {
         fromBaseLayoutConfig: overrideSnapPointConfig.layoutConfig
       );
     }();
-  
-    var snapPoints = prevSnapPointConfigs;
-    snapPoints.append(overrideSnapPointConfig);
+    
+    // make copy...
+    var overrideSnapPoints = prevSnapPoints;
+    
+    overrideSnapPoint.index = overrideSnapPoints.count - 1;
+    overrideSnapPoints.append(overrideSnapPoint);
     
     if let overshootSnapPointConfig = overshootSnapPointConfig {
-      snapPoints.append(overshootSnapPointConfig);
+      let overshootSnapPoint = AdaptiveModalSnapPoint(
+        fromSnapPointConfig: overshootSnapPointConfig,
+        type: .overshootSnapPoint,
+        index: overrideSnapPoints.count - 1
+      );
+      
+      overrideSnapPoints.append(overshootSnapPoint);
     };
     
-    let nextInterpolationPointIndex = prevSnapPointConfigs.count;
+    let nextInterpolationPointIndex = prevSnapPoints.count;
     
-    self.overrideSnapPoints = snapPoints;
+    self.overrideSnapPoints = overrideSnapPoints;
     self._computeSnapPoints();
     
     guard let overrideInterpolationPoints = self.overrideInterpolationPoints,
@@ -560,42 +567,36 @@ public extension AdaptiveModalManager {
   };
   
   func snapTo(
-    key: AdaptiveModalSnapPointConfig.SnapPointKey,
+    key: String?,
+    type: AdaptiveModalSnapPointType? = nil,
     isAnimated: Bool = true,
     animationConfig: AnimationConfig? = nil,
     animationBlock: (() -> Void)? = nil,
     completion: (() -> Void)? = nil
   ) throws {
   
-    let matchingInterpolationPoint: AdaptiveModalInterpolationPoint? = {
-      switch key {
-        case let .index(indexKey):
-          return self.configInterpolationSteps?.first {
-            $0.snapPointIndex == indexKey;
-          };
-          
-        case .string(_):
-          return self.configInterpolationSteps.first {
-            $0.key == key;
-          };
-          
-        case .undershootPoint:
-          return self.configInterpolationSteps?.first;
-          
-        case .overshootPoint:
-          return self.configInterpolationSteps?.last;
-          
-        case .unspecified:
-          return nil;
-      };
-    }();
+    guard key != nil && type != nil else {
+      throw NSError();
+    };
+  
+    let matchingInterpolationPoint = self.configInterpolationSteps.first {
+      let isMatchKey = key == nil
+        ? true
+        : key == $0.snapPoint.key;
+        
+      let isMatchType = type == nil
+        ? true
+        : type == $0.snapPoint.type;
+    
+      return isMatchKey && isMatchType;
+    };
     
     guard let matchingInterpolationPoint = matchingInterpolationPoint else {
       throw NSError();
     };
     
     self.nextConfigInterpolationIndex =
-      matchingInterpolationPoint.snapPointIndex;
+      matchingInterpolationPoint.snapPoint.index;
     
     self.modalStateMachine.setState(.SNAPPING_PROGRAMMATIC);
     self._notifyOnModalWillSnap(shouldSetState: false);

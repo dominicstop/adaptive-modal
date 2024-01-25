@@ -244,7 +244,7 @@ public class AdaptiveModalManager: NSObject {
     }
   };
   
-  var overrideSnapPoints: [AdaptiveModalSnapPointConfig]?;
+  var overrideSnapPoints: [AdaptiveModalSnapPoint]?;
   var overrideInterpolationPoints: [AdaptiveModalInterpolationPoint]?;
   
   var currentOverrideInterpolationStep: AdaptiveModalInterpolationPoint? {
@@ -335,7 +335,7 @@ public class AdaptiveModalManager: NSObject {
         };
       }();
       
-      self.prevSnapPointConfig = {
+      self.prevSnapPoint = {
         if self.isOverridingSnapPoints,
            let overrideSnapPoints = self.overrideSnapPoints {
           
@@ -381,7 +381,7 @@ public class AdaptiveModalManager: NSObject {
     return rootView.frame[keyPath: self.currentModalConfig.maxInputRangeKeyForRect];
   };
   
-  public var currentSnapPoints: [AdaptiveModalSnapPointConfig] {
+  public var currentSnapPoints: [AdaptiveModalSnapPoint] {
     if self.shouldUseOverrideSnapPoints,
        let overrideSnapPoints = self.overrideSnapPoints {
       
@@ -391,11 +391,11 @@ public class AdaptiveModalManager: NSObject {
     return self.currentModalConfig.snapPoints;
   };
   
-  public internal(set) var prevSnapPointConfig: AdaptiveModalSnapPointConfig?;
+  public internal(set) var prevSnapPoint: AdaptiveModalSnapPoint?;
   
-  public var currentSnapPointConfig: AdaptiveModalSnapPointConfig {
+  public var currentSnapPoint: AdaptiveModalSnapPoint {
     return self.currentSnapPoints[
-      self.currentInterpolationStep.snapPointIndex
+      self.currentInterpolationStep.snapPoint.index
     ];
   };
   
@@ -767,7 +767,7 @@ public class AdaptiveModalManager: NSObject {
   };
   
   public var currentSnapPointIndex: Int {
-    self.currentInterpolationStep.snapPointIndex
+    self.currentInterpolationStep.snapPoint.index;
   };
   
   public var canSnapToUnderShootSnapPoint: Bool {
@@ -1836,7 +1836,6 @@ public class AdaptiveModalManager: NSObject {
     forCoord coord: CGFloat? = nil,
     shouldIgnoreAllowSnapping: Bool = false
   ) -> (
-    interpolationIndex: Int,
     interpolationPoint: AdaptiveModalInterpolationPoint,
     snapDistance: CGFloat
   )? {
@@ -1862,7 +1861,7 @@ public class AdaptiveModalManager: NSObject {
       ];
       
       return (
-        index: $0.snapPointIndex,
+        index: $0.snapPoint.index,
         delta: abs(inputCoord - coord)
       );
     };
@@ -1886,7 +1885,6 @@ public class AdaptiveModalManager: NSObject {
       self.interpolationSteps[closestInterpolationIndex];
     
     return (
-      interpolationIndex: closestInterpolationIndex,
       interpolationPoint: interpolationPoint,
       snapDistance: delta[closestInterpolationIndex].delta
     );
@@ -1897,8 +1895,6 @@ public class AdaptiveModalManager: NSObject {
     shouldIgnoreAllowSnapping: Bool = false,
     shouldExcludeUndershootSnapPoint: Bool
   ) -> (
-    interpolationIndex: Int,
-    snapPointConfig: AdaptiveModalSnapPointConfig,
     interpolationPoint: AdaptiveModalInterpolationPoint,
     snapDistance: CGFloat
   )? {
@@ -1907,7 +1903,7 @@ public class AdaptiveModalManager: NSObject {
       guard !shouldIgnoreAllowSnapping else {
         if shouldExcludeUndershootSnapPoint {
           return self.interpolationSteps.filter {
-            $0.key != .undershootPoint;
+            $0.snapPoint.type != .undershootSnapPoint;
           };
         };
         
@@ -1916,7 +1912,7 @@ public class AdaptiveModalManager: NSObject {
       
       return self.interpolationSteps.filter {
         return shouldExcludeUndershootSnapPoint
-          ? $0.allowSnapping && $0.key != .undershootPoint
+          ? $0.allowSnapping && $0.snapPoint.type != .undershootSnapPoint
           : $0.allowSnapping
       };
     }();
@@ -1932,7 +1928,7 @@ public class AdaptiveModalManager: NSObject {
       };
       
       return (
-        snapPointIndex: item.snapPointIndex,
+        snapPointIndex: item.snapPoint.index,
         deltas: deltas
       );
     };
@@ -1966,12 +1962,8 @@ public class AdaptiveModalManager: NSObject {
     
     let closestInterpolationPoint =
       self.interpolationSteps[closestInterpolationPointIndex];
-    
+      
     return (
-      interpolationIndex: closestInterpolationPointIndex,
-      snapPointConfig:
-        self.currentModalConfig.snapPoints[closestInterpolationPointIndex],
-        
       interpolationPoint: closestInterpolationPoint,
       snapDistance: deltaAvg[firstMatch.offset].delta
     );
@@ -2280,8 +2272,9 @@ public class AdaptiveModalManager: NSObject {
       
     guard let closestSnapPoint = closestSnapPoint else { return };
     
-    let nextInterpolationIndex =
-      self._adjustInterpolationIndex(for: closestSnapPoint.interpolationIndex);
+    let nextInterpolationIndex = self._adjustInterpolationIndex(
+      for: closestSnapPoint.interpolationPoint.snapPoint.index
+    );
     
     let nextInterpolationPoint =
       self.interpolationSteps[nextInterpolationIndex];
@@ -2365,7 +2358,7 @@ public class AdaptiveModalManager: NSObject {
         case let .keyframe(keyframe):
           return .init(
             layoutPreset: .layoutConfig(
-              self.currentSnapPointConfig.layoutConfig
+              self.currentSnapPoint.layoutConfig
             ),
             keyframeConfig: keyframe
           );
@@ -2378,22 +2371,23 @@ public class AdaptiveModalManager: NSObject {
     if let undershootSnapPoint = undershootSnapPoint {
       self._clearAnimators();
     
-      let currentSnapPoint: AdaptiveModalSnapPointConfig = {
+      let currentSnapPointConfig: AdaptiveModalSnapPointConfig = {
         var newKeyframe = AdaptiveModalKeyframeConfig(
           fromInterpolationPoint: self.currentInterpolationStep
         );
         
         newKeyframe.computedRect = nil;
-        return .snapPoint(
-          key: self.currentSnapPointConfig.key,
-          layoutConfig: self.currentSnapPointConfig.layoutConfig,
+        
+        return AdaptiveModalSnapPointConfig(
+          key: self.currentSnapPoint.key,
+          layoutConfig: self.currentSnapPoint.layoutConfig,
           keyframeConfig: newKeyframe
         );
       }();
       
-      let snapPoints = AdaptiveModalSnapPointConfig.deriveSnapPoints(
+      let snapPoints = AdaptiveModalSnapPoint.deriveSnapPoints(
         undershootSnapPoint: undershootSnapPoint,
-        inBetweenSnapPoints: [currentSnapPoint],
+        inBetweenSnapPoints: [currentSnapPointConfig],
         overshootSnapPoint: nil
       );
 
