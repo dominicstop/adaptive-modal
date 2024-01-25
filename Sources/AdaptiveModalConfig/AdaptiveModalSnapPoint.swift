@@ -128,7 +128,7 @@ extension AdaptiveModalSnapPoint {
       let overshootSnapPoint = AdaptiveModalSnapPoint(
         fromSnapPointConfig: overshootSnapPointConfig,
         type: .overshootSnapPoint,
-        index: lastIndex
+        index: lastIndex + 1
       );
       
       items.append(overshootSnapPoint);
