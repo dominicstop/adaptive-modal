@@ -12,14 +12,13 @@ extension AdaptiveModalPageViewController: AdaptiveModalPresentationEventsNotifi
 
   public func notifyOnModalWillSnap(
     sender: AdaptiveModalManager,
-    prevSnapPointIndex: Int?,
-    nextSnapPointIndex: Int,
-    prevSnapPointConfig: AdaptiveModalSnapPointConfig?,
-    nextSnapPointConfig: AdaptiveModalSnapPointConfig,
     prevInterpolationPoint: AdaptiveModalInterpolationPoint?,
     nextInterpolationPoint: AdaptiveModalInterpolationPoint
   ) {
-  
+    
+    let prevSnapPointIndex = prevInterpolationPoint?.snapPoint.index;
+    let nextSnapPointIndex = nextInterpolationPoint.snapPoint.index;
+    
     guard let resolvedPages = self.resolvedPages,
           let nextPage = resolvedPages[safeIndex: nextSnapPointIndex]
     else { return };
@@ -58,13 +57,12 @@ extension AdaptiveModalPageViewController: AdaptiveModalPresentationEventsNotifi
   
   public func notifyOnModalDidSnap(
     sender: AdaptiveModalManager,
-    prevSnapPointIndex: Int?,
-    currentSnapPointIndex: Int,
-    prevSnapPointConfig: AdaptiveModalSnapPointConfig?,
-    currentSnapPointConfig: AdaptiveModalSnapPointConfig,
     prevInterpolationPoint: AdaptiveModalInterpolationPoint?,
     currentInterpolationPoint: AdaptiveModalInterpolationPoint
   ) {
+    
+    let prevSnapPointIndex = prevInterpolationPoint?.snapPoint.index;
+    let currentSnapPointIndex = currentInterpolationPoint.snapPoint.index;
     
     guard let resolvedPages = self.resolvedPages,
           let currentPage = resolvedPages[safeIndex: currentSnapPointIndex]

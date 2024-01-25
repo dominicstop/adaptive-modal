@@ -170,25 +170,19 @@ extension ModalViewController: AdaptiveModalPresentationEventsNotifiable {
 
   func notifyOnModalWillSnap(
     sender: AdaptiveModalManager,
-    prevSnapPointIndex: Int?,
-    nextSnapPointIndex: Int,
-    prevSnapPointConfig: AdaptiveModalSnapPointConfig?,
-    nextSnapPointConfig: AdaptiveModalSnapPointConfig,
     prevInterpolationPoint: AdaptiveModalInterpolationPoint?,
     nextInterpolationPoint: AdaptiveModalInterpolationPoint
   ) {
+    let nextSnapPointIndex = nextInterpolationPoint.snapPoint.index;
     self.snapPointIndex = nextSnapPointIndex;
   };
   
   func notifyOnModalDidSnap(
     sender: AdaptiveModalManager,
-    prevSnapPointIndex: Int?,
-    currentSnapPointIndex: Int,
-    prevSnapPointConfig: AdaptiveModalSnapPointConfig?,
-    currentSnapPointConfig: AdaptiveModalSnapPointConfig,
     prevInterpolationPoint: AdaptiveModalInterpolationPoint?,
     currentInterpolationPoint: AdaptiveModalInterpolationPoint
   ) {
+    let currentSnapPointIndex = currentInterpolationPoint.snapPoint.index;
     self.snapPointIndex = currentSnapPointIndex;
   };
   

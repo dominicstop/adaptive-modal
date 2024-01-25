@@ -30,7 +30,7 @@ extension AdaptiveModalManager {
     
       let closestSnapPoint = self._getClosestSnapPoint();
       
-      return closestSnapPoint?.interpolationPoint.snapPointIndex
+      return closestSnapPoint?.interpolationPoint.snapPoint.index
         ?? self.currentInterpolationIndex;
     }();
     
@@ -110,10 +110,6 @@ extension AdaptiveModalManager {
     self.presentationEventsDelegate.invoke {
       $0.notifyOnModalWillSnap(
         sender: self,
-        prevSnapPointIndex: prevIndex,
-        nextSnapPointIndex: nextIndex,
-        prevSnapPointConfig: self.prevSnapPointConfig,
-        nextSnapPointConfig: nextSnapPointConfig,
         prevInterpolationPoint: self.prevInterpolationStep,
         nextInterpolationPoint: nextInterpolationPoint
       );
@@ -177,10 +173,6 @@ extension AdaptiveModalManager {
     self.presentationEventsDelegate.invoke {
       $0.notifyOnModalDidSnap(
         sender: self,
-        prevSnapPointIndex: self.prevInterpolationIndex,
-        currentSnapPointIndex: self.currentSnapPointIndex,
-        prevSnapPointConfig: self.prevSnapPointConfig,
-        currentSnapPointConfig: self.currentSnapPointConfig,
         prevInterpolationPoint: self.prevInterpolationStep,
         currentInterpolationPoint: self.currentInterpolationStep
       );
