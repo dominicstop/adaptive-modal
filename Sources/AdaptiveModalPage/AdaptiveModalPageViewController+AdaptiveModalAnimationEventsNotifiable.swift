@@ -17,7 +17,7 @@ extension AdaptiveModalPageViewController: AdaptiveModalAnimationEventsNotifiabl
     isAnimated: Bool
   ) {
   
-    let nextSnapPointIndex = interpolationPoint.snapPointIndex;
+    let nextSnapPointIndex = interpolationPoint.snapPoint.index;
     
     guard let resolvedPages = self.resolvedPages,
           let nextPage = resolvedPages[safeIndex: nextSnapPointIndex]

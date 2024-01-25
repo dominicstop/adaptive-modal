@@ -7,13 +7,15 @@
 
 import UIKit
 
-
+// TODO: Rename to AdaptiveModalPageItem
+// * E.g. `AdaptiveModalPageItemConfig` -> `AdaptiveModalPageItem`
 public struct AdaptiveModalResolvedPageItemConfig {
   
   public var pageKey: String?;
-
+  
+  /// The snap points associated to this page
   public var associatedSnapPoints: [(
-    snapPointKey: AdaptiveModalSnapPointConfig.SnapPointKey,
+    snapPointKey: String?,
     snapPointIndex: Int
   )];
   
@@ -29,12 +31,18 @@ public struct AdaptiveModalResolvedPageItemConfig {
     let matches = pageConfig.associatedSnapPoints.compactMap { id in
       interpolationPoints.first {
         switch id {
+          case .undershoot:
+            return $0.snapPoint.type == .undershootSnapPoint;
+            
+          case .overshoot:
+            return $0.snapPoint.type == .overshootSnapPoint;
+            
           case let .index(index):
-            return $0.snapPointIndex == index;
+            return $0.snapPoint.index == index;
             
           case let .key(key):
-            return $0.key == key;
-          };
+            return $0.snapPoint.key == key;
+        };
       };
     };
     
@@ -42,12 +50,12 @@ public struct AdaptiveModalResolvedPageItemConfig {
     self.viewController = pageConfig.viewController;
     
     self.associatedSnapPoints = matches.map {(
-      snapPointKey: $0.key,
-      snapPointIndex: $0.snapPointIndex
+      snapPointKey: $0.snapPoint.key,
+      snapPointIndex: $0.snapPoint.index
     )};
   };
   
-  public func contains(key: AdaptiveModalSnapPointConfig.SnapPointKey) -> Bool {
+  public func contains(key: String) -> Bool {
     self.associatedSnapPoints.contains {
       $0.snapPointKey == key;
     };

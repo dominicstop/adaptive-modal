@@ -86,9 +86,9 @@ public class AdaptiveModalPageViewController: UIViewController {
     };
     
     let pagesPartial = interpolationPoints.map { interpolationPoint in (
-      offset: interpolationPoint.snapPointIndex,
+      offset: interpolationPoint.snapPoint.index,
       element: pagesResolved.first {
-        $0.contains(index: interpolationPoint.snapPointIndex);
+        $0.contains(index: interpolationPoint.snapPoint.index);
       }
     )};
     
@@ -112,11 +112,11 @@ public class AdaptiveModalPageViewController: UIViewController {
     };
     
     let pages = interpolationPoints.compactMap {
-      if let page = pagesPartial[safeIndex: $0.snapPointIndex]?.element {
+      if let page = pagesPartial[safeIndex: $0.snapPoint.index]?.element {
         return page;
       };
       
-      return getNextPage(startIndex: $0.snapPointIndex);
+      return getNextPage(startIndex: $0.snapPoint.index);
     };
     
     guard pages.count == interpolationPoints.count else { return };

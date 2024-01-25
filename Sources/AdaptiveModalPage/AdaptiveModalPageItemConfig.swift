@@ -10,8 +10,10 @@ import UIKit
 
 public struct AdaptiveModalPageItemConfig {
   public enum AssociatedSnapPoint: Equatable {
-  
-    case key(AdaptiveModalSnapPointConfig.SnapPointKey);
+    case undershoot;
+    case overshoot;
+    
+    case key(String);
     case index(Int);
   };
   
