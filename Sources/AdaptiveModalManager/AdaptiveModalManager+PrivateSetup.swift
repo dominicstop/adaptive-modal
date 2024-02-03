@@ -228,11 +228,7 @@ extension AdaptiveModalManager {
       modalBGVisualEffectView.backgroundColor = .clear;
     };
     
-    if let modalDragHandleView = self.modalDragHandleView,
-       let modalWrapperShadowView = self.modalWrapperShadowView {
-       
-      modalWrapperShadowView.addSubview(modalDragHandleView);
-    };
+    self._setupAddDragHandleView();
     
     #if DEBUG
     if self.showDebugOverlay {
@@ -242,6 +238,18 @@ extension AdaptiveModalManager {
       modalWrapperView.addSubview(debugView);
     };
     #endif
+  };
+  
+  func _setupAddDragHandleView(){
+    guard let modalDragHandleView = self.modalDragHandleView,
+          let modalWrapperShadowView = self.modalWrapperShadowView
+    else { return };
+    
+    if modalDragHandleView.superview != nil {
+      modalDragHandleView.removeFromSuperview();
+    };
+    
+    modalWrapperShadowView.addSubview(modalDragHandleView);
   };
   
   func _setupDragHandleConstraints(shouldDeactivateOldConstraints: Bool){

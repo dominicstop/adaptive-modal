@@ -109,11 +109,32 @@ public extension AdaptiveModalManager {
           return false;
         };
         
-        return self.currentModalConfig.dragHandlePosition != prevConfig.dragHandlePosition;
+        let snapDirectionDidChange =
+          self.currentModalConfig.snapDirection != prevConfig.snapDirection;
+        
+        let dragHandleDirectionDidChange =
+          self.currentModalConfig.dragHandlePosition != prevConfig.dragHandlePosition;
+        
+        return snapDirectionDidChange || dragHandleDirectionDidChange;
       }();
       
-      if shouldUpdateDragHandleConstraints {
-        self._setupDragHandleConstraints(shouldDeactivateOldConstraints: true);
+      switch (shouldUpdateDragHandleConstraints, self.currentModalConfig.dragHandlePosition) {
+        case (true, .none):
+          // detach drag handle view
+          self.modalDragHandleView?.removeFromSuperview();
+        
+        case (true, _):
+          // attach drag handle view if needed
+          self._setupAddDragHandleView();
+          
+          // update drag handle view position
+          self._setupDragHandleConstraints(
+            shouldDeactivateOldConstraints: true
+          );
+          
+        default:
+          // don't update drag handle
+          break;
       };
       
       self._updateModal();
