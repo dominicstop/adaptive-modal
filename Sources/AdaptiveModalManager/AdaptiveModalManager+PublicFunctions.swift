@@ -269,6 +269,7 @@ public extension AdaptiveModalManager {
   
   func snapTo(
     snapPointIndex nextIndex: Int,
+    shouldIgnoreDidIndexChangeChecking: Bool = false,
     isAnimated: Bool = true,
     animationConfig: AnimationConfig? = nil,
     extraAnimation: (() -> Void)? = nil,
@@ -278,9 +279,16 @@ public extension AdaptiveModalManager {
     let lastIndex = max(self.interpolationSteps.count - 1, 0);
     let nextIndexAdj = self._adjustInterpolationIndex(for: nextIndex);
     
-    guard nextIndexAdj >= 0 && nextIndexAdj <= lastIndex,
-          nextIndexAdj != self.currentInterpolationIndex
-    else { return };
+    let didIndexChangeRaw =
+         nextIndexAdj >= 0
+      && nextIndexAdj <= lastIndex
+      && nextIndexAdj != self.currentInterpolationIndex;
+      
+    let didIndexChange =
+         didIndexChangeRaw
+      || shouldIgnoreDidIndexChangeChecking;
+    
+    guard didIndexChange else { return };
     
     let isDismissing: Bool = {
       let isPresentingOrPresented =
@@ -367,12 +375,11 @@ public extension AdaptiveModalManager {
     let prevFrame = self.modalFrame;
     let nextFrame = nextInterpolationPoint.computedRect;
     
-    guard nextInterpolationIndex != self.currentInterpolationIndex,
-          prevFrame != nextFrame
-    else { return };
+    guard prevFrame != nextFrame else { return };
     
     self.snapTo(
       snapPointIndex: nextInterpolationIndex,
+      shouldIgnoreDidIndexChangeChecking: true,
       isAnimated: isAnimated,
       animationConfig: animationConfig,
       extraAnimation: extraAnimation,
