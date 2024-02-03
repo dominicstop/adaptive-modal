@@ -77,7 +77,14 @@ public extension AdaptiveModalManager {
     let prevTargetFrame = self.prevTargetFrame;
     let nextTargetFrame = rootView.frame;
     
-    guard prevTargetFrame != nextTargetFrame else { return };
+    let didTargetFrameChange =
+      prevTargetFrame != nextTargetFrame;
+      
+    let shouldTriggerLayout =
+         didTargetFrameChange
+      || self._pendingCurrentModalConfigUpdate;
+    
+    guard shouldTriggerLayout else { return };
     self.prevTargetFrame = nextTargetFrame;
     
     self._updateCurrentModalConfig();
