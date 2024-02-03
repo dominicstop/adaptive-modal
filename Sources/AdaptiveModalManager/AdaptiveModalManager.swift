@@ -10,7 +10,6 @@ import ComputableLayout
 import DGSwiftUtilities
 
 
-
 public class AdaptiveModalManager: NSObject {
 
   // MARK: -  Properties - Config-Related
@@ -1796,18 +1795,23 @@ public class AdaptiveModalManager: NSObject {
   };
   
   func _updateCurrentModalConfig(){
-    guard case let .adaptiveConfig(defaultConfig, constrainedConfigs) = self.modalConfig
-    else { return };
-    
     let context = self._layoutValueContext.evaluableConditionContext;
     
-    let match = constrainedConfigs.first {
-      $0.evaluateConstraints(usingContext: context);
-    };
-    
+    let nextConfig: AdaptiveModalConfig = {
+      switch self.modalConfig {
+        case let .adaptiveConfig(defaultConfig, constrainedConfigs):
+          let match = constrainedConfigs.first {
+            $0.evaluateConstraints(usingContext: context);
+          };
+          
+          return match?.config ?? defaultConfig;
+          
+        case let .staticConfig(config):
+          return config;
+      };
+    }();
+  
     let prevConfig = self._currentModalConfig;
-    let nextConfig = match?.config ?? defaultConfig;
-    
     guard prevConfig != nextConfig else { return };
     
     self.prevModalConfig = prevConfig;
