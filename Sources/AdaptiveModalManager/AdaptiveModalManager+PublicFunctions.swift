@@ -136,6 +136,24 @@ public extension AdaptiveModalManager {
           // don't update drag handle
           break;
       };
+            
+      /// update drag handle offset if needed
+      block:
+      if let modalDragHandleView = self.modalDragHandleView,
+         let modalDragHandleConstraintOffset = self.modalDragHandleConstraintOffset {
+            
+        let nextModalDragHandleOffset =
+          self.currentInterpolationStep.modalDragHandleOffset;
+          
+        let prevModalDragHandleOffset =
+          modalDragHandleConstraintOffset.constant;
+          
+        guard nextModalDragHandleOffset != prevModalDragHandleOffset
+        else { break block };
+        
+        modalDragHandleConstraintOffset.constant = nextModalDragHandleOffset;
+        modalDragHandleView.updateConstraints();
+      };
       
       self._updateModal();
       self._pendingCurrentModalConfigUpdate = false;
