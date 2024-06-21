@@ -25,6 +25,6 @@ Support for gesture-driven animations, and modals that adapt to the current devi
   s.frameworks = 'UIKit'
   
   s.dependency 'ComputableLayout', '~> 0.7'
-  s.dependency 'DGSwiftUtilities', '~> 0.11'
+  s.dependency 'DGSwiftUtilities', '~> 0.23'
   
 end
