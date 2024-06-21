@@ -81,7 +81,7 @@ extension AdaptiveModalInterpolationPoint {
       };
       
       return snapPoints.map {
-        AdaptiveModalUtilities.interpolate(
+        InterpolationHelpers.interpolate(
           inputValue: CGFloat($0.index),
           rangeInput: rangeInput,
           rangeOutput: rangeOutput
@@ -192,7 +192,7 @@ extension AdaptiveModalInterpolationPoint {
             keyframeKey: keyframeKey,
             interpolationPointKey: interpolationPointKey,
             interpolator: {
-              AdaptiveModalUtilities.interpolateRect(
+              InterpolationHelpers.interpolateRect(
                 inputValue: $0,
                 rangeInput: $1,
                 rangeOutput: $2,
@@ -215,7 +215,7 @@ extension AdaptiveModalInterpolationPoint {
           setKeyframeValue(
             keyframeKey: keyframeKey,
             interpolationPointKey: interpolationPointKey,
-            interpolator: AdaptiveModalUtilities.interpolateEdgeInsets
+            interpolator: InterpolationHelpers.interpolateEdgeInsets
           );
           
         case (
@@ -225,7 +225,7 @@ extension AdaptiveModalInterpolationPoint {
           setKeyframeValue(
             keyframeKey: keyframeKey,
             interpolationPointKey: interpolationPointKey,
-            interpolator: AdaptiveModalUtilities.interpolate
+            interpolator: InterpolationHelpers.interpolate
           );
           
         case (
@@ -236,7 +236,7 @@ extension AdaptiveModalInterpolationPoint {
             keyframeKey: keyframeKey,
             interpolationPointKey: interpolationPointKey,
             interpolator: {
-              AdaptiveModalUtilities.interpolateTransform3D(
+              InterpolationHelpers.interpolateTransform3D(
                 inputValue: $0,
                 rangeInput: $1,
                 rangeOutput: $2,
@@ -273,7 +273,7 @@ extension AdaptiveModalInterpolationPoint {
           setKeyframeValue(
             keyframeKey: keyframeKey,
             interpolationPointKey: interpolationPointKey,
-            interpolator: AdaptiveModalUtilities.interpolateColor
+            interpolator: InterpolationHelpers.interpolateColor
           );
         
         case (
@@ -283,7 +283,7 @@ extension AdaptiveModalInterpolationPoint {
           setKeyframeValue(
             keyframeKey: keyframeKey,
             interpolationPointKey: interpolationPointKey,
-            interpolator: AdaptiveModalUtilities.interpolateSize
+            interpolator: InterpolationHelpers.interpolateSize
           );
         
         default:

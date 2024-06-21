@@ -515,12 +515,12 @@ public class AdaptiveModalManager: NSObject {
       y: (gestureVelocity.y / 2).clamped(minMax: maxVelocity)
     );
     
-    let nextX = AdaptiveModalUtilities.computeFinalPosition(
+    let nextX = InterpolationHelpers.computeFinalPosition(
       position: gesturePoint.x,
       initialVelocity: gestureVelocityClamped.x
     );
     
-    let nextY = AdaptiveModalUtilities.computeFinalPosition(
+    let nextY = InterpolationHelpers.computeFinalPosition(
       position: gesturePoint.y,
       initialVelocity: gestureVelocityClamped.y
     );
@@ -835,7 +835,7 @@ public class AdaptiveModalManager: NSObject {
           let interpolationRangeInput = rangeInput  ?? self.interpolationRangeInput
     else { return nil };
   
-    return AdaptiveModalUtilities.interpolate(
+    return InterpolationHelpers.interpolate(
       inputValue: inputValue,
       rangeInput: interpolationRangeInput,
       rangeOutput: interpolationSteps.map {
@@ -859,7 +859,7 @@ public class AdaptiveModalManager: NSObject {
           let interpolationRangeInput = rangeInput  ?? self.interpolationRangeInput
     else { return nil };
   
-    return AdaptiveModalUtilities.interpolateColor(
+    return InterpolationHelpers.interpolateColor(
       inputValue: inputValue,
       rangeInput: interpolationRangeInput,
       rangeOutput: interpolationSteps.map {
@@ -1220,10 +1220,10 @@ public class AdaptiveModalManager: NSObject {
     };
     
     self.modalFrame = {
-      let nextRect = AdaptiveModalUtilities.interpolateRect(
+      let nextRect = InterpolationHelpers.interpolateRect(
         inputValue: inputPercentValue,
         rangeInput: rangeInput,
-        rangeOutput: AdaptiveModalUtilities.extractValuesFromArray(
+        rangeOutput: InterpolationHelpers.extractValuesFromArray(
           for: self.interpolationSteps,
           key: \.computedRect
         ),
@@ -1270,9 +1270,9 @@ public class AdaptiveModalManager: NSObject {
         };
         
         let dampingPercent =
-          AdaptiveModalUtilities.invertPercent(dampingPercentRaw);
+          InterpolationHelpers.invertPercent(dampingPercentRaw);
         
-        let secondaryAxisAdj =  AdaptiveModalUtilities.interpolate(
+        let secondaryAxisAdj =  InterpolationHelpers.interpolate(
           inputValue: dampingPercent,
           rangeInput: [0, 1],
           rangeOutput: [
@@ -1320,10 +1320,10 @@ public class AdaptiveModalManager: NSObject {
     if self.currentModalConfig.shouldSetModalScrollViewContentInsets,
        let modalContentScrollView = self.modalContentScrollView {
        
-      let interpolatedInsets = AdaptiveModalUtilities.interpolateEdgeInsets(
+      let interpolatedInsets = InterpolationHelpers.interpolateEdgeInsets(
         inputValue: inputPercentValue,
         rangeInput: rangeInput,
-        rangeOutput: AdaptiveModalUtilities.extractValuesFromArray(
+        rangeOutput: InterpolationHelpers.extractValuesFromArray(
           for: self.interpolationSteps,
           key: \.computedModalScrollViewContentInsets
         )
@@ -1341,10 +1341,10 @@ public class AdaptiveModalManager: NSObject {
        
       guard #available(iOS 11.1, *) else { break block };
        
-      let interpolatedInsets = AdaptiveModalUtilities.interpolateEdgeInsets(
+      let interpolatedInsets = InterpolationHelpers.interpolateEdgeInsets(
         inputValue: inputPercentValue,
         rangeInput: rangeInput,
-        rangeOutput: AdaptiveModalUtilities.extractValuesFromArray(
+        rangeOutput: InterpolationHelpers.extractValuesFromArray(
           for: self.interpolationSteps,
           key: \.computedModalScrollViewVerticalScrollIndicatorInsets
         )
@@ -1360,10 +1360,10 @@ public class AdaptiveModalManager: NSObject {
        
       guard #available(iOS 11.1, *) else { break block };
       
-      let interpolatedInsets = AdaptiveModalUtilities.interpolateEdgeInsets(
+      let interpolatedInsets = InterpolationHelpers.interpolateEdgeInsets(
         inputValue: inputPercentValue,
         rangeInput: rangeInput,
-        rangeOutput: AdaptiveModalUtilities.extractValuesFromArray(
+        rangeOutput: InterpolationHelpers.extractValuesFromArray(
           for: self.interpolationSteps,
           key: \.computedModalScrollViewHorizontalScrollIndicatorInsets
         )
@@ -1373,14 +1373,14 @@ public class AdaptiveModalManager: NSObject {
       modalContentScrollView.horizontalScrollIndicatorInsets = interpolatedInsets;
     };
     
-    AdaptiveModalUtilities.unwrapAndSetProperty(
+    Helpers.unwrapAndSetProperty(
       forObject: self.modalWrapperTransformView,
       forPropertyKey: \.layer.transform,
       withValue: {
-        let transform3D = AdaptiveModalUtilities.interpolateTransform3D(
+        let transform3D = InterpolationHelpers.interpolateTransform3D(
           inputValue: inputPercentValue,
           rangeInput: rangeInput,
-          rangeOutput: AdaptiveModalUtilities.extractValuesFromArray(
+          rangeOutput: InterpolationHelpers.extractValuesFromArray(
             for: self.interpolationSteps,
             key: \.modalTransform
           ),
@@ -1412,7 +1412,7 @@ public class AdaptiveModalManager: NSObject {
       }()
     );
     
-    AdaptiveModalUtilities.unwrapAndSetProperty(
+    Helpers.unwrapAndSetProperty(
       forObject: modalView,
       forPropertyKey: \.alpha,
       withValue:  self._interpolate(
@@ -1421,7 +1421,7 @@ public class AdaptiveModalManager: NSObject {
       )
     );
     
-    AdaptiveModalUtilities.unwrapAndSetProperty(
+    Helpers.unwrapAndSetProperty(
       forObject: self.modalWrapperLayoutView,
       forPropertyKey: \.alpha,
       withValue:  self._interpolate(
@@ -1430,7 +1430,7 @@ public class AdaptiveModalManager: NSObject {
       )
     );
     
-    AdaptiveModalUtilities.unwrapAndSetProperty(
+    Helpers.unwrapAndSetProperty(
       forObject: self.modalWrapperShadowView,
       forPropertyKey: \.layer.borderWidth,
       withValue:  self._interpolate(
@@ -1439,7 +1439,7 @@ public class AdaptiveModalManager: NSObject {
       )
     );
     
-    AdaptiveModalUtilities.unwrapAndSetProperty(
+    Helpers.unwrapAndSetProperty(
       forObject: self.modalWrapperShadowView,
       forPropertyKey: \.layer.borderColor,
       withValue: {
@@ -1452,7 +1452,7 @@ public class AdaptiveModalManager: NSObject {
       }()
     );
     
-    AdaptiveModalUtilities.unwrapAndSetProperty(
+    Helpers.unwrapAndSetProperty(
       forObject: self.modalWrapperShadowView,
       forPropertyKey: \.layer.shadowColor,
       withValue:  {
@@ -1465,14 +1465,14 @@ public class AdaptiveModalManager: NSObject {
       }()
     );
     
-    AdaptiveModalUtilities.unwrapAndSetProperty(
+    Helpers.unwrapAndSetProperty(
       forObject: self.modalWrapperShadowView,
       forPropertyKey: \.layer.shadowOffset,
       withValue: {
-        AdaptiveModalUtilities.interpolateSize(
+        InterpolationHelpers.interpolateSize(
           inputValue: inputPercentValue,
           rangeInput: rangeInput,
-          rangeOutput: AdaptiveModalUtilities.extractValuesFromArray(
+          rangeOutput: InterpolationHelpers.extractValuesFromArray(
             for: self.interpolationSteps,
             key: \.modalShadowOffset
           )
@@ -1480,7 +1480,7 @@ public class AdaptiveModalManager: NSObject {
       }()
     );
     
-    AdaptiveModalUtilities.unwrapAndSetProperty(
+    Helpers.unwrapAndSetProperty(
       forObject: self.modalWrapperShadowView,
       forPropertyKey: \.layer.shadowOpacity,
       withValue: {
@@ -1494,7 +1494,7 @@ public class AdaptiveModalManager: NSObject {
       }()
     );
     
-    AdaptiveModalUtilities.unwrapAndSetProperty(
+    Helpers.unwrapAndSetProperty(
       forObject: self.modalWrapperShadowView,
       forPropertyKey: \.layer.shadowRadius,
       withValue:  self._interpolate(
@@ -1503,7 +1503,7 @@ public class AdaptiveModalManager: NSObject {
       )
     );
     
-    AdaptiveModalUtilities.unwrapAndSetProperty(
+    Helpers.unwrapAndSetProperty(
       forObject: self.modalContentWrapperView,
       forPropertyKey: \.layer.cornerRadius,
       withValue:  self._interpolate(
@@ -1512,7 +1512,7 @@ public class AdaptiveModalManager: NSObject {
       )
     );
     
-    AdaptiveModalUtilities.unwrapAndSetProperty(
+    Helpers.unwrapAndSetProperty(
       forObject: self.modalBackgroundView,
       forPropertyKey: \.backgroundColor,
       withValue:  self._interpolateColor(
@@ -1521,7 +1521,7 @@ public class AdaptiveModalManager: NSObject {
       )
     );
     
-    AdaptiveModalUtilities.unwrapAndSetProperty(
+    Helpers.unwrapAndSetProperty(
       forObject: self.modalBackgroundView,
       forPropertyKey: \.alpha,
       withValue:  self._interpolate(
@@ -1530,7 +1530,7 @@ public class AdaptiveModalManager: NSObject {
       )
     );
     
-    AdaptiveModalUtilities.unwrapAndSetProperty(
+    Helpers.unwrapAndSetProperty(
       forObject: self.modalBackgroundVisualEffectView,
       forPropertyKey: \.alpha,
       withValue:  self._interpolate(
@@ -1539,7 +1539,7 @@ public class AdaptiveModalManager: NSObject {
       )
     );
     
-    AdaptiveModalUtilities.unwrapAndSetProperty(
+    Helpers.unwrapAndSetProperty(
       forObject: self.modalBackgroundVisualEffectView,
       forPropertyKey: \.layer.cornerRadius,
       withValue:  self._interpolate(
@@ -1548,7 +1548,7 @@ public class AdaptiveModalManager: NSObject {
       )
     );
     
-    AdaptiveModalUtilities.unwrapAndSetProperty(
+    Helpers.unwrapAndSetProperty(
       forObject: self.modalDragHandleView,
       forPropertyKey: \.backgroundColor,
       withValue:  self._interpolateColor(
@@ -1557,7 +1557,7 @@ public class AdaptiveModalManager: NSObject {
       )
     );
     
-    AdaptiveModalUtilities.unwrapAndSetProperty(
+    Helpers.unwrapAndSetProperty(
       forObject: self.modalDragHandleView,
       forPropertyKey: \.alpha,
       withValue:  self._interpolate(
@@ -1566,7 +1566,7 @@ public class AdaptiveModalManager: NSObject {
       )
     );
     
-    AdaptiveModalUtilities.unwrapAndSetProperty(
+    Helpers.unwrapAndSetProperty(
       forObject: self.modalDragHandleView,
       forPropertyKey: \.layer.cornerRadius,
       withValue:  self._interpolate(
@@ -1575,7 +1575,7 @@ public class AdaptiveModalManager: NSObject {
       )
     );
     
-    AdaptiveModalUtilities.unwrapAndSetProperty(
+    Helpers.unwrapAndSetProperty(
       forObject: self.backgroundDimmingView,
       forPropertyKey: \.backgroundColor,
       withValue:  self._interpolateColor(
@@ -1584,7 +1584,7 @@ public class AdaptiveModalManager: NSObject {
       )
     );
     
-    AdaptiveModalUtilities.unwrapAndSetProperty(
+    Helpers.unwrapAndSetProperty(
       forObject: self.backgroundDimmingView,
       forPropertyKey: \.alpha,
       withValue:  self._interpolate(
@@ -1593,7 +1593,7 @@ public class AdaptiveModalManager: NSObject {
       )
     );
     
-    AdaptiveModalUtilities.unwrapAndSetProperty(
+    Helpers.unwrapAndSetProperty(
       forObject: self.backgroundVisualEffectView,
       forPropertyKey: \.alpha,
       withValue:  self._interpolate(
@@ -1643,7 +1643,7 @@ public class AdaptiveModalManager: NSObject {
     }();
     
     let percentAdj = shouldInvertPercent
-      ? AdaptiveModalUtilities.invertPercent(percentClamped)
+      ? InterpolationHelpers.invertPercent(percentClamped)
       : percentClamped;
       
     self._applyInterpolationToModal(forInputPercentValue: percentAdj);
@@ -2156,14 +2156,14 @@ public class AdaptiveModalManager: NSObject {
           let percent = inputCoord / interpolationRangeMaxInput;
           
           let percentAdj = self.currentModalConfig.shouldInvertPercent
-            ? AdaptiveModalUtilities.invertPercent(percent)
+            ? InterpolationHelpers.invertPercent(percent)
             : percent;
             
           return percentAdj;
           
         case .animatorFractionComplete:
           guard let modalAnimator = self._modalAnimator else { return nil };
-          return AdaptiveModalUtilities.invertPercent(modalAnimator.fractionComplete);
+          return InterpolationHelpers.invertPercent(modalAnimator.fractionComplete);
       };
     }();
     

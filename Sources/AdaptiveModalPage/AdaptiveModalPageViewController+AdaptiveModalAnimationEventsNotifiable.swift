@@ -6,7 +6,7 @@
 //
 
 import UIKit
-
+import DGSwiftUtilities
 
 extension AdaptiveModalPageViewController: AdaptiveModalAnimationEventsNotifiable {
 
@@ -60,7 +60,7 @@ extension AdaptiveModalPageViewController: AdaptiveModalAnimationEventsNotifiabl
         return CGFloat(shouldShowPage ? 1 : 0);
       };
       
-      let opacityNext = AdaptiveModalUtilities.interpolate(
+      let opacityNext = InterpolationHelpers.interpolate(
         inputValue: percent,
         rangeInput: rangeInput,
         rangeOutput: outputRangeOpacity

@@ -6,7 +6,7 @@
 //
 
 import UIKit
-
+import DGSwiftUtilities
 
 public struct AdaptiveModalRangePropertyAnimator {
 
@@ -113,7 +113,7 @@ public struct AdaptiveModalRangePropertyAnimator {
     forInputPercentValue inputPercentValue: CGFloat
   ) {
   
-    let percent = AdaptiveModalUtilities.interpolate(
+    let percent = InterpolationHelpers.interpolate(
       inputValue: inputPercentValue,
       rangeInput: self.rangeInput,
       rangeOutput: self.rangeOutput
