@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import DGSwiftUtilities
 
 extension AdaptiveModalManager: UIViewControllerAnimatedTransitioning {
 
@@ -48,7 +47,7 @@ extension AdaptiveModalManager: UIViewControllerAnimatedTransitioning {
         
         self._setupPrepareForPresentation();
         
-        SwizzlingHelpers.swizzleHitTest(
+        AdaptiveModalUtilities.swizzleHitTest(
           forView: containerView
         ) { originalImp, selector in
         

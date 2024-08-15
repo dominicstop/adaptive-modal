@@ -365,7 +365,7 @@ public extension AdaptiveModalInterpolationPoint {
           let percent = inputValue / maxRangeInput;
           
           return modalConfig.shouldInvertPercent
-            ? InterpolationHelpers.invertPercent(percent)
+            ? AdaptiveModalUtilities.invertPercent(percent)
             : percent;
             
         case .index:
