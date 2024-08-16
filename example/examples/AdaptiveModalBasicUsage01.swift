@@ -81,7 +81,10 @@ class AdaptiveModalBasicUsage01 : UIViewController {
       button.setTitle("Present View Controller", for: .normal);
       button.setTitleColor(.white, for: .normal);
       
-      button.configuration = .filled();
+      if #available(iOS 15.0, *) {
+        button.configuration = .filled();
+      };
+      
       button.layer.cornerRadius = 10;
       
       button.addTarget(

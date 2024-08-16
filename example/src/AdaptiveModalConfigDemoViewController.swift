@@ -64,7 +64,9 @@ fileprivate class TestModalViewController:
       let button = UIButton();
       
       button.setTitle("Dismiss Modal", for: .normal);
-      button.configuration = .filled();
+      if #available(iOS 15.0, *) {
+        button.configuration = .filled();
+      };
       
       button.addTarget(
         self,
@@ -79,7 +81,9 @@ fileprivate class TestModalViewController:
       let button = UIButton();
       
       button.setTitle("Custom Snap Point", for: .normal);
-      button.configuration = .filled();
+      if #available(iOS 15.0, *) {
+        button.configuration = .filled();
+      };
       
       button.addTarget(
         self,

@@ -82,12 +82,15 @@ fileprivate class ModalViewController: UIViewController {
       ];
       
       button.setTitle("Dismiss Modal", for: .normal);
-      button.configuration = {
-        var config: UIButton.Configuration = .filled();
-        config.baseBackgroundColor = colors[self.instanceID % colors.count];
-        
-        return config;
-      }();
+      
+      if #available(iOS 15.0, *) {
+        button.configuration = {
+          var config: UIButton.Configuration = .filled();
+          config.baseBackgroundColor = colors[self.instanceID % colors.count];
+          
+          return config;
+        }();
+      };
       
       button.addTarget(
         self,
@@ -372,7 +375,10 @@ class AdaptiveModalPageTestViewController: UIViewController {
     let presentButton: UIButton = {
       let button = UIButton();
       button.setTitle("Present View Controller", for: .normal);
-      button.configuration = .filled();
+      
+      if #available(iOS 15.0, *) {
+        button.configuration = .filled();
+      };
       
       button.addTarget(
         self,
@@ -386,7 +392,10 @@ class AdaptiveModalPageTestViewController: UIViewController {
     let nextConfigButton: UIButton = {
       let button = UIButton();
       button.setTitle("Next Modal Config", for: .normal);
-      button.configuration = .filled();
+      
+      if #available(iOS 15.0, *) {
+        button.configuration = .filled();
+      };
       
       button.addTarget(
         self,
@@ -400,7 +409,10 @@ class AdaptiveModalPageTestViewController: UIViewController {
     let nextRouteButton: UIButton = {
       let button = UIButton();
       button.setTitle("Next Route", for: .normal);
-      button.configuration = .filled();
+      
+      if #available(iOS 15.0, *) {
+        button.configuration = .filled();
+      };
       
       button.addTarget(
         self,

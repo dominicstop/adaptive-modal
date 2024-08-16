@@ -93,7 +93,10 @@ class AdaptiveModalConfigTestViewController : UIViewController {
       let button = UIButton();
       
       button.setTitle("Show Modal", for: .normal);
-      button.configuration = .filled();
+      
+      if #available(iOS 15.0, *) {
+        button.configuration = .filled();
+      };
       
       button.addTarget(
         self,
