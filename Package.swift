@@ -27,7 +27,7 @@ let swiftUtilitiesPackage: Package.Dependency = {
   else {
     return .package(
       url: "https://github.com/dominicstop/DGSwiftUtilities",
-      from: "0.23.0"
+      from: "0.46.4"
     );
   };
   
