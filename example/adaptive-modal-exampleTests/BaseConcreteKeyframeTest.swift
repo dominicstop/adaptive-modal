@@ -151,40 +151,28 @@ struct BaseConcreteKeyframeTest {
     let keyframeEnd: TestConcreteKeyframe = .init(someFloat: 100, someDouble: 100);
     
     let resultLerpToNegativeHalf = TestConcreteKeyframe.lerp(valueStart: keyframeStart, valueEnd: keyframeEnd, percent: -0.5);
-    #expect(
-         resultLerpToNegativeHalf.someDouble == -50.0
-      && resultLerpToNegativeHalf.someFloat == -50.0
-    );
+    #expect(resultLerpToNegativeHalf.someDouble == -50.0);
+    #expect(resultLerpToNegativeHalf.someFloat == -50.0);
     
     let resultLerpToZero = TestConcreteKeyframe.lerp(valueStart: keyframeStart, valueEnd: keyframeEnd, percent: 0);
-    #expect(
-         resultLerpToZero.someDouble == 0
-      && resultLerpToZero.someFloat == 0
-    );
+    #expect(resultLerpToZero.someDouble == 0);
+    #expect(resultLerpToZero.someFloat == 0);
     
     let resultLerpToQuarter = TestConcreteKeyframe.lerp(valueStart: keyframeStart, valueEnd: keyframeEnd, percent: 0.25);
-    #expect(
-         resultLerpToQuarter.someDouble == 25.0
-      && resultLerpToQuarter.someFloat == 25.0
-    );
+    #expect(resultLerpToQuarter.someDouble == 25.0);
+    #expect(resultLerpToQuarter.someFloat == 25.0);
     
     let resultLerpToHalf = TestConcreteKeyframe.lerp(valueStart: keyframeStart, valueEnd: keyframeEnd, percent: 0.5);
-    #expect(
-         resultLerpToHalf.someDouble == 50.0
-      && resultLerpToHalf.someFloat == 50.0
-    );
+    #expect(resultLerpToHalf.someDouble == 50.0);
+    #expect(resultLerpToHalf.someFloat == 50.0);
     
     let resultLerpToFull = TestConcreteKeyframe.lerp(valueStart: keyframeStart, valueEnd: keyframeEnd, percent: 1.0);
-    #expect(
-         resultLerpToFull.someDouble == 100.0
-      && resultLerpToFull.someFloat == 100.0
-    );
+    #expect(resultLerpToFull.someDouble == 100.0);
+    #expect(resultLerpToFull.someFloat == 100.0);
     
     let resultLerpToDouble = TestConcreteKeyframe.lerp(valueStart: keyframeStart, valueEnd: keyframeEnd, percent: 2.0);
-    #expect(
-         resultLerpToDouble.someDouble == 200.0
-      && resultLerpToDouble.someFloat == 200.0
-    );
+    #expect(resultLerpToDouble.someDouble == 200.0);
+    #expect(resultLerpToDouble.someFloat == 200.0);
     
     print(
       #function,
@@ -230,10 +218,9 @@ struct BaseConcreteKeyframeTest {
     let resultLerpToHalf = rangeInterpolator.interpolate(inputValue: 0.5);
     #expect(resultLerpToHalf.someDouble == 1.0);
     #expect(resultLerpToHalf.someFloat == 1.0);
-    
-    /// input: 0.75
+  
     /// Input Range: 0.5 -> 1.0, Delta: 0.5
-    /// Delta input: 0.25
+    /// input: 0.75, Delta input: 0.25
     /// output range: 1 -> 100
     ///
     let resultLerpToThreeQuarters = rangeInterpolator.interpolate(inputValue: 0.75);
@@ -244,9 +231,14 @@ struct BaseConcreteKeyframeTest {
     #expect(resultLerpToFull.someDouble == 100);
     #expect(resultLerpToFull.someDouble == 100);
     
+    
+    /// Input Range: 0.5 -> 1.0 (Delta: 0.5)
+    /// output range: 1 -> 100 (Delta: 99)
+    /// input: 2, output: 298
+    ///
     let resultLerpToDouble = rangeInterpolator.interpolate(inputValue: 2);
-    #expect(resultLerpToDouble.someDouble == 200);
-    #expect(resultLerpToDouble.someDouble == 200);
+    #expect(resultLerpToDouble.someDouble == 298);
+    #expect(resultLerpToDouble.someDouble == 298);
 
     print(
       #function,
