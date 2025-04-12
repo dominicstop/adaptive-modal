@@ -61,11 +61,6 @@ public extension BaseConcreteKeyframe {
   typealias PartialKeyframeKeyPath<T> = WritableKeyPath<PartialKeyframe, T>;
   
   typealias ConcreteKeyframeKeypath<T> = WritableKeyPath<Self, T>;
-  
-  static var empty: Self {
-    .init(sourcePartialKeyframe: .empty);
-  }
-  
   private typealias KeyframePairedApplyBlock = (
     applyToPartialKeyframeBlock: (
       _ target: inout PartialKeyframe,
