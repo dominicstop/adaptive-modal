@@ -17,6 +17,9 @@ struct BaseConcreteKeyframeTest {
   // ----------------------
   
   struct TestPartialKeyframe: BasePartialKeyframe {
+    
+    typealias ConcreteKeyframe = TestConcreteKeyframe;
+    
     static var empty: Self = .init();
     
     var someFloat: CGFloat?;

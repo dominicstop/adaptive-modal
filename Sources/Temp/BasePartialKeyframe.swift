@@ -8,7 +8,17 @@
 import Foundation
 
 public protocol BasePartialKeyframe {
+  
+  associatedtype ConcreteKeyframe: BaseConcreteKeyframe<Self>;
+  
   static var empty: Self { get };
+};
+
+public extension BasePartialKeyframe {
+  
+  init (from concreteKeyframe: ConcreteKeyframe) {
+    self = concreteKeyframe.asPartialKeyframe;
+  };
 };
 
 
