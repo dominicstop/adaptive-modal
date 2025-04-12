@@ -90,37 +90,36 @@ public extension BaseConcreteKeyframe {
     
     var pairedApplyBlocks: [KeyframePairedApplyBlock] = [];
     
+    func appendToPairedApplyBlocks<T>(
+      _ partialKeyframeKeyPath: PartialKeyframeKeyPath<T?>,
+      _ concreteKeyframeKeyPath: ConcreteKeyframeKeypath<T>
+    ){
+      pairedApplyBlocks.append((
+        {
+          $0[keyPath: partialKeyframeKeyPath] = $1[keyPath: concreteKeyframeKeyPath];
+        },
+        {
+          print($0, $1, $2);
+          $0[keyPath: concreteKeyframeKeyPath] =
+               $1[keyPath: partialKeyframeKeyPath]
+            ?? $2[keyPath: concreteKeyframeKeyPath];
+        }
+      ));
+    };
+    
     Self.partialToConcreteKeyframePropertyMap.forEach {
       switch ($0, $1) {
         case (
           let partialKeyframeKeyPath as PartialKeyframeKeyPath<CGFloat?>,
           let concreteKeyframeKeyPath as ConcreteKeyframeKeypath<CGFloat>
         ):
-          pairedApplyBlocks.append((
-            {
-              $0[keyPath: partialKeyframeKeyPath] = $1[keyPath: concreteKeyframeKeyPath];
-            },
-            {
-              $0[keyPath: concreteKeyframeKeyPath] =
-                   $1[keyPath: partialKeyframeKeyPath]
-                ?? $2[keyPath: concreteKeyframeKeyPath];
-            }
-          ));
+          appendToPairedApplyBlocks(partialKeyframeKeyPath, concreteKeyframeKeyPath);
         
         case (
           let partialKeyframeKeyPath as PartialKeyframeKeyPath<Double?>,
           let concreteKeyframeKeyPath as ConcreteKeyframeKeypath<Double>
         ):
-          pairedApplyBlocks.append((
-            {
-              $0[keyPath: partialKeyframeKeyPath] = $1[keyPath: concreteKeyframeKeyPath];
-            },
-            {
-              $0[keyPath: concreteKeyframeKeyPath] =
-                   $1[keyPath: partialKeyframeKeyPath]
-                ?? $2[keyPath: concreteKeyframeKeyPath];
-            }
-          ));
+          appendToPairedApplyBlocks(partialKeyframeKeyPath, concreteKeyframeKeyPath);
         
         default:
           break;
