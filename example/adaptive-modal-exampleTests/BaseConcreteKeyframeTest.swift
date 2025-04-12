@@ -67,7 +67,7 @@ struct BaseConcreteKeyframeTest {
   @Test func verifyConcreteToPartialKeyframeConversion() async throws {
     let concreteKeyframe: TestConcreteKeyframe = .default;
     let partialKeyframe: TestPartialKeyframe = concreteKeyframe.asPartialKeyframe;
-    let concreteKeyframe2: TestConcreteKeyframe = .init(sourcePartialKeyframe: partialKeyframe);
+    let concreteKeyframe2: TestConcreteKeyframe = .init(from: partialKeyframe);
     
     print(
       #function,

@@ -137,7 +137,7 @@ public extension BaseConcreteKeyframe {
   // ------------
   
   init(
-    sourcePartialKeyframe partialKeyframe: PartialKeyframe,
+    from partialKeyframe: PartialKeyframe,
     fallbackKeyframe: Self = .default
   ){
     var concreteKeyframe: Self = .default;
