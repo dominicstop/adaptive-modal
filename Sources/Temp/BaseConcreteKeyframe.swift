@@ -56,12 +56,15 @@ public extension BaseConcreteKeyframe where InterpolatableValue == Self {
 // MARK: - BaseConcreteKeyframe+Helpers
 // ------------------------------------
 
+fileprivate var properySetterBlocksCache: Dictionary<String, [Any]> = [:];
+
 public extension BaseConcreteKeyframe {
   
   typealias PartialKeyframeKeyPath<T> = WritableKeyPath<PartialKeyframe, T>;
   
   typealias ConcreteKeyframeKeypath<T> = WritableKeyPath<Self, T>;
-  private typealias KeyframePairedApplyBlock = (
+
+  fileprivate typealias KeyframePairedApplyBlock = (
     applyToPartialKeyframeBlock: (
       _ target: inout PartialKeyframe,
       _ source: Self
@@ -74,9 +77,17 @@ public extension BaseConcreteKeyframe {
   );
   
   // weird workaround for fully generic keyframes
-  // keypaths with generics must be resolved to an actual type
+  // keypaths with generics must be resolved to an actual type at runtime
   //
   private static func createPropertySetterBlocks() -> [KeyframePairedApplyBlock] {
+    let typeName = String(describing: Self.self);
+    
+    if let cacheEntry = properySetterBlocksCache[typeName],
+       let pairedApplyBlocks = cacheEntry as? [KeyframePairedApplyBlock]  {
+      
+      return pairedApplyBlocks;
+    };
+    
     var pairedApplyBlocks: [KeyframePairedApplyBlock] = [];
     
     Self.partialToConcreteKeyframePropertyMap.forEach {
@@ -116,6 +127,7 @@ public extension BaseConcreteKeyframe {
       };
     };
     
+    properySetterBlocksCache[typeName] = pairedApplyBlocks;
     return pairedApplyBlocks;
   };
   
