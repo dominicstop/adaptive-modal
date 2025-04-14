@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -21,6 +21,16 @@
 		88E879FC2AB3442900653BA2 /* AdaptiveModal in Frameworks */ = {isa = PBXBuildFile; productRef = 88E879FB2AB3442900653BA2 /* AdaptiveModal */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		B56198FA2DA6DCEF00DD08D3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 887C3DA12A43EE700026B57C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 887C3DA82A43EE700026B57C;
+			remoteInfo = "adaptive-modal-example";
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		881B68EE2A4494EA009EB533 /* AdaptiveModalConfigDemoPresets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdaptiveModalConfigDemoPresets.swift; sourceTree = "<group>"; };
 		883DA9192AB343F6003D3982 /* adaptive-modal */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "adaptive-modal"; path = ..; sourceTree = "<group>"; };
@@ -36,7 +46,12 @@
 		887C3DF02A43EEF60026B57C /* AdaptiveModalConfigTestViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdaptiveModalConfigTestViewController.swift; sourceTree = "<group>"; };
 		887C3DF12A43EEF60026B57C /* AdaptiveModalConfigDemoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdaptiveModalConfigDemoViewController.swift; sourceTree = "<group>"; };
 		887C3DF32A43EEF60026B57C /* Route.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Route.swift; sourceTree = "<group>"; };
+		B56198F62DA6DCEF00DD08D3 /* adaptive-modal-exampleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "adaptive-modal-exampleTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		B56198F72DA6DCEF00DD08D3 /* adaptive-modal-exampleTests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = "adaptive-modal-exampleTests"; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		887C3DA62A43EE700026B57C /* Frameworks */ = {
@@ -44,6 +59,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				88E879FC2AB3442900653BA2 /* AdaptiveModal in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B56198F32DA6DCEF00DD08D3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -80,6 +102,7 @@
 				887C3DEC2A43EEF60026B57C /* src */,
 				886540702A9962E8006FA9A5 /* examples */,
 				887C3DAB2A43EE700026B57C /* adaptive-modal-example */,
+				B56198F72DA6DCEF00DD08D3 /* adaptive-modal-exampleTests */,
 				887C3DAA2A43EE700026B57C /* Products */,
 				881B68EB2A43FE20009EB533 /* Frameworks */,
 			);
@@ -89,6 +112,7 @@
 			isa = PBXGroup;
 			children = (
 				887C3DA92A43EE700026B57C /* adaptive-modal-example.app */,
+				B56198F62DA6DCEF00DD08D3 /* adaptive-modal-exampleTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -141,6 +165,29 @@
 			productReference = 887C3DA92A43EE700026B57C /* adaptive-modal-example.app */;
 			productType = "com.apple.product-type.application";
 		};
+		B56198F52DA6DCEF00DD08D3 /* adaptive-modal-exampleTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B56198FE2DA6DCEF00DD08D3 /* Build configuration list for PBXNativeTarget "adaptive-modal-exampleTests" */;
+			buildPhases = (
+				B56198F22DA6DCEF00DD08D3 /* Sources */,
+				B56198F32DA6DCEF00DD08D3 /* Frameworks */,
+				B56198F42DA6DCEF00DD08D3 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				B56198FB2DA6DCEF00DD08D3 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				B56198F72DA6DCEF00DD08D3 /* adaptive-modal-exampleTests */,
+			);
+			name = "adaptive-modal-exampleTests";
+			packageProductDependencies = (
+			);
+			productName = "adaptive-modal-exampleTests";
+			productReference = B56198F62DA6DCEF00DD08D3 /* adaptive-modal-exampleTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -148,11 +195,15 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1420;
+				LastSwiftUpdateCheck = 1620;
 				LastUpgradeCheck = 1420;
 				TargetAttributes = {
 					887C3DA82A43EE700026B57C = {
 						CreatedOnToolsVersion = 14.2;
+					};
+					B56198F52DA6DCEF00DD08D3 = {
+						CreatedOnToolsVersion = 16.2;
+						TestTargetID = 887C3DA82A43EE700026B57C;
 					};
 				};
 			};
@@ -170,6 +221,7 @@
 			projectRoot = "";
 			targets = (
 				887C3DA82A43EE700026B57C /* adaptive-modal-example */,
+				B56198F52DA6DCEF00DD08D3 /* adaptive-modal-exampleTests */,
 			);
 		};
 /* End PBXProject section */
@@ -181,6 +233,13 @@
 			files = (
 				887C3DB92A43EE710026B57C /* LaunchScreen.storyboard in Resources */,
 				887C3DB62A43EE710026B57C /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B56198F42DA6DCEF00DD08D3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -203,7 +262,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		B56198F22DA6DCEF00DD08D3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		B56198FB2DA6DCEF00DD08D3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 887C3DA82A43EE700026B57C /* adaptive-modal-example */;
+			targetProxy = B56198FA2DA6DCEF00DD08D3 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		887C3DB72A43EE710026B57C /* LaunchScreen.storyboard */ = {
@@ -393,6 +467,53 @@
 			};
 			name = Release;
 		};
+		B56198FC2DA6DCEF00DD08D3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = ZC7A6XV8GR;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "dev.dominicgo.adaptive-modal-exampleTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/adaptive-modal-example.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/adaptive-modal-example";
+			};
+			name = Debug;
+		};
+		B56198FD2DA6DCEF00DD08D3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = ZC7A6XV8GR;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "dev.dominicgo.adaptive-modal-exampleTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/adaptive-modal-example.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/adaptive-modal-example";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -410,6 +531,15 @@
 			buildConfigurations = (
 				887C3DBE2A43EE710026B57C /* Debug */,
 				887C3DBF2A43EE710026B57C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B56198FE2DA6DCEF00DD08D3 /* Build configuration list for PBXNativeTarget "adaptive-modal-exampleTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B56198FC2DA6DCEF00DD08D3 /* Debug */,
+				B56198FD2DA6DCEF00DD08D3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
