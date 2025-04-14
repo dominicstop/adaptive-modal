@@ -8,6 +8,7 @@
 import UIKit
 import DGSwiftUtilities
 
+
 public protocol BaseConcreteKeyframe<PartialKeyframe>: CompositeInterpolatable {
   
   associatedtype PartialKeyframe: BasePartialKeyframe;
@@ -15,8 +16,8 @@ public protocol BaseConcreteKeyframe<PartialKeyframe>: CompositeInterpolatable {
   static var `default`: Self { get };
   
   typealias KeyframePropertyMap = Dictionary<
-    PartialKeyPath<PartialKeyframe>,
-    PartialKeyPath<Self>
+    AnyWritableKeyPath<PartialKeyframe>,
+    AnyWritableKeyPath<Self>
   >;
   
   static var partialToConcreteKeyframePropertyMap: KeyframePropertyMap { get };
@@ -29,9 +30,11 @@ public extension BaseConcreteKeyframe where InterpolatableValue == Self {
   
   static var interpolatablePropertiesMap: InterpolatableValuesMap {
     Self.partialToConcreteKeyframePropertyMap.reduce(into: [:]) {
-      let concreteKeyframeKeyPath = $1.value;
+      let concreteKeyframeKeyPath = $1.value.partialKeyPath;
       
-      guard let uniformInterpolatableType = concreteKeyframeKeyPath.rootTypeAsType as? any UniformInterpolatable.Type else {
+      guard let uniformInterpolatableType =
+              concreteKeyframeKeyPath.rootTypeAsType as? any UniformInterpolatable.Type
+      else {
         #if DEBUG
         print(
           "BaseConcreteKeyframe.interpolatablePropertiesMap",
@@ -56,79 +59,7 @@ public extension BaseConcreteKeyframe where InterpolatableValue == Self {
 // MARK: - BaseConcreteKeyframe+Helpers
 // ------------------------------------
 
-fileprivate var properySetterBlocksCache: Dictionary<String, [Any]> = [:];
-
 public extension BaseConcreteKeyframe {
-  
-  typealias PartialKeyframeKeyPath<T> = WritableKeyPath<PartialKeyframe, T>;
-  
-  typealias ConcreteKeyframeKeypath<T> = WritableKeyPath<Self, T>;
-
-  fileprivate typealias KeyframePairedApplyBlock = (
-    applyToPartialKeyframeBlock: (
-      _ target: inout PartialKeyframe,
-      _ source: Self
-    ) -> Void,
-    applyToConcreteKeyframeBlock: (
-      _ target: inout Self,
-      _ source: PartialKeyframe,
-      _ fallback: Self
-    ) -> Void
-  );
-  
-  // weird workaround for fully generic keyframes
-  // keypaths with generics must be resolved to an actual type at runtime
-  //
-  private static func createPropertySetterBlocks() -> [KeyframePairedApplyBlock] {
-    let typeName = String(describing: Self.self);
-    
-    if let cacheEntry = properySetterBlocksCache[typeName],
-       let pairedApplyBlocks = cacheEntry as? [KeyframePairedApplyBlock]  {
-      
-      return pairedApplyBlocks;
-    };
-    
-    var pairedApplyBlocks: [KeyframePairedApplyBlock] = [];
-    
-    func appendToPairedApplyBlocks<T>(
-      _ partialKeyframeKeyPath: PartialKeyframeKeyPath<T?>,
-      _ concreteKeyframeKeyPath: ConcreteKeyframeKeypath<T>
-    ){
-      pairedApplyBlocks.append((
-        {
-          $0[keyPath: partialKeyframeKeyPath] = $1[keyPath: concreteKeyframeKeyPath];
-        },
-        {
-          print($0, $1, $2);
-          $0[keyPath: concreteKeyframeKeyPath] =
-               $1[keyPath: partialKeyframeKeyPath]
-            ?? $2[keyPath: concreteKeyframeKeyPath];
-        }
-      ));
-    };
-    
-    Self.partialToConcreteKeyframePropertyMap.forEach {
-      switch ($0, $1) {
-        case (
-          let partialKeyframeKeyPath as PartialKeyframeKeyPath<CGFloat?>,
-          let concreteKeyframeKeyPath as ConcreteKeyframeKeypath<CGFloat>
-        ):
-          appendToPairedApplyBlocks(partialKeyframeKeyPath, concreteKeyframeKeyPath);
-        
-        case (
-          let partialKeyframeKeyPath as PartialKeyframeKeyPath<Double?>,
-          let concreteKeyframeKeyPath as ConcreteKeyframeKeypath<Double>
-        ):
-          appendToPairedApplyBlocks(partialKeyframeKeyPath, concreteKeyframeKeyPath);
-        
-        default:
-          break;
-      };
-    };
-    
-    properySetterBlocksCache[typeName] = pairedApplyBlocks;
-    return pairedApplyBlocks;
-  };
   
   // MARK: - Computed Properties
   // ---------------------------
@@ -159,10 +90,14 @@ public extension BaseConcreteKeyframe {
   // -----------------
   
   func apply(toPartialKeyframe partialKeyframe: inout PartialKeyframe){
-    let applyBlocks = Self.createPropertySetterBlocks();
-    
-    applyBlocks.forEach {
-      $0.applyToPartialKeyframeBlock(&partialKeyframe, self);
+    Self.partialToConcreteKeyframePropertyMap.forEach {
+      let (partialKeyframePath, concreteKeyframePath) = $0;
+      
+      let newValue = self[keyPath: concreteKeyframePath.partialKeyPath];
+      try? partialKeyframePath.setValue(
+        target: &partialKeyframe,
+        withValue: newValue
+      );
     };
   };
   
@@ -170,10 +105,14 @@ public extension BaseConcreteKeyframe {
     sourcePartialKeyframe partialKeyframe: PartialKeyframe,
     fallbackKeyframe: Self = .default
   ) {
-    let applyBlocks = Self.createPropertySetterBlocks();
-    
-    applyBlocks.forEach {
-      $0.applyToConcreteKeyframeBlock(&self, partialKeyframe, fallbackKeyframe);
+    Self.partialToConcreteKeyframePropertyMap.forEach {
+      let (partialKeyframePath, concreteKeyframePath) = $0;
+      
+      let newValue = partialKeyframe[keyPath: partialKeyframePath.partialKeyPath];
+      try? concreteKeyframePath.setValue(
+        target: &self,
+        withValue: newValue
+      );
     };
   };
 };

@@ -36,8 +36,8 @@ struct BaseConcreteKeyframeTest {
     );
     
     static var partialToConcreteKeyframePropertyMap: KeyframePropertyMap = [
-      \.someFloat: \.someFloat,
-      \.someDouble: \.someDouble,
+      .init(keyPath: \.someFloat): .init(keyPath: \.someFloat),
+      .init(keyPath: \.someDouble): .init(keyPath: \.someDouble),
     ];
     
     var someFloat: CGFloat;
@@ -81,14 +81,14 @@ struct BaseConcreteKeyframeTest {
     );
     
     for (_, keyPathPair) in TestConcreteKeyframe.partialToConcreteKeyframePropertyMap.enumerated() {
-      let partialKeyframePath = keyPathPair.key;
-      let concreteKeyframePath = keyPathPair.value;
+      let partialKeyframePath = keyPathPair.key.partialKeyPath;
+      let concreteKeyframePath = keyPathPair.value.partialKeyPath;
       
       let concreteKeyframeValue = concreteKeyframe[keyPath: concreteKeyframePath];
       let concreteKeyframeValue2 = concreteKeyframe2[keyPath: concreteKeyframePath];
       
       let partialKeyframeValue = try #require(
-        partialKeyframe[keyPath: keyPathPair.key],
+        partialKeyframe[keyPath: partialKeyframePath],
         """
         keyPath: `\(partialKeyframePath.valueTypeAsString)` is empty
         but is expected to have a value of \(concreteKeyframeValue)
@@ -256,6 +256,5 @@ struct BaseConcreteKeyframeTest {
       "\n - resultLerpToDouble:", resultLerpToDouble,
       "\n"
     );
-    
   };
 }
