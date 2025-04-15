@@ -10,7 +10,7 @@ import DGSwiftUtilities
 
 public protocol BaseLayerShadowConcreteKeyframe<KeyframeTarget>:
   BaseConcreteKeyframe,
-  BaseKeyframeConfig where
+  KeyframeAppliable where
     PartialKeyframe: BaseLayerShadowPartialKeyframe
 {
   associatedtype KeyframeTarget;

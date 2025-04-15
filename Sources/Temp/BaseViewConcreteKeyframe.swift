@@ -11,7 +11,7 @@ import DGSwiftUtilities
 
 public protocol BaseViewConcreteKeyframe<KeyframeTarget>:
   BaseConcreteKeyframe,
-  BaseKeyframeConfig where
+  KeyframeAppliable where
     KeyframeTarget: UIView,
     PartialKeyframe: BaseViewPartialKeyframe
 {

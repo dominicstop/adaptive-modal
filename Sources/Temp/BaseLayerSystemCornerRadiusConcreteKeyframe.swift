@@ -10,7 +10,7 @@ import DGSwiftUtilities
 
 public protocol BaseLayerSystemCornerRadiusConcreteKeyframe<KeyframeTarget>:
   BaseConcreteKeyframe,
-  BaseKeyframeConfig where
+  KeyframeAppliable where
     PartialKeyframe: BaseLayerSystemCornerRadiusPartialKeyframe
 {
   associatedtype KeyframeTarget;
