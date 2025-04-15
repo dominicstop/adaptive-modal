@@ -9,8 +9,9 @@ import UIKit
 import DGSwiftUtilities
 
 
-public protocol BaseViewPartialKeyframe: BasePartialKeyframe {
-  
+public protocol BaseViewPartialKeyframe:
+  BasePartialKeyframe where ConcreteKeyframe: BaseViewConcreteKeyframe
+{
   var opacity: CGFloat? { get set };
   var transform: Transform3D? { get set };
   var backgroundColor: UIColor? { get set };
