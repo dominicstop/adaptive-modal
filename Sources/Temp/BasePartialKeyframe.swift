@@ -8,7 +8,7 @@
 import Foundation
 import DGSwiftUtilities
 
-public protocol BasePartialKeyframe: SettableNilValues {
+public protocol BasePartialKeyframe: SettableNilValues, Equatable {
   
   associatedtype ConcreteKeyframe: BaseConcreteKeyframe<Self>;
   
