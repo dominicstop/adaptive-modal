@@ -23,7 +23,73 @@ public protocol BaseConcreteKeyframe<PartialKeyframe>: CompositeInterpolatable, 
   static var partialToConcreteKeyframePropertyMap: KeyframePropertyMap { get };
 };
 
-// MARK: - BaseConcreteKeyframe+interpolatablePropertiesMap
+// MARK: - BaseConcreteKeyframe+Default
+// ------------------------------------
+
+public extension BaseConcreteKeyframe {
+  
+  static var partialToConcreteKeyframePropertyMap: KeyframePropertyMap {
+    var combinedMap: KeyframePropertyMap = [:];
+    var totalMapCount = 0;
+    
+    if let concreteKeyframeType =
+        Self.self as? any BaseViewConcreteKeyframe.Type
+    {
+      let extractedMap = concreteKeyframeType
+        .extractBaseViewPartialToConcreteKeyframePropertyMap(forType: Self.self);
+      
+      combinedMap.merge(with: extractedMap);
+      totalMapCount += extractedMap.count;
+    };
+    
+    if let concreteKeyframeType =
+        Self.self as? any BaseLayerBorderConcreteKeyframe.Type
+    {
+      let extractedMap = concreteKeyframeType
+        .extractBaseLayerPartialToConcreteKeyframePropertyMap(forType: Self.self);
+      
+      combinedMap.merge(with: extractedMap);
+      totalMapCount += extractedMap.count;
+    };
+    
+    if let concreteKeyframeType =
+        Self.self as? any BaseLayerShadowConcreteKeyframe.Type
+    {
+      let extractedMap = concreteKeyframeType
+        .extractBaseLayerShadowPartialToConcreteKeyframePropertyMap(forType: Self.self);
+      
+      combinedMap.merge(with: extractedMap);
+      totalMapCount += extractedMap.count;
+    };
+    
+    if let concreteKeyframeType =
+        Self.self as? any BaseLayerSystemCornerRadiusConcreteKeyframe.Type
+    {
+      let extractedMap = concreteKeyframeType
+        .extractBaseLayerSystemCornerRadiusPartialToConcreteKeyframePropertyMap(forType: Self.self);
+      
+      combinedMap.merge(with: extractedMap);
+      totalMapCount += extractedMap.count;
+    };
+    
+    #if DEBUG
+    if combinedMap.count != totalMapCount {
+      print(
+        #function,
+        "Warning:",
+        "\(totalMapCount) properties were extracted from \(String(describing: Self.self)),",
+        "but `combinedMap` only contains: \(combinedMap.count)`",
+        "some properties might have been overwritten due to key collision"
+      );
+    }
+    #endif
+    
+    
+    return combinedMap;
+  };
+}
+
+// MARK: - BaseConcreteKeyframe+InterpolatableValue
 // ------------------------------------
 
 public extension BaseConcreteKeyframe where InterpolatableValue == Self {
@@ -47,7 +113,6 @@ public extension BaseConcreteKeyframe where InterpolatableValue == Self {
         return;
       };
       
-      $0[concreteKeyframeKeyPath] = uniformInterpolatableType;
       $0[concreteKeyframeAnyKeyPath] = uniformInterpolatableType;
     }
   };
