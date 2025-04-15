@@ -9,7 +9,7 @@ import UIKit
 import DGSwiftUtilities
 
 
-public protocol BaseConcreteKeyframe<PartialKeyframe>: CompositeInterpolatable {
+public protocol BaseConcreteKeyframe<PartialKeyframe>: CompositeInterpolatable, Equatable {
   
   associatedtype PartialKeyframe: BasePartialKeyframe;
   
@@ -30,15 +30,15 @@ public extension BaseConcreteKeyframe where InterpolatableValue == Self {
   
   static var interpolatablePropertiesMap: InterpolatableValuesMap {
     Self.partialToConcreteKeyframePropertyMap.reduce(into: [:]) {
-      let concreteKeyframeKeyPath = $1.value.partialKeyPath;
+      let concreteKeyframeAnyKeyPath = $1.value;
       
       guard let uniformInterpolatableType =
-              concreteKeyframeKeyPath.rootTypeAsType as? any UniformInterpolatable.Type
+              concreteKeyframeAnyKeyPath.partialKeyPath.valueTypeAsType as? any UniformInterpolatable.Type
       else {
         #if DEBUG
         print(
           "BaseConcreteKeyframe.interpolatablePropertiesMap",
-          "\n - Error: Could not find uniform interpolatable type for keypath: \(concreteKeyframeKeyPath)",
+          "\n - Error: Could not find uniform interpolatable type for keypath: \(concreteKeyframeAnyKeyPath.partialKeyPath)",
           "\n - Total keyframes to map: \(Self.partialToConcreteKeyframePropertyMap.count)",
           "\n - Current map element count: \($0.count)",
           "\n - Note: Make sure that the concrete keyframe conforms to `UniformInterpolatable"
@@ -48,6 +48,7 @@ public extension BaseConcreteKeyframe where InterpolatableValue == Self {
       };
       
       $0[concreteKeyframeKeyPath] = uniformInterpolatableType;
+      $0[concreteKeyframeAnyKeyPath] = uniformInterpolatableType;
     }
   };
   
