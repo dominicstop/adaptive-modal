@@ -7,3 +7,6 @@
 
 @available(*, deprecated, renamed: "ModalBackgroundInteractionMode")
 public typealias BackgroundInteractionMode = ModalBackgroundInteractionMode;
+
+@available(*, deprecated, renamed: "ComputableLayoutValueEdgeInsets")
+public typealias LayoutValueEdgeInsets = ComputableEdgeInsets;
