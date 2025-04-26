@@ -14,20 +14,10 @@ public struct AdaptiveModalKeyframeConfig: Equatable {
   
   // MARK: - Embedded Types
   // ----------------------
-
-  public enum BackgroundInteractionMode: String {
-    static let `default`: Self = .automatic;
   
-    case automatic;
-    case dismiss, passthrough, ignore;
-    
-    var isPassThrough: Bool {
-      switch self {
-        case .passthrough: return true;
-        default: return false;
-      };
-    };
-  };
+  public typealias BackgroundInteractionMode = ModalBackgroundInteractionMode;
+
+  
   
   public enum LayoutValueEdgeInsets: Equatable {
     case edgeInsets(UIEdgeInsets);
